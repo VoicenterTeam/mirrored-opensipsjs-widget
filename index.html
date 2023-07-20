@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenSIPS Widget</title>
+</head>
+<body>
+    <script type="module" src="/src/main.ts"></script>
+
+    <script>
+        const widget = document.createElement('opensips-widget')
+
+        widget.setAttribute('credentials', JSON.stringify({
+            username: 'F8Sntaw0',
+            password: 'rqmJMK2wZvBsFkWa',
+            domain: 'sip05.voicenter.co'
+        }))
+
+        widget.setAttribute('theme', JSON.stringify({
+            color: 'blue',
+            backgroundColor: 'white'
+        }))
+
+        function onWidgetInitialized (event) {
+            console.log('Widget is ready! Message:', event.detail)
+        }
+
+        widget.addEventListener('widget:ready', onWidgetInitialized)
+
+        document.body.appendChild(widget)
+    </script>
+</body>
+</html>
