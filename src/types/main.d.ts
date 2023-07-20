@@ -1,5 +1,7 @@
 import { ListenerCallbackFnType, ListenersKeyType } from 'opensips-js/src/types/listeners'
 
+export type TWidgetAttributes = 'credentials' | 'theme'
+
 export interface TWidgetEventMap {
     'widget:ready': string
 }
