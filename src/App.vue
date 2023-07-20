@@ -1,5 +1,6 @@
 <template>
     <div className="p-5 shadow-xl rounded-md relative border border-sky-500">
+        <MediaDevicesSettings />
         <div className="absolute left-0 top-1/2 h-1/2 -translate-y-1/2 bg-black cursor-grab w-3" @mousedown="onMouseDown" />
         hello
     </div>
@@ -9,6 +10,7 @@
 import { onMounted } from 'vue'
 import type { IWidgetAppProps } from '@/types/main'
 import { initializeOpenSIPSJS, useExternalOpenSIPSJS } from '@/composables/opensipsjs'
+import MediaDevicesSettings from '@/components/MediaDevicesSettings.vue'
 
 // Props
 const props = defineProps<IWidgetAppProps>()
