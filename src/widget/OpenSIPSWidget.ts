@@ -3,9 +3,9 @@ import 'construct-style-sheets-polyfill'
 import { twind, cssom, observe } from '@twind/core'
 
 import config from 'root/twind.config'
-import type { TDispatchActionEvent, IWidgetAttributes, IWidgetAppProps } from '@/types/main'
+import type { TDispatchActionEvent, IWidgetAttributes, IWidgetAppProps, TWidgetAttributes } from '@/types/main'
 import { parseAndValidateCredentials, parseAndValidateTheme } from '@/utils/validate'
-import { dragStart, drag, dragEnd } from '@/utils/dragDrop'
+import { dragStart, drag, dragEnd, updatePositionOnResize } from '@/utils/dragDrop'
 
 import App from '@/App.vue'
 
@@ -13,33 +13,42 @@ const sheet = cssom(new CSSStyleSheet())
 const tw = twind(config, sheet)
 
 export class OpenSIPSWidget extends HTMLElement implements IWidgetAttributes {
-    static observedAttributes = [ 'credentials', 'theme' ]
+    static observedAttributes: Array<TWidgetAttributes> = [ 'credentials', 'theme' ]
 
+    // From attributes
     credentials?: string
     theme?: string
 
+    // Drag and drop methods
+    dragStart
+    drag
+    dragEnd
+    updatePositionOnResize
+
     constructor () {
         super()
+        this.dragStart = (e: MouseEvent) => dragStart(e, this)
+        this.drag = (e: MouseEvent) => drag(e, this)
+        this.dragEnd = () => dragEnd()
+        this.updatePositionOnResize = () => updatePositionOnResize(this)
     }
 
     // Lifecycle hooks
     connectedCallback () {
         this.mountVueApp()
-        this.style.position = 'absolute'  // make sure it's positioned absolute or fixed
+        this.style.position = 'fixed'
+        window.addEventListener('resize', this.updatePositionOnResize)
     }
 
-    attributeChangedCallback (name: string, oldValue: string, newValue: string) {
+    disconnectedCallback () {
+        window.removeEventListener('resize', this.updatePositionOnResize)
+    }
+
+    attributeChangedCallback (name: TWidgetAttributes, oldValue: string, newValue: string) {
         if (oldValue !== newValue) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
             this[name] = newValue
         }
     }
-
-    // Drag and drop methods
-    dragStart = (e: MouseEvent) => dragStart(e, this)
-    drag = (e: MouseEvent) => drag(e, this)
-    dragEnd = () => dragEnd()
 
 
     // Event dispatcher
