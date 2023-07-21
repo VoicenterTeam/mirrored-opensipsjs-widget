@@ -12,7 +12,7 @@ For more information about OpenSIPS-JS, visit the [official documentation]().
 The demo application is available [here](https://opensips-widget.netlify.app/).
 
 ## How to Use
-### Basic Usage
+### Basic Usage 
 ```html
 <!DOCTYPE html>
 <html lang="en">
