@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="display: flex; flex-direction: column">
         <select id="microphoneEl" v-model="activeInputDevice" @change="onMicrophoneChange">
             <option v-for="(item, key) in inputDevicesList" :key="key" :value="item.deviceId">
                 {{ item.label }}

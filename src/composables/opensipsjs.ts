@@ -4,6 +4,8 @@ import type { IOpenSIPSJSOptions } from 'opensips-js/src/types/rtc'
 import type { ISIPSCredentials, IWidgetExternalAPI } from '@/types/main'
 
 let opensipsjs: OpenSIPSJS
+
+export const isInitialized = ref<boolean>(false)
 export const activeInputDevice = ref<string>('')
 export const inputDevicesList = ref<Array<MediaDeviceInfo>>([])
 export const activeOutputDevice = ref<string>('')
@@ -13,11 +15,13 @@ function isOpensips (opensipsJS: OpenSIPSJS | undefined): opensipsJS is OpenSIPS
     return opensipsjs !== undefined
 }
 
-export function useOpenSIPSJS () {
+function validateInit () {
     if (!isOpensips(opensipsjs)) {
         throw new Error('OpenSIPSJS is not initialized')
     }
+}
 
+export function useOpenSIPSJS () {
     function startCall (target: string, addToCurrentRoom = true) {
         opensipsjs.doCall({ target, addToCurrentRoom })
     }
@@ -65,6 +69,7 @@ export function initializeOpenSIPSJS (options: ISIPSCredentials) {
 
             openSIPSJS
                 .on('ready', () => {
+                    isInitialized.value = true
                     resolve(opensipsjs)
                 })
                 .on('changeActiveInputMediaDevice', (value: string) => {
