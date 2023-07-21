@@ -4,6 +4,11 @@
   "private": true,
   "author": "Bohdan Konechnyi",
   "type": "commonjs",
+  "engines": {
+    "node": ">= 16",
+    "npm": "please-use-yarn",
+    "yarn": ">= 1.22.4"
+  },
   "scripts": {
     "dev": "vite",
     "dev:documentation": "cd docs && yarn && yarn run dev",
