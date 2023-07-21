@@ -8,15 +8,15 @@
     "email": "bohdan.ko@voicenter.com"
   },
   "scripts": {
-    "dev": "node scripts/prebuild.js && vuepress dev src",
-    "build": "vuepress build src",
-    "prebuild": "node scripts/prebuild.js && npx typedoc ../src/types/public-api.d.ts",
-    "generate:typedoc": ""
+    "dev": "vuepress dev src",
+    "build": "vuepress build src"
   },
   "license": "MIT",
   "devDependencies": {
     "@vuepress/plugin-register-components": "^2.0.0-beta.62",
     "typedoc": "^0.24.8",
-    "vuepress": "^2.0.0-beta.62"
+    "typedoc-plugin-markdown": "^3.15.3",
+    "vuepress": "^2.0.0-beta.62",
+    "vuepress-plugin-typedoc": "^0.12.1"
   }
 }

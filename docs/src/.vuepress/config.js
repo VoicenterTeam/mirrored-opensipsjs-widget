@@ -2,6 +2,7 @@ import { defineUserConfig, defaultTheme } from 'vuepress'
 import { description } from '../../package'
 import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
 import { getDirname, path } from '@vuepress/utils'
+import { typedocPlugin } from 'vuepress-plugin-typedoc/next';
 
 const __dirname = getDirname(import.meta.url)
 
@@ -29,8 +30,12 @@ export default defineUserConfig({
                 link: '/',
                 collapsible: false,
                 children: [
-                    'types',
-                    'example'
+                    'demo',
+                    {
+                        text: 'API',
+                        link: 'api',
+                        rel: 'api'
+                    }
                 ]
             }
         ]
@@ -39,6 +44,10 @@ export default defineUserConfig({
     plugins: [
         registerComponentsPlugin({
             componentsDir: path.resolve(__dirname, './components')
+        }),
+        typedocPlugin({
+            entryPoints: ['../src/types/public-api.d.ts'],
+            tsconfig: '../tsconfig.json'
         })
     ],
 
