@@ -1,32 +1,8 @@
-import { ListenerCallbackFnType, ListenersKeyType } from 'opensips-js/src/types/listeners'
+import type { ListenerCallbackFnType, ListenersKeyType } from 'opensips-js/src/types/listeners'
 
-export type TWidgetAttributes = 'credentials' | 'theme'
-
-export interface TWidgetEventMap {
-    'widget:ready': string
-}
-
-export type TDispatchActionEvent = <Event extends keyof TWidgetEventMap, Data extends TWidgetEventMap<Event>> (event: Event, data: Data) => void
-
-export interface IWidgetAppProps {
-    dispatchActionEvent: TDispatchActionEvent
-    credentials: ISIPSCredentials
-    theme: IWidgetTheme
-    dragStart: (e: MouseEvent) => void
-    drag: (e: MouseEvent) => void
-    dragEnd: () => void
-}
-
-export interface IWidgetAttributes {
-    credentials?: string
-    theme?: string
-}
-
-export interface IWidgetAttributesParsed {
-    credentials?: ISIPSCredentials
-    theme?: IWidgetTheme
-}
-
+// ----------------------------------------------
+// Domain Types
+// ----------------------------------------------
 export interface ISIPSCredentials {
     username: string
     password: string
@@ -35,6 +11,10 @@ export interface ISIPSCredentials {
 
 export interface IWidgetTheme {
     color: string
+}
+
+export interface IWidgetConfigOptions {
+    colors: Record<string, string>
 }
 
 export interface IWidgetExternalAPI {
@@ -46,3 +26,34 @@ export interface IWidgetExternalAPI {
      */
     on: <T extends ListenersKeyType> (type: T, listener: ListenerCallbackFnType<T>) => void
 }
+
+// ----------------------------------------------
+// Component Types
+// ----------------------------------------------
+export namespace Widget {
+    export type Attributes = 'theme'
+    export type EventMap = {
+        'widget:ready': IWidgetInit
+    }
+    export type DispatchActionEvent = <Event extends keyof EventMap>(
+        event: Event,
+        data: EventMap[Event]
+    ) => void
+}
+
+export interface IWidgetAppProps {
+    dispatchActionEvent: Widget.DispatchActionEvent
+    theme: IWidgetTheme
+    dragStart: (e: MouseEvent) => void
+}
+
+export interface IWidgetAttributes {
+    theme?: string
+}
+
+export interface IWidgetInitOptions {
+    credentials: ISIPSCredentials
+    config: IWidgetConfigOptions
+}
+
+export type IWidgetInit = (initOptions: IWidgetInitOptions) => Promise<IWidgetExternalAPI>

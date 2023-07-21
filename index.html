@@ -8,27 +8,26 @@
 <body>
     <script type="module" src="/src/main.ts"></script>
 
+    <opensips-widget id="openSIPSWidget"></opensips-widget>
+
     <script>
-        const widget = document.createElement('opensips-widget')
+        const widget = document.getElementById('openSIPSWidget')
 
-        widget.setAttribute('credentials', JSON.stringify({
-            username: 'fV8Dt1RR',
-            password: 'F3sHiwfV8fQ8npVA',
-            domain: 'sip07.voicenter.co'
-        }))
+        async function onWidgetInitialized ({ detail: initFunction }) {
+            const credentials = {
+                username: 'fV8Dt1RR',
+                password: 'F3sHiwfV8fQ8npVA',
+                domain: 'sip07.voicenter.co'
+            }
 
-        widget.setAttribute('theme', JSON.stringify({
-            color: 'blue',
-            backgroundColor: 'white'
-        }))
+            const widgetAPI = await initFunction({
+                credentials
+            })
 
-        function onWidgetInitialized (event) {
-            console.log('Widget is ready! Message:', event.detail)
+            console.log('widgetAPI', widgetAPI)
         }
 
         widget.addEventListener('widget:ready', onWidgetInitialized)
-
-        document.body.appendChild(widget)
     </script>
 </body>
 </html>

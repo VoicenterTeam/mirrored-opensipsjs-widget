@@ -5,20 +5,88 @@ import type { ISIPSCredentials, IWidgetExternalAPI } from '@/types/main'
 
 let opensipsjs: OpenSIPSJS
 
-export const isInitialized = ref<boolean>(false)
+export const isOpenSIPSReady = ref<boolean>(false)
 export const activeInputDevice = ref<string>('')
 export const inputDevicesList = ref<Array<MediaDeviceInfo>>([])
 export const activeOutputDevice = ref<string>('')
 export const outputDevicesList = ref<Array<MediaDeviceInfo>>([])
 
+/**
+ * Helper function to check if OpenSIPSJS is initialized (instance is created)
+ *
+ * @param opensipsJS
+ */
 function isOpensips (opensipsJS: OpenSIPSJS | undefined): opensipsJS is OpenSIPSJS {
     return opensipsjs !== undefined
 }
 
-function validateInit () {
-    if (!isOpensips(opensipsjs)) {
-        throw new Error('OpenSIPSJS is not initialized')
+function makeOpenSIPSJSOptions (credentials: ISIPSCredentials): IOpenSIPSJSOptions {
+    return {
+        configuration: {
+            session_timers: false,
+            uri: `sip:${credentials.username}@${credentials.domain}`,
+            password: credentials.password,
+        },
+        socketInterfaces: [ `wss://${credentials.domain}` ],
+        sipDomain: `${credentials.domain}`,
+        sipOptions: {
+            session_timers: false,
+            extraHeaders: [ 'X-Bar: bar' ],
+            pcConfig: {},
+        },
     }
+}
+
+/**
+ * Helper function to register OpenSIPSJS listeners
+ *
+ * @param opensipsJS
+ */
+function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
+    return opensipsJS
+        .on('ready', () => {
+            isOpenSIPSReady.value = true
+        })
+        .on('changeActiveInputMediaDevice', (value: string) => {
+            activeInputDevice.value = value
+        })
+        .on('changeActiveOutputMediaDevice', (value: string) => {
+            activeOutputDevice.value = value
+        })
+        .on('changeAvailableDeviceList', (devices: Array<MediaDeviceInfo>) => {
+            const inputDevices = devices.filter(d => d.kind === 'audioinput')
+            const outputDevices = devices.filter(d => d.kind === 'audiooutput')
+
+            inputDevicesList.value = [ ...inputDevices ]
+            outputDevicesList.value = [ ...outputDevices ]
+        })
+}
+
+/**
+ * Register OpenSIPSJS instance, set listeners and start it
+ *
+ * @param credentials
+ */
+export function registerOpenSIPS (credentials: ISIPSCredentials) {
+    return new Promise<OpenSIPSJS>((resolve, reject) => {
+        try {
+            if (isOpensips(opensipsjs)) {
+                reject('OpenSIPSJS is already initialized')
+            }
+
+            const opensipsOptions = makeOpenSIPSJSOptions(credentials)
+
+            opensipsjs = new OpenSIPSJS(opensipsOptions)
+
+            registerOpenSIPSListeners(opensipsjs)
+                .on('ready', () => {
+                    resolve(opensipsjs)
+                })
+                .start()
+        } catch (e) {
+            reject(e)
+        }
+    })
 }
 
 export function useOpenSIPSJS () {
@@ -37,59 +105,13 @@ export function useOpenSIPSJS () {
     }
 }
 
+/**
+ * Build external API for widget
+ */
 export function useExternalOpenSIPSJS (): IWidgetExternalAPI {
-    if (!isOpensips(opensipsjs)) {
-        throw new Error('OpenSIPSJS is not initialized')
-    }
-
     return {
         on: opensipsjs.on,
     }
-}
-
-export function initializeOpenSIPSJS (options: ISIPSCredentials) {
-    return new Promise<OpenSIPSJS>((resolve, reject) => {
-        try {
-            const opensipsOptions: IOpenSIPSJSOptions = {
-                configuration: {
-                    session_timers: false,
-                    uri: `sip:${options.username}@${options.domain}`,
-                    password: options.password,
-                },
-                socketInterfaces: [ `wss://${options.domain}` ],
-                sipDomain: `${options.domain}`,
-                sipOptions: {
-                    session_timers: false,
-                    extraHeaders: [ 'X-Bar: bar' ],
-                    pcConfig: {},
-                },
-            }
-
-            const openSIPSJS = opensipsjs = new OpenSIPSJS(opensipsOptions)
-
-            openSIPSJS
-                .on('ready', () => {
-                    isInitialized.value = true
-                    resolve(opensipsjs)
-                })
-                .on('changeActiveInputMediaDevice', (value: string) => {
-                    activeInputDevice.value = value
-                })
-                .on('changeActiveOutputMediaDevice', (value: string) => {
-                    activeOutputDevice.value = value
-                })
-                .on('changeAvailableDeviceList', (devices: Array<MediaDeviceInfo>) => {
-                    const inputDevices = devices.filter(d => d.kind === 'audioinput')
-                    const outputDevices = devices.filter(d => d.kind === 'audiooutput')
-
-                    inputDevicesList.value = [ ...inputDevices ]
-                    outputDevicesList.value = [ ...outputDevices ]
-                })
-                .start()
-        } catch (e) {
-            reject(e)
-        }
-    })
 }
 
 export async function onMicrophoneChange (event: Event) {

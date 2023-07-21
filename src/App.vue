@@ -9,11 +9,11 @@
 
 <script lang="ts" setup>
 import { onMounted } from 'vue'
-import type { IWidgetAppProps } from '@/types/main'
-import { initializeOpenSIPSJS, useExternalOpenSIPSJS, useOpenSIPSJS } from '@/composables/opensipsjs'
+import type { IWidgetAppProps, IWidgetInitOptions } from '@/types/main'
+import { registerOpenSIPS, useExternalOpenSIPSJS } from '@/composables/opensipsjs'
 import MediaDevicesSettings from '@/components/MediaDevicesSettings.vue'
 
-const { startCall } = useOpenSIPSJS()
+// const { startCall } = useOpenSIPSJS()
 
 // Props
 const props = defineProps<IWidgetAppProps>()
@@ -24,20 +24,17 @@ function onMouseDown (e: MouseEvent) {
 }
 
 function makeCall (event: Event) {
-    event.preventDefault()
-    startCall('380937369802', false)
+    // event.preventDefault()
+    // startCall('380937369802', false)
 }
 
-onMounted(async () => {
-    const opensips = await initializeOpenSIPSJS(props.credentials)
-
-    //opensips.doCall({ target: '380937369802', addToCurrentRoom: false })
-
-    const sipsPublic = useExternalOpenSIPSJS()
-
+onMounted(() => {
     props.dispatchActionEvent(
         'widget:ready',
-        sipsPublic
+        ({ credentials, config }: IWidgetInitOptions) => {
+            return registerOpenSIPS(credentials)
+                .then(useExternalOpenSIPSJS)
+        }
     )
 })
 </script>
