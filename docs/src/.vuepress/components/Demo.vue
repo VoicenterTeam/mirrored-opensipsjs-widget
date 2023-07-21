@@ -1,17 +1,76 @@
 <template>
     <div
         ref="wrapperRef"
-    />
+    >
+        <form v-if="!loggedIn" @submit.prevent="login">
+            <label>
+                Username:
+                <input v-model="credentials.username">
+            </label>
+            <label>
+                Password:
+                <input v-model="credentials.password">
+            </label>
+            <label>
+                Domain:
+                <input v-model="credentials.domain">
+            </label>
+
+            <button type="submit" :disabled="!credentialsValid">
+                Login
+            </button>
+        </form>
+        <button v-else @click.prevent="logout">
+            Logout
+        </button>
+    </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { OpenSIPSWidget } from '@/widget/OpenSIPSWidget'
+import { useLocalStorage } from '@vueuse/core'
+import { IWidgetExternalAPI } from '@/types/public-api'
 
+let widgetAPI: IWidgetExternalAPI | null = null
 const wrapperRef = ref(null)
+const credentials = useLocalStorage(
+    'credentials',
+    {
+        username: '',
+        password: '',
+        domain: ''
+    }
+)
+const loggedIn = useLocalStorage('loggedIn', false)
 
+const credentialsValid = computed(() => {
+    return credentials.value.username && credentials.value.password && credentials.value.domain
+})
+function login () {
+    if (!credentialsValid.value) {
+        alert('Please fill all fields')
+        return
+    }
 
-onMounted(async () => {
+    loggedIn.value = true
+    init()
+}
+function logout () {
+    loggedIn.value = false
+    credentials.value = {
+        username: '',
+        password: '',
+        domain: ''
+    }
+
+    const widgetEl = document.querySelector('opensips-widget')
+
+    if (widgetEl) {
+        widgetEl.remove()
+    }
+}
+function init () {
     if (!wrapperRef.value) {
         return
     }
@@ -23,12 +82,6 @@ onMounted(async () => {
     const widgetEl = document.createElement('opensips-widget')
 
     async function onWidgetInitialized ({ detail: initFunction }) {
-        const credentials = {
-            username: 'fV8Dt1RR',
-            password: 'F3sHiwfV8fQ8npVA',
-            domain: 'sip07.voicenter.co'
-        }
-
         const themeSettings = {
             colors: {
                 primary: '#1a202c',
@@ -57,8 +110,8 @@ onMounted(async () => {
             }
         }
 
-        const widgetAPI = await initFunction({
-            credentials,
+        widgetAPI = await initFunction({
+            credentials: credentials.value,
             config: {
                 themeSettings,
                 callSettings
@@ -70,6 +123,14 @@ onMounted(async () => {
 
     widgetEl.addEventListener('widget:ready', onWidgetInitialized)
 
+    widgetEl.style.zIndex = '99999'
+
     wrapperRef.value.appendChild(widgetEl)
+}
+
+onMounted(async () => {
+    if (loggedIn.value) {
+        init()
+    }
 })
 </script>
