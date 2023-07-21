@@ -11,7 +11,6 @@ A Vue3-based widget for integrating OpenSIPS VoIP functionalities into your web 
 For more information about OpenSIPS-JS, visit the [official documentation](). 
 The demo application is available [here](https://opensips-widget.netlify.app/).
 
-
 ## How to Use
 ### Basic Usage
 ```html
