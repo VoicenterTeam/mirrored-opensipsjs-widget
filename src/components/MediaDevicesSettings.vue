@@ -13,7 +13,6 @@
     </div>
 </template>
 <script setup lang="ts">
-
 import {
     activeInputDevice,
     inputDevicesList,
@@ -22,5 +21,4 @@ import {
     onMicrophoneChange,
     onSpeakerChange
 } from '@/composables/opensipsjs'
-
 </script>

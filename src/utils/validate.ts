@@ -1,6 +1,6 @@
 import { parseJSON } from '@/utils/parseJSON'
 import { defaultTheme } from '@/enum/defaultTheme.enum'
-import type { IWidgetTheme } from '@/types/main'
+import type { IWidgetTheme } from '@/types/public-api'
 
 export function validateTheme (theme: unknown): theme is IWidgetTheme {
     if (typeof theme !== 'object' || theme === null) {

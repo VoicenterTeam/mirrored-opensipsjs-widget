@@ -20,8 +20,40 @@
                 domain: 'sip07.voicenter.co'
             }
 
+            const themeSettings = {
+                colors: {
+                    primary: '#1a202c',
+                    secondary: '#1a202c',
+                    accent: '#1a202c',
+                },
+                layoutConfig: {
+                    mode: 'floating',
+                    type: 'rounded'
+                }
+            }
+
+            const callSettings = {
+                allowTransfer: true,
+                autoAnswer: {
+                    allowChange: false,
+                    defaultBehavior: true
+                },
+                outgoingCalls: false,
+                callerInfo: {
+                    displayName: true,
+                    callerId: {
+                        display: true,
+                        mask: true
+                    }
+                }
+            }
+
             const widgetAPI = await initFunction({
-                credentials
+                credentials,
+                config: {
+                    themeSettings,
+                    callSettings
+                }
             })
 
             console.log('widgetAPI', widgetAPI)

@@ -6,7 +6,9 @@
   "type": "commonjs",
   "scripts": {
     "dev": "vite",
+    "dev:documentation": "cd docs && yarn && yarn run dev",
     "build": "run-p type-check build-only",
+    "build:documentation": "cd docs && yarn && yarn run build",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",

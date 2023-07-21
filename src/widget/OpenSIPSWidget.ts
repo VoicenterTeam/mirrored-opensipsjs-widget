@@ -3,7 +3,8 @@ import 'construct-style-sheets-polyfill'
 import { twind, cssom, observe } from '@twind/core'
 
 import config from 'root/twind.config'
-import type { Widget, IWidgetAttributes, IWidgetAppProps } from '@/types/main'
+import type { Widget as InternalWidget, IWidgetAttributes, IWidgetAppProps } from '@/types/internal'
+import type { Widget as PublicWidget } from '@/types/public-api'
 import { parseAndValidateTheme } from '@/utils/validate'
 import { dragStart, drag, dragEnd, updatePositionOnResize } from '@/utils/dragDrop'
 
@@ -13,7 +14,7 @@ const sheet = cssom(new CSSStyleSheet())
 const tw = twind(config, sheet)
 
 export class OpenSIPSWidget extends HTMLElement implements IWidgetAttributes {
-    static observedAttributes: Array<Widget.Attributes> = [ 'theme' ]
+    static observedAttributes: Array<InternalWidget.Attributes> = [ 'theme' ]
 
     // From attributes
     theme?: string
@@ -43,7 +44,7 @@ export class OpenSIPSWidget extends HTMLElement implements IWidgetAttributes {
         window.removeEventListener('resize', this.updatePositionOnResize)
     }
 
-    attributeChangedCallback (name: Widget.Attributes, oldValue: string, newValue: string) {
+    attributeChangedCallback (name: InternalWidget.Attributes, oldValue: string, newValue: string) {
         if (oldValue !== newValue) {
             this[name] = newValue
         }
@@ -51,7 +52,7 @@ export class OpenSIPSWidget extends HTMLElement implements IWidgetAttributes {
 
 
     // Event dispatcher
-    private dispatchActionEvent: Widget.DispatchActionEvent = (event, data) => {
+    private dispatchActionEvent: PublicWidget.DispatchActionEvent = (event, data) => {
         this.dispatchEvent(
             new CustomEvent(event, { bubbles: true, detail: data })
         )

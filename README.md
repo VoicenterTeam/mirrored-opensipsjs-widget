@@ -1,46 +1,99 @@
-# openSIPSJS-widget
+# OpenSIPS Widget
+A Vue3-based widget for integrating OpenSIPS VoIP functionalities into your web application.
 
-This template should help get you started developing with Vue 3 in Vite.
+## Features
+- SIP calling features through OpenSIPS-JS.
+- Audio device selection.
+- Theming support.
+- Draggable UI.
+- Customizable through HTML attributes.
 
-## Recommended IDE Setup
+## How to Use
+### Basic Usage
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenSIPS Widget</title>
+</head>
+<body>
+    <script type="module" src="https://cdn.voicenter.com/opensips-widget"></script>
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+    <opensips-widget id="openSIPSWidget"></opensips-widget>
 
-## Type Support for `.vue` Imports in TS
+    <script>
+        const widget = document.getElementById('openSIPSWidget')
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+        async function onWidgetInitialized ({ detail: initFunction }) {
+            const credentials = {
+                username: 'fV8Dt1RR',
+                password: 'F3sHiwfV8fQ8npVA',
+                domain: 'sip07.voicenter.co'
+            }
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+            const themeSettings = {
+                colors: {
+                    primary: '#1a202c',
+                    secondary: '#1a202c',
+                    accent: '#1a202c',
+                },
+                layoutConfig: {
+                    mode: 'floating',
+                    type: 'rounded'
+                }
+            }
 
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+            const callSettings = {
+                allowTransfer: true,
+                autoAnswer: {
+                    allowChange: false,
+                    defaultBehavior: true
+                },
+                outgoingCalls: false,
+                callerInfo: {
+                    displayName: true,
+                    callerId: {
+                        display: true,
+                        mask: true
+                    }
+                }
+            }
 
-## Customize configuration
+            const widgetAPI = await initFunction({
+                credentials,
+                config: {
+                    themeSettings,
+                    callSettings
+                }
+            })
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+            widgetAPI
+                    .on('callConfirmed', (call) => {
+                        console.log('call confirmed:', call)
+                    })
+        }
 
-## Project Setup
-
-```sh
-npm install
+        widget.addEventListener('widget:ready', onWidgetInitialized)
+    </script>
+</body>
+</html>
 ```
 
-### Compile and Hot-Reload for Development
+Replace `your_username`, `your_password`, and `your_domain` with your actual SIP credentials.
 
-```sh
-npm run dev
-```
+### Available HTML Attributes
+- `theme`: Defines the color theme of the widget.
 
-### Type-Check, Compile and Minify for Production
+### Event Handlers
+The OpenSIPS widget exposes several events that you can listen to:
 
-```sh
-npm run build
-```
+- `widget:ready`: Fired when the widget is ready. 
+The handler for this event is given a function that, when called with the SIP credentials, 
+returns a promise of the widget's API
 
-### Lint with [ESLint](https://eslint.org/)
+## API
+The API returned by the `widget:ready` event handler gives you control over the OpenSIPS instance and other features. The API includes:
 
-```sh
-npm run lint
-```
+- `on(type, listener)`: Registers an event listener for SIP events.

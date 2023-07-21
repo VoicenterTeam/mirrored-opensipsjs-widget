@@ -9,9 +9,10 @@
 
 <script lang="ts" setup>
 import { onMounted } from 'vue'
-import type { IWidgetAppProps, IWidgetInitOptions } from '@/types/main'
-import { registerOpenSIPS, useExternalOpenSIPSJS } from '@/composables/opensipsjs'
+import { registerOpenSIPS, useExternalOpenSIPSJS, isOpenSIPSReady } from '@/composables/opensipsjs'
 import MediaDevicesSettings from '@/components/MediaDevicesSettings.vue'
+import type { IWidgetAppProps } from '@/types/internal'
+import type { IWidgetInitOptions } from '@/types/public-api'
 
 // const { startCall } = useOpenSIPSJS()
 
@@ -27,14 +28,18 @@ function makeCall (event: Event) {
     // event.preventDefault()
     // startCall('380937369802', false)
 }
+async function widgetReady ({ credentials, config }: IWidgetInitOptions) {
+    if (!isOpenSIPSReady.value) {
+        await registerOpenSIPS(credentials)
+    }
+
+    return useExternalOpenSIPSJS()
+}
 
 onMounted(() => {
     props.dispatchActionEvent(
         'widget:ready',
-        ({ credentials, config }: IWidgetInitOptions) => {
-            return registerOpenSIPS(credentials)
-                .then(useExternalOpenSIPSJS)
-        }
+        widgetReady
     )
 })
 </script>
