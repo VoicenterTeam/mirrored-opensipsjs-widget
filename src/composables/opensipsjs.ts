@@ -1,6 +1,6 @@
 import { ref } from 'vue'
-import OpenSIPSJS from 'opensips-js'
-import type { IOpenSIPSJSOptions } from 'opensips-js/src/types/rtc'
+import OpenSIPSJS from '@voicenter-team/opensips-js'
+import type { IOpenSIPSJSOptions } from '@voicenter-team/opensips-js/src/types/rtc'
 import type { ISIPSCredentials, IWidgetExternalAPI } from '@/types/public-api'
 
 let opensipsjs: OpenSIPSJS
