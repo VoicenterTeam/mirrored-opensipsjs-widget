@@ -31,9 +31,9 @@ The demo application is available [here](https://mirrored-opensipsjs-widget.page
 
         async function onWidgetInitialized ({ detail: initFunction }) {
             const credentials = {
-                username: 'fV8Dt1RR',
-                password: 'F3sHiwfV8fQ8npVA',
-                domain: 'sip07.voicenter.co'
+                username: 'your_username',
+                password: 'your_password',
+                domain: 'your_domain'
             }
 
             const themeSettings = {
