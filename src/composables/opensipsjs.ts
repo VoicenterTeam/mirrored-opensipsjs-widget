@@ -2,6 +2,7 @@ import { ref } from 'vue'
 import OpenSIPSJS from '@voicenter-team/opensips-js'
 import type { IOpenSIPSJSOptions } from '@voicenter-team/opensips-js/src/types/rtc'
 import type { ISIPSCredentials, IWidgetExternalAPI } from '@/types/public-api'
+import type { DoHoldFunctionType } from '@/types/opensips'
 
 let opensipsjs: OpenSIPSJS
 
@@ -98,10 +99,50 @@ export function useOpenSIPSJS () {
         opensipsjs.callAnswer(callId)
     }
 
+    function muteAgent (toMute: boolean) {
+        opensipsjs.doMute(toMute)
+    }
+
+    function muteCaller (callId: string, toMute: boolean) {
+        opensipsjs.muteCaller(callId, toMute)
+    }
+
+    function holdCall (params: DoHoldFunctionType) {
+        opensipsjs.doCallHold(params)
+    }
+
+    async function moveCall (callId: string, roomId: number) {
+        await opensipsjs.callMove(callId, roomId)
+    }
+
+    function transferCall (callId: string, target: string) {
+        opensipsjs.callTransfer(callId, target)
+    }
+
+    function mergeCallsInRoom (roomId: number) {
+        opensipsjs.callMerge(roomId)
+    }
+
+    function terminateCall (callId: string) {
+        opensipsjs.callTerminate(callId)
+    }
+
+    async function setActiveRoom (roomId: number | undefined) {
+        await opensipsjs.setCurrentActiveRoomId(roomId)
+    }
+
     return {
         opensipsjs,
         startCall,
         answerCall,
+        muteAgent,
+        muteCaller,
+        holdCall,
+        moveCall,
+        transferCall,
+        mergeCallsInRoom,
+        setActiveRoom,
+        terminateCall,
     }
 }
 
