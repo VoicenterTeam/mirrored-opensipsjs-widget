@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import type { ICallSettings } from '@/types/internal'
+import type { IWidgetTheme } from '@/types/public-api'
 
 const defaultCallSettings: ICallSettings = {
     allowTransfer: true,
@@ -33,4 +34,17 @@ export function setCallSettingsPermissions (settings: ICallSettings) {
     displayCallerInfoName.value = settings.callerInfo.displayName
     displayCallerInfoId.value = settings.callerInfo.callerId.display
     displayCallerInfoIdMask.value = settings.callerInfo.callerId.mask
+}
+
+export function setColorThemeSettings (settings: IWidgetTheme) {
+    const widgetRootEl = document.querySelector('#openSIPSWidget') as HTMLElement
+
+    if (!widgetRootEl) {
+        throw new Error('Widget root element is not found!')
+    }
+
+    widgetRootEl.style.setProperty('--primary', settings.colors.primary)
+    widgetRootEl.style.setProperty('--secondary', settings.colors.secondary)
+    widgetRootEl.style.setProperty('--accent', settings.colors.accent)
+
 }

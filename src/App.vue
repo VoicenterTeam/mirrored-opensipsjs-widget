@@ -11,14 +11,12 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue'
 import { registerOpenSIPS, useExternalOpenSIPSJS, isOpenSIPSReady } from '@/composables/opensipsjs'
-import { setCallSettingsPermissions } from '@/composables/useCallSettingsPermissions'
+import { setCallSettingsPermissions, setColorThemeSettings } from '@/composables/useCallSettingsPermissions'
 import Phone from '@/pages/Phone.vue'
 import Settings from '@/pages/Settings.vue'
 import { isSettingsPageOpened } from '@/composables/useWidgetState'
 import type { IWidgetAppProps } from '@/types/internal'
 import type { IWidgetInitOptions } from '@/types/public-api'
-
-// const { startCall } = useOpenSIPSJS()
 
 // Props
 const props = defineProps<IWidgetAppProps>()
@@ -31,6 +29,7 @@ function onMouseDown (e: MouseEvent) {
 async function widgetReady ({ credentials, config }: IWidgetInitOptions) {
     if (!isOpenSIPSReady.value) {
         setCallSettingsPermissions(config.callSettings)
+        setColorThemeSettings(config.themeSettings)
         await registerOpenSIPS(credentials)
     }
 

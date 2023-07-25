@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="phone-container">
         This is Phone page
         <div>
             <button @click="makeCall">Call</button>
@@ -12,11 +12,13 @@
 
 <script setup lang="ts">
 import { isSettingsPageOpened } from '@/composables/useWidgetState'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
+
+const { startCall } = useOpenSIPSJS()
 
 function makeCall (event: Event) {
     event.preventDefault()
-    console.log('Make a call')
-    // startCall('380937369802', false)
+    startCall('665', false)
 }
 
 function openSettingsPage () {

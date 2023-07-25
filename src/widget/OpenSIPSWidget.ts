@@ -1,6 +1,7 @@
 import { createApp, h } from 'vue'
 import 'construct-style-sheets-polyfill'
 import { twind, cssom, observe } from '@twind/core'
+import styles from '@/styles/style.css?inline'
 
 import config from 'root/twind.config'
 import type { Widget as InternalWidget, IWidgetAttributes, IWidgetAppProps } from '@/types/internal'
@@ -10,7 +11,9 @@ import { dragStart, drag, dragEnd, updatePositionOnResize } from '@/utils/dragDr
 
 import App from '@/App.vue'
 
-const sheet = cssom(new CSSStyleSheet())
+const cssStyleSheet = new CSSStyleSheet()
+cssStyleSheet.insertRule(styles)
+const sheet = cssom(cssStyleSheet)
 const tw = twind(config, sheet)
 
 export class OpenSIPSWidget extends HTMLElement implements IWidgetAttributes {
