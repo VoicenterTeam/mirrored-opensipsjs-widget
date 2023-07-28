@@ -90,6 +90,20 @@ export function registerOpenSIPS (credentials: ISIPSCredentials) {
     })
 }
 
+// TODO: check if this properly restarts receiving events
+export function startOpenSIPS () {
+    if (isOpensips(opensipsjs)) {
+        opensipsjs.start()
+    }
+}
+
+// TODO: check if this properly stops receiving events and frees resources
+export function stopOpenSIPS () {
+    if (isOpensips(opensipsjs)) {
+        opensipsjs.stop()
+    }
+}
+
 export function useOpenSIPSJS () {
     function startCall (target: string, addToCurrentRoom = true) {
         opensipsjs.doCall({ target, addToCurrentRoom })
