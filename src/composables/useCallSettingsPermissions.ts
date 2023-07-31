@@ -45,6 +45,9 @@ export function setColorThemeSettings (settings: IWidgetTheme) {
 
     widgetRootEl.style.setProperty('--primary', settings.colors.primary)
     widgetRootEl.style.setProperty('--secondary', settings.colors.secondary)
-    widgetRootEl.style.setProperty('--accent', settings.colors.accent)
+    widgetRootEl.style.setProperty('--primary-bg', settings.colors['primary-bg'])
+    widgetRootEl.style.setProperty('--secondary-bg', settings.colors['secondary-bg'])
+    widgetRootEl.style.setProperty('--border-lines', settings.colors['border-lines'])
+    widgetRootEl.style.setProperty('--secondary', settings.colors.secondary)
 
 }

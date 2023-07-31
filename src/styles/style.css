@@ -1,3 +1,10 @@
 * {
-    color: var(--primary);
+    /*color: var(--primary);*/
+    .draggable-area {
+        background-color: var(--secondary-bg);
+        border-right: 1px solid var(--border-lines);
+    }
+    .action-buttons_wrapper {
+        background-color: var(--secondary-bg);
+    }
 }
