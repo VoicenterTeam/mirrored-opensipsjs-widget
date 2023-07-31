@@ -3,6 +3,8 @@
     .draggable-area {
         background-color: var(--secondary-bg);
         border-right: 1px solid var(--border-lines);
+        justify-content: center;
+        align-items: center;
     }
     .action-buttons_wrapper {
         background-color: var(--secondary-bg);

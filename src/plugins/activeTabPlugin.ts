@@ -1,4 +1,5 @@
-import { App, computed, inject, InjectionKey, Ref, watch } from 'vue'
+import type { App, InjectionKey, Ref } from 'vue'
+import { computed, inject, watch } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
 import { startOpenSIPS, stopOpenSIPS } from '@/composables/opensipsjs'
 
