@@ -12,6 +12,13 @@ module.exports = {
         ecmaVersion: 'latest'
     },
     rules: {
+        '@typescript-eslint/consistent-type-imports': [
+            'error',
+            {
+                prefer: 'type-imports',
+                disallowTypeAnnotations: true
+            }
+        ],
         'vue/component-api-style': [ 'error',
             [ 'script-setup', 'composition', 'options' ]
         ],

@@ -7,7 +7,7 @@ import styles from '@/styles/style.css?inline'
 import config from 'root/twind.config'
 import type { Widget as InternalWidget, IWidgetAttributes, IWidgetAppProps } from '@/types/internal'
 import type { Widget as PublicWidget } from '@/types/public-api'
-import { parseAndValidateTheme } from '@/utils/validate'
+import { getThemeWithDefaults } from '@/utils/validate'
 import { dragStart, drag, dragEnd, updatePositionOnResize } from '@/utils/dragDrop'
 
 import App from '@/App.vue'
@@ -72,7 +72,7 @@ export class OpenSIPSWidget extends HTMLElement implements IWidgetAttributes {
         observe(tw, shadowRoot)
 
         const appProps: IWidgetAppProps = {
-            theme: parseAndValidateTheme(this.theme),
+            theme: getThemeWithDefaults(this.theme),
             dispatchActionEvent: this.dispatchActionEvent,
             dragStart: this.dragStart
         }

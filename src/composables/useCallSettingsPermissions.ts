@@ -43,8 +43,8 @@ export function setColorThemeSettings (settings: IWidgetTheme) {
         throw new Error('Widget root element is not found!')
     }
 
-    widgetRootEl.style.setProperty('--primary', settings.colors.primary)
-    widgetRootEl.style.setProperty('--secondary', settings.colors.secondary)
-    widgetRootEl.style.setProperty('--accent', settings.colors.accent)
+    Object.entries(settings.colors).forEach(([ key, value ]) => {
+        widgetRootEl.style.setProperty(`--${key}`, value)
+    })
 
 }

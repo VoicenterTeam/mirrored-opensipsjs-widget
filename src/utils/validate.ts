@@ -12,12 +12,15 @@ export function validateTheme (theme: unknown): theme is IWidgetTheme {
     return typeof themeObj.color === 'string'
 }
 
-export function parseAndValidateTheme (theme: string | undefined): IWidgetTheme {
+export function getThemeWithDefaults (theme: string | undefined): IWidgetTheme {
     const parsed = parseJSON(theme)
 
-    if (validateTheme(parsed)) {
-        return parsed
+    if (!validateTheme(parsed)) {
+        return defaultTheme
     }
 
-    return defaultTheme
+    return {
+        ...defaultTheme,
+        ...parsed
+    }
 }

@@ -28,10 +28,19 @@ export interface ISIPSCredentials {
 }
 
 /**
+ * The colors of the widget:
+ * - primary [#5E95E8] - the main color, used as the colors for button icon, highlight color for the buttons, etc.
+ * - success [#46B020] - the color for the answer call button, confirm button, etc.
+ * - danger  [#EC2A2A] - the color for the end call button, cancel button, etc.
+ * - main-bg [#FFFFFF] - the main background color for the widget,
+ */
+export type ColorsType = ''
+
+/**
  * Represents the configuration options for the widget theme.
  */
 export interface IWidgetTheme {
-    colors: Record<string, string>
+    colors: Record<ColorsType, string>
     layoutConfig: ILayoutConfig
 }
 
