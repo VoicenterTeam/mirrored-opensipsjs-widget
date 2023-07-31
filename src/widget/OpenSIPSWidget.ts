@@ -1,4 +1,5 @@
 import { createApp, h } from 'vue'
+import Popper from 'vue3-popper'
 import 'construct-style-sheets-polyfill'
 import { twind, cssom, observe } from '@twind/core'
 import styles from '@/styles/style.css?inline'
@@ -10,6 +11,7 @@ import { parseAndValidateTheme } from '@/utils/validate'
 import { dragStart, drag, dragEnd, updatePositionOnResize } from '@/utils/dragDrop'
 
 import App from '@/App.vue'
+import { ActiveTabPlugin } from '@/plugins/activeTabPlugin'
 
 const cssStyleSheet = new CSSStyleSheet()
 cssStyleSheet.insertRule(styles)
@@ -75,8 +77,14 @@ export class OpenSIPSWidget extends HTMLElement implements IWidgetAttributes {
             dragStart: this.dragStart
         }
 
-        createApp({
+        const app = createApp({
             render: () => h(App, appProps),
-        }).mount(div)
+        })
+
+        app
+            .use(ActiveTabPlugin)
+            .component('Popper', Popper)
+
+        app.mount(div)
     }
 }
