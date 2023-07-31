@@ -1,5 +1,5 @@
 <template>
-    <div class="phone-container">
+    <div className="phone-container">
         This is Phone page
         <div>
             <button @click="makeCall">Call</button>
