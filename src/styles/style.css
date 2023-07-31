@@ -6,6 +6,10 @@
         justify-content: center;
         align-items: center;
     }
+
+    .ddicon {
+        color: blue;
+    }
     .action-buttons_wrapper {
         background-color: var(--secondary-bg);
     }

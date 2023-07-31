@@ -1,20 +1,12 @@
 <template>
     <div className="flex rounded-l-md w-6 cursor-grab draggable-area" @mousedown="onMouseDown">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="color: var(--border-lines)">
-            <path d="M8.92 0C7.86 0 7 0.86 7 1.92C7 2.98 7.86 3.84 8.92 3.84C9.98 3.84 10.84 2.98 10.84 1.92C10.84 0.86 9.97 0 8.92 0Z" fill="currentColor"/>
-            <path d="M8.92 6.65991C7.86 6.65991 7 7.51991 7 8.57991C7 9.63991 7.86 10.4999 8.92 10.4999C9.98 10.4999 10.84 9.63991 10.84 8.57991C10.84 7.51991 9.98 6.65991 8.92 6.65991Z" fill="currentColor"/>
-            <path d="M8.92 13.3101C7.86 13.3101 7 14.1701 7 15.2301C7 16.2901 7.86 17.1501 8.92 17.1501C9.98 17.1501 10.84 16.2901 10.84 15.2301C10.84 14.1701 9.98 13.3101 8.92 13.3101Z" fill="currentColor"/>
-            <path d="M15.76 0C14.7 0 13.84 0.86 13.84 1.92C13.84 2.98 14.7 3.84 15.76 3.84C16.82 3.84 17.68 2.98 17.68 1.92C17.68 0.86 16.82 0 15.76 0Z" fill="currentColor"/>
-            <path d="M15.76 6.65991C14.7 6.65991 13.84 7.51991 13.84 8.57991C13.84 9.63991 14.7 10.4999 15.76 10.4999C16.82 10.4999 17.68 9.63991 17.68 8.57991C17.68 7.51991 16.82 6.65991 15.76 6.65991Z" fill="currentColor"/>
-            <path d="M15.76 13.3101C14.7 13.3101 13.84 14.1701 13.84 15.2301C13.84 16.2901 14.7 17.1501 15.76 17.1501C16.82 17.1501 17.68 16.2901 17.68 15.2301C17.68 14.1701 16.82 13.3101 15.76 13.3101Z" fill="currentColor"/>
-            <path d="M8.92 19.97C7.86 19.97 7 20.83 7 21.89C7 22.95 7.86 23.81 8.92 23.81C9.98 23.81 10.84 22.95 10.84 21.89C10.84 20.83 9.98 19.97 8.92 19.97Z" fill="currentColor"/>
-            <path d="M15.76 19.97C14.7 19.97 13.84 20.83 13.84 21.89C13.84 22.95 14.7 23.81 15.76 23.81C16.82 23.81 17.68 22.95 17.68 21.89C17.68 20.83 16.82 19.97 15.76 19.97Z" fill="currentColor"/>
-        </svg>
+        <DragDrop color="var(--border-lines)" />
     </div>
 </template>
 
 <script lang="ts" setup>
 import type { IWidgetAppProps } from '@/types/internal'
+import DragDrop from '@/assets/icons/dragdrop.svg'
 
 const props = defineProps<IWidgetAppProps>()
 
