@@ -19,6 +19,9 @@ export default defineConfig({
     theme: {
         extend: {
             colors
+        },
+        fontSize: {
+            xxs: '10px'
         }
     }
 })

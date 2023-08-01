@@ -8,7 +8,11 @@
                 </div>
             </template>
 
-            <WidgetIconButton color="primary" :icon="SettingsIcon" @click="openSettingsPopover" />
+            <WidgetIconButton
+                color="primary"
+                :icon="SettingsIcon"
+                :button-classes="props.buttonClasses"
+                @click="openSettingsPopover" />
         </BasePopper>
     </div>
 </template>
@@ -20,6 +24,13 @@ import SettingsIcon from '@/assets/icons/settings.svg?component'
 import BasePopper from '@/components/base/BasePopper.vue'
 import BaseSelect from '@/components/base/BaseSelect.vue'
 import BaseInput from '@/components/base/BaseInput.vue'
+
+const props = withDefaults(
+    defineProps<{
+        buttonClasses?: string
+    }>(),
+    {}
+)
 
 const isPopoverOpened = ref(false)
 const model = ref('')

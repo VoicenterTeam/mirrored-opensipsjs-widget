@@ -19,10 +19,12 @@ const props = withDefaults(
         pressedIcon?: Component
         pressed?: boolean
         size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl'
+        buttonClasses?: string
     }>(),
     {
         pressed: false,
-        size: 'base'
+        size: 'base',
+        buttonClasses: ''
     }
 )
 
@@ -51,9 +53,10 @@ const iconSize = computed(() => {
     }
 })
 const buttonClasses = computed(() => {
-    const base = `
+    let base = `
         p-1.5
         pointer
+        ${props.buttonClasses}
     `
 
     if (props.pressed) {
