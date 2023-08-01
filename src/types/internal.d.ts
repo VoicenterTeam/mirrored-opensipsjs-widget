@@ -82,7 +82,6 @@ export namespace Widget {
  */
 export interface IWidgetAppProps {
     dispatchActionEvent: PublicWidget.DispatchActionEvent
-    theme: IWidgetTheme
     dragStart: (e: MouseEvent) => void
 }
 

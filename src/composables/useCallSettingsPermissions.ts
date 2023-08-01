@@ -1,6 +1,8 @@
 import { ref } from 'vue'
+import merge from 'lodash/merge'
 import type { ICallSettings } from '@/types/internal'
 import type { IWidgetTheme } from '@/types/public-api'
+import { defaultTheme } from '@/enum/defaultTheme.enum'
 
 const defaultCallSettings: ICallSettings = {
     allowTransfer: true,
@@ -43,7 +45,9 @@ export function setColorThemeSettings (settings: IWidgetTheme) {
         throw new Error('Widget root element is not found!')
     }
 
-    Object.entries(settings.colors).forEach(([ key, value ]) => {
+    const mergedTheme = merge(defaultTheme, settings)
+
+    Object.entries(mergedTheme.colors).forEach(([ key, value ]) => {
         widgetRootEl.style.setProperty(`--${key}`, value)
     })
 

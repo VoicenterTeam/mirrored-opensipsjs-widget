@@ -23,14 +23,17 @@
     "@voicenter-team/opensips-js": "^1.0.10",
     "@vueuse/core": "^10.2.1",
     "construct-style-sheets-polyfill": "^3.1.0",
+    "lodash": "^4.17.21",
     "regenerator-runtime": "^0.13.11",
-    "vite-plugin-css-injected-by-js": "^3.2.1",
     "vue": "^3.3.4",
+    "vue-select": "^4.0.0-beta.6",
     "vue3-popper": "^1.5.0"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
+    "@types/lodash": "^4.14.196",
     "@types/node": "18.8.0",
+    "@types/vue-select": "^3.16.2",
     "@vitejs/plugin-vue": "3.1.2",
     "@vue/eslint-config-typescript": "^11.0.3",
     "@vue/tsconfig": "^0.4.0",

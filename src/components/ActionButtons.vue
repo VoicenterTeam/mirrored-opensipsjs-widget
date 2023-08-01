@@ -1,15 +1,13 @@
 <template>
     <div className="flex action-buttons_wrapper">
-        <div className="p-2">
+        <div>
             1
         </div>
-        <div className="p-2">
-            <SettingsIconButton />
-        </div>
-        <div className="p-2">
+        <SettingsIconButton className="border-r-1 border-border-lines" />
+        <div>
             3
         </div>
-        <div className="p-2">
+        <div>
             4
         </div>
     </div>

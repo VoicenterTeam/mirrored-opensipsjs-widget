@@ -1,5 +1,167 @@
+/*noinspection ALL*/
 * {
-    /*color: var(--primary);*/
+    /* VueSelect styling */
+    --vs-colors--light: rgba(60, 60, 60, 0.5);
+    --vs-colors--dark: #333;
+    --vs-colors--darkest: rgba(0, 0, 0, 0.15);
+
+    /* Search Input */
+    --vs-search-input-color: inherit;
+    --vs-search-input-bg: var(--secondary-bg);
+    --vs-search-input-placeholder-color: inherit;
+
+    /* Font */
+    --vs-font-size: 0.5rem;
+    --vs-line-height: 1;
+
+    /* Disabled State */
+    --vs-state-disabled-bg: rgb(248, 248, 248);
+    --vs-state-disabled-color: var(--vs-colors--light);
+    --vs-state-disabled-controls-color: var(--vs-colors--light);
+    --vs-state-disabled-cursor: not-allowed;
+
+    /* Borders */
+    --vs-border-color: var(--border-lines);
+    --vs-border-width: 1px;
+    --vs-border-style: solid;
+    --vs-border-radius: 2px;
+
+    /* Actions: house the component controls */
+    --vs-actions-padding: 4px 6px 0 3px;
+
+    /* Component Controls: Clear, Open Indicator */
+    --vs-controls-color: var(--vs-colors--light);
+    --vs-controls-size: 1;
+    --vs-controls--deselect-text-shadow: 0 1px 0 var(--primary-bg);
+
+    /* Selected */
+    --vs-selected-bg: var(--secondary-bg);
+    --vs-selected-color: var(--vs-colors--dark);
+    --vs-selected-border-color: var(--vs-border-color);
+    --vs-selected-border-style: var(--vs-border-style);
+    --vs-selected-border-width: var(--vs-border-width);
+
+    /* Dropdown */
+    --vs-dropdown-bg: var(--primary-bg);
+    --vs-dropdown-color: inherit;
+    --vs-dropdown-z-index: 1000;
+    --vs-dropdown-min-width: 160px;
+    --vs-dropdown-max-height: 350px;
+    --vs-dropdown-box-shadow: 0px 3px 6px 0px var(--vs-colors--darkest);
+
+    /* Options */
+    --vs-dropdown-option-bg: #000;
+    --vs-dropdown-option-color: var(--vs-dropdown-color);
+    --vs-dropdown-option-padding: 3px 20px;
+
+    /* Active State */
+    --vs-dropdown-option--active-bg: var(--primary-bg);
+    --vs-dropdown-option--active-color: var(--button-pressed-text);
+
+    /* Deselect State */
+    --vs-dropdown-option--deselect-bg: var(--danger);
+    --vs-dropdown-option--deselect-color: var(--button-pressed-text);
+
+    /* Transitions */
+    --vs-transition-timing-function: cubic-bezier(1, -0.115, 0.975, 0.855);
+    --vs-transition-duration: 150ms;
+
+    /* Popper styling */
+    --popper-theme-background-color: var(--primary-bg);
+    --popper-theme-padding: 6px;
+    --popper-theme-text-color: var(--primary-text);
+    --popper-theme-border-radius: 6px;
+    --popper-theme-border-width: 1px;
+    --popper-theme-border-style: solid;
+    --popper-theme-border-color: var(--border-lines);
+    --popper-theme-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+
+    .vs__dropdown-toggle {
+        background: var(--primary-bg);
+    }
+
+    .popper {
+        transition: background 250ms ease-in-out;
+        background: var(--popper-theme-background-color);
+        padding: var(--popper-theme-padding);
+        color: var(--popper-theme-text-color);
+        border-radius: var(--popper-theme-border-radius);
+        border-width: var(--popper-theme-border-width);
+        border-style: var(--popper-theme-border-style);
+        border-color: var(--popper-theme-border-color);
+        box-shadow: var(--popper-theme-box-shadow);
+        /*z-index: v-bind(zIndex);*/
+    }
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity 0.2s ease;
+    }
+
+    .fade-enter-from, .fade-leave-to {
+        opacity: 0;
+    }
+
+    #arrow,
+    #arrow::before {
+        transition: background 250ms ease-in-out;
+        position: absolute;
+        width: calc(10px - var(--popper-theme-border-width, 0px));
+        height: calc(10px - var(--popper-theme-border-width, 0px));
+        box-sizing: border-box;
+        background: var(--primary-bg);
+    }
+
+    #arrow {
+        visibility: hidden;
+    }
+
+    #arrow::before {
+        visibility: visible;
+        content: "";
+        transform: rotate(45deg);
+    }
+
+    /* Top arrow */
+    .popper[data-popper-placement^="top"] > #arrow {
+        bottom: -5px;
+    }
+
+    .popper[data-popper-placement^="top"] > #arrow::before {
+        border-right: var(--popper-theme-border-width)
+        var(--popper-theme-border-style) var(--popper-theme-border-color);
+        border-bottom: var(--popper-theme-border-width)
+        var(--popper-theme-border-style) var(--popper-theme-border-color);
+    }
+
+    /* Bottom arrow */
+    .popper[data-popper-placement^="bottom"] > #arrow {
+        top: -5px;
+    }
+
+    .popper[data-popper-placement^="bottom"] > #arrow::before {
+        border-left: var(--popper-theme-border-width)
+        var(--popper-theme-border-style) var(--popper-theme-border-color);
+        border-top: var(--popper-theme-border-width)
+        var(--popper-theme-border-style) var(--popper-theme-border-color);
+    }
+
+    /* Left arrow */
+    .popper[data-popper-placement^="left"] > #arrow {
+        right: -5px;
+    }
+
+    .popper[data-popper-placement^="left"] > #arrow::before {
+        border-right: var(--popper-theme-border-width)
+        var(--popper-theme-border-style) var(--popper-theme-border-color);
+        border-top: var(--popper-theme-border-width)
+        var(--popper-theme-border-style) var(--popper-theme-border-color);
+    }
+
+    /* Right arrow */
+    .popper[data-popper-placement^="right"] > #arrow {
+        left: -5px;
+    }
+
     .draggable-area {
         background-color: var(--secondary-bg);
         border-right: 1px solid var(--border-lines);

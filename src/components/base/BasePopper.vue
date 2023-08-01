@@ -1,19 +1,8 @@
 <template>
-    <Popper>
-        <template #content>
-            <div style="background-color: white; border-radius: 4px; border: 1px solid grey">
-                <slot name="content" />
-            </div>
-        </template>
+    <Popper v-bind="$attrs" arrow>
         <slot />
+        <template #content="props">
+            <slot name="content" v-bind="props" />
+        </template>
     </Popper>
 </template>
-
-<script lang="ts" setup>
-
-
-</script>
-
-<style scoped>
-
-</style>

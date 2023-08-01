@@ -3,11 +3,11 @@ import Popper from 'vue3-popper'
 import 'construct-style-sheets-polyfill'
 import { twind, cssom, observe } from '@twind/core'
 import styles from '@/styles/style.css?inline'
+import selectStyles from 'vue-select/dist/vue-select.css?inline'
 
 import config from 'root/twind.config'
 import type { Widget as InternalWidget, IWidgetAttributes, IWidgetAppProps } from '@/types/internal'
 import type { Widget as PublicWidget } from '@/types/public-api'
-import { getThemeWithDefaults } from '@/utils/validate'
 import { dragStart, drag, dragEnd, updatePositionOnResize } from '@/utils/dragDrop'
 
 import App from '@/App.vue'
@@ -15,6 +15,7 @@ import { ActiveTabPlugin } from '@/plugins/activeTabPlugin'
 
 const cssStyleSheet = new CSSStyleSheet()
 cssStyleSheet.insertRule(styles)
+cssStyleSheet.insertRule(`* { ${selectStyles} }`)
 const sheet = cssom(cssStyleSheet)
 const tw = twind(config, sheet)
 
@@ -72,7 +73,6 @@ export class OpenSIPSWidget extends HTMLElement implements IWidgetAttributes {
         observe(tw, shadowRoot)
 
         const appProps: IWidgetAppProps = {
-            theme: getThemeWithDefaults(this.theme),
             dispatchActionEvent: this.dispatchActionEvent,
             dragStart: this.dragStart
         }

@@ -6,7 +6,7 @@
 
 <script lang="ts" setup>
 import type { IWidgetAppProps } from '@/types/internal'
-import DragDrop from '@/assets/icons/dragdrop.svg'
+import DragDrop from '@/assets/icons/dragdrop.svg?component'
 
 const props = defineProps<IWidgetAppProps>()
 
