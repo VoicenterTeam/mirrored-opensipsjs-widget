@@ -1,18 +1,23 @@
 import { ref } from 'vue'
 import OpenSIPSJS from '@voicenter-team/opensips-js'
-import type { IOpenSIPSJSOptions } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { IOpenSIPSJSOptions, ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import type { ISIPSCredentials, IWidgetExternalAPI } from '@/types/public-api'
-import type { DoHoldFunctionType } from '@/types/opensips'
+import type { AllActiveCallsType, DoHoldFunctionType, CallTimeType } from '@/types/opensips'
 
 let opensipsjs: OpenSIPSJS
 
 export const isOpenSIPSReady = ref<boolean>(false)
+
+/* Device management */
 export const activeInputDevice = ref<string>('')
 export const inputDevicesList = ref<Array<MediaDeviceInfo>>([])
 export const activeOutputDevice = ref<string>('')
 export const outputDevicesList = ref<Array<MediaDeviceInfo>>([])
 export const ringingDevicesList = ref<Array<MediaDeviceInfo>>([])
 export const activeRingingDevice = ref<string>('default')
+
+/* Calls management */
+export const allActiveCalls = ref<AllActiveCallsType>({})
 
 /**
  * Helper function to check if OpenSIPSJS is initialized (instance is created)
@@ -38,6 +43,69 @@ function makeOpenSIPSJSOptions (credentials: ISIPSCredentials): IOpenSIPSJSOptio
             pcConfig: {},
         },
     }
+}
+
+interface CallTimeIntervalsType {
+    [key: string]: any
+}
+
+export const callTimes = ref<CallTimeType>({})
+const callTimeIntervals = ref<CallTimeIntervalsType>({})
+
+function updateCallTime (callId: string) {
+    const prevTime = callTimes.value[callId] || 0
+    callTimes.value = {
+        ...callTimes.value,
+        [callId]: prevTime + 1
+    }
+}
+
+function removeCallTime (callId: string) {
+    delete callTimes.value[callId]
+}
+
+function setCallInterval (callId: string, interval: any) {
+    callTimeIntervals.value = {
+        ...callTimeIntervals.value,
+        [callId]: interval
+    }
+}
+function removeOldCallTimes (calls: Array<ICall>) {
+    const ids = calls.map(call => call._id)
+
+    ids.forEach(id => {
+        clearInterval(id)
+        removeCallTime(id)
+    })
+
+
+}
+
+function processCallsTime (calls: AllActiveCallsType) {
+    const removedCalls = Object.values(allActiveCalls.value).filter(oldCall => {
+        return !Object.values(calls).some(newCall => {
+            return newCall._id === oldCall._id
+        })
+    })
+
+    removeOldCallTimes(removedCalls)
+
+    const newCalls = Object.values(calls).filter(call => {
+        return !Object.values(allActiveCalls.value).some(existingCall => {
+            return existingCall._id === call._id
+        })
+    })
+
+    console.log('newCallIds', newCalls)
+
+    if (!newCalls.length) {
+        return
+    }
+
+    newCalls.forEach(call => {
+        const interval = setInterval(() => updateCallTime(call._id), 1000)
+        setCallInterval(call._id, interval)
+    })
 }
 
 /**
@@ -76,6 +144,13 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
 
             ringingDevicesList.value = [ ...outputDevices ]
         })
+        .on('changeActiveCalls', (calls: AllActiveCallsType) => {
+            processCallsTime(calls)
+            console.log('calls', calls)
+            // allActiveCalls.value = {}
+            allActiveCalls.value = { ...calls }
+        })
+
 }
 
 /**
