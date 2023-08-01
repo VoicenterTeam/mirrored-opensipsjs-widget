@@ -33,14 +33,18 @@ export interface ISIPSCredentials {
 export type ColorsType =
     'primary'
     | 'secondary'
+    | 'main-text'
+    | 'secondary-text'
+    | 'button-pressed-text'
+    | 'border-lines'
     | 'primary-bg'
     | 'secondary-bg'
-    | 'primary-text'
-    | 'secondary-text'
+    | 'inactive-bg'
     | 'success'
     | 'danger'
-    | 'border-lines'
-    | 'button-pressed-text'
+    | 'additional-danger-bg'
+    | 'additional-success-bg'
+    | 'additional-bg'
 
 /**
  * Represents the configuration options for the widget theme.

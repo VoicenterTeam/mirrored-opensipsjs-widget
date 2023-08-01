@@ -69,7 +69,7 @@
     /* Popper styling */
     --popper-theme-background-color: var(--primary-bg);
     --popper-theme-padding: 6px;
-    --popper-theme-text-color: var(--primary-text);
+    --popper-theme-text-color: var(--main-text);
     --popper-theme-border-radius: 6px;
     --popper-theme-border-width: 1px;
     --popper-theme-border-style: solid;

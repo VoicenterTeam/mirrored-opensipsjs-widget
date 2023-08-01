@@ -17,7 +17,8 @@ const defaultCallSettings: ICallSettings = {
             display: true,
             mask: true
         }
-    }
+    },
+    shrinkOnIdle: true
 }
 
 export const allowTransfer = ref<boolean>(defaultCallSettings.allowTransfer)
@@ -27,6 +28,7 @@ export const allowOutgoingCalls = ref<boolean>(defaultCallSettings.outgoingCalls
 export const displayCallerInfoName = ref<boolean>(defaultCallSettings.callerInfo.displayName)
 export const displayCallerInfoId = ref<boolean>(defaultCallSettings.callerInfo.callerId.display)
 export const displayCallerInfoIdMask = ref<boolean>(defaultCallSettings.callerInfo.callerId.mask)
+export const allowShrinkOnIdle = ref<boolean>(defaultCallSettings.shrinkOnIdle)
 
 export function setCallSettingsPermissions (settings: ICallSettings) {
     allowTransfer.value = settings.allowTransfer

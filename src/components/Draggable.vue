@@ -1,5 +1,5 @@
 <template>
-    <div className="flex rounded-l-md w-6 cursor-grab draggable-area" @mousedown="onMouseDown">
+    <div className="flex w-6 cursor-grab draggable-area" @mousedown="onMouseDown">
         <DragDrop color="var(--border-lines)" />
     </div>
 </template>

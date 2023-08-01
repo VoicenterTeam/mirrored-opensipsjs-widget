@@ -1,5 +1,5 @@
 <template>
-    <div className="shadow-xl rounded-md flex flex-row border">
+    <div className="shadow-xl rounded-md min-h-[60px] flex flex-row border overflow-hidden">
         <Draggable :dragStart="dragStart" />
         <WidgetContent />
     </div>

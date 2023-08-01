@@ -46,6 +46,7 @@ export interface ICallSettings {
     autoAnswer: IAutoAnswerSettings
     outgoingCalls: boolean
     callerInfo: ICallerInfoSettings
+    shrinkOnIdle: boolean
 }
 
 /**
