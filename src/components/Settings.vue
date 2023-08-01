@@ -1,0 +1,34 @@
+<template>
+    <div className="max-w-[250px]">
+        <!--        <BaseSelect :options="[{label: 'Canada', code: 'ca'}]" />
+        <BaseInput v-model="model" /> {{ model }} -->
+        <MediaDevicesSettings />
+
+        <div class="flex items-center mt-2">
+            <label>
+                <div className="inline-block w-4 h-4 text-primary">
+                    <MicrophoneIcon />
+                </div>
+                Auto answer
+            </label>
+            <div class="inline-block ml-2">
+                <div className="pt-[4px]">
+                    <BaseSwitch v-model="autoAnswerDefaultBehaviour"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script lang="ts" setup>
+import MediaDevicesSettings from '@/components/MediaDevicesSettings.vue'
+import BaseSwitch from '@/components/base/BaseSwitch.vue'
+// import AutoAnswerIcon from '@/assets/icons/autoAnswer.svg?component'
+import MicrophoneIcon from '@/assets/icons/mute.svg?component'
+import { autoAnswerDefaultBehaviour } from '@/composables/useCallSettingsPermissions'
+
+</script>
+
+<style scoped>
+
+</style>

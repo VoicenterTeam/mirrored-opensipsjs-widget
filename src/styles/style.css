@@ -1,5 +1,6 @@
 /*noinspection ALL*/
 * {
+    font-family: sans-serif;
     /* VueSelect styling */
     --vs-colors--light: rgba(60, 60, 60, 0.5);
     --vs-colors--dark: #333;
@@ -169,10 +170,66 @@
         align-items: center;
     }
 
-    .ddicon {
-        color: blue;
-    }
     .action-buttons_wrapper {
         background-color: var(--secondary-bg);
+    }
+
+    /* Toggle */
+    .toggle_el__switch {
+        /*transform: scale(0.4);*/
+        position: relative;
+        display: inline-block;
+        width: 20px; /* 60 */
+        height: 11px; /* 33 */
+    }
+
+    .toggle_el__switch .toggle_el__input {
+        display: none;
+    }
+
+    .toggle_el__slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--danger);
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+    }
+
+    .toggle_el__slider:before {
+        position: absolute;
+        content: "";
+        height: 9px; /* 26 */
+        width: 9px; /* 26 */
+        left: 1px; /* 4 */
+        bottom: 1px; /* 4 */
+        background-color: #fff;
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+    }
+
+    .toggle_el__input:checked + .toggle_el__slider {
+        background-color: var(--success);
+    }
+
+    .toggle_el__input:focus + .toggle_el__slider {
+        box-shadow: 0 0 1px #101010;
+    }
+
+    .toggle_el__input:checked + .toggle_el__slider:before {
+        -webkit-transform: translateX(9px); /* 26 */
+        -ms-transform: translateX(9px); /* 26 */
+        transform: translateX(9px); /* 26 */
+    }
+
+    .toggle_el__slider.round {
+        border-radius: 11px; /* 34 */
+    }
+
+    .toggle_el__slider.round:before {
+        border-radius: 50%;
     }
 }

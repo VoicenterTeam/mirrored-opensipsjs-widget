@@ -11,6 +11,8 @@ export const activeInputDevice = ref<string>('')
 export const inputDevicesList = ref<Array<MediaDeviceInfo>>([])
 export const activeOutputDevice = ref<string>('')
 export const outputDevicesList = ref<Array<MediaDeviceInfo>>([])
+export const ringingDevicesList = ref<Array<MediaDeviceInfo>>([])
+export const activeRingingDevice = ref<string>('default')
 
 /**
  * Helper function to check if OpenSIPSJS is initialized (instance is created)
@@ -58,8 +60,21 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
             const inputDevices = devices.filter(d => d.kind === 'audioinput')
             const outputDevices = devices.filter(d => d.kind === 'audiooutput')
 
-            inputDevicesList.value = [ ...inputDevices ]
-            outputDevicesList.value = [ ...outputDevices ]
+            inputDevicesList.value = [ ...inputDevices ] /*inputDevices.map((d) => ({
+                label: d.label,
+                deviceId: d.deviceId,
+                kind: d.deviceId,
+                groupId: d.deviceId,
+            }))*/
+
+            outputDevicesList.value = [ ...outputDevices ] /*outputDevices.map((d) => ({
+                label: d.label,
+                deviceId: d.deviceId,
+                kind: d.deviceId,
+                groupId: d.deviceId,
+            }))*/
+
+            ringingDevicesList.value = [ ...outputDevices ]
         })
 }
 

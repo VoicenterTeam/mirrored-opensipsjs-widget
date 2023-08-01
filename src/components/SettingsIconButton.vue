@@ -2,10 +2,7 @@
     <div>
         <BasePopper v-model="isPopoverOpened">
             <template #content>
-                <div>
-                    <BaseSelect :options="[{label: 'Canada', code: 'ca'}]" />
-                    <BaseInput v-model="model" /> {{ model }}
-                </div>
+                <Settings />
             </template>
 
             <WidgetIconButton
@@ -22,8 +19,7 @@ import { ref } from 'vue'
 import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
 import SettingsIcon from '@/assets/icons/settings.svg?component'
 import BasePopper from '@/components/base/BasePopper.vue'
-import BaseSelect from '@/components/base/BaseSelect.vue'
-import BaseInput from '@/components/base/BaseInput.vue'
+import Settings from '@/components/Settings.vue'
 
 const props = withDefaults(
     defineProps<{
@@ -33,7 +29,6 @@ const props = withDefaults(
 )
 
 const isPopoverOpened = ref(false)
-const model = ref('')
 
 const openSettingsPopover = () => {
     isPopoverOpened.value = !isPopoverOpened.value
