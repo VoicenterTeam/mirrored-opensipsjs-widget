@@ -6,6 +6,7 @@
             <WidgetIconButton
                 color="primary"
                 :icon="MuteIcon"
+                :pressed-icon="UnMuteIcon"
                 additional-classes="border-r border-border-lines"
                 @click="muteAgentWhenJoin" />
         </div>
@@ -17,6 +18,8 @@
 import SettingsIconButton from '@/components/SettingsIconButton.vue'
 import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
 import MuteIcon from '@/assets/icons/mute.svg?component'
+import UnMuteIcon from '@/assets/icons/unmute.svg?component'
+
 const openSettingsPopover = (event: Event) => {
     event.preventDefault()
 

@@ -13,8 +13,9 @@ import type { Component } from 'vue'
 
 const props = withDefaults(
     defineProps<{
-        color: ColorsType,
-        icon: Component,
+        color: ColorsType
+        manual?: boolean | undefined
+        icon: Component
         // The icon which will be displayed on focus/active state
         pressedIcon?: Component
         pressed?: boolean
@@ -22,7 +23,7 @@ const props = withDefaults(
         additionalClasses?: string
     }>(),
     {
-        pressed: false,
+        pressed: undefined,
         size: 'base',
         additionalClasses: ''
     }
@@ -61,12 +62,20 @@ const buttonClasses = computed(() => {
         ${props.additionalClasses}
     `
 
-    if (props.pressed) {
-        return `
-            ${base}
-            bg-${props.color}
-            text-button-pressed-text
-        `
+    if (props.pressed !== undefined) {
+        if (props.pressed) {
+            return `
+                ${base}
+                bg-${props.color}
+                text-button-pressed-text
+            `
+        } else {
+            return `
+                ${base}
+                bg-secondary-bg
+                text-${props.color}
+            `
+        }
     } else {
         return `
             ${base}
