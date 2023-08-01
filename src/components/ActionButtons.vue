@@ -8,7 +8,7 @@
                 :icon="MuteIcon"
                 :pressed-icon="UnMuteIcon"
                 additional-classes="border-r border-border-lines"
-                @click="muteAgentWhenJoin" />
+                @click="doMuteAgent" />
         </div>
         <slot name="suffix-buttons" />
     </div>
@@ -19,14 +19,17 @@ import SettingsIconButton from '@/components/SettingsIconButton.vue'
 import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
 import MuteIcon from '@/assets/icons/mute.svg?component'
 import UnMuteIcon from '@/assets/icons/unmute.svg?component'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 
+const { muteAgent } = useOpenSIPSJS()
 const openSettingsPopover = (event: Event) => {
     event.preventDefault()
 
 }
 
-const muteAgentWhenJoin = () => {
+const doMuteAgent = () => {
     console.log('mute')
+    muteAgent(true)
 }
 
 </script>

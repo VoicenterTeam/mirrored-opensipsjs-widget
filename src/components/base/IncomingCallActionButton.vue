@@ -14,8 +14,8 @@ import type { Component } from 'vue'
 const props = withDefaults(
     defineProps<{
         color: ColorsType,
-        hoverColor: ColorsType,
         icon: Component,
+        hoverColor?: ColorsType,
         size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | 'xxl'
         additionalClasses?: string
     }>(),
@@ -57,8 +57,8 @@ const buttonClasses = computed(() => {
     return `
         ${base}
         text-${props.color}
-        focus:text-${props.hoverColor}
-        hover:text-${props.hoverColor}
+        focus:text-${props.hoverColor || props.color}
+        hover:text-${props.hoverColor || props.color}
     `
 })
 </script>

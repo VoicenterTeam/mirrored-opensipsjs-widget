@@ -18,7 +18,7 @@ const defaultCallSettings: ICallSettings = {
             mask: true
         }
     },
-    shrinkOnIdle: true
+    shrinkOnIdle: false
 }
 
 export const allowTransfer = ref<boolean>(defaultCallSettings.allowTransfer)
