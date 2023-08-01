@@ -8,7 +8,7 @@
             <WidgetIconButton
                 color="primary"
                 :icon="SettingsIcon"
-                :button-classes="props.buttonClasses"
+                :additional-classes="props.buttonClasses"
                 @click="openSettingsPopover" />
         </BasePopper>
     </div>

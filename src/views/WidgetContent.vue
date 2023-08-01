@@ -1,6 +1,6 @@
 <template>
     <div>
-        <NotInitializedView v-if="true" />
+        <NotInitializedView v-if="false" />
         <InitializedView v-else />
     </div>
 </template>

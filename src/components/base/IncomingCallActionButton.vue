@@ -14,15 +14,12 @@ import type { Component } from 'vue'
 const props = withDefaults(
     defineProps<{
         color: ColorsType,
+        hoverColor: ColorsType,
         icon: Component,
-        // The icon which will be displayed on focus/active state
-        pressedIcon?: Component
-        pressed?: boolean
         size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | 'xxl'
         additionalClasses?: string
     }>(),
     {
-        pressed: false,
         size: 'base',
         additionalClasses: ''
     }
@@ -30,11 +27,7 @@ const props = withDefaults(
 
 // Computed
 const icon = computed(() => {
-    if (props.pressed && props.pressedIcon) {
-        return props.pressedIcon
-    } else {
-        return props.icon
-    }
+    return props.icon
 })
 const iconSize = computed(() => {
     switch (props.size) {
@@ -61,22 +54,11 @@ const buttonClasses = computed(() => {
         ${props.additionalClasses}
     `
 
-    if (props.pressed) {
-        return `
-            ${base}
-            bg-${props.color}
-            text-button-pressed-text
-        `
-    } else {
-        return `
-            ${base}
-            bg-secondary-bg
-            text-${props.color}
-            focus:bg-${props.color}
-            focus:text-button-pressed-text
-            hover:bg-${props.color}
-            hover:text-button-pressed-text
-        `
-    }
+    return `
+        ${base}
+        text-${props.color}
+        focus:text-${props.hoverColor}
+        hover:text-${props.hoverColor}
+    `
 })
 </script>
