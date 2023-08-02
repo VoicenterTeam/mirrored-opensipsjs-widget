@@ -1,7 +1,7 @@
 <template>
     <div className="flex">
         <div className="flex items-center mx-4">
-            {{ callerNumber }}
+            3809365434356<!--            {{ callerNumber }}-->
         </div>
         <div className="flex items-center mx-4">
             <IncomingCallActionButton
@@ -44,6 +44,10 @@
                 size="xxl"
                 @click="declineIncomingCall" />
         </div>
+
+        <div>
+            <CallOptionsIconButton @transfer-click="onTransferClick" />
+        </div>
     </div>
 
 </template>
@@ -56,10 +60,14 @@ import OnHoldIcon from '@/assets/icons/onHold.svg?component'
 import MuteIcon from '@/assets/icons/mute.svg?component'
 import UnmuteIcon from '@/assets/icons/unmute.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
+import CallOptionsIconButton from '@/components/CallOptionsIconButton.vue'
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import { useOpenSIPSJS, callTimes } from '@/composables/opensipsjs'
 import { computed, onMounted, ref } from 'vue'
 import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
+
+import MoveToCallIcon from '@/assets/icons/moveToCall.svg?component'
+import TransferIcon from '@/assets/icons/transfer.svg?component'
 
 const { terminateCall, holdCall, muteCaller } = useOpenSIPSJS()
 
@@ -69,6 +77,10 @@ const props = withDefaults(
     }>(),
     {}
 )
+
+const emit = defineEmits<{
+    (e: 'transfer-click', callId: string): void
+}>()
 
 const isOnLocalHold = ref<boolean>(false)
 
@@ -103,11 +115,15 @@ const callerNumber = computed(() => {
     return props.call?._remote_identity._uri._user as string
 })
 
-onMounted(() => {
+const onTransferClick = () => {
+    emit('transfer-click', props.call._id)
+}
+
+/*onMounted(() => {
     if (props.call) {
         isOnLocalHold.value = props.call.isOnHold().local
     }
-})
+})*/
 
 </script>
 
