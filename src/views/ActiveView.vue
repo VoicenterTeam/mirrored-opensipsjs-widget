@@ -11,7 +11,7 @@
             v-if="transferringCall"
             :call-id="transferringCall"
             @transfer="onCallTransfer"
-            @cancel="cancelTransfering"
+            @cancel="cancelTransferring"
         />
         <div v-if="!isAnyActiveCall">
             <div className="flex min-h-[32px] justify-center items-center">
@@ -59,10 +59,9 @@ const incomingAnsweredCall = computed(() => {
 
 const onTransferClick = (callId: string) => {
     transferringCall.value = callId
-    // showTransfer.value = true
 }
 
-const cancelTransfering = () => {
+const cancelTransferring = () => {
     transferringCall.value = ''
 }
 

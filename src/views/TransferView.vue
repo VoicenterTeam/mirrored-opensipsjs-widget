@@ -1,42 +1,45 @@
 <template>
     <div className="flex justify-around items-center">
-        <div className="flex items-center justify-center uppercase px-2">
-            Transfer
+        <div className="flex items-center justify-center px-2 uppercase text-xxs">
+            <span className="text-center font-bold text-secondary-text">
+                Transfer
+            </span>
         </div>
 
         <div className="px-2">
             <BaseInput v-model="target" />
         </div>
 
-        <div>
-            <IncomingCallActionButton
-                color="success"
-                hover-color="additional-success-bg"
-                :icon="CheckmarkIcon"
-                size="xxl"
-                @click="doTransfer" />
-            <IncomingCallActionButton
-                color="danger"
-                hover-color="additional-danger-bg"
-                :icon="CloseIcon"
-                size="xxl"
-                additional-classes=""
-                @click="cancelTransferring" />
+        <div className="flex p-1">
+            <div className="rounded-l overflow-hidden mr-[2px]">
+                <WidgetIconButton
+                    color="success"
+                    hover-color="additional-success-bg"
+                    :icon="CheckmarkIcon"
+                    size="lg"
+                    @click="doTransfer" />
+            </div>
+            <div className="rounded-r overflow-hidden">
+                <WidgetIconButton
+                    color="danger"
+                    hover-color="additional-danger-bg"
+                    :icon="CloseIcon"
+                    size="lg"
+                    additional-classes=""
+                    @click="cancelTransferring" />
+            </div>
+
+
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
-import type { UnwrapRef } from 'vue'
+import { ref } from 'vue'
 import CheckmarkIcon from '@/assets/icons/checkmark.svg?component'
 import CloseIcon from '@/assets/icons/close.svg?component'
-import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
-import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
-import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import BaseInput from '@/components/base/BaseInput.vue'
-
-const { answerCall, terminateCall } = useOpenSIPSJS()
+import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
 
 const target = ref<string>('')
 
@@ -53,7 +56,6 @@ const emit = defineEmits<{
 }>()
 
 const doTransfer = () => {
-    //console.log('doTransfer', props.call._id)
     if (!target.value) {
         return
     }
@@ -61,13 +63,8 @@ const doTransfer = () => {
 }
 
 const cancelTransferring = () => {
-    //console.log('cancelTransfering', props.call)
     emit('cancel')
 }
-
-const callerNumber = computed(() => {
-    return props.call?._remote_identity._uri._user as string
-})
 
 </script>
 
