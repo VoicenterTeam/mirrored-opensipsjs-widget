@@ -8,7 +8,7 @@ const defaultCallSettings: ICallSettings = {
     allowTransfer: true,
     autoAnswer: {
         allowChange: false,
-        defaultBehavior: true
+        defaultBehavior: false
     },
     outgoingCalls: false,
     callerInfo: {
@@ -38,6 +38,7 @@ export function setCallSettingsPermissions (settings: ICallSettings) {
     displayCallerInfoName.value = settings.callerInfo.displayName
     displayCallerInfoId.value = settings.callerInfo.callerId.display
     displayCallerInfoIdMask.value = settings.callerInfo.callerId.mask
+    allowShrinkOnIdle.value = settings.shrinkOnIdle
 }
 
 export function setColorThemeSettings (settings: IWidgetTheme) {

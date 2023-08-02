@@ -8,13 +8,13 @@
                 color="success"
                 hover-color="additional-success-bg"
                 :icon="CallIcon"
-                size="xxl"
+                size="xxxl"
                 @click="answerIncomingCall" />
             <IncomingCallActionButton
                 color="danger"
                 hover-color="additional-danger-bg"
                 :icon="DeclineIcon"
-                size="xxl"
+                size="xxxl"
                 additional-classes=""
                 @click="declineIncomingCall" />
         </div>
@@ -29,6 +29,8 @@ import IncomingCallActionButton from '@/components/base/IncomingCallActionButton
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import { computed } from 'vue'
+import { getCallerInfo } from '@/helpers/callerHelper'
+import { displayCallerInfoName, displayCallerInfoIdMask } from '@/composables/useCallSettingsPermissions'
 
 const { answerCall, terminateCall } = useOpenSIPSJS()
 
@@ -51,7 +53,9 @@ const declineIncomingCall = () => {
 }
 
 const callerNumber = computed(() => {
-    return props.call?._remote_identity._uri._user as string
+    const cNumber = props.call?._remote_identity._uri._user as string
+    const cName = props.call?._remote_identity._display_name as string
+    return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
 })
 
 </script>

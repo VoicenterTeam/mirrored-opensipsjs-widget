@@ -1,5 +1,5 @@
 <template>
-    <div :className="wrapperClasses">
+    <div className="flex h-full flex-row">
         <div v-if="!allowShrinkOnIdle" className="w-[60px] text-primary p-3">
             <ConnectToServerIcon/>
         </div>
@@ -7,9 +7,6 @@
             <span className="text-center">
                 Not connected to server
             </span>
-        </div>
-        <div v-if="allowShrinkOnIdle" className="bg-secondary-bg">
-            <SettingsIconButton buttonClasses="border-r border-border-lines" />
         </div>
     </div>
 </template>

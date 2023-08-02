@@ -4,6 +4,8 @@ import type { IOpenSIPSJSOptions, ICall } from '@voicenter-team/opensips-js/src/
 import type { ISIPSCredentials, IWidgetExternalAPI } from '@/types/public-api'
 import type { AllActiveCallsType, DoHoldFunctionType, CallTimeType } from '@/types/opensips'
 
+import { autoAnswerDefaultBehaviour } from '@/composables/useCallSettingsPermissions'
+
 let opensipsjs: OpenSIPSJS
 
 export const isOpenSIPSReady = ref<boolean>(false)
@@ -18,6 +20,11 @@ export const activeRingingDevice = ref<string>('default')
 
 /* Calls management */
 export const allActiveCalls = ref<AllActiveCallsType>({})
+
+
+/* Call settings */
+export const isMuted = ref<boolean>(false)
+export const isMuteWhenJoin = ref<boolean>(false)
 
 /**
  * Helper function to check if OpenSIPSJS is initialized (instance is created)
@@ -124,6 +131,12 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
         .on('changeActiveOutputMediaDevice', (value: string) => {
             activeOutputDevice.value = value
         })
+        .on('changeIsMuted', (value: boolean) => {
+            isMuted.value = value
+        })
+        .on('changeMuteWhenJoin', (value: boolean) => {
+            isMuteWhenJoin.value = value
+        })
         .on('changeAvailableDeviceList', (devices: Array<MediaDeviceInfo>) => {
             const inputDevices = devices.filter(d => d.kind === 'audioinput')
             const outputDevices = devices.filter(d => d.kind === 'audiooutput')
@@ -171,6 +184,10 @@ export function registerOpenSIPS (credentials: ISIPSCredentials) {
 
             registerOpenSIPSListeners(opensipsjs)
                 .on('ready', () => {
+                    if (autoAnswerDefaultBehaviour.value) {
+                        opensipsjs.setAutoAnswer(true)
+                    }
+
                     resolve(opensipsjs)
                 })
                 .start()

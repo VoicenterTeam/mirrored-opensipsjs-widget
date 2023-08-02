@@ -61,7 +61,8 @@ The demo application is available [here](https://mirrored-opensipsjs-widget.page
                         display: true,
                         mask: true
                     }
-                }
+                },
+                shrinkOnIdle: false
             }
 
             const widgetAPI = await initFunction({

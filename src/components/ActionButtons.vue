@@ -6,6 +6,7 @@
             <WidgetIconButton
                 color="primary"
                 :icon="MuteIcon"
+                :pressed="isAgentMuted"
                 :pressed-icon="UnMuteIcon"
                 additional-classes="border-r border-border-lines"
                 @click="doMuteAgent" />
@@ -15,22 +16,34 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted, ref, computed } from 'vue'
 import SettingsIconButton from '@/components/SettingsIconButton.vue'
 import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
 import MuteIcon from '@/assets/icons/mute.svg?component'
 import UnMuteIcon from '@/assets/icons/unmute.svg?component'
-import { useOpenSIPSJS } from '@/composables/opensipsjs'
+import { useOpenSIPSJS, isMuted, isMuteWhenJoin, allActiveCalls } from '@/composables/opensipsjs'
 
-const { muteAgent } = useOpenSIPSJS()
-const openSettingsPopover = (event: Event) => {
-    event.preventDefault()
+const { muteAgent, opensipsjs } = useOpenSIPSJS()
 
-}
+const isAgentMuted = computed(() => {
+    if (!Object.values(allActiveCalls.value).length) {
+        return isMuteWhenJoin.value
+    } else {
+        return isMuted.value
+    }
+})
 
 const doMuteAgent = () => {
-    console.log('mute')
-    muteAgent(true)
+    if (!Object.values(allActiveCalls.value).length) {
+        opensipsjs.setMuteWhenJoin(!isAgentMuted.value)
+    } else {
+        muteAgent(!isAgentMuted.value)
+    }
 }
+
+onMounted(() => {
+    opensipsjs.muteWhenJoin
+})
 
 </script>
 

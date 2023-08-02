@@ -1,9 +1,11 @@
 <template>
     <div className="flex">
-        <div className="flex items-center mx-4">
-            3809365434356<!--            {{ callerNumber }}-->
+        <div className="flex items-center w-[92px] mx-3">
+            <span className="text-xs text-main-text font-medium">
+                {{ callerNumber }}
+            </span>
         </div>
-        <div className="flex items-center mx-4">
+        <div className="flex items-center mx-1">
             <IncomingCallActionButton
                 v-if="!isOnLocalHold"
                 color="primary"
@@ -17,7 +19,7 @@
                 size="xl"
                 @click="unHoldCall" />
         </div>
-        <div className="flex items-center mx-4">
+        <div className="flex items-center mx-1">
             <IncomingCallActionButton
                 v-if="!props.call.localMuted"
                 color="primary"
@@ -32,20 +34,22 @@
                 @click="unmuteCaller" />
         </div>
 
-        <div className="flex items-center mx-4">
-            {{ callTime }}
+        <div className="flex items-center mx-2">
+            <span className="text-xs text-main-text font-medium">
+                {{ callTime }}
+            </span>
         </div>
 
-        <div>
+        <div className="mx-2">
             <IncomingCallActionButton
                 color="danger"
                 hover-color="additional-danger-bg"
                 :icon="DeclineIcon"
-                size="xxl"
+                size="xxxl"
                 @click="declineIncomingCall" />
         </div>
 
-        <div>
+        <div v-if="allowTransfer">
             <CallOptionsIconButton @transfer-click="onTransferClick" />
         </div>
     </div>
@@ -68,6 +72,8 @@ import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
 
 import MoveToCallIcon from '@/assets/icons/moveToCall.svg?component'
 import TransferIcon from '@/assets/icons/transfer.svg?component'
+import { allowTransfer, displayCallerInfoIdMask, displayCallerInfoName } from '@/composables/useCallSettingsPermissions'
+import { getCallerInfo } from '@/helpers/callerHelper'
 
 const { terminateCall, holdCall, muteCaller } = useOpenSIPSJS()
 
@@ -112,7 +118,9 @@ const declineIncomingCall = () => {
 }
 
 const callerNumber = computed(() => {
-    return props.call?._remote_identity._uri._user as string
+    const cNumber = props.call?._remote_identity._uri._user as string
+    const cName = props.call?._remote_identity._display_name as string
+    return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
 })
 
 const onTransferClick = () => {

@@ -22,7 +22,7 @@
                 {{ item.label }}
             </option>
         </select>
-        <label>
+        <!--        <label>
             <div className="inline-block w-4 h-4 text-primary mt-2">
                 <SoundOnIcon />
             </div>
@@ -32,7 +32,7 @@
             <option v-for="(item, key) in ringingDevicesList" :key="key" :value="item.deviceId">
                 {{ item.label }}
             </option>
-        </select>
+        </select>-->
     </div>
 </template>
 <script setup lang="ts">
@@ -51,9 +51,4 @@ import MicrophoneIcon from '@/assets/icons/mute.svg?component'
 import HeadphonesIcon from '@/assets/icons/headphones.svg?component'
 import SoundOnIcon from '@/assets/icons/soundOn.svg?component'
 
-const sValue = ref<string | undefined>(undefined)
-
-const onChange = (val) => {
-    console.log('change', val)
-}
 </script>

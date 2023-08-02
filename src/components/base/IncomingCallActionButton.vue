@@ -16,7 +16,7 @@ const props = withDefaults(
         color: ColorsType,
         icon: Component,
         hoverColor?: ColorsType,
-        size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | 'xxl'
+        size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | 'xxl' | 'xxxl'
         additionalClasses?: string
     }>(),
     {
@@ -42,6 +42,8 @@ const iconSize = computed(() => {
         case 'xl':
             return 'w-6 h-6'
         case 'xxl':
+            return 'w-7 h-7'
+        case 'xxxl':
             return 'w-8 h-8'
         default:
             return 'w-4 h-4'
@@ -49,7 +51,7 @@ const iconSize = computed(() => {
 })
 const buttonClasses = computed(() => {
     let base = `
-        p-1.5
+        p-1
         pointer
         ${props.additionalClasses}
     `

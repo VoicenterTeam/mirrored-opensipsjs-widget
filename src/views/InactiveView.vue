@@ -1,22 +1,22 @@
 <template>
-    <div :className="wrapperClasses">
-        <div v-if="!allowShrinkOnIdle" className="w-[60px] text-primary p-1 ml-3">
+    <div className="flex bg-inactive-bg h-[60px] flex-row">
+        <div :className="activateButtonClasses">
             <!--            <ConnectToServerIcon/>-->
             <WidgetIconButton
-                color="secondary"
+                color="success"
                 :icon="StartIcon"
                 size="xl"
-                additional-classes="rounded-full p-3"
+                additional-classes="rounded-full p-3.5"
                 @click="activateTab" />
         </div>
-        <div :className="`flex items-center justify-center uppercase ${messageFontClasses}`">
-            <span className="text-center font-bold text-secondary-text">
+        <div v-if="!allowShrinkOnIdle" :className="`flex items-center px-4 justify-start uppercase w-[270px]`">
+            <span className="text-center font-bold text-button-pressed-text">
                 Activate
             </span>
         </div>
-        <div v-if="allowShrinkOnIdle" className="bg-secondary-bg">
+        <!--        <div v-if="allowShrinkOnIdle" className="bg-secondary-bg">
             <SettingsIconButton buttonClasses="border-r border-border-lines" />
-        </div>
+        </div>-->
     </div>
 </template>
 
@@ -30,6 +30,17 @@ import { useActiveTab } from '@/plugins/activeTabPlugin'
 import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
 
 const { activateTab } = useActiveTab()
+
+const activateButtonClasses = computed(() => {
+    let classes = 'text-primary p-1 '
+    if (allowShrinkOnIdle.value) {
+        classes += 'px-8'
+    } else {
+        classes += 'px-4'
+    }
+
+    return classes
+})
 
 const wrapperClasses = computed(() => {
     let classes = 'flex h-full '

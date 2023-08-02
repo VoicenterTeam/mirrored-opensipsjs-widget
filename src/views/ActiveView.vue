@@ -32,7 +32,7 @@ import ActiveCallView from '@/components/views/active/ActiveCallView.vue'
 
 import { allActiveCalls, useOpenSIPSJS } from '@/composables/opensipsjs'
 
-const { transferCall } = useOpenSIPSJS()
+const { transferCall, answerCall, opensipsjs } = useOpenSIPSJS()
 
 const transferringCall = ref<string>('')
 
@@ -44,6 +44,13 @@ const incomingUnansweredCall = computed(() => {
     const incomingCallObject = Object.values(allActiveCalls.value).find((call) => {
         return call.direction === 'incoming' && !call._is_confirmed && !call._is_canceled
     })
+
+    console.log('opensipsjs.autoAnswer', opensipsjs.autoAnswer)
+    console.log('incomingCallObject', incomingCallObject)
+    if (opensipsjs.autoAnswer && incomingCallObject) {
+        answerCall(incomingCallObject._id)
+        return undefined
+    }
 
     return incomingCallObject
 })

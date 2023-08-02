@@ -21,6 +21,7 @@ export default defineConfig({
             colors
         },
         fontSize: {
+            xs: '12px',
             xxs: '10px'
         }
     }

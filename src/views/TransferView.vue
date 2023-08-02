@@ -28,8 +28,6 @@
                     additional-classes=""
                     @click="cancelTransferring" />
             </div>
-
-
         </div>
     </div>
 </template>

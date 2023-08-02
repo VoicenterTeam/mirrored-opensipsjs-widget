@@ -19,7 +19,7 @@ const props = withDefaults(
         // The icon which will be displayed on focus/active state
         pressedIcon?: Component
         pressed?: boolean
-        size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | 'xxl'
+        size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | 'xxl' | 'xxxl'
         additionalClasses?: string
     }>(),
     {
@@ -50,6 +50,8 @@ const iconSize = computed(() => {
         case 'xl':
             return 'w-6 h-6'
         case 'xxl':
+            return 'w-7 h-7'
+        case 'xxxl':
             return 'w-8 h-8'
         default:
             return 'w-4 h-4'
