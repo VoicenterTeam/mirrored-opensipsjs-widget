@@ -185,7 +185,7 @@ export function registerOpenSIPS (credentials: ISIPSCredentials) {
             registerOpenSIPSListeners(opensipsjs)
                 .on('ready', () => {
                     if (autoAnswerDefaultBehaviour.value) {
-                        opensipsjs.setAutoAnswer(true)
+                        opensipsjs.autoAnswer = true
                     }
 
                     resolve(opensipsjs)
