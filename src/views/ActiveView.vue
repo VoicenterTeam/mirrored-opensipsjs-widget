@@ -1,12 +1,12 @@
 <template>
-    <div className="min-h-[60px] min-w-[354px]">
+    <div :className="wrapperClasses">
         <RingingView v-if="incomingUnansweredCall" :call="incomingUnansweredCall" />
         <ActiveCallView
             v-if="incomingAnsweredCall"
             v-show="!transferringCall"
             :call="incomingAnsweredCall"
             @transfer-click="onTransferClick"
-        /> <!--incomingAnsweredCall-->
+        />
         <TransferView
             v-if="transferringCall"
             :call-id="transferringCall"
@@ -24,12 +24,13 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
+import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import ActionButtons from '@/components/ActionButtons.vue'
 import VoicenterIcon from '@/assets/icons/voicenter.svg?component'
 import TransferView from '@/views/TransferView.vue'
 import RingingView from '@/views/RingingView.vue'
 import ActiveCallView from '@/components/views/active/ActiveCallView.vue'
-
+import { allowShrinkOnIdle } from '@/composables/useCallSettingsPermissions'
 import { allActiveCalls, useOpenSIPSJS } from '@/composables/opensipsjs'
 
 const { transferCall, answerCall, opensipsjs } = useOpenSIPSJS()
@@ -41,12 +42,10 @@ const isAnyActiveCall = computed(() => {
 })
 
 const incomingUnansweredCall = computed(() => {
-    const incomingCallObject = Object.values(allActiveCalls.value).find((call) => {
+    const incomingCallObject = Object.values(allActiveCalls.value).find((call: ICall) => {
         return call.direction === 'incoming' && !call._is_confirmed && !call._is_canceled
     })
 
-    console.log('opensipsjs.autoAnswer', opensipsjs.autoAnswer)
-    console.log('incomingCallObject', incomingCallObject)
     if (opensipsjs.autoAnswer && incomingCallObject) {
         answerCall(incomingCallObject._id)
         return undefined
@@ -56,12 +55,20 @@ const incomingUnansweredCall = computed(() => {
 })
 
 const incomingAnsweredCall = computed(() => {
-    const incomingCallObject = Object.values(allActiveCalls.value).find((call) => {
+    const incomingCallObject = Object.values(allActiveCalls.value).find((call: ICall) => {
         return call.direction === 'incoming' && call._is_confirmed
     })
 
-    console.log('incomingAnsweredCall', incomingCallObject)
     return incomingCallObject
+})
+
+const wrapperClasses = computed(() => {
+    const baseClasses = 'min-h-[60px]'
+    if (allowShrinkOnIdle.value && !isAnyActiveCall.value) {
+        return `${baseClasses} min-w-[116px]`
+    } else {
+        return `${baseClasses} min-w-[354px]`
+    }
 })
 
 const onTransferClick = (callId: string) => {

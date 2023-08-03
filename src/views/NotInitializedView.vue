@@ -16,18 +16,6 @@ import { computed } from 'vue'
 import ConnectToServerIcon from '@/assets/icons/connectToServer.svg?component'
 
 import { allowShrinkOnIdle } from '@/composables/useCallSettingsPermissions'
-import SettingsIconButton from '@/components/SettingsIconButton.vue'
-
-const wrapperClasses = computed(() => {
-    let classes = 'flex h-full'
-    if (allowShrinkOnIdle.value) {
-        classes += ' flex-col'
-    } else {
-        classes += 'flex-row'
-    }
-
-    return classes
-})
 
 const messageFontClasses = computed(() => {
     if (allowShrinkOnIdle.value) {

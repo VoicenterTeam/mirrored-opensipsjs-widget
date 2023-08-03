@@ -31,20 +31,14 @@
 import MoveToCallIcon from '@/assets/icons/moveToCall.svg?component'
 import TransferIcon from '@/assets/icons/transfer.svg?component'
 
-import MuteIcon from '@/assets/icons/mute.svg?component'
 import { allowTransfer } from '@/composables/useCallSettingsPermissions'
 
 const emit = defineEmits<{
     (e: 'transfer-click'): void
 }>()
 
-const onCallMove = () => {
-    console.log('move')
-}
 const onTransferClick = () => {
     emit('transfer-click')
-    console.log('transfer')
-
 }
 
 

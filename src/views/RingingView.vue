@@ -42,13 +42,11 @@ const props = withDefaults(
 )
 
 const answerIncomingCall = () => {
-    console.log('answer', props.call._id)
     answerCall(props.call._id)
 
 }
 
 const declineIncomingCall = () => {
-    console.log('decline', props.call)
     terminateCall(props.call._id)
 }
 
