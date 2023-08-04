@@ -1,19 +1,19 @@
 <template>
     <div className="">
         <ul>
-            <!--            <li className="h-8 cursor-pointer hover:bg-secondary-bg p-2" @click="onCallMove">
-                <div className="inline-block">
+            <li className="h-8 cursor-pointer hover:bg-secondary-bg p-2" @click="onMoveClick">
+                <!--                <div className="inline-block">
                     <div className="w-4 h-4 text-primary">
                         <MoveToCallIcon />
                     </div>
 
-                </div>
+                </div>-->
 
                 <span>
-                    Move the Call
+                    Move Call
                 </span>
 
-            </li>-->
+            </li>
             <li v-if="allowTransfer" className="h-8 cursor-pointer hover:bg-secondary-bg p-2" @click="onTransferClick" >
                 <!--                <div className="inline-block w-4 h-4 text-primary">
                     <TransferIcon />
@@ -35,10 +35,15 @@ import { allowTransfer } from '@/composables/useCallSettingsPermissions'
 
 const emit = defineEmits<{
     (e: 'transfer-click'): void
+    (e: 'move-click'): void
 }>()
 
 const onTransferClick = () => {
     emit('transfer-click')
+}
+
+const onMoveClick = () => {
+    emit('move-click')
 }
 
 

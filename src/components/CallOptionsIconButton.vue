@@ -2,7 +2,7 @@
     <div>
         <BasePopper v-model="isPopoverOpened">
             <template #content>
-                <CallOptionsContent @transfer-click="onTransferClick" />
+                <CallOptionsContent @transfer-click="onTransferClick" @move-click="onMoveClick" />
             </template>
 
             <WidgetIconButton
@@ -31,6 +31,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
     (e: 'transfer-click'): void
+    (e: 'move-click'): void
 }>()
 
 const isPopoverOpened = ref(false)
@@ -41,6 +42,10 @@ const openOptionsPopover = () => {
 
 const onTransferClick = () => {
     emit('transfer-click')
+}
+
+const onMoveClick = () => {
+    emit('move-click')
 }
 </script>
 

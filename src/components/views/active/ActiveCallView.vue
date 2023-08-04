@@ -50,7 +50,7 @@
         </div>
 
         <div v-if="allowTransfer">
-            <CallOptionsIconButton @transfer-click="onTransferClick" />
+            <CallOptionsIconButton @transfer-click="onTransferClick" @move-click="onMoveClick" />
         </div>
     </div>
 
@@ -86,6 +86,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
     (e: 'transfer-click', callId: string): void
+    (e: 'move-click', callId: string): void
 }>()
 
 const isOnLocalHold = ref<boolean>(false)
@@ -114,6 +115,7 @@ const unmuteCaller = () => {
 }
 
 const declineIncomingCall = () => {
+    console.log('declineIncomingCall', props.call._id)
     terminateCall(props.call._id)
 }
 
@@ -127,11 +129,15 @@ const onTransferClick = () => {
     emit('transfer-click', props.call._id)
 }
 
-/*onMounted(() => {
+const onMoveClick = () => {
+    emit('move-click', props.call._id)
+}
+
+onMounted(() => {
     if (props.call) {
         isOnLocalHold.value = props.call.isOnHold().local
     }
-})*/
+})
 
 </script>
 

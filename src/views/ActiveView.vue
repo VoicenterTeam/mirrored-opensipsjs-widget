@@ -1,12 +1,13 @@
 <template>
     <div :className="wrapperClasses">
         <RingingView v-if="incomingUnansweredCall" :call="incomingUnansweredCall" />
-        <ActiveCallView
-            v-if="incomingAnsweredCall"
+        <!--        <ActiveCallView
+            v-if="activeCall"
             v-show="!transferringCall"
-            :call="incomingAnsweredCall"
+            :call="activeCall"
             @transfer-click="onTransferClick"
-        />
+        />-->
+        <ActiveCallsView :calls="activeCalls" @transfer-click="onTransferClick" @move-click="onMoveClick"/>
         <TransferView
             v-if="transferringCall"
             :call-id="transferringCall"
@@ -32,8 +33,9 @@ import RingingView from '@/views/RingingView.vue'
 import ActiveCallView from '@/components/views/active/ActiveCallView.vue'
 import { allowShrinkOnIdle } from '@/composables/useCallSettingsPermissions'
 import { allActiveCalls, useOpenSIPSJS } from '@/composables/opensipsjs'
+import ActiveCallsView from '@/views/ActiveCallsView.vue'
 
-const { transferCall, answerCall, opensipsjs } = useOpenSIPSJS()
+const { transferCall, answerCall, moveCall, opensipsjs } = useOpenSIPSJS()
 
 const transferringCall = ref<string>('')
 
@@ -42,7 +44,7 @@ const isAnyActiveCall = computed(() => {
 })
 
 const incomingUnansweredCall = computed(() => {
-    const incomingCallObject = Object.values(allActiveCalls.value).find((call: ICall) => {
+    const incomingCallObject: ICall = Object.values(allActiveCalls.value).find((call: ICall) => {
         return call.direction === 'incoming' && !call._is_confirmed && !call._is_canceled
     })
 
@@ -54,12 +56,13 @@ const incomingUnansweredCall = computed(() => {
     return incomingCallObject
 })
 
-const incomingAnsweredCall = computed(() => {
-    const incomingCallObject = Object.values(allActiveCalls.value).find((call: ICall) => {
-        return call.direction === 'incoming' && call._is_confirmed
-    })
+const activeCalls = computed(() => {
+    const activeCallObjects: Array<ICall> = Object.values(allActiveCalls.value)
+        .filter((call: ICall) => {
+            return call._is_confirmed
+        })
 
-    return incomingCallObject
+    return activeCallObjects
 })
 
 const wrapperClasses = computed(() => {
@@ -82,6 +85,10 @@ const cancelTransferring = () => {
 const onCallTransfer = (callId: string, target: string) => {
     transferCall(callId, target)
     transferringCall.value = ''
+}
+
+const onMoveClick = (callId: string) => {
+    moveCall(callId, 1)
 }
 
 </script>

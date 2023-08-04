@@ -1,4 +1,4 @@
-import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { ICall, IRoom } from '@voicenter-team/opensips-js/src/types/rtc'
 
 export type DoHoldFunctionType = {
     callId: string
@@ -7,6 +7,7 @@ export type DoHoldFunctionType = {
 }
 
 export type AllActiveCallsType = { [p: string]: ICall }
+export type AllActiveRoomsType = { [p: number]: IRoom }
 
 export interface CallTimeType {
     [key: string]: number

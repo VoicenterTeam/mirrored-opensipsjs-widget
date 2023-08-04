@@ -1,8 +1,8 @@
 import { ref } from 'vue'
 import OpenSIPSJS from '@voicenter-team/opensips-js'
-import type { IOpenSIPSJSOptions, ICall } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { IOpenSIPSJSOptions, ICall, RoomChangeEmitType } from '@voicenter-team/opensips-js/src/types/rtc'
 import type { ISIPSCredentials, IWidgetExternalAPI } from '@/types/public-api'
-import type { AllActiveCallsType, DoHoldFunctionType, CallTimeType } from '@/types/opensips'
+import type { AllActiveCallsType, DoHoldFunctionType, CallTimeType, AllActiveRoomsType } from '@/types/opensips'
 
 import { autoAnswerDefaultBehaviour } from '@/composables/useCallSettingsPermissions'
 
@@ -20,6 +20,8 @@ export const activeRingingDevice = ref<string>('default')
 
 /* Calls management */
 export const allActiveCalls = ref<AllActiveCallsType>({})
+export const allRooms = ref<AllActiveRoomsType>({})
+export const currentActiveRoom = ref<number | undefined>()
 
 
 /* Call settings */
@@ -160,8 +162,28 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
         .on('changeActiveCalls', (calls: AllActiveCallsType) => {
             processCallsTime(calls)
             console.log('calls', calls)
+            console.log('calls.length', Object.values(calls).length)
             // allActiveCalls.value = {}
             allActiveCalls.value = { ...calls }
+        })
+        .on('addRoom', (data: RoomChangeEmitType) => {
+            const rooms: AllActiveRoomsType = data.roomList
+            allRooms.value = { ...rooms }
+            console.log('addRoom', allRooms.value)
+        })
+        .on('updateRoom', (data: RoomChangeEmitType) => {
+            const rooms: AllActiveRoomsType = data.roomList
+            allRooms.value = { ...rooms }
+            console.log('updateRoom', allRooms.value)
+        })
+        .on('removeRoom', (data: RoomChangeEmitType) => {
+            const rooms: AllActiveRoomsType = data.roomList
+            allRooms.value = { ...rooms }
+            console.log('removeRoom', allRooms.value)
+        })
+        .on('currentActiveRoomChanged', (roomId: number) => {
+            currentActiveRoom.value = roomId
+            console.log('currentActiveRoomChanged', currentActiveRoom.value)
         })
 
 }
