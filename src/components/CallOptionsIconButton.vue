@@ -2,7 +2,11 @@
     <div>
         <BasePopper v-model="isPopoverOpened">
             <template #content>
-                <CallOptionsContent @transfer-click="onTransferClick" @move-click="onMoveClick" />
+                <CallOptionsContent
+                    :is-single-room="props.isSingleRoom"
+                    @transfer-click="onTransferClick"
+                    @move-click="onMoveClick"
+                />
             </template>
 
             <WidgetIconButton
@@ -25,6 +29,7 @@ import CallOptionsContent from '@/components/CallOptionsContent.vue'
 const props = withDefaults(
     defineProps<{
         buttonClasses?: string
+        isSingleRoom: boolean
     }>(),
     {}
 )

@@ -1,25 +1,30 @@
 <template>
     <div :className="wrapperClasses">
         <RingingView v-if="incomingUnansweredCall" :call="incomingUnansweredCall" />
-        <!--        <ActiveCallView
-            v-if="activeCall"
-            v-show="!transferringCall"
-            :call="activeCall"
+        <ActiveCallsView
+            v-show="!transferringCall && !movingCall"
+            :calls="activeCalls"
             @transfer-click="onTransferClick"
-        />-->
-        <ActiveCallsView :calls="activeCalls" @transfer-click="onTransferClick" @move-click="onMoveClick"/>
+            @move-click="onMoveClick"
+        />
         <TransferView
             v-if="transferringCall"
             :call-id="transferringCall"
             @transfer="onCallTransfer"
             @cancel="cancelTransferring"
         />
+        <MoveView
+            v-if="movingCall"
+            :call-id="movingCall"
+            @move="onCallMove"
+            @cancel="cancelMoving"
+        />
         <div v-if="!isAnyActiveCall">
             <div className="flex min-h-[32px] justify-center items-center">
                 <VoicenterIcon />
             </div>
         </div>
-        <ActionButtons v-if="!incomingUnansweredCall"  />
+        <ActionButtons v-if="!incomingUnansweredCall" @merge-click="onCallsMerge"/>
     </div>
 </template>
 
@@ -30,21 +35,22 @@ import ActionButtons from '@/components/ActionButtons.vue'
 import VoicenterIcon from '@/assets/icons/voicenter.svg?component'
 import TransferView from '@/views/TransferView.vue'
 import RingingView from '@/views/RingingView.vue'
-import ActiveCallView from '@/components/views/active/ActiveCallView.vue'
 import { allowShrinkOnIdle } from '@/composables/useCallSettingsPermissions'
 import { allActiveCalls, useOpenSIPSJS } from '@/composables/opensipsjs'
 import ActiveCallsView from '@/views/ActiveCallsView.vue'
+import MoveView from '@/views/MoveView.vue'
 
-const { transferCall, answerCall, moveCall, opensipsjs } = useOpenSIPSJS()
+const { transferCall, answerCall, moveCall, mergeCallsInRoom, opensipsjs } = useOpenSIPSJS()
 
 const transferringCall = ref<string>('')
+const movingCall = ref<string>('')
 
 const isAnyActiveCall = computed(() => {
-    return Object.values(allActiveCalls.value).length > 0
+    return allActiveCalls.value.length > 0
 })
 
 const incomingUnansweredCall = computed(() => {
-    const incomingCallObject: ICall = Object.values(allActiveCalls.value).find((call: ICall) => {
+    const incomingCallObject = allActiveCalls.value.find((call: ICall) => {
         return call.direction === 'incoming' && !call._is_confirmed && !call._is_canceled
     })
 
@@ -57,7 +63,7 @@ const incomingUnansweredCall = computed(() => {
 })
 
 const activeCalls = computed(() => {
-    const activeCallObjects: Array<ICall> = Object.values(allActiveCalls.value)
+    const activeCallObjects: Array<ICall> = allActiveCalls.value
         .filter((call: ICall) => {
             return call._is_confirmed
         })
@@ -82,13 +88,26 @@ const cancelTransferring = () => {
     transferringCall.value = ''
 }
 
+const onMoveClick = (callId: string) => {
+    movingCall.value = callId
+}
+
+const cancelMoving = () => {
+    movingCall.value = ''
+}
+
 const onCallTransfer = (callId: string, target: string) => {
     transferCall(callId, target)
     transferringCall.value = ''
 }
 
-const onMoveClick = (callId: string) => {
-    moveCall(callId, 1)
+const onCallMove = (callId: string, targetRoom: number) => {
+    moveCall(callId, targetRoom)
+    movingCall.value = ''
+}
+
+const onCallsMerge = (roomId: number) => {
+    mergeCallsInRoom(roomId)
 }
 
 </script>

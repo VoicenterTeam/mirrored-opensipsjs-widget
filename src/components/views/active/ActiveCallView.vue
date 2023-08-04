@@ -1,5 +1,5 @@
 <template>
-    <div className="flex">
+    <div :className="wrapperClasses">
         <div className="flex items-center w-[92px] mx-3">
             <span className="text-xs text-main-text font-medium">
                 {{ callerNumber }}
@@ -34,7 +34,7 @@
                 @click="unmuteCaller" />
         </div>
 
-        <div className="flex items-center mx-2">
+        <div className="flex items-center mx-2 w-[46px]">
             <span className="text-xs text-main-text font-medium">
                 {{ callTime }}
             </span>
@@ -49,8 +49,12 @@
                 @click="declineIncomingCall" />
         </div>
 
-        <div v-if="allowTransfer">
-            <CallOptionsIconButton @transfer-click="onTransferClick" @move-click="onMoveClick" />
+        <div v-if="!props.isSingleRoom || props.isSingleRoom && allowTransfer">
+            <CallOptionsIconButton
+                :is-single-room="props.isSingleRoom"
+                @transfer-click="onTransferClick"
+                @move-click="onMoveClick"
+            />
         </div>
     </div>
 
@@ -80,6 +84,9 @@ const { terminateCall, holdCall, muteCaller } = useOpenSIPSJS()
 const props = withDefaults(
     defineProps<{
         call: UnwrapRef<ICall>
+        isFirstCaller: boolean
+        isSingleCall: boolean
+        isSingleRoom: boolean
     }>(),
     {}
 )
@@ -91,11 +98,35 @@ const emit = defineEmits<{
 
 const isOnLocalHold = ref<boolean>(false)
 
+const wrapperClasses = computed(() => {
+    const baseClasses = 'flex border-l'
+
+    if (props.isSingleRoom) {
+        if (props.isSingleCall) {
+            return baseClasses
+        } else {
+            return props.isFirstCaller ? baseClasses : baseClasses + ' border-t'
+        }
+    } else {
+        if (props.isSingleCall) {
+            return baseClasses + ' border-t'
+        } else {
+            return props.isFirstCaller ? baseClasses : baseClasses + ' border-t'
+        }
+    }
+})
 
 const callTime = computed(() => {
     const time = callTimes.value[props.call._id]
     return getFormattedTimeFromSeconds(time)
 })
+
+const callerNumber = computed(() => {
+    const cNumber = props.call?._remote_identity._uri._user as string
+    const cName = props.call?._remote_identity._display_name as string
+    return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
+})
+
 const putOnHold = () => {
     holdCall({ callId: props.call._id, toHold: true })
     isOnLocalHold.value = true
@@ -118,12 +149,6 @@ const declineIncomingCall = () => {
     console.log('declineIncomingCall', props.call._id)
     terminateCall(props.call._id)
 }
-
-const callerNumber = computed(() => {
-    const cNumber = props.call?._remote_identity._uri._user as string
-    const cName = props.call?._remote_identity._display_name as string
-    return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
-})
 
 const onTransferClick = () => {
     emit('transfer-click', props.call._id)

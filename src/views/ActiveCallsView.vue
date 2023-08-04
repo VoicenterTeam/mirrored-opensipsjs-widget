@@ -1,29 +1,27 @@
 <template>
-    <div>
-        <div v-for="room in roomsList" :key="room.roomId">
-            <div className="flex">
-                <RoomButton :room-id="room.roomId" />
-                <div v-if="currentActiveRoom === room.roomId">
-                    <div v-for="call in getCallsInRoom(room.roomId)" :key="call._id">
-                        <ActiveCallView
-                            :call="call"
-                            @transfer-click="onTransferClick"
-                            @move-click="onMoveClick"
-                        />
-                    </div>
+    <div className="flex items-end">
+        <div>
+            <div v-for="room in roomsList" :key="room.roomId">
+                <div>
+                    <RoomButton :room-id="room.roomId" :is-active="room.roomId === currentActiveRoom" />
                 </div>
-                <div v-if="!callsInActiveRoom.length">{{ getFirstCallInInactiveRoom(room.roomId) }}</div>
             </div>
         </div>
+
+        <div>
+            <div v-for="(call, index) in callsInActiveRoom" :key="call._id">
+                <ActiveCallView
+                    :call="call"
+                    :is-single-room="roomsList.length === 1"
+                    :is-single-call="callsInActiveRoom.length === 1"
+                    :is-first-caller="index === 0"
+                    @transfer-click="onTransferClick"
+                    @move-click="onMoveClick"
+                />
+            </div>
+        </div>
+
     </div>
-<!--    <div>
-        <ActiveCallView
-            v-if="activeCall"
-            v-show="!transferringCall"
-            :call="activeCall"
-            @transfer-click="onTransferClick"
-        />
-    </div>-->
 </template>
 
 <script lang="ts" setup>

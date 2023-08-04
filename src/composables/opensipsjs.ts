@@ -19,9 +19,9 @@ export const ringingDevicesList = ref<Array<MediaDeviceInfo>>([])
 export const activeRingingDevice = ref<string>('default')
 
 /* Calls management */
-export const allActiveCalls = ref<AllActiveCallsType>({})
+export const allActiveCalls = ref<Array<ICall>>([])
 export const allRooms = ref<AllActiveRoomsType>({})
-export const currentActiveRoom = ref<number | undefined>()
+export const currentActiveRoom = ref<number | undefined>(undefined)
 
 
 /* Call settings */
@@ -91,7 +91,7 @@ function removeOldCallTimes (calls: Array<ICall>) {
 }
 
 function processCallsTime (calls: AllActiveCallsType) {
-    const removedCalls = Object.values(allActiveCalls.value).filter(oldCall => {
+    const removedCalls = allActiveCalls.value.filter(oldCall => {
         return !Object.values(calls).some(newCall => {
             return newCall._id === oldCall._id
         })
@@ -100,7 +100,7 @@ function processCallsTime (calls: AllActiveCallsType) {
     removeOldCallTimes(removedCalls)
 
     const newCalls = Object.values(calls).filter(call => {
-        return !Object.values(allActiveCalls.value).some(existingCall => {
+        return !allActiveCalls.value.some(existingCall => {
             return existingCall._id === call._id
         })
     })
@@ -164,7 +164,8 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
             console.log('calls', calls)
             console.log('calls.length', Object.values(calls).length)
             // allActiveCalls.value = {}
-            allActiveCalls.value = { ...calls }
+            const parsedCalls = Object.values(calls)
+            allActiveCalls.value = [ ...parsedCalls ]
         })
         .on('addRoom', (data: RoomChangeEmitType) => {
             const rooms: AllActiveRoomsType = data.roomList
@@ -181,7 +182,7 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
             allRooms.value = { ...rooms }
             console.log('removeRoom', allRooms.value)
         })
-        .on('currentActiveRoomChanged', (roomId: number) => {
+        .on('currentActiveRoomChanged', (roomId: number | undefined) => {
             currentActiveRoom.value = roomId
             console.log('currentActiveRoomChanged', currentActiveRoom.value)
         })
