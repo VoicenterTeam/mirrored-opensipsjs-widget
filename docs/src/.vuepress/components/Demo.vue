@@ -28,13 +28,19 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, computed } from 'vue'
-import { OpenSIPSWidget } from '@/widget/OpenSIPSWidget'
 import { useLocalStorage } from '@vueuse/core'
-import { IWidgetExternalAPI } from '@/types/public-api'
+import { IWidgetExternalAPI, IWidgetInit, IWidgetInitOptions } from '@/types/public-api'
+import type { OpenSIPSWidgetElement } from '@/types/opensips-widget'
+
+type Credentials = {
+    username: string
+    password: string
+    domain: string
+}
 
 let widgetAPI: IWidgetExternalAPI | null = null
 const wrapperRef = ref(null)
-const credentials = useLocalStorage(
+const credentials = useLocalStorage<Credentials>(
     'credentials',
     {
         username: '',
@@ -42,7 +48,7 @@ const credentials = useLocalStorage(
         domain: ''
     }
 )
-const loggedIn = useLocalStorage('loggedIn', false)
+const loggedIn = useLocalStorage<boolean>('loggedIn', false)
 
 const credentialsValid = computed(() => {
     return credentials.value.username && credentials.value.password && credentials.value.domain
@@ -75,13 +81,9 @@ function init () {
         return
     }
 
-    if (!customElements.get('opensips-widget')) {
-        customElements.define('opensips-widget', OpenSIPSWidget)
-    }
+    const widgetEl = document.createElement('opensips-widget') as OpenSIPSWidgetElement
 
-    const widgetEl = document.createElement('opensips-widget')
-
-    async function onWidgetInitialized ({ detail: initFunction }) {
+    async function onWidgetInitialized ({ detail: initFunction }: { detail: IWidgetInit }) {
         const themeSettings = {
             colors: {
                 primary: '#1a202c',
@@ -110,13 +112,15 @@ function init () {
             }
         }
 
-        widgetAPI = await initFunction({
+        const initOptions: IWidgetInitOptions = {
             credentials: credentials.value,
             config: {
-                themeSettings,
-                callSettings
+                themeSettings: {},
+                callSettings: {}
             }
-        })
+        }
+
+        widgetAPI = await initFunction(initOptions)
 
         console.log('widgetAPI', widgetAPI)
     }

@@ -31,6 +31,7 @@ export default defineUserConfig({
                 collapsible: false,
                 children: [
                     'demo',
+                    'config',
                     {
                         text: 'API',
                         link: 'api',

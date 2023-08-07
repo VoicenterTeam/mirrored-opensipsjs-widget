@@ -3,14 +3,16 @@
   "version": "0.0.0",
   "private": true,
   "author": "Bohdan Konechnyi",
+  "main": "dist/opensips-widget.es.js",
+  "types": "dist/types/opensips-widget.d.ts",
   "engines": {
     "node": ">= 16"
   },
   "scripts": {
     "dev": "vite",
-    "dev:documentation": "cd docs && npm install && npm run dev",
+    "dev:documentation": "npm run build && cd docs && npm install && npm run dev",
     "build": "run-p type-check build-only",
-    "build:documentation": "cd docs && npm install && npm run build",
+    "build:documentation": "npm run build && cd docs && npm install && npm run build",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
@@ -43,6 +45,7 @@
     "sass": "^1.54.9",
     "typescript": "4.8.4",
     "vite": "^3.2.7",
+    "vite-plugin-static-copy": "^0.17.0",
     "vite-svg-loader": "^4.0.0",
     "vue-tsc": "^0.40.4"
   }

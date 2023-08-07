@@ -1,10 +1,13 @@
 import { ref } from 'vue'
 import OpenSIPSJS from '@voicenter-team/opensips-js'
 import type { IOpenSIPSJSOptions, ICall, RoomChangeEmitType, IRoom } from '@voicenter-team/opensips-js/src/types/rtc'
-import type { ISIPSCredentials, IWidgetExternalAPI } from '@/types/public-api'
+import type { ISIPSCredentials, IWidgetConfigOptions, IWidgetExternalAPI } from '@/types/public-api'
 import type { AllActiveCallsType, DoHoldFunctionType, CallTimeType } from '@/types/opensips'
 
-import { autoAnswerDefaultBehaviour } from '@/composables/useCallSettingsPermissions'
+import {
+    autoAnswerDefaultBehaviour,
+    setConfig
+} from '@/composables/useCallSettingsPermissions'
 
 let opensipsjs: OpenSIPSJS
 
@@ -300,10 +303,17 @@ export function useOpenSIPSJS () {
 /**
  * Build external API for widget
  */
-export function useExternalOpenSIPSJS (): IWidgetExternalAPI {
-    return {
+export function useExternalOpenSIPSJS (config: IWidgetConfigOptions, rootEl: HTMLElement): IWidgetExternalAPI {
+    const widgetAPI: IWidgetExternalAPI = {
         on: opensipsjs.on,
+        setConfig: function (config) {
+            setConfig(config, rootEl)
+
+            return this
+        }
     }
+
+    return widgetAPI.setConfig(config)
 }
 
 export async function onMicrophoneChange (event: Event) {

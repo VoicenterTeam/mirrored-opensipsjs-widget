@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import merge from 'lodash/merge'
 import type { ICallSettings } from '@/types/internal'
-import type { IWidgetTheme } from '@/types/public-api'
+import type { IWidgetConfigOptions, IWidgetTheme } from '@/types/public-api'
 import { defaultTheme } from '@/enum/defaultTheme.enum'
 import { defaultRingingSound } from '@/utils/ringingSound'
 
@@ -16,7 +16,7 @@ const defaultCallSettings: ICallSettings = {
         displayName: true,
         callerId: {
             display: true,
-            mask: true
+            mask: false
         }
     },
     shrinkOnIdle: false,
@@ -33,34 +33,34 @@ export const displayCallerInfoIdMask = ref<boolean>(defaultCallSettings.callerIn
 export const allowShrinkOnIdle = ref<boolean>(defaultCallSettings.shrinkOnIdle)
 export const ringingSoundBase64 = ref<string>(defaultCallSettings.ringingSound)
 
-export function setCallSettingsPermissions (settings: ICallSettings) {
-    allowTransfer.value = settings.allowTransfer
-    allowAutoAnswerSetup.value = settings.autoAnswer.allowChange
-    autoAnswerDefaultBehaviour.value = settings.autoAnswer.defaultBehavior
-    allowOutgoingCalls.value = settings.outgoingCalls
-    displayCallerInfoName.value = settings.callerInfo.displayName
-    displayCallerInfoId.value = settings.callerInfo.callerId.display
-    displayCallerInfoIdMask.value = settings.callerInfo.callerId.mask
-    allowShrinkOnIdle.value = settings.shrinkOnIdle
+export function setCallSettingsPermissions (settings: Partial<ICallSettings>) {
+    const mergedSettings: ICallSettings = merge(defaultCallSettings, settings)
+
+    allowTransfer.value = mergedSettings.allowTransfer
+    allowAutoAnswerSetup.value = mergedSettings.autoAnswer.allowChange
+    autoAnswerDefaultBehaviour.value = mergedSettings.autoAnswer.defaultBehavior
+    allowOutgoingCalls.value = mergedSettings.outgoingCalls
+    displayCallerInfoName.value = mergedSettings.callerInfo.displayName
+    displayCallerInfoId.value = mergedSettings.callerInfo.callerId.display
+    displayCallerInfoIdMask.value = mergedSettings.callerInfo.callerId.mask
+    allowShrinkOnIdle.value = mergedSettings.shrinkOnIdle
 
     if (settings.ringingSound) {
-        ringingSoundBase64.value = settings.ringingSound
+        ringingSoundBase64.value = mergedSettings.ringingSound
     }
 }
 
-export function setColorThemeSettings (settings: IWidgetTheme) {
-    const widgetRootEl = document.querySelector('#openSIPSWidget') as HTMLElement
-
-    if (!widgetRootEl) {
-        throw new Error('Widget root element is not found!')
-    }
-
-    const mergedTheme = merge(defaultTheme, settings)
+export function setColorThemeSettings (settings: Partial<IWidgetTheme>, widgetRootEl: HTMLElement) {
+    const mergedTheme: IWidgetTheme = merge(defaultTheme, settings)
 
     Object.entries(mergedTheme.colors).forEach(([ key, value ]) => {
         widgetRootEl.style.setProperty(`--${key}`, value)
     })
+}
 
+export function setConfig (config: Partial<IWidgetConfigOptions>, widgetRootEl: HTMLElement) {
+    setCallSettingsPermissions(config.callSettings ?? {})
+    setColorThemeSettings(config.themeSettings ?? {}, widgetRootEl)
 }
 
 export function setRingingSound (base64: string) {

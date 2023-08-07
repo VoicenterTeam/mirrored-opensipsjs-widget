@@ -6,7 +6,7 @@ import styles from '@/styles/style.css?inline'
 //import selectStyles from 'vue-select/dist/vue-select.css?inline'
 
 import config from 'root/twind.config'
-import type { Widget as InternalWidget, IWidgetAttributes, IWidgetAppProps } from '@/types/internal'
+import type { IWidgetAppProps } from '@/types/internal'
 import type { Widget as PublicWidget } from '@/types/public-api'
 import { dragStart, drag, dragEnd, updatePositionOnResize } from '@/utils/dragDrop'
 
@@ -19,17 +19,12 @@ cssStyleSheet.insertRule(styles)
 const sheet = cssom(cssStyleSheet)
 const tw = twind(config, sheet)
 
-export class OpenSIPSWidget extends HTMLElement implements IWidgetAttributes {
-    static observedAttributes: Array<InternalWidget.Attributes> = [ 'theme' ]
-
-    // From attributes
-    theme?: string
-
+export class OpenSIPSWidget extends HTMLElement {
     // Drag and drop methods
-    dragStart
-    drag
-    dragEnd
-    updatePositionOnResize
+    private readonly dragStart
+    private readonly updatePositionOnResize
+    private drag
+    private dragEnd
 
     constructor () {
         super()
@@ -48,12 +43,6 @@ export class OpenSIPSWidget extends HTMLElement implements IWidgetAttributes {
 
     disconnectedCallback () {
         window.removeEventListener('resize', this.updatePositionOnResize)
-    }
-
-    attributeChangedCallback (name: InternalWidget.Attributes, oldValue: string, newValue: string) {
-        if (oldValue !== newValue) {
-            this[name] = newValue
-        }
     }
 
 
