@@ -1,20 +1,9 @@
 <template>
-    <div className="flex w-6 z-50 cursor-grab draggable-area" @mousedown="onMouseDown">
+    <div className="flex w-6 z-50 cursor-grab draggable-area">
         <DragDrop color="var(--border-lines)" />
     </div>
 </template>
 
 <script lang="ts" setup>
-import type { IWidgetAppProps } from '@/types/internal'
 import DragDrop from '@/assets/icons/dragdrop.svg?component'
-
-const props = defineProps<IWidgetAppProps>()
-
-function onMouseDown (e: MouseEvent) {
-    props.dragStart(e)
-}
 </script>
-
-<style scoped>
-
-</style>

@@ -58,8 +58,8 @@ export interface IWidgetTheme {
  * Represents the configuration options for the widget.
  */
 export interface IWidgetConfigOptions {
-    themeSettings: IWidgetTheme
-    callSettings: ICallSettings
+    themeSettings: Partial<IWidgetTheme>
+    callSettings: Partial<ICallSettings>
 }
 
 /**
@@ -73,6 +73,13 @@ export interface IWidgetExternalAPI {
      * @param listener - the event listener, check ListenerCallbackFnType of provided event
      */
     on: <T extends ListenersKeyType> (type: T, listener: ListenerCallbackFnType<T>) => void
+
+    /**
+     * Changes the widget configuration.
+     *
+     * @param config
+     */
+    setConfig: (config: IWidgetConfigOptions) => IWidgetExternalAPI
 }
 
 /**

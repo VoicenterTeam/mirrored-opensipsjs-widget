@@ -2,7 +2,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import svgLoader from 'vite-svg-loader'
-
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 export default defineConfig({
     define: {
@@ -10,7 +10,15 @@ export default defineConfig({
     },
     plugins: [
         vue(),
-        svgLoader()
+        svgLoader(),
+        viteStaticCopy({
+            targets: [
+                {
+                    src: 'src/types/*',
+                    dest: 'types'
+                }
+            ]
+        })
     ],
     resolve: {
         alias: {

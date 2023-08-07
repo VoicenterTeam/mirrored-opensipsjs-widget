@@ -1,4 +1,4 @@
-import type { IWidgetTheme, Widget as PublicWidget } from '@/types/public-api'
+import type { Widget as PublicWidget } from '@/types/public-api'
 
 /**
  * Represents the layout modes for the widget.
@@ -68,27 +68,10 @@ export interface ICallerInfoSettings {
     }
 }
 
-// ----------------------------------------------
-// Component Types
-// ----------------------------------------------
-export namespace Widget {
-    /**
-     * Represents the theme attributes for the widget.
-     */
-    export type Attributes = 'theme'
-}
-
 /**
  * Represents the props for the WidgetApp component.
  */
 export interface IWidgetAppProps {
     dispatchActionEvent: PublicWidget.DispatchActionEvent
     dragStart: (e: MouseEvent) => void
-}
-
-/**
- * Represents the attributes for the widget.
- */
-export interface IWidgetAttributes {
-    theme?: string
 }
