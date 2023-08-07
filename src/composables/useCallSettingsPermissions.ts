@@ -5,7 +5,7 @@ import type { IWidgetConfigOptions, IWidgetTheme } from '@/types/public-api'
 import { defaultTheme } from '@/enum/defaultTheme.enum'
 import { defaultRingingSound } from '@/utils/ringingSound'
 
-const defaultCallSettings: ICallSettings = {
+export const defaultCallSettings: ICallSettings = {
     allowTransfer: true,
     autoAnswer: {
         allowChange: false,
