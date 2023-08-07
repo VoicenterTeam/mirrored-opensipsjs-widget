@@ -1,6 +1,6 @@
 <template>
     <div ref="widgetRoot" className="shadow-xl rounded-md min-h-[60px] flex flex-row border overflow-hidden">
-        <Draggable @mousedown="dragStart" />
+        <Draggable @mousedown.prevent="dragStart" />
         <WidgetContent />
     </div>
 </template>
