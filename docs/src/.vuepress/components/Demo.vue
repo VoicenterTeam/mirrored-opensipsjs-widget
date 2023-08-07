@@ -31,6 +31,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
 import { IWidgetExternalAPI, IWidgetInit, IWidgetInitOptions } from '@/types/public-api'
 import type { OpenSIPSWidgetElement } from '@/types/opensips-widget'
+import '../../../../'
 
 type Credentials = {
     username: string

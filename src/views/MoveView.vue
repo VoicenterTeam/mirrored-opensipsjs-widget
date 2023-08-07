@@ -1,5 +1,5 @@
 <template>
-    <div className="flex justify-around items-center">
+    <div className="flex justify-around items-center bg-primary-bg">
         <div className="flex items-center justify-center px-2 text-xxs">
             <span className="text-center font-bold text-secondary-text uppercase">
                 Move

@@ -20,7 +20,7 @@
             @cancel="cancelMoving"
         />
         <div v-if="!isAnyActiveCall">
-            <div className="flex min-h-[32px] justify-center items-center">
+            <div className="flex min-h-[32px] bg-primary-bg justify-center items-center">
                 <VoicenterIcon />
             </div>
         </div>

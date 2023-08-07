@@ -285,6 +285,10 @@ export function useOpenSIPSJS () {
         await opensipsjs.setCurrentActiveRoomId(roomId)
     }
 
+    function setAutoAnswer (value: boolean) {
+        opensipsjs.autoAnswer = value
+    }
+
     return {
         opensipsjs,
         startCall,
@@ -297,6 +301,7 @@ export function useOpenSIPSJS () {
         mergeCallsInRoom,
         setActiveRoom,
         terminateCall,
+        setAutoAnswer
     }
 }
 

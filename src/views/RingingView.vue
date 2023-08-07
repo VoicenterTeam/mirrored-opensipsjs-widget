@@ -1,5 +1,5 @@
 <template>
-    <div className="flex min-h-[60px] justify-around items-center">
+    <div className="flex min-h-[60px] justify-around items-center bg-primary-bg">
         <div className="flex flex-col items-center justify-evenly w-[92px] mx-3">
             <span v-if="displayCallerInfoName" className="text-xs text-main-text font-medium">
                 {{ callerName }}
@@ -34,7 +34,7 @@ import IncomingCallActionButton from '@/components/base/IncomingCallActionButton
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import { computed, ref, onMounted, onUnmounted } from 'vue'
-import { getCallerInfo, getCallerNumber } from '@/helpers/callerHelper'
+import { getCallerNumber } from '@/helpers/callerHelper'
 import {
     displayCallerInfoName,
     displayCallerInfoIdMask,

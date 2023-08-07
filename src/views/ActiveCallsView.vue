@@ -1,5 +1,5 @@
 <template>
-    <div className="flex items-end">
+    <div className="flex items-end bg-primary-bg">
         <div>
             <div v-for="room in allRooms" :key="room.roomId">
                 <div>

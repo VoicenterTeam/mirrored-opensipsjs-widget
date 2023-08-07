@@ -38,9 +38,20 @@ The demo application is available [here](https://mirrored-opensipsjs-widget.page
 
             const themeSettings = {
                 colors: {
-                    primary: '#1a202c',
-                    secondary: '#1a202c',
-                    accent: '#1a202c',
+                    primary: '#5E95E8',
+                    secondary: '#0d8099',
+                    'main-text': '#414C59',
+                    'secondary-text': '#8292A5',
+                    'button-pressed-text': '#FFF',
+                    'border-lines': '#DDD',
+                    'primary-bg': '#FFF',
+                    'secondary-bg': '#F0F2F4',
+                    'inactive-bg': '#B9C2CC',
+                    'success': '#7CC24F',
+                    'danger': '#EC2A2A',
+                    'additional-danger-bg': '#F44C4C',
+                    'additional-success-bg': '#75B8A0',
+                    'additional-bg': '#B0BFC2'
                 },
                 layoutConfig: {
                     mode: 'floating',
@@ -62,7 +73,8 @@ The demo application is available [here](https://mirrored-opensipsjs-widget.page
                         mask: true
                     }
                 },
-                shrinkOnIdle: false
+                shrinkOnIdle: false,
+                ringingSound: 'data:audio/mpeg;base64,SUQzBAAAAAAAIlRTU='
             }
 
             const widgetAPI = await initFunction({
