@@ -1,7 +1,7 @@
 <template>
     <div className="flex items-end">
         <div>
-            <div v-for="room in roomsList" :key="room.roomId">
+            <div v-for="room in allRooms" :key="room.roomId">
                 <div>
                     <RoomButton :room-id="room.roomId" :is-active="room.roomId === currentActiveRoom" />
                 </div>
@@ -12,7 +12,7 @@
             <div v-for="(call, index) in callsInActiveRoom" :key="call._id">
                 <ActiveCallView
                     :call="call"
-                    :is-single-room="roomsList.length === 1"
+                    :is-single-room="allRooms.length === 1"
                     :is-single-call="callsInActiveRoom.length === 1"
                     :is-first-caller="index === 0"
                     @transfer-click="onTransferClick"
@@ -44,11 +44,11 @@ const props = withDefaults(
     {}
 )
 
-const roomsList = computed(() => {
+/*const roomsList = computed(() => {
     const rooms: Array<IRoom> = Object.values(allRooms.value)
     console.log('roomsList', rooms)
     return rooms
-})
+})*/
 
 const callsInActiveRoom = computed(() => {
     const cls = props.calls.filter(call => {

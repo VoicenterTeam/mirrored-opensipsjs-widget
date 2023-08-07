@@ -1,8 +1,8 @@
 import { ref } from 'vue'
 import OpenSIPSJS from '@voicenter-team/opensips-js'
-import type { IOpenSIPSJSOptions, ICall, RoomChangeEmitType } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { IOpenSIPSJSOptions, ICall, RoomChangeEmitType, IRoom } from '@voicenter-team/opensips-js/src/types/rtc'
 import type { ISIPSCredentials, IWidgetExternalAPI } from '@/types/public-api'
-import type { AllActiveCallsType, DoHoldFunctionType, CallTimeType, AllActiveRoomsType } from '@/types/opensips'
+import type { AllActiveCallsType, DoHoldFunctionType, CallTimeType } from '@/types/opensips'
 
 import { autoAnswerDefaultBehaviour } from '@/composables/useCallSettingsPermissions'
 
@@ -20,7 +20,7 @@ export const activeRingingDevice = ref<string>('default')
 
 /* Calls management */
 export const allActiveCalls = ref<Array<ICall>>([])
-export const allRooms = ref<AllActiveRoomsType>({})
+export const allRooms = ref<Array<IRoom>>([])
 export const currentActiveRoom = ref<number | undefined>(undefined)
 
 
@@ -168,19 +168,26 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
             allActiveCalls.value = [ ...parsedCalls ]
         })
         .on('addRoom', (data: RoomChangeEmitType) => {
-            const rooms: AllActiveRoomsType = data.roomList
-            allRooms.value = { ...rooms }
-            console.log('addRoom', allRooms.value)
+            const rooms = Object.values(data.roomList)
+            console.log('addRoom', rooms)
+            allRooms.value = [ ...rooms ]
+            //console.log('addRoom', allRooms.value)
         })
         .on('updateRoom', (data: RoomChangeEmitType) => {
-            const rooms: AllActiveRoomsType = data.roomList
-            allRooms.value = { ...rooms }
-            console.log('updateRoom', allRooms.value)
+            /*const rooms: AllActiveRoomsType = data.roomList
+            allRooms.value = { ...rooms }*/
+            const rooms = Object.values(data.roomList)
+            console.log('updateRoom', rooms)
+            allRooms.value = [ ...rooms ]
+            //console.log('updateRoom', allRooms.value)
         })
         .on('removeRoom', (data: RoomChangeEmitType) => {
-            const rooms: AllActiveRoomsType = data.roomList
-            allRooms.value = { ...rooms }
-            console.log('removeRoom', allRooms.value)
+            /*const rooms: AllActiveRoomsType = data.roomList
+            allRooms.value = { ...rooms }*/
+            const rooms = Object.values(data.roomList)
+            console.log('removeRoom', rooms)
+            allRooms.value = [ ...rooms ]
+            //console.log('removeRoom', allRooms.value)
         })
         .on('currentActiveRoomChanged', (roomId: number | undefined) => {
             currentActiveRoom.value = roomId

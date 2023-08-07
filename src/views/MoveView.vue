@@ -1,8 +1,19 @@
 <template>
     <div className="flex justify-around items-center">
-        <div className="flex items-center justify-center px-2 uppercase text-xxs">
-            <span className="text-center font-bold text-secondary-text">
-                Move {{ movingCallerPhone }} to
+        <div className="flex items-center justify-center px-2 text-xxs">
+            <span className="text-center font-bold text-secondary-text uppercase">
+                Move
+            </span>
+            <div className="flex items-center flex-col justify-evenly px-2">
+                <span v-if="displayCallerInfoName" className="text-main-text font-medium">
+                    {{ movingCallerName }}
+                </span>
+                <span v-if="displayCallerInfoId" className="text-main-text font-medium">
+                    {{ movingCallerNumber }}
+                </span>
+            </div>
+            <span className="text-center font-bold text-secondary-text uppercase">
+                to
             </span>
         </div>
 
@@ -44,8 +55,12 @@ import CloseIcon from '@/assets/icons/close.svg?component'
 import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import { allActiveCalls, allRooms } from '@/composables/opensipsjs'
-import { getCallerInfo } from '@/helpers/callerHelper'
-import { displayCallerInfoIdMask, displayCallerInfoName } from '@/composables/useCallSettingsPermissions'
+import { getCallerInfo, getCallerNumber } from '@/helpers/callerHelper'
+import {
+    displayCallerInfoId,
+    displayCallerInfoIdMask,
+    displayCallerInfoName
+} from '@/composables/useCallSettingsPermissions'
 import type { IRoom } from '@voicenter-team/opensips-js/src/types/rtc'
 
 const target = ref<string | undefined>(undefined)
@@ -68,17 +83,31 @@ const movingCall = computed(() => {
     })
 })
 
-const movingCallerPhone = computed(() => {
+/*const movingCallerPhone = computed(() => {
     const cNumber = movingCall.value?._remote_identity._uri._user as string
     const cName = movingCall.value?._remote_identity._display_name as string
     return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
+})*/
+
+const movingCallerNumber = computed(() => {
+    const cNumber = movingCall.value?._remote_identity._uri._user as string
+    // const cName = props.call?._remote_identity._display_name as string
+    // return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
+    return getCallerNumber(cNumber, displayCallerInfoIdMask.value)
+})
+
+const movingCallerName = computed(() => {
+    // const cNumber = props.call?._remote_identity._uri._user as string
+    const cName = movingCall.value?._remote_identity._display_name || '' as string
+    // return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
+    return cName
 })
 
 const roomsList = computed(() => {
     if (!movingCall.value) return
 
-    const rooms: Array<IRoom> = Object.values(allRooms.value)
-    const filteredRooms = rooms.filter(room => room.roomId !== movingCall.value?.roomId)
+    //const rooms: Array<IRoom> = Object.values(allRooms.value)
+    const filteredRooms = allRooms.value.filter(room => room.roomId !== movingCall.value?.roomId)
     return filteredRooms
 })
 

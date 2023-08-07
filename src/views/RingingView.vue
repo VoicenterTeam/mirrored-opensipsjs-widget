@@ -1,7 +1,12 @@
 <template>
     <div className="flex min-h-[60px] justify-around items-center">
-        <div>
-            {{ callerNumber }}
+        <div className="flex flex-col items-center justify-evenly w-[92px] mx-3">
+            <span v-if="displayCallerInfoName" className="text-xs text-main-text font-medium">
+                {{ callerName }}
+            </span>
+            <span v-if="displayCallerInfoId" className="text-xs text-main-text font-medium">
+                {{ callerNumber }}
+            </span>
         </div>
         <div>
             <IncomingCallActionButton
@@ -28,9 +33,14 @@ import DeclineIcon from '@/assets/icons/decline.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
-import { computed } from 'vue'
-import { getCallerInfo } from '@/helpers/callerHelper'
-import { displayCallerInfoName, displayCallerInfoIdMask } from '@/composables/useCallSettingsPermissions'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { getCallerInfo, getCallerNumber } from '@/helpers/callerHelper'
+import {
+    displayCallerInfoName,
+    displayCallerInfoIdMask,
+    displayCallerInfoId,
+    ringingSoundBase64
+} from '@/composables/useCallSettingsPermissions'
 
 const { answerCall, terminateCall } = useOpenSIPSJS()
 
@@ -52,8 +62,42 @@ const declineIncomingCall = () => {
 
 const callerNumber = computed(() => {
     const cNumber = props.call?._remote_identity._uri._user as string
-    const cName = props.call?._remote_identity._display_name as string
-    return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
+    // const cName = props.call?._remote_identity._display_name as string
+    // return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
+    return getCallerNumber(cNumber, displayCallerInfoIdMask.value)
+})
+
+const callerName = computed(() => {
+    // const cNumber = props.call?._remote_identity._uri._user as string
+    const cName = props.call?._remote_identity._display_name || '' as string
+    // return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
+    return cName
+})
+
+const df = ref<DocumentFragment | undefined>()
+const soundEl = ref<HTMLAudioElement | undefined>()
+
+const playRingingSound = (src: string) => {
+    df.value = document.createDocumentFragment()
+    soundEl.value = new Audio(src)
+    df.value.appendChild(soundEl.value) // keep in fragment until finished playing
+    soundEl.value.addEventListener('ended', function () {
+        // df.removeChild(snd)
+        soundEl.value?.play()
+    })
+    soundEl.value.play()
+    return soundEl.value
+}
+
+onMounted(() => {
+    playRingingSound(ringingSoundBase64.value)
+})
+
+onUnmounted(() => {
+    soundEl.value?.pause()
+    if (soundEl.value) {
+        df.value?.removeChild(soundEl.value)
+    }
 })
 
 </script>

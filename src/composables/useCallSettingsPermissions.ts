@@ -3,6 +3,7 @@ import merge from 'lodash/merge'
 import type { ICallSettings } from '@/types/internal'
 import type { IWidgetTheme } from '@/types/public-api'
 import { defaultTheme } from '@/enum/defaultTheme.enum'
+import { defaultRingingSound } from '@/utils/ringingSound'
 
 const defaultCallSettings: ICallSettings = {
     allowTransfer: true,
@@ -18,7 +19,8 @@ const defaultCallSettings: ICallSettings = {
             mask: true
         }
     },
-    shrinkOnIdle: false
+    shrinkOnIdle: false,
+    ringingSound: defaultRingingSound
 }
 
 export const allowTransfer = ref<boolean>(defaultCallSettings.allowTransfer)
@@ -29,6 +31,7 @@ export const displayCallerInfoName = ref<boolean>(defaultCallSettings.callerInfo
 export const displayCallerInfoId = ref<boolean>(defaultCallSettings.callerInfo.callerId.display)
 export const displayCallerInfoIdMask = ref<boolean>(defaultCallSettings.callerInfo.callerId.mask)
 export const allowShrinkOnIdle = ref<boolean>(defaultCallSettings.shrinkOnIdle)
+export const ringingSoundBase64 = ref<string>(defaultCallSettings.ringingSound)
 
 export function setCallSettingsPermissions (settings: ICallSettings) {
     allowTransfer.value = settings.allowTransfer
@@ -39,6 +42,10 @@ export function setCallSettingsPermissions (settings: ICallSettings) {
     displayCallerInfoId.value = settings.callerInfo.callerId.display
     displayCallerInfoIdMask.value = settings.callerInfo.callerId.mask
     allowShrinkOnIdle.value = settings.shrinkOnIdle
+
+    if (settings.ringingSound) {
+        ringingSoundBase64.value = settings.ringingSound
+    }
 }
 
 export function setColorThemeSettings (settings: IWidgetTheme) {
@@ -54,4 +61,8 @@ export function setColorThemeSettings (settings: IWidgetTheme) {
         widgetRootEl.style.setProperty(`--${key}`, value)
     })
 
+}
+
+export function setRingingSound (base64: string) {
+    ringingSoundBase64.value = base64
 }

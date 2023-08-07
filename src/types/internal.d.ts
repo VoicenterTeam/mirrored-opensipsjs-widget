@@ -47,6 +47,7 @@ export interface ICallSettings {
     outgoingCalls: boolean
     callerInfo: ICallerInfoSettings
     shrinkOnIdle: boolean
+    ringingSound: string
 }
 
 /**

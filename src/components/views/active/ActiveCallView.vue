@@ -1,7 +1,10 @@
 <template>
     <div :className="wrapperClasses">
-        <div className="flex items-center w-[92px] mx-3">
-            <span className="text-xs text-main-text font-medium">
+        <div className="flex flex-col items-center justify-evenly w-[92px] mx-3">
+            <span v-if="displayCallerInfoName" className="text-xs text-main-text font-medium">
+                {{ callerName }}
+            </span>
+            <span v-if="displayCallerInfoId" className="text-xs text-main-text font-medium">
                 {{ callerNumber }}
             </span>
         </div>
@@ -76,8 +79,8 @@ import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
 
 import MoveToCallIcon from '@/assets/icons/moveToCall.svg?component'
 import TransferIcon from '@/assets/icons/transfer.svg?component'
-import { allowTransfer, displayCallerInfoIdMask, displayCallerInfoName } from '@/composables/useCallSettingsPermissions'
-import { getCallerInfo } from '@/helpers/callerHelper'
+import { allowTransfer, displayCallerInfoId, displayCallerInfoIdMask, displayCallerInfoName } from '@/composables/useCallSettingsPermissions'
+import { getCallerInfo, getCallerNumber } from '@/helpers/callerHelper'
 
 const { terminateCall, holdCall, muteCaller } = useOpenSIPSJS()
 
@@ -123,8 +126,16 @@ const callTime = computed(() => {
 
 const callerNumber = computed(() => {
     const cNumber = props.call?._remote_identity._uri._user as string
-    const cName = props.call?._remote_identity._display_name as string
-    return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
+    // const cName = props.call?._remote_identity._display_name as string
+    // return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
+    return getCallerNumber(cNumber, displayCallerInfoIdMask.value)
+})
+
+const callerName = computed(() => {
+    // const cNumber = props.call?._remote_identity._uri._user as string
+    const cName = props.call?._remote_identity._display_name || '' as string
+    // return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
+    return cName
 })
 
 const putOnHold = () => {
