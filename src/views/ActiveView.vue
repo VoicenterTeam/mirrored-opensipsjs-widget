@@ -1,6 +1,10 @@
 <template>
     <div :className="wrapperClasses">
-        <RingingView v-if="incomingUnansweredCall" :call="incomingUnansweredCall" />
+        <RingingView
+            v-if="incomingUnansweredCall && !transferringCall"
+            :call="incomingUnansweredCall"
+            @transfer-click="onTransferClick"
+        />
         <ActiveCallsView
             v-show="!transferringCall && !movingCall && !incomingUnansweredCall"
             :calls="activeCalls"

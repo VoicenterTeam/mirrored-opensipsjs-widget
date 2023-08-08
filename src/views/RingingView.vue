@@ -22,6 +22,14 @@
                 size="xxxl"
                 additional-classes=""
                 @click="declineIncomingCall" />
+            <IncomingCallActionButton
+                v-if="allowTransfer"
+                color="secondary"
+                hover-color="secondary-text"
+                :icon="TransferIcon"
+                size="xxxl"
+                additional-classes=""
+                @click="transferIncomingCall" />
         </div>
     </div>
 </template>
@@ -30,6 +38,7 @@
 import type { UnwrapRef } from 'vue'
 import CallIcon from '@/assets/icons/call.svg?component'
 import DeclineIcon from '@/assets/icons/decline.svg?component'
+import TransferIcon from '@/assets/icons/transferCall.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
@@ -39,7 +48,8 @@ import {
     displayCallerInfoName,
     displayCallerInfoIdMask,
     displayCallerInfoId,
-    ringingSoundBase64
+    ringingSoundBase64,
+    allowTransfer
 } from '@/composables/useCallSettingsPermissions'
 
 const { answerCall, terminateCall } = useOpenSIPSJS()
@@ -51,6 +61,10 @@ const props = withDefaults(
     {}
 )
 
+const emit = defineEmits<{
+    (e: 'transfer-click', callId: string): void
+}>()
+
 const answerIncomingCall = () => {
     answerCall(props.call._id)
 
@@ -60,8 +74,13 @@ const declineIncomingCall = () => {
     terminateCall(props.call._id)
 }
 
+const transferIncomingCall = () => {
+    const callId = props.call?._id
+    emit('transfer-click', callId)
+}
+
 const callerNumber = computed(() => {
-    const cNumber = props.call?._remote_identity._uri._user as string
+    const cNumber = props.call?._remote_identity?._uri._user || '' as string
     // const cName = props.call?._remote_identity._display_name as string
     // return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
     return getCallerNumber(cNumber, displayCallerInfoIdMask.value)
@@ -69,7 +88,7 @@ const callerNumber = computed(() => {
 
 const callerName = computed(() => {
     // const cNumber = props.call?._remote_identity._uri._user as string
-    const cName = props.call?._remote_identity._display_name || '' as string
+    const cName = props.call?._remote_identity?._display_name || '' as string
     // return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
     return cName
 })

@@ -19,7 +19,7 @@ const defaultCallSettings: ICallSettings = {
             mask: false
         }
     },
-    shrinkOnIdle: false,
+    shrinkOnIdle: true,
     ringingSound: defaultRingingSound
 }
 
