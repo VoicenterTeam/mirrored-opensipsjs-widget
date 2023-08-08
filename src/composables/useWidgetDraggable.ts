@@ -1,4 +1,4 @@
-import { tryOnMounted, tryOnBeforeUnmount } from '@vueuse/core'
+import { tryOnBeforeUnmount } from '@vueuse/core'
 
 let dragHandleElement: HTMLElement | null = null
 let dragTargetElement: HTMLElement | null = null
@@ -108,7 +108,7 @@ function setListeners () {
     }
 }
 
-function removeListeners () {
+export function removeListeners () {
     window.removeEventListener('resize', updatePositionOnResize)
 
     if (dragHandleElement) {
@@ -122,7 +122,7 @@ function enableDraggable (handle: HTMLElement, target: HTMLElement) {
 
     dragTargetElement.style.position = 'fixed'
 
-    tryOnMounted(setListeners)
+    setListeners()
 
     tryOnBeforeUnmount(removeListeners)
 }

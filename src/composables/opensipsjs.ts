@@ -1,13 +1,10 @@
 import { ref } from 'vue'
 import OpenSIPSJS from '@voicenter-team/opensips-js'
-import type { IOpenSIPSJSOptions, ICall, RoomChangeEmitType, IRoom } from '@voicenter-team/opensips-js/src/types/rtc'
-import type { ISIPSCredentials, TWidgetConfigOptions, IWidgetExternalAPI } from '@/types/public-api'
-import type { AllActiveCallsType, DoHoldFunctionType, CallTimeType } from '@/types/opensips'
+import type { ICall, IOpenSIPSJSOptions, IRoom, RoomChangeEmitType } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { ISIPSCredentials } from '@/types/public-api'
+import type { AllActiveCallsType, CallTimeType, DoHoldFunctionType } from '@/types/opensips'
 
-import {
-    autoAnswerDefaultBehaviour,
-    setConfig
-} from '@/composables/useWidgetConfig'
+import { autoAnswerDefaultBehaviour } from '@/composables/useWidgetConfig'
 
 /* Main */
 let opensipsjs: OpenSIPSJS
@@ -91,8 +88,12 @@ function removeOldCallTimes (calls: Array<ICall>) {
         clearInterval(id)
         removeCallTime(id)
     })
+}
 
-
+function validateCredentials (credentials: ISIPSCredentials) {
+    if (!credentials.username || !credentials.password || !credentials.domain) {
+        throw new Error('Invalid credentials')
+    }
 }
 
 function processCallsTime (calls: AllActiveCallsType) {
@@ -209,6 +210,8 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
 export function registerOpenSIPS (credentials: ISIPSCredentials) {
     return new Promise<OpenSIPSJS>((resolve, reject) => {
         try {
+            validateCredentials(credentials)
+
             if (isOpensips(opensipsjs)) {
                 reject('OpenSIPSJS is already initialized')
             }
@@ -305,22 +308,6 @@ export function useOpenSIPSJS () {
         terminateCall,
         setAutoAnswer
     }
-}
-
-/**
- * Build external API for widget
- */
-export function useExternalOpenSIPSJS (config: TWidgetConfigOptions): IWidgetExternalAPI {
-    const widgetAPI: IWidgetExternalAPI = {
-        on: opensipsjs.on,
-        setConfig: function (config) {
-            setConfig(config)
-
-            return this
-        }
-    }
-
-    return widgetAPI.setConfig(config)
 }
 
 export async function onMicrophoneChange (event: Event) {

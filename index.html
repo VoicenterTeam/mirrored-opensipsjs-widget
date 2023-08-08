@@ -13,7 +13,7 @@
     <script>
         const widget = document.getElementById('openSIPSWidget')
 
-        async function onWidgetInitialized ({ detail: initFunction }) {
+        async function onWidgetInitialized ({ detail: OpenSIPSExternalWidgetAPI }) {
             const credentials = {
                 username: '',
                 password: '',
@@ -42,7 +42,6 @@
                     type: 'rounded'
                 }
             }
-
             const callSettings = {
                 allowTransfer: true,
                 autoAnswer: {
@@ -60,18 +59,14 @@
                 shrinkOnIdle: true,
                 ringingSound: ''
             }
+            const config = {
+                themeSettings,
+                callSettings
+            }
 
-            const widgetAPI = await initFunction({
-                credentials,
-                config: {
-                    themeSettings,
-                    callSettings
-                }
-            })
+            const widgetAPI = new OpenSIPSExternalWidgetAPI(config)
 
-            console.log('widgetAPI', widgetAPI)
-
-            window.widgetApi = widgetAPI
+            await widgetAPI.login(credentials)
         }
 
         widget.addEventListener('widget:ready', onWidgetInitialized)

@@ -68,7 +68,6 @@ const onMergeClick = () => {
 onMounted(() => {
     opensipsjs.muteWhenJoin
 })
-
 </script>
 
 <style scoped>

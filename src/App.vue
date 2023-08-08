@@ -1,5 +1,5 @@
 <template>
-    <div ref="widgetRoot" className="shadow-xl rounded-md min-h-[60px] flex flex-row border overflow-hidden">
+    <div className="shadow-xl rounded-md min-h-[60px] flex flex-row border overflow-hidden">
         <Draggable
             v-show="showDraggableHandle"
             ref="draggableHandle"
@@ -10,13 +10,12 @@
 
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { registerOpenSIPS, useExternalOpenSIPSJS, isOpenSIPSReady } from '@/composables/opensipsjs'
 import WidgetContent from '@/views/WidgetContent.vue'
 import Draggable from '@/components/Draggable.vue'
 import type { IWidgetAppProps } from '@/types/internal'
-import type { IWidgetInitOptions } from '@/types/public-api'
 import { setWidgetElement } from '@/composables/useWidgetState'
 import { layoutMode } from '@/composables/useWidgetConfig'
+import OpenSIPSExternalWidgetAPI from '@/widget/OpenSIPSExternalWidgetAPI'
 
 // Props
 const props = defineProps<IWidgetAppProps>()
@@ -28,20 +27,12 @@ const draggableHandle = ref<typeof Draggable>()
 const showDraggableHandle = computed(() => layoutMode.value === 'floating')
 
 // Methods
-async function makeWidgetAPI ({ credentials, config }: IWidgetInitOptions) {
-    if (!isOpenSIPSReady.value) {
-        await registerOpenSIPS(credentials)
-    }
-
-    return useExternalOpenSIPSJS(config)
-}
-
 onMounted(() => {
     const draggableRoot = draggableHandle.value?.root as HTMLElement | undefined
 
     setWidgetElement(props.widgetElement, draggableRoot)
 
-    props.widgetElement.dispatchEvent('widget:ready', makeWidgetAPI)
+    props.widgetElement.dispatchEvent('widget:ready', OpenSIPSExternalWidgetAPI)
 })
 
 onBeforeUnmount(() => {

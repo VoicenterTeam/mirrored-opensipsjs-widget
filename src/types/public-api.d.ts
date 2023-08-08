@@ -1,12 +1,13 @@
 import type { ListenerCallbackFnType, ListenersKeyType } from 'opensips-js/src/types/listeners'
 import type { ICallSettings, ILayoutConfig } from '@/types/internal'
+import type OpenSIPSExternalWidgetAPI from '@/widget/OpenSIPSExternalWidgetAPI'
 
 export namespace Widget {
     /**
      * Represents the event map for the widget.
      */
     export type EventMap = {
-        'widget:ready': IWidgetInit,
+        'widget:ready': OpenSIPSExternalWidgetAPI,
         'widget:destroy': undefined,
     }
 
@@ -75,7 +76,7 @@ export interface IWidgetExternalAPI {
      * @param type - type of event, check ListenersKeyType
      * @param listener - the event listener, check ListenerCallbackFnType of provided event
      */
-    on: <T extends ListenersKeyType> (type: T, listener: ListenerCallbackFnType<T>) => void
+    on: <T extends ListenersKeyType> (type: T, listener: ListenerCallbackFnType<T>) => IWidgetExternalAPI
 
     /**
      * Changes the widget configuration.
@@ -83,17 +84,15 @@ export interface IWidgetExternalAPI {
      * @param config
      */
     setConfig: (config: TWidgetConfigOptions) => IWidgetExternalAPI
+
+    /**
+     * Logs in to the SIP server.
+     *
+     * @param credentials
+     */
+    login: (credentials: ISIPSCredentials) => Promise<IWidgetExternalAPI>
 }
 
-/**
- * Represents the initialization options for the widget.
- */
-export interface IWidgetInitOptions {
-    credentials: ISIPSCredentials
-    config: TWidgetConfigOptions
+export interface IWidgetExternalAPIConstructor {
+    new (config: TWidgetConfigOptions): IWidgetExternalAPI
 }
-
-/**
- * Represents the widget initialization function.
- */
-export type IWidgetInit = (initOptions: IWidgetInitOptions) => Promise<IWidgetExternalAPI>
