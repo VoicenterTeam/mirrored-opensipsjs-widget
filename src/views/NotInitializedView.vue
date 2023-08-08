@@ -15,7 +15,7 @@
 import { computed } from 'vue'
 import ConnectToServerIcon from '@/assets/icons/connectToServer.svg?component'
 
-import { allowShrinkOnIdle } from '@/composables/useCallSettingsPermissions'
+import { allowShrinkOnIdle } from '@/composables/useWidgetConfig'
 
 const messageFontClasses = computed(() => {
     if (allowShrinkOnIdle.value) {

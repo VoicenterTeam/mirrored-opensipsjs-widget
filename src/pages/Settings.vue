@@ -10,9 +10,8 @@
 
 <script setup lang="ts">
 import MediaDevicesSettings from '@/components/MediaDevicesSettings.vue'
-import { isSettingsPageOpened } from '@/composables/useWidgetState'
+import { useWidgetState } from '@/composables/useWidgetState'
 
-function closeSettingsPage () {
-    isSettingsPageOpened.value = false
-}
+/* Composable */
+const { closeSettingsPage } = useWidgetState()
 </script>

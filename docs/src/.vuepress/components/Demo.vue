@@ -39,7 +39,7 @@ type Credentials = {
     domain: string
 }
 
-let widgetAPI: IWidgetExternalAPI | null = null
+const widgetAPI = ref<null | IWidgetExternalAPI>()
 const wrapperRef = ref(null)
 const credentials = useLocalStorage<Credentials>(
     'credentials',
@@ -50,6 +50,8 @@ const credentials = useLocalStorage<Credentials>(
     }
 )
 const loggedIn = useLocalStorage<boolean>('loggedIn', false)
+
+const emit = defineEmits(['widget-api-init'])
 
 const credentialsValid = computed(() => {
     return credentials.value.username && credentials.value.password && credentials.value.domain
@@ -121,7 +123,9 @@ function init () {
             }
         }
 
-        widgetAPI = await initFunction(initOptions)
+        widgetAPI.value = await initFunction(initOptions)
+
+        emit('widget-api-init', widgetAPI.value)
 
         console.log('widgetAPI', widgetAPI)
     }

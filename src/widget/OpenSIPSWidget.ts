@@ -3,54 +3,45 @@ import Popper from 'vue3-popper'
 import 'construct-style-sheets-polyfill'
 import { twind, cssom, observe } from '@twind/core'
 import styles from '@/styles/style.css?inline'
-//import selectStyles from 'vue-select/dist/vue-select.css?inline'
 
 import config from 'root/twind.config'
 import type { IWidgetAppProps } from '@/types/internal'
 import type { Widget as PublicWidget } from '@/types/public-api'
-import { dragStart, drag, dragEnd, updatePositionOnResize } from '@/utils/dragDrop'
 
 import App from '@/App.vue'
 import { ActiveTabPlugin } from '@/plugins/activeTabPlugin'
+import type { OpenSIPSWidgetElement } from '@/types/opensips-widget'
 
 const cssStyleSheet = new CSSStyleSheet()
 cssStyleSheet.insertRule(styles)
-//cssStyleSheet.insertRule(`* { ${selectStyles} }`)
 const sheet = cssom(cssStyleSheet)
 const tw = twind(config, sheet)
 
-export class OpenSIPSWidget extends HTMLElement {
-    // Drag and drop methods
-    private readonly dragStart
-    private readonly updatePositionOnResize
-    private drag
-    private dragEnd
-
+export class OpenSIPSWidget extends HTMLElement implements OpenSIPSWidgetElement {
     constructor () {
         super()
-        this.dragStart = (e: MouseEvent) => dragStart(e, this)
-        this.drag = (e: MouseEvent) => drag(e, this)
-        this.dragEnd = () => dragEnd()
-        this.updatePositionOnResize = () => updatePositionOnResize(this)
     }
 
     // Lifecycle hooks
     connectedCallback () {
         this.mountVueApp()
-        this.style.position = 'fixed'
-        window.addEventListener('resize', this.updatePositionOnResize)
     }
-
-    disconnectedCallback () {
-        window.removeEventListener('resize', this.updatePositionOnResize)
-    }
-
 
     // Event dispatcher
-    private dispatchActionEvent: PublicWidget.DispatchActionEvent = (event, data) => {
-        this.dispatchEvent(
-            new CustomEvent(event, { bubbles: true, detail: data })
-        )
+    public dispatchEvent(event: Event): boolean;
+    public dispatchEvent<Event extends keyof PublicWidget.EventMap>(
+        event: Event,
+        data: PublicWidget.EventMap[Event]
+    ): void
+    public dispatchEvent (event: Event | keyof PublicWidget.EventMap, data?: PublicWidget.EventMap[keyof PublicWidget.EventMap]): boolean | void {
+        if (typeof event === 'string' && data !== undefined) {
+            super.dispatchEvent(
+                new CustomEvent(event, { bubbles: true, detail: data })
+            )
+            return
+        } else {
+            return super.dispatchEvent(event as Event)
+        }
     }
 
     // Mount Vue application
@@ -62,8 +53,7 @@ export class OpenSIPSWidget extends HTMLElement {
         observe(tw, shadowRoot)
 
         const appProps: IWidgetAppProps = {
-            dispatchActionEvent: this.dispatchActionEvent,
-            dragStart: this.dragStart
+            widgetElement: this
         }
 
         const app = createApp({

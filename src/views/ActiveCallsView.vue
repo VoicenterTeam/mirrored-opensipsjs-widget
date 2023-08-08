@@ -33,7 +33,7 @@ import VoicenterIcon from '@/assets/icons/voicenter.svg?component'
 import TransferView from '@/views/TransferView.vue'
 import RingingView from '@/views/RingingView.vue'
 import ActiveCallView from '@/components/views/active/ActiveCallView.vue'
-import { allowShrinkOnIdle } from '@/composables/useCallSettingsPermissions'
+import { allowShrinkOnIdle } from '@/composables/useWidgetConfig'
 import { allActiveCalls, allRooms, currentActiveRoom, useOpenSIPSJS } from '@/composables/opensipsjs'
 import RoomButton from '@/components/views/active/RoomButton.vue'
 

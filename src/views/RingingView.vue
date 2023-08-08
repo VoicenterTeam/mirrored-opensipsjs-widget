@@ -50,7 +50,7 @@ import {
     displayCallerInfoId,
     ringingSoundBase64,
     allowTransfer
-} from '@/composables/useCallSettingsPermissions'
+} from '@/composables/useWidgetConfig'
 
 const { answerCall, terminateCall } = useOpenSIPSJS()
 

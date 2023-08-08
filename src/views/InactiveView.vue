@@ -19,7 +19,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import StartIcon from '@/assets/icons/start.svg?component'
-import { allowShrinkOnIdle } from '@/composables/useCallSettingsPermissions'
+import { allowShrinkOnIdle } from '@/composables/useWidgetConfig'
 
 import { useActiveTab } from '@/plugins/activeTabPlugin'
 import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
