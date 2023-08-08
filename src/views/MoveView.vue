@@ -60,7 +60,7 @@ import {
     displayCallerInfoId,
     displayCallerInfoIdMask,
     displayCallerInfoName
-} from '@/composables/useCallSettingsPermissions'
+} from '@/composables/useWidgetConfig'
 import type { IRoom } from '@voicenter-team/opensips-js/src/types/rtc'
 
 const target = ref<string | undefined>(undefined)

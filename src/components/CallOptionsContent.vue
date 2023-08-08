@@ -31,7 +31,7 @@
 import MoveToCallIcon from '@/assets/icons/moveToCall.svg?component'
 import TransferIcon from '@/assets/icons/transfer.svg?component'
 
-import { allowTransfer } from '@/composables/useCallSettingsPermissions'
+import { allowTransfer } from '@/composables/useWidgetConfig'
 
 const props = withDefaults(
     defineProps<{

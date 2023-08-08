@@ -6,7 +6,8 @@ export namespace Widget {
      * Represents the event map for the widget.
      */
     export type EventMap = {
-        'widget:ready': IWidgetInit
+        'widget:ready': IWidgetInit,
+        'widget:destroy': undefined,
     }
 
     /**
@@ -54,13 +55,15 @@ export interface IWidgetTheme {
     layoutConfig: ILayoutConfig
 }
 
+export interface IWidgetConfig {
+    themeSettings: IWidgetTheme
+    callSettings: ICallSettings
+}
+
 /**
  * Represents the configuration options for the widget.
  */
-export interface IWidgetConfigOptions {
-    themeSettings: Partial<IWidgetTheme>
-    callSettings: Partial<ICallSettings>
-}
+export type TWidgetConfigOptions = Partial<IWidgetConfig>
 
 /**
  * Represents the external API provided by the widget.
@@ -79,7 +82,7 @@ export interface IWidgetExternalAPI {
      *
      * @param config
      */
-    setConfig: (config: IWidgetConfigOptions) => IWidgetExternalAPI
+    setConfig: (config: TWidgetConfigOptions) => IWidgetExternalAPI
 }
 
 /**
@@ -87,7 +90,7 @@ export interface IWidgetExternalAPI {
  */
 export interface IWidgetInitOptions {
     credentials: ISIPSCredentials
-    config: IWidgetConfigOptions
+    config: TWidgetConfigOptions
 }
 
 /**

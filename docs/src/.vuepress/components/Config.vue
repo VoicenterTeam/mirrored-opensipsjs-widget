@@ -26,16 +26,10 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import Demo from './Demo.vue'
-import { defaultTheme } from '@/enum/defaultTheme.enum'
-import type {IWidgetConfigOptions, IWidgetExternalAPI} from '@/types/public-api'
-import { defaultCallSettings } from '@/composables/useCallSettingsPermissions'
+import type { TWidgetConfigOptions, IWidgetExternalAPI } from '@/types/public-api'
+import { getDefaultWidgetConfig } from '@/enum/defaultWidgetConfig.enum'
 
-const defaultForm: IWidgetConfigOptions = {
-    themeSettings: JSON.parse(JSON.stringify(defaultTheme)),
-    callSettings: JSON.parse(JSON.stringify(defaultCallSettings))
-}
-
-const form = ref<IWidgetConfigOptions>({ ...defaultForm })
+const form = ref<TWidgetConfigOptions>(getDefaultWidgetConfig())
 const widgetApi = ref<IWidgetExternalAPI>()
 
 function onWidgetApiInit (wapi: IWidgetExternalAPI) {
@@ -55,7 +49,7 @@ function onColorChange (value, name) {
     }
 }
 function reset () {
-    form.value = { ...defaultForm }
+    form.value = getDefaultWidgetConfig()
 
     if (widgetApi.value) {
         widgetApi.value.setConfig(form.value)

@@ -79,7 +79,7 @@ import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
 
 import MoveToCallIcon from '@/assets/icons/moveToCall.svg?component'
 import TransferIcon from '@/assets/icons/transfer.svg?component'
-import { allowTransfer, displayCallerInfoId, displayCallerInfoIdMask, displayCallerInfoName } from '@/composables/useCallSettingsPermissions'
+import { allowTransfer, displayCallerInfoId, displayCallerInfoIdMask, displayCallerInfoName } from '@/composables/useWidgetConfig'
 import { getCallerInfo, getCallerNumber } from '@/helpers/callerHelper'
 
 const { terminateCall, holdCall, muteCaller } = useOpenSIPSJS()

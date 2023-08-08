@@ -24,7 +24,7 @@ import MediaDevicesSettings from '@/components/MediaDevicesSettings.vue'
 import BaseSwitch from '@/components/base/BaseSwitch.vue'
 // import AutoAnswerIcon from '@/assets/icons/autoAnswer.svg?component'
 // import MicrophoneIcon from '@/assets/icons/mute.svg?component'
-import { autoAnswerDefaultBehaviour } from '@/composables/useCallSettingsPermissions'
+import { autoAnswerDefaultBehaviour } from '@/composables/useWidgetConfig'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 
 const { setAutoAnswer } = useOpenSIPSJS()

@@ -1,4 +1,4 @@
-import type { Widget as PublicWidget } from '@/types/public-api'
+import type { OpenSIPSWidgetElement } from '@/types/opensips-widget'
 
 /**
  * Represents the layout modes for the widget.
@@ -73,6 +73,5 @@ export interface ICallerInfoSettings {
  * Represents the props for the WidgetApp component.
  */
 export interface IWidgetAppProps {
-    dispatchActionEvent: PublicWidget.DispatchActionEvent
-    dragStart: (e: MouseEvent) => void
+    widgetElement: OpenSIPSWidgetElement
 }
