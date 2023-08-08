@@ -4,7 +4,7 @@ import type {
     IWidgetExternalAPIConstructor,
     TWidgetConfigOptions
 } from '@/types/public-api'
-import { setConfig } from '@/composables/useWidgetConfig'
+import { getConfig, setConfig } from '@/composables/useWidgetConfig'
 import { useOpenSIPSJS, registerOpenSIPS } from '@/composables/opensipsjs'
 import type { ListenerCallbackFnType, ListenersKeyType } from '@voicenter-team/opensips-js/src/types/listeners'
 
@@ -23,6 +23,10 @@ const OpenSIPSExternalWidgetAPI: IWidgetExternalAPIConstructor = class OpenSIPSE
         setConfig(config)
 
         return this
+    }
+
+    public getConfig () {
+        return getConfig()
     }
 
     public on <T extends ListenersKeyType> (event: T, listener: ListenerCallbackFnType<T>) {

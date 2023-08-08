@@ -1,6 +1,6 @@
 <template>
     <div className="flex h-full flex-row">
-        <div v-if="!allowShrinkOnIdle" className="w-[60px] text-primary p-3">
+        <div v-if="!allowShrinkOnIdle" className="w-[60px] text-primary p-3 bg-primary-bg">
             <ConnectToServerIcon/>
         </div>
         <div :className="`flex items-center justify-center bg-danger uppercase text-button-pressed-text ${messageFontClasses}`">

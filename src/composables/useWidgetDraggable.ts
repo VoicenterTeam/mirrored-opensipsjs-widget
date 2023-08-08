@@ -20,38 +20,25 @@ function dragStart (e: MouseEvent) {
     document.addEventListener('mouseup', dragEnd)
 }
 
+function ensureInBounds (x: number, y: number): { x: number, y: number } {
+    const windowWidth = window.innerWidth
+    const windowHeight = window.innerHeight
+    const widgetWidth = dragTargetElement!.offsetWidth
+    const widgetHeight = dragTargetElement!.offsetHeight
+
+    // Ensure the widget is within the window's bounds
+    x = Math.min(Math.max(x, 0), windowWidth - widgetWidth)
+    y = Math.min(Math.max(y, 0), windowHeight - widgetHeight)
+
+    return { x, y }
+}
+
 function drag (e: MouseEvent) {
     if (!dragTargetElement) {
         return
     }
 
-    const windowWidth = window.innerWidth
-    const windowHeight = window.innerHeight
-    const widgetWidth = dragTargetElement.offsetWidth
-    const widgetHeight = dragTargetElement.offsetHeight
-
-    let x = e.clientX + startX
-    let y = e.clientY + startY
-
-    // Don't allow the widget to move beyond the right edge of the window
-    if (x + widgetWidth > windowWidth) {
-        x = windowWidth - widgetWidth
-    }
-
-    // Don't allow the widget to move beyond the left edge of the window
-    if (x < 0) {
-        x = 0
-    }
-
-    // Don't allow the widget to move below the bottom edge of the window
-    if (y + widgetHeight > windowHeight) {
-        y = windowHeight - widgetHeight
-    }
-
-    // Don't allow the widget to move above the top edge of the window
-    if (y < 0) {
-        y = 0
-    }
+    const { x, y } = ensureInBounds(e.clientX + startX, e.clientY + startY)
 
     dragTargetElement.style.left = x + 'px'
     dragTargetElement.style.top = y + 'px'
@@ -62,38 +49,14 @@ function updatePositionOnResize () {
         return
     }
 
-    const windowWidth = window.innerWidth
-    const windowHeight = window.innerHeight
-    const widgetWidth = dragTargetElement.offsetWidth
-    const widgetHeight = dragTargetElement.offsetHeight
+    const currentX = parseInt(dragTargetElement.style.left, 10)
+    const currentY = parseInt(dragTargetElement.style.top, 10)
 
-    let x = parseInt(dragTargetElement.style.left, 10)
-    let y = parseInt(dragTargetElement.style.top, 10)
-
-    // If the widget is beyond the right edge of the window, move it back
-    if (x + widgetWidth > windowWidth) {
-        x = windowWidth - widgetWidth
-    }
-
-    // If the widget is beyond the left edge of the window, move it back
-    if (x < 0) {
-        x = 0
-    }
-
-    // If the widget is below the bottom edge of the window, move it back
-    if (y + widgetHeight > windowHeight) {
-        y = windowHeight - widgetHeight
-    }
-
-    // If the widget is above the top edge of the window, move it back
-    if (y < 0) {
-        y = 0
-    }
+    const { x, y } = ensureInBounds(currentX, currentY)
 
     dragTargetElement.style.left = x + 'px'
     dragTargetElement.style.top = y + 'px'
 }
-
 
 function dragEnd () {
     document.removeEventListener('mousemove', drag)
@@ -120,18 +83,12 @@ function enableDraggable (handle: HTMLElement, target: HTMLElement) {
     dragHandleElement = handle
     dragTargetElement = target
 
-    dragTargetElement.style.position = 'fixed'
-
     setListeners()
 
     tryOnBeforeUnmount(removeListeners)
 }
 
 function disableDraggable () {
-    if (dragTargetElement) {
-        dragTargetElement.style.position = 'absolute'
-    }
-
     dragHandleElement = null
     dragTargetElement = null
 

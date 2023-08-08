@@ -1,4 +1,4 @@
-import type { ICallSettings } from '@/types/internal'
+import type { ICallSettings } from '@/types/public-api'
 import { defaultRingingSound } from '@/utils/ringingSound'
 
 export const defaultCallSettings: ICallSettings = {

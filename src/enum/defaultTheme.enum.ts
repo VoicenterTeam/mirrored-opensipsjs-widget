@@ -19,6 +19,10 @@ export const defaultTheme: IWidgetTheme = {
     },
     layoutConfig: {
         type: 'rounded',
-        mode: 'floating'
+        mode: 'fixed',
+        position: {
+            bottom: '20px',
+            anchor: 'bottom-center'
+        }
     }
 }
