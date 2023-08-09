@@ -47,10 +47,19 @@ export const ActiveTabPlugin = {
                 window.addEventListener('unload', function () {
                     localStorageTabList.value.delete(tabId)
 
+                    if (!localStorageTabList.value.size) {
+                        localStorageActiveTab.value = ''
+                        return
+                    }
                     if (isActiveTab.value) {
                         localStorageActiveTab.value = Array.from(localStorageTabList.value).pop() ?? ''
                     }
                 })
+            } else {
+                localStorageTabList.value.delete(tabId)
+                if (!localStorageTabList.value.size) {
+                    localStorageActiveTab.value = ''
+                }
             }
         })
 
