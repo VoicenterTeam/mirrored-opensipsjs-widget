@@ -1,11 +1,38 @@
 import { computed, ref } from 'vue'
 import merge from 'lodash/merge'
-import type { ICallSettings } from '@/types/internal'
-import type { TWidgetConfigOptions, IWidgetTheme, IWidgetConfig } from '@/types/public-api'
+import type {
+    TWidgetConfigOptions,
+    ICallSettings,
+    IWidgetConfig,
+    IWidgetTheme,
+    TLayoutMode,
+    TPosition
+} from '@/types/public-api'
 import { defaultTheme } from '@/enum/defaultTheme.enum'
 import { useWidgetState } from '@/composables/useWidgetState'
 import { getDefaultWidgetConfig } from '@/enum/defaultWidgetConfig.enum'
 import { useWidgetDraggable } from '@/composables/useWidgetDraggable'
+import { toCssValue } from '@/helpers/cssHelper'
+import { cloneDeep } from 'lodash'
+
+/* Const */
+const POSITION_MODE_MAP: Record<TLayoutMode, string> = {
+    floating: 'fixed',
+    docked: 'relative',
+    fixed: 'fixed'
+}
+
+const POSITION_MAP: Record<TPosition, TPosition> = {
+    left: 'right',
+    right: 'left',
+    top: 'bottom',
+    bottom: 'top'
+}
+
+const CENTER_POSITIONS: Record<string, string> = {
+    horizontal: '50vw',
+    vertical: '50vh'
+}
 
 /* Data */
 const widgetConfig = ref<IWidgetConfig>(getDefaultWidgetConfig())
@@ -85,20 +112,72 @@ export const ringingSoundBase64 = computed({
 })
 export const layoutMode = computed(() => widgetThemeSettings.value.layoutConfig.mode)
 
+/* Methods */
 export function setCallSettingsPermissions (settings: Partial<ICallSettings>) {
-    const mergedSettings: ICallSettings = merge(widgetCallSettings.value, settings)
-
-    widgetCallSettings.value = mergedSettings
+    widgetCallSettings.value = merge(widgetCallSettings.value, settings)
 }
 
-export function setColorThemeSettings (settings: Partial<IWidgetTheme>, widgetRootEl: HTMLElement) {
+function setWidgetPosition (settings: IWidgetTheme, widgetRootEl: HTMLElement) {
+    widgetRootEl.style.position = POSITION_MODE_MAP[settings.layoutConfig.mode] || 'unset'
+
+    for (const [ key, oppositeKey ] of Object.entries(POSITION_MAP) as [ TPosition, TPosition ][]) {
+        const value = settings.layoutConfig.position[key]
+
+        if (value !== undefined) {
+            widgetThemeSettings.value.layoutConfig.position[key] = widgetRootEl.style[key] = toCssValue(value, 'unset')
+
+            if (!settings.layoutConfig.position[oppositeKey]) {
+                widgetThemeSettings.value.layoutConfig.position[oppositeKey] = widgetRootEl.style[oppositeKey] = 'unset'
+            }
+        }
+    }
+
+    if (settings.layoutConfig.mode === 'floating') {
+        widgetThemeSettings.value.layoutConfig.position.right = widgetRootEl.style.right = 'unset'
+        widgetThemeSettings.value.layoutConfig.position.bottom = widgetRootEl.style.bottom = 'unset'
+    } else {
+        const anchor = widgetThemeSettings.value.layoutConfig.position.anchor = settings.layoutConfig.position.anchor
+
+        if (anchor) {
+            widgetThemeSettings.value.layoutConfig.position.left = widgetRootEl.style.left = CENTER_POSITIONS.horizontal
+            widgetThemeSettings.value.layoutConfig.position.right = widgetRootEl.style.right = 'unset'
+
+            switch (anchor) {
+                case 'bottom-center':
+                    widgetThemeSettings.value.layoutConfig.position.bottom = widgetRootEl.style.bottom = toCssValue(settings.layoutConfig.position.bottom, '0px')
+                    widgetThemeSettings.value.layoutConfig.position.top = widgetRootEl.style.top = 'unset'
+                    widgetRootEl.style.transform = 'translateX(-50%)'
+
+                    break
+                case 'top-center':
+                    widgetThemeSettings.value.layoutConfig.position.bottom = widgetRootEl.style.bottom = 'unset'
+                    widgetThemeSettings.value.layoutConfig.position.top = widgetRootEl.style.top = toCssValue(settings.layoutConfig.position.top, '0px')
+                    widgetRootEl.style.transform = 'translateX(-50%)'
+
+                    break
+                case 'center':
+                    widgetThemeSettings.value.layoutConfig.position.bottom = widgetRootEl.style.bottom = 'unset'
+                    widgetThemeSettings.value.layoutConfig.position.top = widgetRootEl.style.top = CENTER_POSITIONS.vertical
+                    widgetRootEl.style.transform = 'translate(-50%, -50%)'
+
+                    break
+            }
+        }
+    }
+}
+
+export function setThemeSettings (settings: Partial<IWidgetTheme>, widgetRootEl: HTMLElement) {
     const mergedTheme: IWidgetTheme = merge(defaultTheme, settings)
 
     widgetThemeSettings.value = mergedTheme
 
+    // Setting widget colors
     Object.entries(mergedTheme.colors).forEach(([ key, value ]) => {
         widgetRootEl.style.setProperty(`--${key}`, value)
     })
+
+    // Setting widget position
+    setWidgetPosition(mergedTheme, widgetRootEl)
 }
 
 export function setConfig (config: Partial<TWidgetConfigOptions>) {
@@ -106,7 +185,7 @@ export function setConfig (config: Partial<TWidgetConfigOptions>) {
     const { enableDraggable, disableDraggable } = useWidgetDraggable()
 
     setCallSettingsPermissions(config.callSettings ?? {})
-    setColorThemeSettings(config.themeSettings ?? {}, widgetElement)
+    setThemeSettings(config.themeSettings ?? {}, widgetElement)
 
     if (widgetThemeSettings.value.layoutConfig.mode === 'floating') {
         enableDraggable(dragHandleElement, widgetElement)
@@ -114,6 +193,11 @@ export function setConfig (config: Partial<TWidgetConfigOptions>) {
         disableDraggable()
     }
 }
+
+export function getConfig (): IWidgetConfig {
+    return cloneDeep(widgetConfig.value)
+}
+
 
 export function setRingingSound (base64: string) {
     ringingSoundBase64.value = base64

@@ -3,11 +3,17 @@ import { description } from '../../package'
 import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
 import { getDirname, path } from '@vuepress/utils'
 import { typedocPlugin } from 'vuepress-plugin-typedoc/next';
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 const __dirname = getDirname(import.meta.url)
 
 export default defineUserConfig({
     description: description,
+
+    define: {
+        __OPENSIPS_WIDGET_CDN__: process.env.OPENSIPS_WIDGET_CDN,
+    },
 
     head: [
         ['link', {rel: 'icon', href: '/favicon.ico'}],

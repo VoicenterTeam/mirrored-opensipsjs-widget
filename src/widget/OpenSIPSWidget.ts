@@ -11,6 +11,7 @@ import type { Widget as PublicWidget } from '@/types/public-api'
 import App from '@/App.vue'
 import { ActiveTabPlugin } from '@/plugins/activeTabPlugin'
 import type { OpenSIPSWidgetElement } from '@/types/opensips-widget'
+import { removeListeners } from '@/composables/useWidgetDraggable'
 
 const cssStyleSheet = new CSSStyleSheet()
 cssStyleSheet.insertRule(styles)
@@ -42,6 +43,10 @@ export class OpenSIPSWidget extends HTMLElement implements OpenSIPSWidgetElement
         } else {
             return super.dispatchEvent(event as Event)
         }
+    }
+
+    public disconnectedCallback () {
+        removeListeners()
     }
 
     // Mount Vue application

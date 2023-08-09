@@ -1,7 +1,9 @@
 <template>
-    <VueSelect v-bind="$attrs" />
+    <select>
+        <option value=""/>
+    </select>
 </template>
 
 <script lang="ts" setup>
-import VueSelect from 'vue-select'
+// TODO component
 </script>
