@@ -9,14 +9,17 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { registerOpenSIPS, useExternalOpenSIPSJS, isOpenSIPSReady } from '@/composables/opensipsjs'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { registerOpenSIPS, useExternalOpenSIPSJS, isOpenSIPSReady, allActiveCalls } from '@/composables/opensipsjs'
 import WidgetContent from '@/views/WidgetContent.vue'
 import Draggable from '@/components/Draggable.vue'
 import type { IWidgetAppProps } from '@/types/internal'
 import type { IWidgetInitOptions } from '@/types/public-api'
 import { setWidgetElement } from '@/composables/useWidgetState'
 import { layoutMode } from '@/composables/useWidgetConfig'
+import { useActiveTab } from '@/plugins/activeTabPlugin'
+
+const { setTabIDWithActiveCall } = useActiveTab()
 
 // Props
 const props = defineProps<IWidgetAppProps>()
@@ -26,6 +29,14 @@ const draggableHandle = ref<typeof Draggable>()
 
 /* Computed */
 const showDraggableHandle = computed(() => layoutMode.value === 'floating')
+
+watch(allActiveCalls, (calls) => {
+    if (calls && calls.length) {
+        setTabIDWithActiveCall(true)
+    } else {
+        setTabIDWithActiveCall(false)
+    }
+})
 
 // Methods
 async function makeWidgetAPI ({ credentials, config }: IWidgetInitOptions) {

@@ -110,8 +110,6 @@ function processCallsTime (calls: AllActiveCallsType) {
         })
     })
 
-    console.log('newCallIds', newCalls)
-
     if (!newCalls.length) {
         return
     }
@@ -166,37 +164,23 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
         })
         .on('changeActiveCalls', (calls: AllActiveCallsType) => {
             processCallsTime(calls)
-            console.log('calls', calls)
-            console.log('calls.length', Object.values(calls).length)
-            // allActiveCalls.value = {}
             const parsedCalls = Object.values(calls)
             allActiveCalls.value = [ ...parsedCalls ]
         })
         .on('addRoom', (data: RoomChangeEmitType) => {
             const rooms = Object.values(data.roomList)
-            console.log('addRoom', rooms)
             allRooms.value = [ ...rooms ]
-            //console.log('addRoom', allRooms.value)
         })
         .on('updateRoom', (data: RoomChangeEmitType) => {
-            /*const rooms: AllActiveRoomsType = data.roomList
-            allRooms.value = { ...rooms }*/
             const rooms = Object.values(data.roomList)
-            console.log('updateRoom', rooms)
             allRooms.value = [ ...rooms ]
-            //console.log('updateRoom', allRooms.value)
         })
         .on('removeRoom', (data: RoomChangeEmitType) => {
-            /*const rooms: AllActiveRoomsType = data.roomList
-            allRooms.value = { ...rooms }*/
             const rooms = Object.values(data.roomList)
-            console.log('removeRoom', rooms)
             allRooms.value = [ ...rooms ]
-            //console.log('removeRoom', allRooms.value)
         })
         .on('currentActiveRoomChanged', (roomId: number | undefined) => {
             currentActiveRoom.value = roomId
-            console.log('currentActiveRoomChanged', currentActiveRoom.value)
         })
 
 }
