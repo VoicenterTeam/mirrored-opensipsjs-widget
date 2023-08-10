@@ -6,11 +6,14 @@ import { startOpenSIPS, stopOpenSIPS } from '@/composables/opensipsjs'
 interface ActiveTabPluginProvide {
     isActiveTab: Ref<boolean>
     activateTab: () => void
+    setTabIDWithActiveCall: (state: boolean) => void
+    tabIdWithActiveCall: Ref<string>
 }
 
 export const ActiveTabKey: InjectionKey<ActiveTabPluginProvide> = Symbol()
 
 const tabId = Math.random().toString()
+const localStorageTabWithActiveCall = useLocalStorage('openSIPSWidgetTabWithActiveCallID', '')
 const localStorageActiveTab = useLocalStorage('openSIPSWidgetActiveTabID', '')
 const localStorageTabList = useLocalStorage('openSIPSWidgetTabList', new Set<string>())
 const isActiveTab = computed(() => localStorageActiveTab.value === tabId)
@@ -21,6 +24,10 @@ export const ActiveTabPlugin = {
             if (!isActiveTab.value) {
                 localStorageActiveTab.value = tabId
             }
+        }
+
+        function setTabIDWithActiveCall (state: boolean) {
+            localStorageTabWithActiveCall.value = state ? tabId : ''
         }
 
         localStorageTabList.value.add(tabId)
@@ -40,10 +47,19 @@ export const ActiveTabPlugin = {
                 window.addEventListener('unload', function () {
                     localStorageTabList.value.delete(tabId)
 
+                    if (!localStorageTabList.value.size) {
+                        localStorageActiveTab.value = ''
+                        return
+                    }
                     if (isActiveTab.value) {
                         localStorageActiveTab.value = Array.from(localStorageTabList.value).pop() ?? ''
                     }
                 })
+            } else {
+                localStorageTabList.value.delete(tabId)
+                if (!localStorageTabList.value.size) {
+                    localStorageActiveTab.value = ''
+                }
             }
         })
 
@@ -63,7 +79,9 @@ export const ActiveTabPlugin = {
             ActiveTabKey,
             {
                 isActiveTab,
-                activateTab
+                activateTab,
+                setTabIDWithActiveCall,
+                tabIdWithActiveCall: localStorageTabWithActiveCall
             }
         )
     },

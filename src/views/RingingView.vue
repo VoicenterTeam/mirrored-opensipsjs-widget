@@ -51,6 +51,7 @@ import {
     ringingSoundBase64,
     allowTransfer
 } from '@/composables/useWidgetConfig'
+import { defaultRingingSound } from '@/utils/ringingSound'
 
 const { answerCall, terminateCall } = useOpenSIPSJS()
 
@@ -109,7 +110,12 @@ const playRingingSound = (src: string) => {
 }
 
 onMounted(() => {
-    playRingingSound(ringingSoundBase64.value)
+    if (ringingSoundBase64.value) {
+        playRingingSound(ringingSoundBase64.value)
+    } else {
+        playRingingSound(defaultRingingSound)
+    }
+
 })
 
 onUnmounted(() => {
