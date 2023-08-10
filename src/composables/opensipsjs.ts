@@ -1,8 +1,8 @@
 import { ref } from 'vue'
 import OpenSIPSJS from '@voicenter-team/opensips-js'
-import type { ICall, IOpenSIPSJSOptions, IRoom, RoomChangeEmitType } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { ICall, IOpenSIPSJSOptions, IRoom, RoomChangeEmitType, ICallStatus } from '@voicenter-team/opensips-js/src/types/rtc'
 import type { ISIPSCredentials } from '@/types/public-api'
-import type { AllActiveCallsType, CallTimeType, DoHoldFunctionType } from '@/types/opensips'
+import type { AllActiveCallsStatusType, AllActiveCallsType, CallTimeType, DoHoldFunctionType } from '@/types/opensips'
 
 import { autoAnswerDefaultBehaviour } from '@/composables/useWidgetConfig'
 
@@ -24,7 +24,7 @@ export const activeRingingDevice = ref<string>('default')
 export const allActiveCalls = ref<Array<ICall>>([])
 export const allRooms = ref<Array<IRoom>>([])
 export const currentActiveRoom = ref<number | undefined>(undefined)
-
+export const allCallStatuses = ref<Array<ICallStatus>>([])
 
 /* Call settings */
 export const isMuted = ref<boolean>(false)
@@ -183,7 +183,10 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
         .on('currentActiveRoomChanged', (roomId: number | undefined) => {
             currentActiveRoom.value = roomId
         })
-
+        .on('changeCallStatus', (data: AllActiveCallsStatusType) => {
+            const statuses = Object.values(data)
+            allCallStatuses.value = [ ...statuses ]
+        })
 }
 
 /**

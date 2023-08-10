@@ -28,7 +28,7 @@
                 <VoicenterIcon />
             </div>
         </div>
-        <ActionButtons v-if="!incomingUnansweredCall" @merge-click="onCallsMerge"/>
+        <ActionButtons v-if="!incomingUnansweredCall" :calls="activeCalls" @merge-click="onCallsMerge"/>
     </div>
 </template>
 
