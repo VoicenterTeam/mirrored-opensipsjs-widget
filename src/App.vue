@@ -9,13 +9,17 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { allActiveCalls } from '@/composables/opensipsjs'
 import WidgetContent from '@/views/WidgetContent.vue'
 import Draggable from '@/components/Draggable.vue'
 import type { IWidgetAppProps } from '@/types/internal'
 import { setWidgetElement } from '@/composables/useWidgetState'
 import { layoutMode } from '@/composables/useWidgetConfig'
 import OpenSIPSExternalWidgetAPI from '@/widget/OpenSIPSExternalWidgetAPI'
+import { useActiveTab } from '@/plugins/activeTabPlugin'
+
+const { setTabIDWithActiveCall } = useActiveTab()
 
 // Props
 const props = defineProps<IWidgetAppProps>()
@@ -25,6 +29,14 @@ const draggableHandle = ref<typeof Draggable>()
 
 /* Computed */
 const showDraggableHandle = computed(() => layoutMode.value === 'floating')
+
+watch(allActiveCalls, (calls) => {
+    if (calls && calls.length) {
+        setTabIDWithActiveCall(true)
+    } else {
+        setTabIDWithActiveCall(false)
+    }
+})
 
 // Methods
 onMounted(() => {

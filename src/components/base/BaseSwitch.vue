@@ -1,6 +1,6 @@
 <template>
     <label class="toggle_el__switch">
-        <input v-model="toggleValue" type="checkbox" class="toggle_el__input">
+        <input v-model="toggleValue" :disabled="props.disabled" type="checkbox" class="toggle_el__input">
         <div class="toggle_el__slider round"/>
     </label>
 </template>
@@ -10,6 +10,7 @@ import { useVModel } from '@vueuse/core'
 
 const props = defineProps<{
     modelValue: boolean
+    disabled: boolean
 }>()
 const emit = defineEmits([ 'update:modelValue' ])
 

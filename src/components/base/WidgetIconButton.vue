@@ -1,5 +1,5 @@
 <template>
-    <button :className="buttonClasses">
+    <button :className="buttonClasses" :disabled="props.disabled">
         <div :className="iconSize">
             <component :is="icon"/>
         </div>
@@ -16,6 +16,7 @@ const props = withDefaults(
         color: ColorsType
         manual?: boolean | undefined
         icon: Component
+        disabled?: boolean
         // The icon which will be displayed on focus/active state
         pressedIcon?: Component
         pressed?: boolean
@@ -25,6 +26,7 @@ const props = withDefaults(
     {
         pressed: undefined,
         size: 'base',
+        disabled: false,
         additionalClasses: ''
     }
 )
@@ -60,7 +62,6 @@ const iconSize = computed(() => {
 const buttonClasses = computed(() => {
     let base = `
         p-1.5
-        pointer
         ${props.additionalClasses}
     `
 
@@ -68,19 +69,29 @@ const buttonClasses = computed(() => {
         if (props.pressed) {
             return `
                 ${base}
+                pointer
                 bg-${props.color}
                 text-button-pressed-text
             `
         } else {
             return `
                 ${base}
+                pointer
                 bg-secondary-bg
                 text-${props.color}
             `
         }
+    } else if (props.disabled) {
+        return `
+            ${base}
+            cursor-not-allowed
+            bg-inactive-bg
+            text-button-pressed-text
+        `
     } else {
         return `
             ${base}
+            pointer
             bg-secondary-bg
             text-${props.color}
             focus:bg-${props.color}
