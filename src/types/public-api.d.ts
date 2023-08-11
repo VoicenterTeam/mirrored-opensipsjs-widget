@@ -46,11 +46,16 @@ export type ColorsType =
     | 'additional-success-bg'
     | 'additional-bg'
 
+export interface ImagesConfig {
+    backgroundLogo: string
+}
+
 /**
  * Represents the configuration options for the widget theme.
  */
 export interface IWidgetTheme {
     colors: Record<ColorsType, string>
+    images: ImagesConfig
     layoutConfig: ILayoutConfig
 }
 

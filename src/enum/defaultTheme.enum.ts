@@ -24,5 +24,8 @@ export const defaultTheme: IWidgetTheme = {
             bottom: '20px',
             anchor: 'bottom-center'
         }
+    },
+    images: {
+        backgroundLogo: ''
     }
 }
