@@ -12,18 +12,9 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import CloseIcon from '@/assets/icons/close.svg?component'
 import CallIcon from '@/assets/icons/call.svg?component'
-import { useVModel } from '@vueuse/core'
 import InputOutgoingCall from '@/components/InputOutgoingCall.vue'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
-
-const props = withDefaults(
-    defineProps<{
-        modelValue: string
-    }>(),
-    {}
-)
 
 const emit = defineEmits<{
     (e: 'call', value: string): void
