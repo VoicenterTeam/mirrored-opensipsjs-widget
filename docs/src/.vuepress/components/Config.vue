@@ -89,6 +89,10 @@
                             </el-select>
                         </el-form-item>
 
+                        <el-form-item label="Logo">
+                            <ImageUploader v-model="form.themeSettings.images.backgroundLogo" :max-size="1024 * 1024" />
+                        </el-form-item>
+
                         <p>Position</p>
 
                         <el-form-item label="Left">
@@ -161,6 +165,7 @@ import prismjs from 'prismjs'
 import { useLocalStorage } from '@vueuse/core'
 import Demo from './Demo.vue'
 import AudioUploader from './AudioUploader.vue'
+import ImageUploader from './ImageUploader.vue'
 import type { TWidgetConfigOptions, IWidgetExternalAPI } from '@/types/public-api'
 import { getDefaultWidgetConfig } from '@/enum/defaultWidgetConfig.enum'
 

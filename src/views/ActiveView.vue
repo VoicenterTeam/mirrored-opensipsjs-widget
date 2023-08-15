@@ -25,7 +25,7 @@
         />
         <div v-if="!isAnyActiveCall">
             <div className="flex min-h-[32px] bg-primary-bg justify-center items-center">
-                <VoicenterIcon />
+                <img v-if="bgLogoBase64" :src="bgLogoBase64" >
             </div>
         </div>
         <ActionButtons v-if="!incomingUnansweredCall" :calls="activeCalls" @merge-click="onCallsMerge"/>
@@ -36,10 +36,9 @@
 import { computed, ref } from 'vue'
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import ActionButtons from '@/components/ActionButtons.vue'
-import VoicenterIcon from '@/assets/icons/voicenter.svg?component'
 import TransferView from '@/views/TransferView.vue'
 import RingingView from '@/views/RingingView.vue'
-import { allowShrinkOnIdle } from '@/composables/useWidgetConfig'
+import { allowShrinkOnIdle, bgLogoBase64 } from '@/composables/useWidgetConfig'
 import { allActiveCalls, useOpenSIPSJS } from '@/composables/opensipsjs'
 import ActiveCallsView from '@/views/ActiveCallsView.vue'
 import MoveView from '@/views/MoveView.vue'

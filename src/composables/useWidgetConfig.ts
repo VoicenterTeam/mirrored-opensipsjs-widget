@@ -110,6 +110,12 @@ export const ringingSoundBase64 = computed({
         widgetCallSettings.value.ringingSound = value
     }
 })
+export const bgLogoBase64 = computed({
+    get: () => widgetThemeSettings.value.images.backgroundLogo,
+    set: (value: string) => {
+        widgetThemeSettings.value.images.backgroundLogo = value
+    }
+})
 export const layoutMode = computed(() => widgetThemeSettings.value.layoutConfig.mode)
 
 /* Methods */
