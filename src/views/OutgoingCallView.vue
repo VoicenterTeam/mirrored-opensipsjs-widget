@@ -1,5 +1,5 @@
 <template>
-    <div className="flex justify-center w-full h-[32px] p-0.5">
+    <div className="flex justify-center w-full h-[32px] p-0.5 bg-primary-bg">
         <InputOutgoingCall v-model="inputValue" bg-color="secondary-bg" @close="clearOutgoingInput"/>
         <IncomingCallActionButton
             color="success"

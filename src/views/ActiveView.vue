@@ -6,9 +6,7 @@
             @transfer-click="onTransferClick"
         />
         <div v-if="outgoingUnansweredCall && !incomingUnansweredCall">
-            <div className="flex min-h-[32px] items-center px-2">
-                <span>Calling...</span>
-            </div>
+            <OutgoingCallInProgressView @hangup="onOutgoingCallHangup" />
         </div>
         <ActiveCallsView
             v-show="!transferringCall && !movingCall && !incomingUnansweredCall && !outgoingUnansweredCall"
@@ -53,10 +51,18 @@ import { allowShrinkOnIdle, allowOutgoingCalls, bgLogoBase64 } from '@/composabl
 import { allActiveCalls, useOpenSIPSJS } from '@/composables/opensipsjs'
 import ActiveCallsView from '@/views/ActiveCallsView.vue'
 import MoveView from '@/views/MoveView.vue'
-import InputOutgoingCall from '@/components/InputOutgoingCall.vue'
 import OutgoingCallView from '@/views/OutgoingCallView.vue'
+import OutgoingCallInProgressView from '@/views/OutgoingCallInProgressView.vue'
 
-const { transferCall, answerCall, moveCall, mergeCallsInRoom, startCall, opensipsjs } = useOpenSIPSJS()
+const {
+    transferCall,
+    answerCall,
+    moveCall,
+    mergeCallsInRoom,
+    startCall,
+    terminateCall,
+    opensipsjs
+} = useOpenSIPSJS()
 
 const transferringCall = ref<string>('')
 const movingCall = ref<string>('')
@@ -143,6 +149,15 @@ const onCallsMerge = (roomId: number) => {
 
 const onMakeOutgoingCall = (target: string) => {
     startCall(target, false)
+}
+
+const onOutgoingCallHangup = () => {
+    const callId = outgoingUnansweredCall.value?._id
+    if (!callId) {
+        return
+    }
+
+    terminateCall(callId)
 }
 
 </script>
