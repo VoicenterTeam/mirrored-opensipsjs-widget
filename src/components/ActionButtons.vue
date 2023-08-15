@@ -1,6 +1,6 @@
 <template>
     <div :className="actionButtonWrapperClasses">
-        <div :className="expandWrapperClasses">
+        <!--        <div :className="expandWrapperClasses">
             <div>
                 <WidgetIconButton
                     color="primary"
@@ -12,8 +12,8 @@
             <div v-if="isExpandRoomsState" className="w-full bg-primary">
                 <div/>
             </div>
-        </div>
-        <div className="flex">
+        </div>-->
+        <div className="flex w-full">
             <slot name="prefix-buttons" />
             <SettingsIconButton className="border-r-1 border-border-lines" />
             <div>
@@ -25,14 +25,15 @@
                     additional-classes="border-r border-border-lines"
                     @click="doMuteAgent" />
             </div>
-            <div v-if="allowOutgoingCalls" className="flex">
+            <div v-if="allowOutgoingCalls" className="flex w-full">
                 <div v-if="isOutgoingCallInputOpen" className="w-full">
-                    Type a number
+                    <InputOutgoingCall v-model="outgoingInputValue" @close="onOutgoingInputClose" />
                 </div>
                 <div>
                     <WidgetIconButton
                         color="success"
                         :icon="CallIcon"
+                        :use-focus-effect="false"
                         :additional-classes="outgoingCallButtonClasses"
                         @click="onOutgoingCallClick" />
                 </div>
@@ -63,8 +64,9 @@ import CallIcon from '@/assets/icons/call2.svg?component'
 import { useOpenSIPSJS, isMuted, isMuteWhenJoin, allActiveCalls, currentActiveRoom } from '@/composables/opensipsjs'
 import { allowOutgoingCalls } from '@/composables/useWidgetConfig'
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
+import InputOutgoingCall from '@/components/InputOutgoingCall.vue'
 
-const { muteAgent, opensipsjs } = useOpenSIPSJS()
+const { muteAgent, startCall, opensipsjs } = useOpenSIPSJS()
 
 const props = withDefaults(
     defineProps<{
@@ -79,6 +81,7 @@ const emit = defineEmits<{
 
 const isExpandRoomsState = ref<boolean>(false)
 const isOutgoingCallInputOpen = ref<boolean>(false)
+const outgoingInputValue = ref<string>('')
 
 const actionButtonWrapperClasses = computed(() => {
     const justifyStyle = isExpandRoomsState.value ? 'justify-between' : 'justify-start'
@@ -130,8 +133,21 @@ const expandRoom = () => {
 }
 
 const onOutgoingCallClick = () => {
-    isExpandRoomsState.value = false
-    isOutgoingCallInputOpen.value = true
+    if (!isOutgoingCallInputOpen.value) {
+        isExpandRoomsState.value = false
+        isOutgoingCallInputOpen.value = true
+    } else {
+        if (!outgoingInputValue.value) {
+            return
+        }
+      
+        startCall(outgoingInputValue.value, false)
+    }
+
+}
+
+const onOutgoingInputClose = () => {
+    isOutgoingCallInputOpen.value = false
 }
 
 onMounted(() => {

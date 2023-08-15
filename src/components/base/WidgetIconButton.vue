@@ -22,12 +22,14 @@ const props = withDefaults(
         pressed?: boolean
         size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | 'xxl' | 'xxxl'
         additionalClasses?: string
+        useFocusEffect?: boolean
     }>(),
     {
         pressed: undefined,
         size: 'base',
         disabled: false,
-        additionalClasses: ''
+        additionalClasses: '',
+        useFocusEffect: true
     }
 )
 
@@ -89,16 +91,24 @@ const buttonClasses = computed(() => {
             text-button-pressed-text
         `
     } else {
-        return `
+        const primaryClasses = `
             ${base}
             pointer
             bg-secondary-bg
             text-${props.color}
-            focus:bg-${props.color}
-            focus:text-button-pressed-text
             hover:bg-${props.color}
             hover:text-button-pressed-text
         `
+
+        if (props.useFocusEffect) {
+            return `
+              ${primaryClasses}
+              focus:bg-${props.color}
+              focus:text-button-pressed-text
+            `
+        } else {
+            return primaryClasses
+        }
     }
 })
 </script>
