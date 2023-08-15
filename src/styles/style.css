@@ -271,4 +271,8 @@
     .toggle_el__slider.round:before {
         border-radius: 50%;
     }
+
+    .room-button-gradient {
+        background: linear-gradient(to right, var(--primary) 0%, transparent 5%);
+    }
 }

@@ -35,7 +35,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import CheckmarkIcon from '@/assets/icons/checkmark.svg?component'
-import CloseIcon from '@/assets/icons/close.svg?component'
+import CloseIcon from '@/assets/icons/close2.svg?component'
 import BaseInput from '@/components/base/BaseInput.vue'
 import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
 

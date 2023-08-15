@@ -25,7 +25,7 @@
                     additional-classes="border-r border-border-lines"
                     @click="doMuteAgent" />
             </div>
-            <div v-if="allowOutgoingCalls" className="flex w-full">
+            <div v-if="allowOutgoingCalls && props.showOutgoingButton" className="flex w-full">
                 <div v-if="isOutgoingCallInputOpen" className="w-full">
                     <InputOutgoingCall v-model="outgoingInputValue" @close="onOutgoingInputClose" />
                 </div>
@@ -71,8 +71,11 @@ const { muteAgent, startCall, opensipsjs } = useOpenSIPSJS()
 const props = withDefaults(
     defineProps<{
         calls: UnwrapRef<Array<ICall>>
+        showOutgoingButton: boolean
     }>(),
-    {}
+    {
+        showOutgoingButton: false
+    }
 )
 
 const emit = defineEmits<{
@@ -148,6 +151,7 @@ const onOutgoingCallClick = () => {
 
 const onOutgoingInputClose = () => {
     isOutgoingCallInputOpen.value = false
+    outgoingInputValue.value = ''
 }
 
 onMounted(() => {
