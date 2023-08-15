@@ -51,7 +51,7 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
 import CheckmarkIcon from '@/assets/icons/checkmark.svg?component'
-import CloseIcon from '@/assets/icons/close.svg?component'
+import CloseIcon from '@/assets/icons/close2.svg?component'
 import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import { allActiveCalls, allRooms } from '@/composables/opensipsjs'

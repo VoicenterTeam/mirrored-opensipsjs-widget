@@ -22,12 +22,12 @@ const props = withDefaults(
 )
 
 const buttonWrapperClasses = computed(() => {
-    const baseClasses = 'flex justify-center border-b border-t border-r items-center px-2 h-[40px] w-[40px] cursor-pointer z-50 '
+    const baseClasses = 'flex justify-center items-center px-2 h-[40px] w-[40px] cursor-pointer z-50 '
 
     if (props.isActive) {
         return baseClasses + 'bg-primary text-button-pressed-text'
     } else {
-        return baseClasses + 'b-secondary-bg'
+        return baseClasses + 'bg-secondary-bg border-primary-bg border-b border-t'
     }
 })
 

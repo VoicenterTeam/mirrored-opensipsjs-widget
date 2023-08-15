@@ -1,6 +1,19 @@
 <template>
-    <div className="flex justify-between bg-secondary-bg">
-        <div className="flex">
+    <div :className="actionButtonWrapperClasses">
+        <!--        <div :className="expandWrapperClasses">
+            <div>
+                <WidgetIconButton
+                    color="primary"
+                    :icon="ExpandRoomsIcon"
+                    :pressed="isExpandRoomsState"
+                    additional-classes="border-r border-border-lines"
+                    @click="expandRoom" />
+            </div>
+            <div v-if="isExpandRoomsState" className="w-full bg-primary">
+                <div/>
+            </div>
+        </div>-->
+        <div className="flex w-full">
             <slot name="prefix-buttons" />
             <SettingsIconButton className="border-r-1 border-border-lines" />
             <div>
@@ -11,6 +24,20 @@
                     :pressed-icon="UnMuteIcon"
                     additional-classes="border-r border-border-lines"
                     @click="doMuteAgent" />
+            </div>
+            <div v-if="allowOutgoingCalls && props.showOutgoingButton" className="flex w-full">
+                <div v-if="isOutgoingCallInputOpen" className="w-full">
+                    <InputOutgoingCall v-model="outgoingInputValue" @close="onOutgoingInputClose" />
+                </div>
+                <div>
+                    <WidgetIconButton
+                        color="success"
+                        :icon="CallIcon"
+                        :use-focus-effect="false"
+                        :additional-classes="outgoingCallButtonClasses"
+                        @click="onOutgoingCallClick" />
+                </div>
+
             </div>
             <slot name="suffix-buttons" />
         </div>
@@ -25,19 +52,57 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, computed } from 'vue'
+import type { UnwrapRef } from 'vue'
+import { onMounted, computed, ref } from 'vue'
 import SettingsIconButton from '@/components/SettingsIconButton.vue'
 import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
 import MuteIcon from '@/assets/icons/mute.svg?component'
 import UnMuteIcon from '@/assets/icons/unmute.svg?component'
+import ExpandRoomsIcon from '@/assets/icons/expandRooms.svg?component'
 import MergeIcon from '@/assets/icons/merge.svg?component'
+import CallIcon from '@/assets/icons/call2.svg?component'
 import { useOpenSIPSJS, isMuted, isMuteWhenJoin, allActiveCalls, currentActiveRoom } from '@/composables/opensipsjs'
+import { allowOutgoingCalls } from '@/composables/useWidgetConfig'
+import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
+import InputOutgoingCall from '@/components/InputOutgoingCall.vue'
 
-const { muteAgent, opensipsjs } = useOpenSIPSJS()
+const { muteAgent, startCall, opensipsjs } = useOpenSIPSJS()
+
+const props = withDefaults(
+    defineProps<{
+        calls: UnwrapRef<Array<ICall>>
+        showOutgoingButton: boolean
+    }>(),
+    {
+        showOutgoingButton: false
+    }
+)
 
 const emit = defineEmits<{
     (e: 'merge-click', roomId: number): void
 }>()
+
+const isExpandRoomsState = ref<boolean>(false)
+const isOutgoingCallInputOpen = ref<boolean>(false)
+const outgoingInputValue = ref<string>('')
+
+const actionButtonWrapperClasses = computed(() => {
+    const justifyStyle = isExpandRoomsState.value ? 'justify-between' : 'justify-start'
+    return `flex ${justifyStyle} bg-secondary-bg`
+})
+
+const expandWrapperClasses = computed(() => {
+    const base = 'flex z-50'
+    return isExpandRoomsState.value ? base + ' w-full' : base
+})
+
+const outgoingCallButtonClasses = computed(() => {
+    let classes = ' border-border-lines'
+    if (!isExpandRoomsState.value && !isOutgoingCallInputOpen.value) {
+        classes += ' border-r'
+    }
+    return classes
+})
 
 const isAgentMuted = computed(() => {
     if (!allActiveCalls.value.length) {
@@ -63,6 +128,30 @@ const doMuteAgent = () => {
 const onMergeClick = () => {
     if (!currentActiveRoom.value) return
     emit('merge-click', currentActiveRoom.value)
+}
+
+const expandRoom = () => {
+    isOutgoingCallInputOpen.value = false
+    isExpandRoomsState.value = !isExpandRoomsState.value
+}
+
+const onOutgoingCallClick = () => {
+    if (!isOutgoingCallInputOpen.value) {
+        isExpandRoomsState.value = false
+        isOutgoingCallInputOpen.value = true
+    } else {
+        if (!outgoingInputValue.value) {
+            return
+        }
+      
+        startCall(outgoingInputValue.value, false)
+    }
+
+}
+
+const onOutgoingInputClose = () => {
+    isOutgoingCallInputOpen.value = false
+    outgoingInputValue.value = ''
 }
 
 onMounted(() => {

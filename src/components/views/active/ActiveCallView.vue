@@ -102,7 +102,7 @@ const emit = defineEmits<{
 const isOnLocalHold = ref<boolean>(false)
 
 const wrapperClasses = computed(() => {
-    const baseClasses = 'flex border-l'
+    const baseClasses = 'flex room-button-gradient'
 
     if (props.isSingleRoom) {
         if (props.isSingleCall) {
