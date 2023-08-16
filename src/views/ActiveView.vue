@@ -134,8 +134,6 @@ const cancelMoving = () => {
 }
 
 const onCallTransfer = (callId: string, target: string) => {
-    console.log('callId', callId)
-    console.log('target', target)
     transferCall(callId, target)
     transferringCall.value = ''
 }

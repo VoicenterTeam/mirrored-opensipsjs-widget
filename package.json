@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "vite",
     "dev:documentation": "npm run build && cd docs && npm install && npm run dev",
-    "build": "run-p build-only",
+    "build": "run-p type-check build-only",
     "build:documentation": "npm run build && cd docs && npm install && npm run build",
     "preview": "vite preview",
     "build-only": "vite build",
