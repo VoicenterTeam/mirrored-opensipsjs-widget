@@ -8,17 +8,20 @@
                     </div>
 
                 </div>-->
+                <div className="inline-block w-3 h-3 text-primary">
+                    <MoveToCallIcon />
+                </div>
 
-                <span className="text-xs">
+                <span className="text-xs mx-2">
                     Move Call
                 </span>
 
             </li>
             <li v-if="allowTransfer" className="h-8 cursor-pointer hover:bg-secondary-bg p-2" @click="onTransferClick" >
-                <!--                <div className="inline-block w-4 h-4 text-primary">
+                <div className="inline-block w-3 h-3 text-primary">
                     <TransferIcon />
-                </div>-->
-                <span className="text-xs">
+                </div>
+                <span className="text-xs mx-2">
                     Transfer Call
                 </span>
             </li>

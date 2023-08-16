@@ -29,7 +29,7 @@
         <div v-if="!isAnyActiveCall">
             <OutgoingCallView v-if="allowOutgoingCalls" @call="onMakeOutgoingCall" />
             <div v-else className="flex min-h-[32px] bg-primary-bg justify-center items-center">
-                <img v-if="bgLogoBase64" :src="bgLogoBase64" >
+                <img v-if="bgLogoBase64" :src="bgLogoBase64" className="logo-image">
             </div>
         </div>
         <ActionButtons

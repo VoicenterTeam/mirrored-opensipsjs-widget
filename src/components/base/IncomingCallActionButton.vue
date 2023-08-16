@@ -16,7 +16,7 @@ const props = withDefaults(
         color: ColorsType,
         icon: Component,
         hoverColor?: ColorsType,
-        size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | 'xxl' | 'xxxl'
+        size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | 'xxl' | 'xxxl' | 'xl-lg' | 'xl-base'
         additionalClasses?: string
     }>(),
     {
@@ -45,6 +45,10 @@ const iconSize = computed(() => {
             return 'w-7 h-7'
         case 'xxxl':
             return 'w-8 h-8'
+        case 'xl-base':
+            return 'w-6 h-4'
+        case 'xl-lg':
+            return 'w-6 h-5'
         default:
             return 'w-4 h-4'
     }
