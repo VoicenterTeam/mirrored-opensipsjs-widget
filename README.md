@@ -1,6 +1,7 @@
 # OpenSIPS Widget
 A Vue3-based widget for integrating OpenSIPS VoIP functionalities into your web application.
 
+
 ## Features
 - SIP calling features through OpenSIPS-JS.
 - Audio device selection.
