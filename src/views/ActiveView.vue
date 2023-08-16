@@ -29,7 +29,7 @@
         <div v-if="!isAnyActiveCall">
             <OutgoingCallView v-if="allowOutgoingCalls" @call="onMakeOutgoingCall" />
             <div v-else className="flex min-h-[32px] bg-primary-bg justify-center items-center">
-                <img v-if="bgLogoBase64" :src="bgLogoBase64" >
+                <img v-if="bgLogoBase64" :src="bgLogoBase64" className="logo-image">
             </div>
         </div>
         <ActionButtons
@@ -134,6 +134,8 @@ const cancelMoving = () => {
 }
 
 const onCallTransfer = (callId: string, target: string) => {
+    console.log('callId', callId)
+    console.log('target', target)
     transferCall(callId, target)
     transferringCall.value = ''
 }

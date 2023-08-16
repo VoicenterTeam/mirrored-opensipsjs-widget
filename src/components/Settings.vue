@@ -4,9 +4,9 @@
 
         <div v-if="showAutoAnswerSetup" class="flex items-center mt-2">
             <label>
-                <!--                <div className="inline-block w-4 h-4 text-primary">
-                    <MicrophoneIcon />
-                </div>-->
+                <div className="inline-block w-4 h-4 text-primary">
+                    <AutoAnswerIcon />
+                </div>
                 Auto answer
             </label>
             <div class="inline-block ml-2">
@@ -22,7 +22,7 @@
 import { computed, watch } from 'vue'
 import MediaDevicesSettings from '@/components/MediaDevicesSettings.vue'
 import BaseSwitch from '@/components/base/BaseSwitch.vue'
-// import AutoAnswerIcon from '@/assets/icons/autoAnswer.svg?component'
+import AutoAnswerIcon from '@/assets/icons/autoAnswer.svg?component'
 // import MicrophoneIcon from '@/assets/icons/mute.svg?component'
 import { autoAnswerDefaultBehaviour, allowAutoAnswerSetup } from '@/composables/useWidgetConfig'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'

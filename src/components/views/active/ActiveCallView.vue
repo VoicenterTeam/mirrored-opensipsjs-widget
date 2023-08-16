@@ -26,14 +26,14 @@
             <IncomingCallActionButton
                 v-if="!props.call.localMuted"
                 color="primary"
-                :icon="MuteIcon"
-                size="xl"
+                :icon="SoundOnIcon"
+                size="xl-base"
                 @click="doMuteCaller" />
             <IncomingCallActionButton
                 v-else
                 color="primary"
-                :icon="UnmuteIcon"
-                size="xl"
+                :icon="SoundOffIcon"
+                size="xl-lg"
                 @click="unmuteCaller" />
         </div>
 
@@ -68,8 +68,8 @@ import type { UnwrapRef } from 'vue'
 import DeclineIcon from '@/assets/icons/decline.svg?component'
 import HoldIcon from '@/assets/icons/hold.svg?component'
 import OnHoldIcon from '@/assets/icons/onHold.svg?component'
-import MuteIcon from '@/assets/icons/mute.svg?component'
-import UnmuteIcon from '@/assets/icons/unmute.svg?component'
+import SoundOnIcon from '@/assets/icons/soundOn.svg?component'
+import SoundOffIcon from '@/assets/icons/soundOff.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
 import CallOptionsIconButton from '@/components/CallOptionsIconButton.vue'
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
@@ -77,10 +77,8 @@ import { useOpenSIPSJS, callTimes } from '@/composables/opensipsjs'
 import { computed, onMounted, ref } from 'vue'
 import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
 
-import MoveToCallIcon from '@/assets/icons/moveToCall.svg?component'
-import TransferIcon from '@/assets/icons/transfer.svg?component'
 import { allowTransfer, displayCallerInfoId, displayCallerInfoIdMask, displayCallerInfoName } from '@/composables/useWidgetConfig'
-import { getCallerInfo, getCallerNumber } from '@/helpers/callerHelper'
+import { getCallerNumber } from '@/helpers/callerHelper'
 
 const { terminateCall, holdCall, muteCaller } = useOpenSIPSJS()
 
@@ -157,7 +155,6 @@ const unmuteCaller = () => {
 }
 
 const declineIncomingCall = () => {
-    console.log('declineIncomingCall', props.call._id)
     terminateCall(props.call._id)
 }
 
