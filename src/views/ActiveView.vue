@@ -102,7 +102,7 @@ const activeCalls = computed(() => {
 })
 
 const wrapperClasses = computed(() => {
-    const baseClasses = 'min-h-[60px]'
+    const baseClasses = 'min-h-[60px] bg-primary-bg'
     if (allowShrinkOnIdle.value && !isAnyActiveCall.value) {
         return `${baseClasses} min-w-[116px]`
     } else {
