@@ -73,7 +73,7 @@ import SoundOffIcon from '@/assets/icons/soundOff.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
 import CallOptionsIconButton from '@/components/CallOptionsIconButton.vue'
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
-import { useOpenSIPSJS, callTimes } from '@/composables/opensipsjs'
+import { useOpenSIPSJS, callTimes, allRooms } from '@/composables/opensipsjs'
 import { computed, onMounted, ref } from 'vue'
 import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
 
@@ -100,7 +100,11 @@ const emit = defineEmits<{
 const isOnLocalHold = ref<boolean>(false)
 
 const wrapperClasses = computed(() => {
-    const baseClasses = 'flex room-button-gradient'
+    let baseClasses = 'flex'
+
+    if (allRooms.value.length > 1) {
+        baseClasses += ' room-button-gradient'
+    }
 
     if (props.isSingleRoom) {
         if (props.isSingleCall) {

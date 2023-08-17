@@ -3,7 +3,6 @@
         <span className="text-xs" >
             {{ props.roomId }}
         </span>
-
     </div>
 </template>
 
@@ -32,7 +31,6 @@ const buttonWrapperClasses = computed(() => {
 })
 
 const makeRoomActive = () => {
-    console.log('set', props.roomId, 'room active')
     setActiveRoom(props.roomId)
 }
 </script>
