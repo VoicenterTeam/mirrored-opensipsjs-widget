@@ -1,6 +1,11 @@
 <template>
     <div className="flex justify-center w-full h-[32px] p-0.5 bg-primary-bg">
-        <InputOutgoingCall v-model="inputValue" bg-color="secondary-bg" @close="clearOutgoingInput"/>
+        <InputOutgoingCall
+            v-model="inputValue"
+            bg-color="secondary-bg"
+            @call="onCallClick"
+            @close="clearOutgoingInput"
+        />
         <IncomingCallActionButton
             color="success"
             hover-color="additional-success-bg"

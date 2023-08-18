@@ -6,6 +6,7 @@
                 :className="inputClasses"
                 :placeholder="inputPlaceholder"
                 type="text"
+                @keypress="onKeyPressed"
             >
             <div className="w-4 h-4 text-secondary-text">
                 <button :className="buttonClasses" @click="onClose">
@@ -38,6 +39,7 @@ const props = withDefaults(
 const emit = defineEmits<{
     (e: 'update:modelValue', value: string): void
     (e: 'close'): void
+    (e: 'call'): void
 }>()
 
 const inputValue = useVModel(props, 'modelValue', emit) as WritableComputedRef<string>
@@ -57,6 +59,15 @@ const buttonClasses = computed(() => {
 const inputPlaceholder = computed(() => {
     return `+${outgoingCallPrefix.value} ___-___-__-__`
 })
+
+const onKeyPressed = (event: KeyboardEvent) => {
+    if (event.key === 'Enter') {
+        // Cancel the default action, if needed
+        event.preventDefault()
+        emit('call')
+        // Trigger the button element with a click
+    }
+}
 const onClose = () => {
     emit('close')
 }
