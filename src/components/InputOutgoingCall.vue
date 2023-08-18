@@ -3,9 +3,9 @@
         <div :className="wrapperClasses">
             <input
                 v-model="inputValue"
-                placeholder="+972 ___-___-__-__"
-                type="text"
                 :className="inputClasses"
+                :placeholder="inputPlaceholder"
+                type="text"
             >
             <div className="w-4 h-4 text-secondary-text">
                 <button :className="buttonClasses" @click="onClose">
@@ -19,10 +19,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { WritableComputedRef } from 'vue'
-import CloseIcon from '@/assets/icons/close.svg?component'
-import { useVModel } from '@vueuse/core'
 import { computed } from 'vue'
+import type { WritableComputedRef } from 'vue'
+import { useVModel } from '@vueuse/core'
+import CloseIcon from '@/assets/icons/close.svg?component'
+import { outgoingCallPrefix } from '@/composables/useWidgetConfig'
 
 const props = withDefaults(
     defineProps<{
@@ -51,6 +52,10 @@ const inputClasses = computed(() => {
 
 const buttonClasses = computed(() => {
     return `p-1 pointer bg-${props.bgColor}`
+})
+
+const inputPlaceholder = computed(() => {
+    return `+${outgoingCallPrefix.value} ___-___-__-__`
 })
 const onClose = () => {
     emit('close')

@@ -182,6 +182,7 @@ export interface ICallSettings {
     callerInfo: ICallerInfoSettings
     shrinkOnIdle: boolean
     ringingSound: string
+    outgoingCallPrefixPlaceHolder: string
 }
 
 /**

@@ -128,8 +128,8 @@ function processCallsTime (calls: AllActiveCallsType) {
  */
 function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
     return opensipsJS
-        .on('ready', () => {
-            isOpenSIPSReady.value = true
+        .on('ready', (value: boolean) => {
+            isOpenSIPSReady.value = value
         })
         .on('changeActiveInputMediaDevice', (value: string) => {
             activeInputDevice.value = value

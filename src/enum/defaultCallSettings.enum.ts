@@ -16,5 +16,6 @@ export const defaultCallSettings: ICallSettings = {
         }
     },
     shrinkOnIdle: false,
-    ringingSound: defaultRingingSound
+    ringingSound: defaultRingingSound,
+    outgoingCallPrefixPlaceHolder: '972'
 }

@@ -34,10 +34,10 @@ function init () {
             callSettings: {
                 allowTransfer: true,
                 autoAnswer: {
-                    allowChange: false,
+                    allowChange: true,
                     defaultBehavior: false
                 },
-                outgoingCalls: false,
+                outgoingCalls: true,
                 callerInfo: {
                     displayName: true,
                     callerId: {
@@ -46,7 +46,8 @@ function init () {
                     }
                 },
                 shrinkOnIdle: false,
-                ringingSound: defaultRingingSound
+                ringingSound: defaultRingingSound,
+                outgoingCallPrefixPlaceHolder: '972'
             },
             themeSettings: {
                 colors: {
