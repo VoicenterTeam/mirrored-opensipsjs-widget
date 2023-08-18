@@ -135,6 +135,10 @@
                             <el-switch v-model="form.callSettings.autoAnswer.defaultBehavior" />
                         </el-form-item>
 
+                        <el-form-item label="Outgoing call prefix placeholder">
+                          <el-input v-model="form.callSettings.outgoingCallPrefixPlaceHolder" />
+                        </el-form-item>
+
                         <el-form-item label="Ringing Sound">
                             <AudioUploader v-model="form.callSettings.ringingSound" :max-size="1024 * 1024" />
                         </el-form-item>

@@ -116,6 +116,13 @@ export const bgLogoBase64 = computed({
         widgetThemeSettings.value.images.backgroundLogo = value
     }
 })
+
+export const outgoingCallPrefix = computed({
+    get: () => widgetCallSettings.value.outgoingCallPrefixPlaceHolder,
+    set: (value: string) => {
+        widgetCallSettings.value.outgoingCallPrefixPlaceHolder = value
+    }
+})
 export const layoutMode = computed(() => widgetThemeSettings.value.layoutConfig.mode)
 
 /* Methods */
