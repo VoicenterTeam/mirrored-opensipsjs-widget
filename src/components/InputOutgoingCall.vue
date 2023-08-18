@@ -62,10 +62,8 @@ const inputPlaceholder = computed(() => {
 
 const onKeyPressed = (event: KeyboardEvent) => {
     if (event.key === 'Enter') {
-        // Cancel the default action, if needed
         event.preventDefault()
         emit('call')
-        // Trigger the button element with a click
     }
 }
 const onClose = () => {

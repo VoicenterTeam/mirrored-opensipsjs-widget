@@ -1,6 +1,6 @@
 <template>
     <div className="flex justify-evenly min-h-[32px] items-center px-2 text-main-text bg-primary-bg">
-        <span>Dialing {{ props.number }}...</span>
+        <span>Dialing {{ props.number }} ...</span>
         <IncomingCallActionButton
             color="danger"
             hover-color="additional-danger-bg"
