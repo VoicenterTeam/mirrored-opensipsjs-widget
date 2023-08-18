@@ -1,6 +1,6 @@
 <template>
     <div className="flex items-end bg-primary-bg">
-        <div v-if="allRooms.length > 1">
+        <div v-if="allRooms.length > 1 || !currentActiveRoom">
             <div v-for="room in allRooms" :key="room.roomId">
                 <div>
                     <RoomButton :room-id="room.roomId" :is-active="room.roomId === currentActiveRoom" />

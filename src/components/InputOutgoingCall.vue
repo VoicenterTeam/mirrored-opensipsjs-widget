@@ -6,8 +6,9 @@
                 :className="inputClasses"
                 :placeholder="inputPlaceholder"
                 type="text"
+                @keyup.enter.prevent="onKeyPressed"
             >
-            <div className="w-4 h-4 text-secondary-text">
+            <div v-if="inputValue" className="w-4 h-4 text-secondary-text">
                 <button :className="buttonClasses" @click="onClose">
                     <div className="w-2 h-2">
                         <CloseIcon />
@@ -38,12 +39,13 @@ const props = withDefaults(
 const emit = defineEmits<{
     (e: 'update:modelValue', value: string): void
     (e: 'close'): void
+    (e: 'call'): void
 }>()
 
 const inputValue = useVModel(props, 'modelValue', emit) as WritableComputedRef<string>
 
 const wrapperClasses = computed(() => {
-    return `flex bg-${props.bgColor} border rounded p-0.5`
+    return `flex w-[156px] bg-${props.bgColor} border rounded p-0.5`
 })
 
 const inputClasses = computed(() => {
@@ -57,6 +59,10 @@ const buttonClasses = computed(() => {
 const inputPlaceholder = computed(() => {
     return `+${outgoingCallPrefix.value} ___-___-__-__`
 })
+
+const onKeyPressed = () => {
+    emit('call')
+}
 const onClose = () => {
     emit('close')
 }

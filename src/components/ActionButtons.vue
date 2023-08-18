@@ -27,7 +27,11 @@
             </div>
             <div v-if="allowOutgoingCalls && props.showOutgoingButton" className="flex w-full">
                 <div v-if="isOutgoingCallInputOpen" className="w-full">
-                    <InputOutgoingCall v-model="outgoingInputValue" @close="onOutgoingInputClose" />
+                    <InputOutgoingCall
+                        v-model="outgoingInputValue"
+                        @call="onOutgoingCallClick"
+                        @close="onOutgoingInputClose"
+                    />
                 </div>
                 <div>
                     <WidgetIconButton
@@ -143,8 +147,10 @@ const onOutgoingCallClick = () => {
         if (!outgoingInputValue.value) {
             return
         }
-      
-        startCall(outgoingInputValue.value, false)
+        const target = outgoingInputValue.value
+        outgoingInputValue.value = ''
+
+        startCall(target, false)
     }
 
 }

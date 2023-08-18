@@ -6,7 +6,10 @@
             @transfer-click="onTransferClick"
         />
         <div v-if="outgoingUnansweredCall && !incomingUnansweredCall">
-            <OutgoingCallInProgressView @hangup="onOutgoingCallHangup" />
+            <OutgoingCallInProgressView
+                :number="outgoingUnansweredCall?._remote_identity?._uri?._user"
+                @hangup="onOutgoingCallHangup"
+            />
         </div>
         <ActiveCallsView
             v-show="!transferringCall && !movingCall && !incomingUnansweredCall && !outgoingUnansweredCall"

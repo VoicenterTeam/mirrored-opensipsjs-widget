@@ -14,6 +14,7 @@ import { getDefaultWidgetConfig } from '@/enum/defaultWidgetConfig.enum'
 import { useWidgetDraggable } from '@/composables/useWidgetDraggable'
 import { toCssValue } from '@/helpers/cssHelper'
 import { cloneDeep } from 'lodash'
+import { defaultLogo } from '@/utils/defaultLogo'
 
 /* Const */
 const POSITION_MODE_MAP: Record<TLayoutMode, string> = {
@@ -111,8 +112,8 @@ export const ringingSoundBase64 = computed({
     }
 })
 export const bgLogoBase64 = computed({
-    get: () => widgetThemeSettings.value.images.backgroundLogo,
-    set: (value: string) => {
+    get: () => widgetThemeSettings.value.images.backgroundLogo || defaultLogo,
+    set: (value: string | undefined) => {
         widgetThemeSettings.value.images.backgroundLogo = value
     }
 })
