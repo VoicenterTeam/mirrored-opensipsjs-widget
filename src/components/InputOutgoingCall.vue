@@ -8,7 +8,7 @@
                 type="text"
                 @keypress="onKeyPressed"
             >
-            <div className="w-4 h-4 text-secondary-text">
+            <div v-if="inputValue" className="w-4 h-4 text-secondary-text">
                 <button :className="buttonClasses" @click="onClose">
                     <div className="w-2 h-2">
                         <CloseIcon />
@@ -45,7 +45,7 @@ const emit = defineEmits<{
 const inputValue = useVModel(props, 'modelValue', emit) as WritableComputedRef<string>
 
 const wrapperClasses = computed(() => {
-    return `flex bg-${props.bgColor} border rounded p-0.5`
+    return `flex w-[156px] bg-${props.bgColor} border rounded p-0.5`
 })
 
 const inputClasses = computed(() => {

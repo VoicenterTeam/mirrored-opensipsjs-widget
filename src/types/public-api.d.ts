@@ -47,7 +47,7 @@ export type ColorsType =
     | 'additional-bg'
 
 export interface ImagesConfig {
-    backgroundLogo: string
+    backgroundLogo?: string
 }
 
 /**

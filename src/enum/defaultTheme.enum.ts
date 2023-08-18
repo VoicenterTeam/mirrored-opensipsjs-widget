@@ -1,4 +1,5 @@
 import type { IWidgetTheme } from '@/types/public-api'
+import { defaultLogo } from '@/utils/defaultLogo'
 
 export const defaultTheme: IWidgetTheme = {
     colors: {
@@ -26,6 +27,6 @@ export const defaultTheme: IWidgetTheme = {
         }
     },
     images: {
-        backgroundLogo: ''
+        backgroundLogo: defaultLogo
     }
 }
