@@ -6,7 +6,7 @@
                 :className="inputClasses"
                 :placeholder="inputPlaceholder"
                 type="text"
-                @keypress="onKeyPressed"
+                @keyup.enter.prevent="onKeyPressed"
             >
             <div v-if="inputValue" className="w-4 h-4 text-secondary-text">
                 <button :className="buttonClasses" @click="onClose">
@@ -60,11 +60,8 @@ const inputPlaceholder = computed(() => {
     return `+${outgoingCallPrefix.value} ___-___-__-__`
 })
 
-const onKeyPressed = (event: KeyboardEvent) => {
-    if (event.key === 'Enter') {
-        event.preventDefault()
-        emit('call')
-    }
+const onKeyPressed = () => {
+    emit('call')
 }
 const onClose = () => {
     emit('close')

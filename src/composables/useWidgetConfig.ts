@@ -183,10 +183,6 @@ function setWidgetPosition (settings: IWidgetTheme, widgetRootEl: HTMLElement) {
 export function setThemeSettings (settings: Partial<IWidgetTheme>, widgetRootEl: HTMLElement) {
     const mergedTheme: IWidgetTheme = merge(defaultTheme, settings)
 
-    /*if (!settings.images?.backgroundLogo) {
-        mergedTheme.images.backgroundLogo = defaultLogo
-    }*/
-
     widgetThemeSettings.value = mergedTheme
 
     // Setting widget colors
