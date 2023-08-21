@@ -1,15 +1,20 @@
 <template>
     <div className="flex items-end bg-primary-bg">
-        <div v-if="allRooms.length > 1 || !currentActiveRoom">
-            <div v-for="room in allRooms" :key="room.roomId">
+        <div v-if="allRooms.length > 1 || !currentActiveRoom" className="flex flex-col-reverse">
+            <div v-for="(room, index) in allRooms" :key="room.roomId">
                 <div>
-                    <RoomButton :room-id="room.roomId" :is-active="room.roomId === currentActiveRoom" />
+                    <RoomButton
+                        :room-id="room.roomId"
+                        :is-active="room.roomId === currentActiveRoom"
+                        :is-with-border="index < callsInActiveRoom.length"
+                        :is-multi-call-mode="allRooms.length > 1 || callsInActiveRoom.length > 1"
+                    />
                 </div>
             </div>
         </div>
 
-        <div>
-            <div v-for="(call, index) in callsInActiveRoom" :key="call._id">
+        <div className="flex w-full">
+            <div v-for="(call, index) in callsInActiveRoom" :key="call._id" className="flex w-full">
                 <ActiveCallView
                     :call="call"
                     :is-single-room="allRooms.length === 1"

@@ -16,17 +16,26 @@ const props = withDefaults(
     defineProps<{
         roomId: number
         isActive: boolean
+        isWithBorder: boolean
+        isMultiCallMode: boolean
     }>(),
     {}
 )
 
 const buttonWrapperClasses = computed(() => {
-    const baseClasses = 'flex justify-center items-center px-2 h-[40px] w-[40px] cursor-pointer z-50 '
+    let baseClasses = 'flex justify-center items-center px-2 w-[40px] cursor-pointer z-50 '
+
+    if (props.isMultiCallMode) {
+        baseClasses += 'h-[20px] '
+    } else {
+        baseClasses += 'h-[40px] '
+    }
 
     if (props.isActive) {
-        return baseClasses + 'bg-primary text-button-pressed-text'
+        baseClasses += 'bg-primary text-button-pressed-text '
+        return props.isWithBorder ? baseClasses + 'border-t border-t-border-lines' : baseClasses
     } else {
-        return baseClasses + 'bg-secondary-bg border-primary-bg border-b border-t'
+        return baseClasses + 'bg-secondary-bg border-b border-t border-primary-bg '
     }
 })
 

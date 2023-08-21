@@ -23,13 +23,15 @@ const props = withDefaults(
         size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | 'xxl' | 'xxxl'
         additionalClasses?: string
         useFocusEffect?: boolean
+        usePadding?: boolean
     }>(),
     {
         pressed: undefined,
         size: 'base',
         disabled: false,
         additionalClasses: '',
-        useFocusEffect: true
+        useFocusEffect: true,
+        usePadding: true
     }
 )
 
@@ -63,7 +65,7 @@ const iconSize = computed(() => {
 })
 const buttonClasses = computed(() => {
     let base = `
-        p-1.5
+        ${props.usePadding ? 'p-1.5' : ''}
         ${props.additionalClasses}
     `
 
