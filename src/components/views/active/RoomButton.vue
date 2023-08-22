@@ -16,11 +16,23 @@ const props = withDefaults(
     defineProps<{
         roomId: number
         isActive: boolean
-        isWithBorder: boolean
         isMultiCallMode: boolean
+        callsInActiveRoomLength: number
+        roomsLength: number
+        index: number
     }>(),
     {}
 )
+
+const isWithBorder = computed(() => {
+    if (props.callsInActiveRoomLength > props.roomsLength) {
+        return props.index + 1 < props.callsInActiveRoomLength
+    } else if (props.callsInActiveRoomLength < props.roomsLength) {
+        return props.index < props.callsInActiveRoomLength
+    } else {
+        return props.index + 1 < props.callsInActiveRoomLength
+    }
+})
 
 const buttonWrapperClasses = computed(() => {
     let baseClasses = 'flex justify-center items-center px-2 w-[40px] cursor-pointer z-50 '
@@ -33,7 +45,7 @@ const buttonWrapperClasses = computed(() => {
 
     if (props.isActive) {
         baseClasses += 'bg-primary text-button-pressed-text '
-        return props.isWithBorder ? baseClasses + 'border-t border-t-border-lines' : baseClasses
+        return isWithBorder.value ? baseClasses + 'border-t border-t-border-lines' : baseClasses
     } else {
         return baseClasses + 'bg-secondary-bg border-b border-t border-primary-bg '
     }

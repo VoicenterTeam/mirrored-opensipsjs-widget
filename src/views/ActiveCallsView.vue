@@ -6,14 +6,16 @@
                     <RoomButton
                         :room-id="room.roomId"
                         :is-active="room.roomId === currentActiveRoom"
-                        :is-with-border="index < callsInActiveRoom.length"
+                        :calls-in-active-room-length="callsInActiveRoom.length"
+                        :rooms-length="allRooms.length"
+                        :index="index"
                         :is-multi-call-mode="allRooms.length > 1 || callsInActiveRoom.length > 1"
                     />
                 </div>
             </div>
         </div>
 
-        <div className="flex w-full">
+        <div className="flex w-full flex-col">
             <div v-for="(call, index) in callsInActiveRoom" :key="call._id" className="flex w-full">
                 <ActiveCallView
                     :call="call"
