@@ -16,12 +16,14 @@ const props = withDefaults(
         color: ColorsType,
         icon: Component,
         hoverColor?: ColorsType,
-        size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | 'xxl' | 'xxxl' | 'xl-lg' | 'xl-base'
+        size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | 'xxl' | 'xxxl' | 'base-sm' | 'xl-lg' | 'xl-base'
         additionalClasses?: string
+        usePadding: boolean
     }>(),
     {
         size: 'base',
-        additionalClasses: ''
+        additionalClasses: '',
+        usePadding: true
     }
 )
 
@@ -45,6 +47,8 @@ const iconSize = computed(() => {
             return 'w-7 h-7'
         case 'xxxl':
             return 'w-8 h-8'
+        case 'base-sm':
+            return 'w-4 h-3'
         case 'xl-base':
             return 'w-6 h-4'
         case 'xl-lg':
@@ -55,8 +59,8 @@ const iconSize = computed(() => {
 })
 const buttonClasses = computed(() => {
     let base = `
-        p-1
         pointer
+        ${props.usePadding ? 'p-1' : ''}
         ${props.additionalClasses}
     `
 
