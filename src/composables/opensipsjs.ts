@@ -3,6 +3,7 @@ import OpenSIPSJS from '@voicenter-team/opensips-js'
 import type { ICall, IOpenSIPSJSOptions, IRoom, RoomChangeEmitType, ICallStatus } from '@voicenter-team/opensips-js/src/types/rtc'
 import type { ISIPSCredentials } from '@/types/public-api'
 import type { AllActiveCallsStatusType, AllActiveCallsType, CallTimeType, DoHoldFunctionType } from '@/types/opensips'
+import type { UnRegisterOptions } from 'jssip/lib/UA'
 
 import { autoAnswerDefaultBehaviour } from '@/composables/useWidgetConfig'
 
@@ -233,6 +234,12 @@ export function startOpenSIPS () {
 export function stopOpenSIPS () {
     if (isOpensips(opensipsjs)) {
         opensipsjs.stop()
+    }
+}
+
+export function unregisterOpenSIPS (options?: UnRegisterOptions | undefined) {
+    if (isOpensips(opensipsjs)) {
+        opensipsjs.unregister(options)
     }
 }
 

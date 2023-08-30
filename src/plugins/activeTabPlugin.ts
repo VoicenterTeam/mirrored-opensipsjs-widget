@@ -1,7 +1,7 @@
 import type { App, InjectionKey, Ref } from 'vue'
 import { computed, inject, watch } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
-import { startOpenSIPS, stopOpenSIPS } from '@/composables/opensipsjs'
+import { startOpenSIPS, stopOpenSIPS, unregisterOpenSIPS } from '@/composables/opensipsjs'
 
 interface ActiveTabPluginProvide {
     isActiveTab: Ref<boolean>
@@ -45,6 +45,7 @@ export const ActiveTabPlugin = {
 
                 // When user chooses to stay on the page
                 window.addEventListener('unload', function () {
+                    unregisterOpenSIPS({ all: true })
                     localStorageTabList.value.delete(tabId)
 
                     if (!localStorageTabList.value.size) {
