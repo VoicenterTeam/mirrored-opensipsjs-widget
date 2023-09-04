@@ -127,6 +127,18 @@
                             <el-switch v-model="form.callSettings.shrinkOnIdle" />
                         </el-form-item>
 
+                        <el-form-item label="Display Name">
+                            <el-switch v-model="form.callSettings.callerInfo.displayName" />
+                        </el-form-item>
+
+                        <el-form-item label="Display Caller ID">
+                            <el-switch v-model="form.callSettings.callerInfo.callerId.display" />
+                        </el-form-item>
+
+                        <el-form-item label="Mask Caller ID">
+                            <el-switch v-model="form.callSettings.callerInfo.callerId.mask" />
+                        </el-form-item>
+
                         <el-form-item label="Allow changing auto-answer option">
                             <el-switch v-model="form.callSettings.autoAnswer.allowChange" />
                         </el-form-item>
