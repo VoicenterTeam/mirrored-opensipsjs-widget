@@ -55,13 +55,11 @@ import CloseIcon from '@/assets/icons/close2.svg?component'
 import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import { allActiveCalls, allRooms } from '@/composables/opensipsjs'
-import { getCallerInfo, getCallerNumber } from '@/helpers/callerHelper'
 import {
     displayCallerInfoId,
-    displayCallerInfoIdMask,
     displayCallerInfoName
 } from '@/composables/useWidgetConfig'
-import type { IRoom } from '@voicenter-team/opensips-js/src/types/rtc'
+import useCallInfo from '@/composables/useCallInfo'
 
 const target = ref<string | undefined>(undefined)
 
@@ -83,25 +81,13 @@ const movingCall = computed(() => {
     })
 })
 
+const { callerNumber: movingCallerNumber, callerName: movingCallerName } = useCallInfo(movingCall)
+
 /*const movingCallerPhone = computed(() => {
     const cNumber = movingCall.value?._remote_identity._uri._user as string
     const cName = movingCall.value?._remote_identity._display_name as string
     return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
 })*/
-
-const movingCallerNumber = computed(() => {
-    const cNumber = movingCall.value?._remote_identity._uri._user as string
-    // const cName = props.call?._remote_identity._display_name as string
-    // return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
-    return getCallerNumber(cNumber, displayCallerInfoIdMask.value)
-})
-
-const movingCallerName = computed(() => {
-    // const cNumber = props.call?._remote_identity._uri._user as string
-    const cName = movingCall.value?._remote_identity._display_name || '' as string
-    // return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
-    return cName
-})
 
 const roomsList = computed(() => {
     if (!movingCall.value) return

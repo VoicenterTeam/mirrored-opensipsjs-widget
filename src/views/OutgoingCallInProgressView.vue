@@ -1,6 +1,6 @@
 <template>
     <div className="flex justify-evenly min-h-[32px] items-center px-2 text-main-text bg-primary-bg">
-        <span>Dialing {{ props.number }} ...</span>
+        <span>Dialing {{ maskedNumber }}...</span>
         <IncomingCallActionButton
             color="danger"
             hover-color="additional-danger-bg"
@@ -13,6 +13,9 @@
 <script lang="ts" setup>
 import DeclineIcon from '@/assets/icons/decline.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
+import { computed } from 'vue'
+import { getCallerNumber } from '@/helpers/callerHelper'
+import { displayCallerInfoIdMask } from '@/composables/useWidgetConfig'
 
 const props = withDefaults(
     defineProps<{
@@ -26,6 +29,10 @@ const props = withDefaults(
 const emit = defineEmits<{
     (e: 'hangup'): void
 }>()
+
+const maskedNumber = computed(() => {
+    return getCallerNumber(props.number, displayCallerInfoIdMask.value)
+})
 
 const declineOutgoingCall = () => {
     emit('hangup')

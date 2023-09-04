@@ -42,18 +42,15 @@ import TransferIcon from '@/assets/icons/transferCall.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
-import { computed, ref, onMounted, onUnmounted } from 'vue'
-import { getCallerNumber } from '@/helpers/callerHelper'
+import useCallInfo from '@/composables/useCallInfo'
+import { ref, onMounted, onUnmounted } from 'vue'
 import {
     displayCallerInfoName,
-    displayCallerInfoIdMask,
     displayCallerInfoId,
     ringingSoundBase64,
     allowTransfer
 } from '@/composables/useWidgetConfig'
 import { defaultRingingSound } from '@/utils/ringingSound'
-
-const { answerCall, terminateCall } = useOpenSIPSJS()
 
 const props = withDefaults(
     defineProps<{
@@ -61,6 +58,10 @@ const props = withDefaults(
     }>(),
     {}
 )
+
+/* Composables */
+const { answerCall, terminateCall } = useOpenSIPSJS()
+const { callerNumber, callerName } = useCallInfo(props.call)
 
 const emit = defineEmits<{
     (e: 'transfer-click', callId: string): void
@@ -79,20 +80,6 @@ const transferIncomingCall = () => {
     const callId = props.call?._id
     emit('transfer-click', callId)
 }
-
-const callerNumber = computed(() => {
-    const cNumber = props.call?._remote_identity?._uri._user || '' as string
-    // const cName = props.call?._remote_identity._display_name as string
-    // return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
-    return getCallerNumber(cNumber, displayCallerInfoIdMask.value)
-})
-
-const callerName = computed(() => {
-    // const cNumber = props.call?._remote_identity._uri._user as string
-    const cName = props.call?._remote_identity?._display_name || '' as string
-    // return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
-    return cName
-})
 
 const df = ref<DocumentFragment | undefined>()
 const soundEl = ref<HTMLAudioElement | undefined>()

@@ -73,6 +73,7 @@
 </template>
 
 <script lang="ts" setup>
+import { computed, onMounted, ref } from 'vue'
 import type { UnwrapRef } from 'vue'
 import DeclineIcon from '@/assets/icons/decline.svg?component'
 import HoldIcon from '@/assets/icons/hold.svg?component'
@@ -83,13 +84,9 @@ import IncomingCallActionButton from '@/components/base/IncomingCallActionButton
 import CallOptionsIconButton from '@/components/CallOptionsIconButton.vue'
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import { useOpenSIPSJS, callTimes, allRooms } from '@/composables/opensipsjs'
-import { computed, onMounted, ref } from 'vue'
+import useCallInfo from '@/composables/useCallInfo'
 import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
-
-import { allowTransfer, displayCallerInfoId, displayCallerInfoIdMask, displayCallerInfoName } from '@/composables/useWidgetConfig'
-import { getCallerNumber } from '@/helpers/callerHelper'
-
-const { terminateCall, holdCall, muteCaller } = useOpenSIPSJS()
+import { allowTransfer, displayCallerInfoId, displayCallerInfoName } from '@/composables/useWidgetConfig'
 
 const props = withDefaults(
     defineProps<{
@@ -100,6 +97,10 @@ const props = withDefaults(
     }>(),
     {}
 )
+
+/* Composables */
+const { terminateCall, holdCall, muteCaller } = useOpenSIPSJS()
+const { callerNumber, callerName } = useCallInfo(props.call)
 
 const emit = defineEmits<{
     (e: 'transfer-click', callId: string): void
@@ -167,20 +168,6 @@ const wrapperClasses = computed(() => {
 const callTime = computed(() => {
     const time = callTimes.value[props.call._id]
     return getFormattedTimeFromSeconds(time)
-})
-
-const callerNumber = computed(() => {
-    const cNumber = props.call?._remote_identity._uri._user as string
-    // const cName = props.call?._remote_identity._display_name as string
-    // return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
-    return getCallerNumber(cNumber, displayCallerInfoIdMask.value)
-})
-
-const callerName = computed(() => {
-    // const cNumber = props.call?._remote_identity._uri._user as string
-    const cName = props.call?._remote_identity._display_name || '' as string
-    // return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
-    return cName
 })
 
 const putOnHold = () => {
