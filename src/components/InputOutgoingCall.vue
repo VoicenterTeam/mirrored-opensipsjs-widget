@@ -5,7 +5,7 @@
                 v-model="inputValue"
                 :className="inputClasses"
                 :placeholder="inputPlaceholder"
-                type="text"
+                type="number"
                 @keyup.enter.prevent="onKeyPressed"
             >
             <div v-if="inputValue" className="w-4 h-4 text-secondary-text">
@@ -49,7 +49,7 @@ const wrapperClasses = computed(() => {
 })
 
 const inputClasses = computed(() => {
-    return `outline-0 bg-${props.bgColor} text-main-text text-xxs pl-2`
+    return `outline-0 bg-${props.bgColor} text-main-text text-xxs pl-2 remove-arrow`
 })
 
 const buttonClasses = computed(() => {
