@@ -69,7 +69,7 @@ const emit = defineEmits<{
 
 const answerIncomingCall = () => {
     answerCall(props.call._id)
-
+    stopRingingSound()
 }
 
 const declineIncomingCall = () => {
@@ -95,6 +95,15 @@ const playRingingSound = (src: string) => {
     soundEl.value.play()
     return soundEl.value
 }
+const stopRingingSound = () => {
+    if (soundEl.value) {
+        soundEl.value?.pause()
+
+        df.value?.removeChild(soundEl.value)
+
+        soundEl.value = undefined
+    }
+}
 
 onMounted(() => {
     if (ringingSoundBase64.value) {
@@ -106,10 +115,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-    soundEl.value?.pause()
-    if (soundEl.value) {
-        df.value?.removeChild(soundEl.value)
-    }
+    stopRingingSound()
 })
 
 </script>
