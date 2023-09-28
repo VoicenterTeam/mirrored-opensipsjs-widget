@@ -47,7 +47,7 @@ import IncomingCallActionButton from '@/components/base/IncomingCallActionButton
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import useCallInfo from '@/composables/useCallInfo'
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import {
     displayCallerInfoName,
     displayCallerInfoId,
@@ -125,13 +125,6 @@ onMounted(() => {
 onUnmounted(() => {
     stopRingingSound()
 })
-
-watch(
-    () => props.call,
-    (val) => {
-        console.log('ad', JSON.stringify(val))
-    }
-)
 
 </script>
 
