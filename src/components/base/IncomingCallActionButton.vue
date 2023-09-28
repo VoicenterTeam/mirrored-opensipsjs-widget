@@ -13,6 +13,7 @@ import type { Component } from 'vue'
 
 const props = withDefaults(
     defineProps<{
+        disabled?: boolean,
         color: ColorsType,
         icon: Component,
         hoverColor?: ColorsType,
@@ -21,6 +22,7 @@ const props = withDefaults(
         usePadding: boolean
     }>(),
     {
+        disabled: false,
         size: 'base',
         additionalClasses: '',
         usePadding: true
@@ -62,6 +64,7 @@ const buttonClasses = computed(() => {
         pointer
         ${props.usePadding ? 'p-1' : ''}
         ${props.additionalClasses}
+        ${props.disabled ? 'opacity-50 cursor-not-allowed' : ''}
     `
 
     return `

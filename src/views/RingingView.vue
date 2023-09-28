@@ -13,6 +13,7 @@
                 color="success"
                 hover-color="additional-success-bg"
                 :icon="CallIcon"
+                :disabled="answerClicked"
                 size="xxxl"
                 @click="answerIncomingCall" />
             <IncomingCallActionButton
@@ -59,17 +60,25 @@ const props = withDefaults(
     {}
 )
 
-/* Composables */
-const { answerCall, terminateCall } = useOpenSIPSJS()
-const { callerNumber, callerName } = useCallInfo(props.call)
-
+/* Emits */
 const emit = defineEmits<{
     (e: 'transfer-click', callId: string): void
 }>()
 
+/* Composables */
+const { answerCall, terminateCall } = useOpenSIPSJS()
+const { callerNumber, callerName } = useCallInfo(props.call)
+
+/* Data */
+const df = ref<DocumentFragment | undefined>()
+const soundEl = ref<HTMLAudioElement | undefined>()
+const answerClicked = ref(false)
+
+/* Methods */
 const answerIncomingCall = () => {
     answerCall(props.call._id)
     stopRingingSound()
+    answerClicked.value = true
 }
 
 const declineIncomingCall = () => {
@@ -80,10 +89,6 @@ const transferIncomingCall = () => {
     const callId = props.call?._id
     emit('transfer-click', callId)
 }
-
-const df = ref<DocumentFragment | undefined>()
-const soundEl = ref<HTMLAudioElement | undefined>()
-
 const playRingingSound = (src: string) => {
     df.value = document.createDocumentFragment()
     soundEl.value = new Audio(src)
