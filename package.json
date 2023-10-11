@@ -6,7 +6,9 @@
   "main": "dist/opensips-widget.es.js",
   "types": "dist/types/opensips-widget.d.ts",
   "engines": {
-    "node": ">= 16"
+    "node": ">= 16",
+    "npm": "please-use-yarn",
+    "yarn": ">= 1.22.4"
   },
   "scripts": {
     "dev": "vite",
