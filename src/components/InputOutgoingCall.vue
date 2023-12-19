@@ -4,7 +4,7 @@
             <input
                 v-model="inputValue"
                 :className="inputClasses"
-                :placeholder="inputPlaceholder"
+                :placeholder="outgoingCallInputPlaceholder"
                 @input="applyPatterns"
                 @keyup.enter.prevent="onKeyPressed"
             >
@@ -24,7 +24,7 @@ import { computed } from 'vue'
 import type { WritableComputedRef } from 'vue'
 import { useVModel } from '@vueuse/core'
 import CloseIcon from '@/assets/icons/close.svg?component'
-import { outgoingCallPrefix, outgoingInputRegexValidator } from '@/composables/useWidgetConfig'
+import { outgoingCallInputPlaceholder, outgoingInputRegexValidator } from '@/composables/useWidgetConfig'
 
 const props = withDefaults(
     defineProps<{
@@ -54,10 +54,6 @@ const inputClasses = computed(() => {
 
 const buttonClasses = computed(() => {
     return `p-1 pointer bg-${props.bgColor}`
-})
-
-const inputPlaceholder = computed(() => {
-    return `+${outgoingCallPrefix.value} ___-___-__-__`
 })
 
 const onKeyPressed = () => {

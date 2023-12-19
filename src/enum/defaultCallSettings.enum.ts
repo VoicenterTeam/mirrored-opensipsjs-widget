@@ -17,7 +17,7 @@ export const defaultCallSettings: ICallSettings = {
     },
     shrinkOnIdle: false,
     ringingSound: defaultRingingSound,
-    outgoingCallPrefixPlaceHolder: '',
+    outgoingCallPlaceHolder: '',
     outgoingInputRegexValidator: [
         '/^\\+?\\d*$/'
     ]
