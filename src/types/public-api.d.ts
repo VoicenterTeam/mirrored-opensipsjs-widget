@@ -183,6 +183,7 @@ export interface ICallSettings {
     shrinkOnIdle: boolean
     ringingSound: string
     outgoingCallPrefixPlaceHolder: string
+    outgoingInputRegexValidator: Array<string>
 }
 
 /**

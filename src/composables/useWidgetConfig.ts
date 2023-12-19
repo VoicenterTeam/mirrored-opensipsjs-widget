@@ -124,6 +124,12 @@ export const outgoingCallPrefix = computed({
         widgetCallSettings.value.outgoingCallPrefixPlaceHolder = value
     }
 })
+export const outgoingInputRegexValidator = computed({
+    get: () => widgetCallSettings.value.outgoingInputRegexValidator,
+    set: (value: Array<string>) => {
+        widgetCallSettings.value.outgoingInputRegexValidator = value
+    }
+})
 export const layoutMode = computed(() => widgetThemeSettings.value.layoutConfig.mode)
 
 /* Methods */

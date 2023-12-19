@@ -65,7 +65,10 @@
                 },
                 shrinkOnIdle: false,
                 ringingSound: '',
-                outgoingCallPrefixPlaceHolder: ''
+                outgoingCallPrefixPlaceHolder: '',
+                outgoingInputRegexValidator: [
+                  /^\+?\d*$/
+                ]
             }
             const config = {
                 themeSettings,

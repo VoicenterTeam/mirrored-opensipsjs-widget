@@ -211,12 +211,12 @@ export function registerOpenSIPS (credentials: ISIPSCredentials) {
             registerOpenSIPSListeners(opensipsjs)
                 .on('ready', () => {
                     if (autoAnswerDefaultBehaviour.value) {
-                        opensipsjs.autoAnswer = true
+                        opensipsjs.setAutoAnswer(true)
                     }
 
                     resolve(opensipsjs)
                 })
-                .start()
+                .begin()
         } catch (e) {
             reject(e)
         }
@@ -226,7 +226,7 @@ export function registerOpenSIPS (credentials: ISIPSCredentials) {
 // TODO: check if this properly restarts receiving events
 export function startOpenSIPS () {
     if (isOpensips(opensipsjs)) {
-        opensipsjs.start()
+        opensipsjs.begin()
     }
 }
 
@@ -285,7 +285,7 @@ export function useOpenSIPSJS () {
     }
 
     function setAutoAnswer (value: boolean) {
-        opensipsjs.autoAnswer = value
+        opensipsjs.setAutoAnswer(value)
     }
 
     return {
