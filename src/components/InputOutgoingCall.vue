@@ -5,7 +5,7 @@
                 v-model="inputValue"
                 :className="inputClasses"
                 :placeholder="inputPlaceholder"
-                type="number"
+                @input="applyPatterns"
                 @keyup.enter.prevent="onKeyPressed"
             >
             <div v-if="inputValue" className="w-4 h-4 text-secondary-text">
@@ -24,7 +24,7 @@ import { computed } from 'vue'
 import type { WritableComputedRef } from 'vue'
 import { useVModel } from '@vueuse/core'
 import CloseIcon from '@/assets/icons/close.svg?component'
-import { outgoingCallPrefix } from '@/composables/useWidgetConfig'
+import { outgoingCallPrefix, outgoingInputRegexValidator } from '@/composables/useWidgetConfig'
 
 const props = withDefaults(
     defineProps<{
@@ -65,6 +65,21 @@ const onKeyPressed = () => {
 }
 const onClose = () => {
     emit('close')
+}
+const applyPatterns = (event: Event) => {
+    const evt = event.target as HTMLInputElement
+    let newInputValue = evt.value
+
+    const regexPatterns = [ ...outgoingInputRegexValidator.value ]
+
+    regexPatterns.forEach((pattern) => {
+        const regexFromStr = new RegExp(pattern)
+        if (!regexFromStr.test(newInputValue)) {
+            newInputValue = newInputValue.replace(new RegExp(`[^${regexFromStr.source}]`, 'g'), '')
+        }
+    })
+
+    inputValue.value = newInputValue
 }
 
 </script>

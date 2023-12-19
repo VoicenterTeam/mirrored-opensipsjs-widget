@@ -151,6 +151,10 @@
                           <el-input v-model="form.callSettings.outgoingCallPrefixPlaceHolder" />
                         </el-form-item>
 
+                        <el-form-item label="Outgoing call input regex validator (put regex in square brackets and use coma separator)">
+                          <el-input v-model="outgoingInputRegexModel" />
+                        </el-form-item>
+
                         <el-form-item label="Ringing Sound">
                             <AudioUploader v-model="form.callSettings.ringingSound" :max-size="1024 * 1024" />
                         </el-form-item>
@@ -206,6 +210,10 @@ const credentials = useLocalStorage<Credentials>(
         domain: ''
     }
 )
+
+const values = getDefaultWidgetConfig().callSettings.outgoingInputRegexValidator
+const defaultOutgoingInputValidator = values.map((value) => `[${value}]`).join(',')
+const outgoingInputRegexModel = ref<string>(defaultOutgoingInputValidator)
 
 /* Computed */
 const widgetCodeExample = computed(() => {
@@ -299,7 +307,29 @@ function reset () {
         finalForm.value = widgetAPI.value.getConfig()
     }
 }
+function extractValuesFromBrackets (inputString: string): string[] {
+  const regex = /\[([^\]]+)\]/g;
+
+  const matches: string[] = [];
+  let match;
+
+  while ((match = regex.exec(inputString)) !== null) {
+    matches.push(match[1]);
+  }
+
+  return matches;
+}
+function saveRegexValidators () {
+  const regexes = extractValuesFromBrackets(outgoingInputRegexModel.value)
+  form.value.callSettings.outgoingInputRegexValidator = []
+  regexes.forEach((value) => {
+    form.value.callSettings.outgoingInputRegexValidator.push(value)
+  })
+}
+
 function save () {
+    saveRegexValidators()
+
     if (widgetAPI.value) {
         widgetAPI.value.setConfig(form.value)
 

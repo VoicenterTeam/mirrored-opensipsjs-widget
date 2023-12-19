@@ -216,7 +216,7 @@ export function registerOpenSIPS (credentials: ISIPSCredentials) {
 
                     resolve(opensipsjs)
                 })
-                .start()
+                .begin()
         } catch (e) {
             reject(e)
         }
@@ -226,7 +226,7 @@ export function registerOpenSIPS (credentials: ISIPSCredentials) {
 // TODO: check if this properly restarts receiving events
 export function startOpenSIPS () {
     if (isOpensips(opensipsjs)) {
-        opensipsjs.start()
+        opensipsjs.begin()
     }
 }
 
