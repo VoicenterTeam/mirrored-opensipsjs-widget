@@ -147,8 +147,8 @@
                             <el-switch v-model="form.callSettings.autoAnswer.defaultBehavior" />
                         </el-form-item>
 
-                        <el-form-item label="Outgoing call prefix placeholder">
-                          <el-input v-model="form.callSettings.outgoingCallPrefixPlaceHolder" />
+                        <el-form-item label="Outgoing call placeholder">
+                          <el-input v-model="form.callSettings.outgoingCallPlaceHolder" />
                         </el-form-item>
 
                         <el-form-item label="Outgoing call input regex validator (put regex in square brackets and use coma separator)">

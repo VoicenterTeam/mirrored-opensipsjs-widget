@@ -47,7 +47,7 @@ function init () {
                 },
                 shrinkOnIdle: false,
                 ringingSound: defaultRingingSound,
-                outgoingCallPrefixPlaceHolder: '972'
+                outgoingCallPlaceHolder: 'Enter number'
             },
             themeSettings: {
                 colors: {

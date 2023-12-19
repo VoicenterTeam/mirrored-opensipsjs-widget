@@ -118,10 +118,10 @@ export const bgLogoBase64 = computed({
     }
 })
 
-export const outgoingCallPrefix = computed({
-    get: () => widgetCallSettings.value.outgoingCallPrefixPlaceHolder,
+export const outgoingCallInputPlaceholder = computed({
+    get: () => widgetCallSettings.value.outgoingCallPlaceHolder,
     set: (value: string) => {
-        widgetCallSettings.value.outgoingCallPrefixPlaceHolder = value
+        widgetCallSettings.value.outgoingCallPlaceHolder = value
     }
 })
 export const outgoingInputRegexValidator = computed({
