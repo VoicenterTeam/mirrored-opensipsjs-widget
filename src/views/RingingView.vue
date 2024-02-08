@@ -32,8 +32,21 @@
                 additional-classes=""
                 @click="transferIncomingCall" />
         </div>
-        <div v-else>
-            Answering...
+        <div v-else class="flex">
+            <!--            Answering...-->
+            <div className="flex items-center mx-2 w-[46px]">
+                <span className="text-xs text-main-text font-medium">
+                    {{ callTime }}
+                </span>
+            </div>
+
+            <IncomingCallActionButton
+                color="danger"
+                hover-color="additional-danger-bg"
+                :icon="DeclineIcon"
+                size="xxxl"
+                additional-classes=""
+                @click="declineIncomingCall" />
         </div>
     </div>
 </template>
@@ -46,8 +59,9 @@ import TransferIcon from '@/assets/icons/transferCall.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
+import { callTimes } from '@/composables/opensipsjs'
 import useCallInfo from '@/composables/useCallInfo'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import {
     displayCallerInfoName,
     displayCallerInfoId,
@@ -55,6 +69,7 @@ import {
     allowTransfer
 } from '@/composables/useWidgetConfig'
 import { defaultRingingSound } from '@/utils/ringingSound'
+import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
 
 const props = withDefaults(
     defineProps<{
@@ -71,6 +86,12 @@ const emit = defineEmits<{
 /* Composables */
 const { answerCall, terminateCall } = useOpenSIPSJS()
 const { callerNumber, callerName } = useCallInfo(props.call)
+
+/* Computed */
+const callTime = computed(() => {
+    const time = callTimes.value[props.call._id]
+    return getFormattedTimeFromSeconds(time)
+})
 
 /* Data */
 const df = ref<DocumentFragment | undefined>()
