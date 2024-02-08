@@ -1,6 +1,6 @@
 {
   "name": "opensipsjs-widget",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "author": "Bohdan Konechnyi",
   "main": "dist/opensips-widget.es.js",

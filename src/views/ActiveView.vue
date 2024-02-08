@@ -79,9 +79,13 @@ const incomingUnansweredCall = computed(() => {
         return call.direction === 'incoming' && !call._is_confirmed && !call._is_canceled
     })
 
-    if (opensipsjs.autoAnswer && incomingCallObject) {
-        answerCall(incomingCallObject._id)
-        return undefined
+    // TODO: remove try catch when error with call statuses is fixed
+    try {
+        if (opensipsjs.autoAnswer && incomingCallObject) {
+            answerCall(incomingCallObject._id)
+        }
+    } catch (err) {
+        console.error(err)
     }
 
     return incomingCallObject

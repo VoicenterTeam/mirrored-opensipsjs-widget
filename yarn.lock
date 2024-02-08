@@ -259,10 +259,10 @@
   resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-3.1.2.tgz#3cd52114e8871a0b5e7bd7d837469c032e503036"
   integrity sha512-3zxKNlvA3oNaKDYX0NBclgxTQ1xaFdL7PzwF6zj9tGFziKwmBa3Q/6XcJQxudlT81WxDjEhHmevvIC4Orc1LhQ==
 
-"@voicenter-team/opensips-js@^1.0.45":
-  version "1.0.45"
-  resolved "https://registry.yarnpkg.com/@voicenter-team/opensips-js/-/opensips-js-1.0.45.tgz#e20680ced7193ad1e8caa2e5544d0894b2559474"
-  integrity sha512-ab4b7jirTbxdHt5DOfX8S1Rf+FdH82QyZPK4gJu3T4reO8qFd8n+LLvF400xTWUwQFQFMHMwZhdFupAePJUbAw==
+"@voicenter-team/opensips-js@^1.0.71":
+  version "1.0.71"
+  resolved "http://localhost:4873/@voicenter-team/opensips-js/-/opensips-js-1.0.71.tgz#3229c51ef796b68de749f511f176a7e0d3dd0c82"
+  integrity sha512-jUIJNXO1DrviSFaNfYKcR0GpFfUitN0XQqHhcmJ2Zl2vLCZzd38bMMUY0GeDJe3PF0fv1avaeYccevQMIcJBcw==
   dependencies:
     "@types/mime" "^3.0.1"
     generate-unique-id "^2.0.1"
