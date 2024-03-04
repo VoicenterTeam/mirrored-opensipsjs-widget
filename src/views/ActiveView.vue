@@ -46,6 +46,7 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
+import { watchDebounced } from '@vueuse/core'
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import ActionButtons from '@/components/ActionButtons.vue'
 import TransferView from '@/views/TransferView.vue'
@@ -74,27 +75,10 @@ const isAnyActiveCall = computed(() => {
     return allActiveCalls.value.length > 0
 })
 
-const answerIncomingCall = (incomingCall: ICall) => {
-    setTimeout(() => {
-        answerCall(incomingCall._id)
-    }, 1000)
-}
-
 const incomingUnansweredCall = computed(() => {
-    const incomingCallObject = allActiveCalls.value.find((call: ICall) => {
+    return allActiveCalls.value.find((call: ICall) => {
         return call.direction === 'incoming' && !call._is_confirmed && !call._is_canceled
     })
-
-    // TODO: remove try catch when error with call statuses is fixed
-    try {
-        if (opensipsjs.autoAnswer && incomingCallObject) {
-            answerIncomingCall(incomingCallObject)
-        }
-    } catch (err) {
-        console.error(err)
-    }
-
-    return incomingCallObject
 })
 
 const outgoingUnansweredCall = computed(() => {
@@ -129,6 +113,20 @@ watch(isAnyActiveCall, (value) => {
         cancelMoving()
     }
 }, { deep: true })
+
+watchDebounced(
+    incomingUnansweredCall,
+    (incomingCallObject) => {
+        try {
+            if (opensipsjs.autoAnswer && incomingCallObject) {
+                answerCall(incomingCallObject._id)
+            }
+        } catch (err) {
+            console.error(err)
+        }
+    },
+    { debounce: 1000, maxWait: 1000 },
+)
 
 const onTransferClick = (callId: string) => {
     transferringCall.value = callId
