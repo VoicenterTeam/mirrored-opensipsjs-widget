@@ -99,7 +99,7 @@ const props = withDefaults(
 )
 
 /* Composables */
-const { terminateCall, holdCall, muteCaller } = useOpenSIPSJS()
+const { terminateCall, holdCall, unholdCall, muteCaller } = useOpenSIPSJS()
 const { callerNumber, callerName } = useCallInfo(props.call)
 
 const emit = defineEmits<{
@@ -171,12 +171,12 @@ const callTime = computed(() => {
 })
 
 const putOnHold = () => {
-    holdCall({ callId: props.call._id, toHold: true })
+    holdCall(props.call._id)
     isOnLocalHold.value = true
 }
 
 const unHoldCall = () => {
-    holdCall({ callId: props.call._id, toHold: false })
+    unholdCall(props.call._id)
     isOnLocalHold.value = false
 }
 

@@ -74,6 +74,12 @@ const isAnyActiveCall = computed(() => {
     return allActiveCalls.value.length > 0
 })
 
+const answerIncomingCall = (incomingCall: ICall) => {
+    setTimeout(() => {
+        answerCall(incomingCall._id)
+    }, 1000)
+}
+
 const incomingUnansweredCall = computed(() => {
     const incomingCallObject = allActiveCalls.value.find((call: ICall) => {
         return call.direction === 'incoming' && !call._is_confirmed && !call._is_canceled
@@ -82,7 +88,7 @@ const incomingUnansweredCall = computed(() => {
     // TODO: remove try catch when error with call statuses is fixed
     try {
         if (opensipsjs.autoAnswer && incomingCallObject) {
-            answerCall(incomingCallObject._id)
+            answerIncomingCall(incomingCallObject)
         }
     } catch (err) {
         console.error(err)

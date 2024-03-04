@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import OpenSIPSJS from '@voicenter-team/opensips-js'
 import type { ICall, IOpenSIPSJSOptions, IRoom, RoomChangeEmitType, ICallStatus } from '@voicenter-team/opensips-js/src/types/rtc'
 import type { ISIPSCredentials } from '@/types/public-api'
-import type { AllActiveCallsStatusType, AllActiveCallsType, CallTimeType, DoHoldFunctionType } from '@/types/opensips'
+import type { AllActiveCallsStatusType, AllActiveCallsType, CallTimeType } from '@/types/opensips'
 import type { UnRegisterOptions } from 'jssip/lib/UA'
 
 import { autoAnswerDefaultBehaviour } from '@/composables/useWidgetConfig'
@@ -245,43 +245,55 @@ export function unregisterOpenSIPS (options?: UnRegisterOptions | undefined) {
 
 export function useOpenSIPSJS () {
     function startCall (target: string, addToCurrentRoom = true) {
-        opensipsjs.doCall({ target, addToCurrentRoom })
+        opensipsjs.initCall(target, addToCurrentRoom)
     }
 
     function answerCall (callId: string) {
-        opensipsjs.callAnswer(callId)
+        opensipsjs.answerCall(callId)
     }
 
     function muteAgent (toMute: boolean) {
-        opensipsjs.doMute(toMute)
+        if (toMute) {
+            opensipsjs.mute()
+        } else {
+            opensipsjs.unmute()
+        }
     }
 
     function muteCaller (callId: string, toMute: boolean) {
-        opensipsjs.muteCaller(callId, toMute)
+        if (toMute) {
+            opensipsjs.muteCaller(callId)
+        } else {
+            opensipsjs.unmuteCaller(callId)
+        }
     }
 
-    function holdCall (params: DoHoldFunctionType) {
-        opensipsjs.doCallHold(params)
+    function holdCall (callId: string) {
+        opensipsjs.holdCall(callId)
+    }
+
+    function unholdCall (callId: string) {
+        opensipsjs.unholdCall(callId)
     }
 
     async function moveCall (callId: string, roomId: number) {
-        await opensipsjs.callMove(callId, roomId)
+        await opensipsjs.moveCall(callId, roomId)
     }
 
     function transferCall (callId: string, target: string) {
-        opensipsjs.callTransfer(callId, target)
+        opensipsjs.transferCall(callId, target)
     }
 
     function mergeCallsInRoom (roomId: number) {
-        opensipsjs.callMerge(roomId)
+        opensipsjs.mergeCall(roomId)
     }
 
     function terminateCall (callId: string) {
-        opensipsjs.callTerminate(callId)
+        opensipsjs.terminateCall(callId)
     }
 
     async function setActiveRoom (roomId: number | undefined) {
-        await opensipsjs.setCurrentActiveRoomId(roomId)
+        await opensipsjs.setActiveRoom(roomId)
     }
 
     function setAutoAnswer (value: boolean) {
@@ -295,6 +307,7 @@ export function useOpenSIPSJS () {
         muteAgent,
         muteCaller,
         holdCall,
+        unholdCall,
         moveCall,
         transferCall,
         mergeCallsInRoom,
