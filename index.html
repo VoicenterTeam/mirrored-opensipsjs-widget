@@ -13,13 +13,14 @@
     <script>
         const widget = document.getElementById('openSIPSWidget')
 
-        async function onWidgetInitialized ({ detail: OpenSIPSExternalWidgetAPI }) {
-            const credentials = {
-                username: '',
-                password: '',
-                domain: ''
-            }
+        let widgetAPI = null
+        const credentials = {
+            username: '',
+            password: '',
+            domain: ''
+        }
 
+        async function onWidgetInitialized ({ detail: OpenSIPSExternalWidgetAPI }) {
             const themeSettings = {
                 colors: {
                     primary: '#5E95E8',
@@ -38,11 +39,11 @@
                     'additional-bg': '#B0BFC2'
                 },
                 layoutConfig: {
-                    mode: 'floating',
+                    mode: 'fixed',
                     type: 'rounded',
                     position: {
-                        bottom: '50px',
-                        anchor: 'bottom-center',
+                        top: '50px',
+                        anchor: 'top-center',
                     }
                 },
                 images: {
@@ -51,6 +52,8 @@
             }
             const callSettings = {
                 allowTransfer: true,
+                isQuickCall: true,
+                quickCallNumber: '665',
                 autoAnswer: {
                     allowChange: true,
                     defaultBehavior: false
@@ -75,12 +78,18 @@
                 callSettings
             }
 
-            const widgetAPI = new OpenSIPSExternalWidgetAPI(config)
+            widgetAPI = new OpenSIPSExternalWidgetAPI(config)
 
+            //await widgetAPI.login(credentials)
+        }
+
+        async function onLogin () {
             await widgetAPI.login(credentials)
         }
 
+
         widget.addEventListener('widget:ready', onWidgetInitialized)
+        widget.addEventListener('widget:login', onLogin)
     </script>
 </body>
 </html>

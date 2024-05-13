@@ -5,7 +5,7 @@ import type { ISIPSCredentials } from '@/types/public-api'
 import type { AllActiveCallsStatusType, AllActiveCallsType, CallTimeType } from '@/types/opensips'
 import type { UnRegisterOptions } from 'jssip/lib/UA'
 
-import { autoAnswerDefaultBehaviour } from '@/composables/useWidgetConfig'
+import { autoAnswerDefaultBehaviour, isQuickCall, quickCallNumber } from '@/composables/useWidgetConfig'
 
 /* Main */
 let opensipsjs: OpenSIPSJS
@@ -198,23 +198,33 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
 export function registerOpenSIPS (credentials: ISIPSCredentials) {
     return new Promise<OpenSIPSJS>((resolve, reject) => {
         try {
-            validateCredentials(credentials)
-
             if (isOpensips(opensipsjs)) {
-                reject('OpenSIPSJS is already initialized')
+                opensipsjs.register()
+                return
             }
+
+            validateCredentials(credentials)
 
             const opensipsOptions = makeOpenSIPSJSOptions(credentials)
 
             opensipsjs = new OpenSIPSJS(opensipsOptions)
 
             registerOpenSIPSListeners(opensipsjs)
-                .on('ready', () => {
+                .on('ready', (value) => {
                     if (autoAnswerDefaultBehaviour.value) {
                         opensipsjs.setAutoAnswer(true)
                     }
 
+                    if (value && isQuickCall.value) {
+                        opensipsjs.initCall(quickCallNumber.value, false)
+                    }
+
                     resolve(opensipsjs)
+                })
+                .on('changeActiveCalls', (calls: AllActiveCallsType) => {
+                    if (isQuickCall.value && !Object.keys(calls).length) {
+                        unregisterOpenSIPS()
+                    }
                 })
                 .begin()
         } catch (e) {

@@ -57,6 +57,18 @@ export const widgetThemeSettings = computed({
         }
     }
 })
+export const isQuickCall = computed({
+    get: () => widgetCallSettings.value.isQuickCall,
+    set: (value: boolean) => {
+        widgetCallSettings.value.isQuickCall = value
+    }
+})
+export const quickCallNumber = computed({
+    get: () => widgetCallSettings.value.quickCallNumber,
+    set: (value: string) => {
+        widgetCallSettings.value.quickCallNumber = value
+    }
+})
 export const allowTransfer = computed({
     get: () => widgetCallSettings.value.allowTransfer,
     set: (value: boolean) => {

@@ -1,34 +1,53 @@
 <template>
-    <div className="shadow-xl rounded-md min-h-[60px] flex flex-row border overflow-hidden">
-        <Draggable
-            v-show="showDraggableHandle"
-            ref="draggableHandle"
-        />
-        <WidgetContent />
+    <div>
+        <div v-if="isQuickCall">
+            <QuickCallView
+                :widget-element="widgetElement"
+                @call="onCall"
+            />
+        </div>
+        <div v-else className="shadow-xl rounded-md min-h-[60px] flex flex-row border overflow-hidden">
+            <Draggable
+                v-show="showDraggableHandle"
+                ref="draggableHandle"
+            />
+            <WidgetContent />
+        </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, UnwrapRef, watch } from 'vue'
 import { allActiveCalls } from '@/composables/opensipsjs'
 import WidgetContent from '@/views/WidgetContent.vue'
 import Draggable from '@/components/Draggable.vue'
-import type { IWidgetAppProps } from '@/types/internal'
 import { setWidgetElement } from '@/composables/useWidgetState'
-import { layoutMode } from '@/composables/useWidgetConfig'
+import { layoutMode, isQuickCall } from '@/composables/useWidgetConfig'
 import OpenSIPSExternalWidgetAPI from '@/widget/OpenSIPSExternalWidgetAPI'
 import { useActiveTab } from '@/plugins/activeTabPlugin'
+import QuickCallView from '@/views/QuickCallView.vue'
 
 const { setTabIDWithActiveCall } = useActiveTab()
 
 // Props
-const props = defineProps<IWidgetAppProps>()
+const props = withDefaults(
+    defineProps<{
+        widgetElement: HTMLElement
+    }>(),
+    {}
+)
 
 /* Data */
 const draggableHandle = ref<typeof Draggable>()
 
 /* Computed */
 const showDraggableHandle = computed(() => layoutMode.value === 'floating')
+
+const onCall = () => {
+    props.widgetElement.dispatchEvent('widget:login', {})
+
+    //props.widgetElement.dispatchEvent('widget:ready', OpenSIPSExternalWidgetAPI)
+}
 
 watch(allActiveCalls, (calls) => {
     if (calls && calls.length) {
@@ -45,9 +64,13 @@ onMounted(() => {
     setWidgetElement(props.widgetElement, draggableRoot)
 
     props.widgetElement.dispatchEvent('widget:ready', OpenSIPSExternalWidgetAPI)
+
+    if (!isQuickCall.value) {
+        props.widgetElement.dispatchEvent('widget:login', {})
+    }
 })
 
 onBeforeUnmount(() => {
-    props.widgetElement.dispatchEvent('widget:destroy', undefined)
+    props.widgetElement.dispatchEvent('widget:destroy', {})
 })
 </script>

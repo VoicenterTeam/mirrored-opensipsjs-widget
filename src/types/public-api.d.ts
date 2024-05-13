@@ -7,6 +7,7 @@ export namespace Widget {
     export type EventMap = {
         'widget:ready': IWidgetExternalAPIConstructor,
         'widget:destroy': undefined,
+        'widget:login': undefined,
     }
 
     /**
@@ -176,6 +177,8 @@ export type ILayoutConfig = IFloatingLayoutConfig | IDockedLayoutConfig | IFixed
  * Represents the call settings for the widget.
  */
 export interface ICallSettings {
+    isQuickCall: boolean
+    quickCallNumber: string
     allowTransfer: boolean
     autoAnswer: IAutoAnswerSettings
     outgoingCalls: boolean
