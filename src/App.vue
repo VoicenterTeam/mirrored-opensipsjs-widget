@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, onMounted, ref, UnwrapRef, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { allActiveCalls } from '@/composables/opensipsjs'
 import WidgetContent from '@/views/WidgetContent.vue'
 import Draggable from '@/components/Draggable.vue'
@@ -26,16 +26,12 @@ import { layoutMode, isQuickCall } from '@/composables/useWidgetConfig'
 import OpenSIPSExternalWidgetAPI from '@/widget/OpenSIPSExternalWidgetAPI'
 import { useActiveTab } from '@/plugins/activeTabPlugin'
 import QuickCallView from '@/views/QuickCallView.vue'
+import type { IWidgetAppProps } from '@/types/internal'
 
 const { setTabIDWithActiveCall } = useActiveTab()
 
 // Props
-const props = withDefaults(
-    defineProps<{
-        widgetElement: HTMLElement
-    }>(),
-    {}
-)
+const props = defineProps<IWidgetAppProps>()
 
 /* Data */
 const draggableHandle = ref<typeof Draggable>()
@@ -44,7 +40,7 @@ const draggableHandle = ref<typeof Draggable>()
 const showDraggableHandle = computed(() => layoutMode.value === 'floating')
 
 const onCall = () => {
-    props.widgetElement.dispatchEvent('widget:login', {})
+    props.widgetElement.dispatchEvent('widget:login', undefined)
 
     //props.widgetElement.dispatchEvent('widget:ready', OpenSIPSExternalWidgetAPI)
 }
@@ -66,11 +62,11 @@ onMounted(() => {
     props.widgetElement.dispatchEvent('widget:ready', OpenSIPSExternalWidgetAPI)
 
     if (!isQuickCall.value) {
-        props.widgetElement.dispatchEvent('widget:login', {})
+        props.widgetElement.dispatchEvent('widget:login', undefined)
     }
 })
 
 onBeforeUnmount(() => {
-    props.widgetElement.dispatchEvent('widget:destroy', {})
+    props.widgetElement.dispatchEvent('widget:destroy', undefined)
 })
 </script>
