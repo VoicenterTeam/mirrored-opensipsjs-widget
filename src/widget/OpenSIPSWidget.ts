@@ -36,13 +36,15 @@ export class OpenSIPSWidget extends HTMLElement implements OpenSIPSWidgetElement
         data: PublicWidget.EventMap[Event]
     ): void
     public dispatchEvent (event: Event | keyof PublicWidget.EventMap, data?: PublicWidget.EventMap[keyof PublicWidget.EventMap]): boolean | void {
-        if (typeof event === 'string' && data !== undefined) {
+        if (typeof event === 'string') {
             super.dispatchEvent(
                 new CustomEvent(event, { bubbles: true, detail: data })
             )
             return
+        } else if (event instanceof Event) {
+            return super.dispatchEvent(event)
         } else {
-            return super.dispatchEvent(event as Event)
+            throw new Error('Invalid event type')
         }
     }
 
