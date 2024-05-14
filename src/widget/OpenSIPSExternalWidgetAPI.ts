@@ -5,7 +5,7 @@ import type {
     TWidgetConfigOptions
 } from '@/types/public-api'
 import { getConfig, setConfig } from '@/composables/useWidgetConfig'
-import { useOpenSIPSJS, registerOpenSIPS } from '@/composables/opensipsjs'
+import { useOpenSIPSJS, startOpenSIPS } from '@/composables/opensipsjs'
 import type { ListenerCallbackFnType, ListenersKeyType } from '@voicenter-team/opensips-js/src/types/listeners'
 
 const OpenSIPSExternalWidgetAPI: IWidgetExternalAPIConstructor = class OpenSIPSExternalWidgetAPI implements IWidgetExternalAPI {
@@ -36,7 +36,7 @@ const OpenSIPSExternalWidgetAPI: IWidgetExternalAPIConstructor = class OpenSIPSE
     }
 
     public async login (credentials: ISIPSCredentials) {
-        await registerOpenSIPS(credentials)
+        await startOpenSIPS(credentials)
 
         return this
     }

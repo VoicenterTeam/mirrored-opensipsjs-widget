@@ -3,7 +3,6 @@
         <div v-if="isQuickCall">
             <QuickCallView
                 :widget-element="widgetElement"
-                @call="onCall"
             />
         </div>
         <div v-else className="shadow-xl rounded-md min-h-[60px] flex flex-row border overflow-hidden">
@@ -39,12 +38,6 @@ const draggableHandle = ref<typeof Draggable>()
 /* Computed */
 const showDraggableHandle = computed(() => layoutMode.value === 'floating')
 
-const onCall = () => {
-    props.widgetElement.dispatchEvent('widget:login', undefined)
-
-    //props.widgetElement.dispatchEvent('widget:ready', OpenSIPSExternalWidgetAPI)
-}
-
 watch(allActiveCalls, (calls) => {
     if (calls && calls.length) {
         setTabIDWithActiveCall(true)
@@ -60,10 +53,6 @@ onMounted(() => {
     setWidgetElement(props.widgetElement, draggableRoot)
 
     props.widgetElement.dispatchEvent('widget:ready', OpenSIPSExternalWidgetAPI)
-
-    if (!isQuickCall.value) {
-        props.widgetElement.dispatchEvent('widget:login', undefined)
-    }
 })
 
 onBeforeUnmount(() => {

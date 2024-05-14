@@ -5,9 +5,8 @@ export namespace Widget {
      * Represents the event map for the widget.
      */
     export type EventMap = {
-        'widget:ready': IWidgetExternalAPIConstructor,
-        'widget:destroy': undefined,
-        'widget:login': undefined,
+        'widget:ready': IWidgetExternalAPIConstructor
+        'widget:destroy': undefined
     }
 
     /**

@@ -5,13 +5,14 @@ import type { ISIPSCredentials } from '@/types/public-api'
 import type { AllActiveCallsStatusType, AllActiveCallsType, CallTimeType } from '@/types/opensips'
 import type { UnRegisterOptions } from 'jssip/lib/UA'
 
-import { autoAnswerDefaultBehaviour, isQuickCall, quickCallNumber } from '@/composables/useWidgetConfig'
+import { autoAnswerDefaultBehaviour } from '@/composables/useWidgetConfig'
 
 /* Main */
 let opensipsjs: OpenSIPSJS
 
 /* State */
 export const isOpenSIPSReady = ref<boolean>(false)
+export const isOpenSIPSInitialized = ref<boolean>(false)
 
 /* Device management */
 export const activeInputDevice = ref<string>('')
@@ -195,14 +196,9 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
  *
  * @param credentials
  */
-export function registerOpenSIPS (credentials: ISIPSCredentials) {
+export function startOpenSIPS (credentials: ISIPSCredentials) {
     return new Promise<OpenSIPSJS>((resolve, reject) => {
         try {
-            if (isOpensips(opensipsjs)) {
-                opensipsjs.register()
-                return
-            }
-
             validateCredentials(credentials)
 
             const opensipsOptions = makeOpenSIPSJSOptions(credentials)
@@ -210,31 +206,32 @@ export function registerOpenSIPS (credentials: ISIPSCredentials) {
             opensipsjs = new OpenSIPSJS(opensipsOptions)
 
             registerOpenSIPSListeners(opensipsjs)
-                .on('ready', (value) => {
+                .on('ready', () => {
                     if (autoAnswerDefaultBehaviour.value) {
                         opensipsjs.setAutoAnswer(true)
                     }
 
-                    if (value && isQuickCall.value) {
-                        opensipsjs.initCall(quickCallNumber.value, false)
-                    }
-
                     resolve(opensipsjs)
                 })
-                .on('changeActiveCalls', (calls: AllActiveCallsType) => {
-                    if (isQuickCall.value && !Object.keys(calls).length) {
-                        unregisterOpenSIPS()
-                    }
-                })
                 .begin()
+
+            isOpenSIPSInitialized.value = true
         } catch (e) {
             reject(e)
         }
     })
 }
 
+export function tryRegisterOpenSIPS () {
+    if (isOpensips(opensipsjs)) {
+        opensipsjs.register()
+
+        return opensipsjs
+    }
+}
+
 // TODO: check if this properly restarts receiving events
-export function startOpenSIPS () {
+export function beginOpenSIPS () {
     if (isOpensips(opensipsjs)) {
         opensipsjs.begin()
     }
@@ -254,7 +251,7 @@ export function unregisterOpenSIPS (options?: UnRegisterOptions | undefined) {
 }
 
 export function useOpenSIPSJS () {
-    function startCall (target: string, addToCurrentRoom = true) {
+    function startCall (target: string, addToCurrentRoom = false) {
         opensipsjs.initCall(target, addToCurrentRoom)
     }
 

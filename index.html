@@ -52,7 +52,7 @@
             }
             const callSettings = {
                 allowTransfer: true,
-                isQuickCall: true,
+                isQuickCall: false,
                 quickCallNumber: '665',
                 autoAnswer: {
                     allowChange: true,
@@ -80,16 +80,16 @@
 
             widgetAPI = new OpenSIPSExternalWidgetAPI(config)
 
-            //await widgetAPI.login(credentials)
+            setTimeout(
+                async () => {
+                    console.log('CALLING LOGIN')
+                    await widgetAPI.login(credentials)
+                },
+                5000
+            )
         }
-
-        async function onLogin () {
-            await widgetAPI.login(credentials)
-        }
-
 
         widget.addEventListener('widget:ready', onWidgetInitialized)
-        widget.addEventListener('widget:login', onLogin)
     </script>
 </body>
 </html>

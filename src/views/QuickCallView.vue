@@ -1,13 +1,14 @@
 <template>
     <div>
-        <div v-if="!isOpenSIPSReady">
+        <div v-if="!allActiveCalls.length">
             <IncomingCallActionButton
                 color="success"
                 hover-color="additional-success-bg"
                 :icon="CallIcon"
-                :disabled="false"
+                :disabled="!isOpenSIPSInitialized"
                 size="xxxl"
-                @click="onCall" />
+                @click="onCall"
+            />
         </div>
         <div v-else className="shadow-xl rounded-md min-h-[40px] flex flex-row border overflow-hidden">
             <Draggable
@@ -22,24 +23,51 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, watchEffect } from 'vue'
 import Draggable from '@/components/Draggable.vue'
-import { isOpenSIPSReady } from '@/composables/opensipsjs'
+import {
+    isOpenSIPSReady,
+    allActiveCalls,
+    isOpenSIPSInitialized,
+    useOpenSIPSJS,
+    unregisterOpenSIPS,
+    tryRegisterOpenSIPS,
+} from '@/composables/opensipsjs'
 import CallIcon from '@/assets/icons/call.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
 import QuickCallActiveView from '@/views/QuickCallActiveView.vue'
-import { layoutMode } from '@/composables/useWidgetConfig'
+import { layoutMode, quickCallNumber } from '@/composables/useWidgetConfig'
 
-const emit = defineEmits([ 'call' ])
+/* Composable */
+const {
+    startCall,
+} = useOpenSIPSJS()
 
+/* Computed */
 const showDraggableHandle = computed(() => layoutMode.value === 'floating')
 
-const onCall = () => {
-    emit('call')
+/* Methods */
+function onCall () {
+    if (!isOpenSIPSReady.value) {
+        tryRegisterOpenSIPS()?.once(
+            'ready',
+            (value) => {
+                if (value) {
+                    startCall(quickCallNumber.value)
+                }
+            }
+        )
+    } else {
+        startCall(quickCallNumber.value)
+    }
 }
 
+/* Watch */
+watchEffect(
+    () => {
+        if (!allActiveCalls.value.length) {
+            unregisterOpenSIPS()
+        }
+    }
+)
 </script>
-
-<style scoped>
-
-</style>
