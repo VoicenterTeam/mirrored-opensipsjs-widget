@@ -15,7 +15,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import SettingsIcon from '@/assets/icons/settings.svg'
+import SettingsIcon from '@/assets/icons/settings.svg?component'
 import BasePopper from '@/components/base/BasePopper.vue'
 import Settings from '@/components/Settings.vue'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
