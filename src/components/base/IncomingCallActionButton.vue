@@ -1,5 +1,5 @@
 <template>
-    <button :className="buttonClasses">
+    <button :className="buttonClasses" :disabled="disabled">
         <div :className="iconSize">
             <component :is="icon"/>
         </div>
@@ -19,7 +19,7 @@ const props = withDefaults(
         hoverColor?: ColorsType,
         size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | 'xxl' | 'xxxl' | 'base-sm' | 'xl-lg' | 'xl-base'
         additionalClasses?: string
-        usePadding: boolean
+        usePadding?: boolean
     }>(),
     {
         disabled: false,

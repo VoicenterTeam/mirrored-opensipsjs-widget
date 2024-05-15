@@ -159,7 +159,7 @@ const onCallsMerge = (roomId: number) => {
 }
 
 const onMakeOutgoingCall = (target: string) => {
-    startCall(target, false)
+    startCall(target)
 }
 
 const onOutgoingCallHangup = () => {

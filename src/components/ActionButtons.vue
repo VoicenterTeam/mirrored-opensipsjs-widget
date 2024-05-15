@@ -150,7 +150,7 @@ const onOutgoingCallClick = () => {
         const target = outgoingInputValue.value
         outgoingInputValue.value = ''
 
-        startCall(target, false)
+        startCall(target)
     }
 
 }

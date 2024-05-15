@@ -5,8 +5,8 @@ export namespace Widget {
      * Represents the event map for the widget.
      */
     export type EventMap = {
-        'widget:ready': IWidgetExternalAPIConstructor,
-        'widget:destroy': undefined,
+        'widget:ready': IWidgetExternalAPIConstructor
+        'widget:destroy': undefined
     }
 
     /**
@@ -113,7 +113,7 @@ export type TLayoutMode = 'floating' | 'docked' | 'fixed'
 /**
  * Represents the layout types for the widget.
  */
-export type TLayoutType = 'small' | 'rounded' | 'squared'
+export type TLayoutType = 'rounded' | 'quickCall'
 
 /**
  * Represents the anchor position for the widget.
@@ -176,6 +176,7 @@ export type ILayoutConfig = IFloatingLayoutConfig | IDockedLayoutConfig | IFixed
  * Represents the call settings for the widget.
  */
 export interface ICallSettings {
+    quickCallNumber: string
     allowTransfer: boolean
     autoAnswer: IAutoAnswerSettings
     outgoingCalls: boolean

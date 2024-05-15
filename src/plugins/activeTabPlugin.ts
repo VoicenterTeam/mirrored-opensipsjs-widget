@@ -1,7 +1,7 @@
 import type { App, InjectionKey, Ref } from 'vue'
 import { computed, inject, watch } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
-import { startOpenSIPS, stopOpenSIPS, unregisterOpenSIPS } from '@/composables/opensipsjs'
+import { beginOpenSIPS, stopOpenSIPS, unregisterOpenSIPS } from '@/composables/opensipsjs'
 
 interface ActiveTabPluginProvide {
     isActiveTab: Ref<boolean>
@@ -71,7 +71,7 @@ export const ActiveTabPlugin = {
                 if (!newVal) {
                     stopOpenSIPS()
                 } else {
-                    startOpenSIPS()
+                    beginOpenSIPS()
                 }
             }
         )

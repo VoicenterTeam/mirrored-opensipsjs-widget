@@ -12,6 +12,7 @@ let opensipsjs: OpenSIPSJS
 
 /* State */
 export const isOpenSIPSReady = ref<boolean>(false)
+export const isOpenSIPSInitialized = ref<boolean>(false)
 
 /* Device management */
 export const activeInputDevice = ref<string>('')
@@ -195,14 +196,10 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
  *
  * @param credentials
  */
-export function registerOpenSIPS (credentials: ISIPSCredentials) {
+export function startOpenSIPS (credentials: ISIPSCredentials) {
     return new Promise<OpenSIPSJS>((resolve, reject) => {
         try {
             validateCredentials(credentials)
-
-            if (isOpensips(opensipsjs)) {
-                reject('OpenSIPSJS is already initialized')
-            }
 
             const opensipsOptions = makeOpenSIPSJSOptions(credentials)
 
@@ -217,14 +214,24 @@ export function registerOpenSIPS (credentials: ISIPSCredentials) {
                     resolve(opensipsjs)
                 })
                 .begin()
+
+            isOpenSIPSInitialized.value = true
         } catch (e) {
             reject(e)
         }
     })
 }
 
+export function tryRegisterOpenSIPS () {
+    if (isOpensips(opensipsjs)) {
+        opensipsjs.register()
+
+        return opensipsjs
+    }
+}
+
 // TODO: check if this properly restarts receiving events
-export function startOpenSIPS () {
+export function beginOpenSIPS () {
     if (isOpensips(opensipsjs)) {
         opensipsjs.begin()
     }
@@ -244,7 +251,7 @@ export function unregisterOpenSIPS (options?: UnRegisterOptions | undefined) {
 }
 
 export function useOpenSIPSJS () {
-    function startCall (target: string, addToCurrentRoom = true) {
+    function startCall (target: string, addToCurrentRoom = false) {
         opensipsjs.initCall(target, addToCurrentRoom)
     }
 
