@@ -41,6 +41,11 @@
                                         label="Rounded"
                                         value="rounded"
                                 />
+                                <el-option
+                                        key="quickCall"
+                                        label="Quick Call"
+                                        value="quickCall"
+                                />
                             </el-select>
                         </el-form-item>
 
@@ -115,10 +120,6 @@
 
                 <el-collapse-item title="Call Settings" name="callSettings">
                     <el-form label-position="left" label-width="auto">
-                        <el-form-item label="Is Quick Call">
-                          <el-switch v-model="form.callSettings.isQuickCall" />
-                        </el-form-item>
-
                         <el-form-item label="Quick Call Number">
                           <el-input v-model="form.callSettings.quickCallNumber" />
                         </el-form-item>

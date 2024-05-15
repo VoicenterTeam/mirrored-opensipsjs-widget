@@ -2,7 +2,6 @@ import type { ICallSettings } from '@/types/public-api'
 import { defaultRingingSound } from '@/utils/ringingSound'
 
 export const defaultCallSettings: ICallSettings = {
-    isQuickCall: false,
     quickCallNumber: '665',
     allowTransfer: true,
     autoAnswer: {

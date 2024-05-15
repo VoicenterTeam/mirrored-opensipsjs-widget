@@ -113,7 +113,7 @@ export type TLayoutMode = 'floating' | 'docked' | 'fixed'
 /**
  * Represents the layout types for the widget.
  */
-export type TLayoutType = 'small' | 'rounded' | 'squared'
+export type TLayoutType = 'rounded' | 'quickCall'
 
 /**
  * Represents the anchor position for the widget.
@@ -176,7 +176,6 @@ export type ILayoutConfig = IFloatingLayoutConfig | IDockedLayoutConfig | IFixed
  * Represents the call settings for the widget.
  */
 export interface ICallSettings {
-    isQuickCall: boolean
     quickCallNumber: string
     allowTransfer: boolean
     autoAnswer: IAutoAnswerSettings

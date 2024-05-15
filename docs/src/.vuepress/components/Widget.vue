@@ -32,7 +32,6 @@ function init () {
     widgetEl.addEventListener('widget:ready', ({ detail: OpenSIPSWidget }) => {
         const config: TWidgetConfigOptions = {
             callSettings: {
-                isQuickCall: false,
                 quickCallNumber: '665',
                 allowTransfer: true,
                 autoAnswer: {

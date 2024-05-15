@@ -57,12 +57,6 @@ export const widgetThemeSettings = computed({
         }
     }
 })
-export const isQuickCall = computed({
-    get: () => widgetCallSettings.value.isQuickCall,
-    set: (value: boolean) => {
-        widgetCallSettings.value.isQuickCall = value
-    }
-})
 export const quickCallNumber = computed({
     get: () => widgetCallSettings.value.quickCallNumber,
     set: (value: string) => {
@@ -142,6 +136,8 @@ export const outgoingInputRegexValidator = computed({
         widgetCallSettings.value.outgoingInputRegexValidator = value
     }
 })
+export const layoutType = computed(() => widgetThemeSettings.value.layoutConfig.type)
+
 export const layoutMode = computed(() => widgetThemeSettings.value.layoutConfig.mode)
 
 /* Methods */

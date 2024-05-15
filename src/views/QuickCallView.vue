@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="!allActiveCalls.length">
+        <div v-show="!allActiveCalls.length">
             <IncomingCallActionButton
                 color="success"
                 hover-color="additional-success-bg"
@@ -10,9 +10,9 @@
                 @click="onCall"
             />
         </div>
-        <div v-else className="shadow-xl rounded-md min-h-[40px] flex flex-row border overflow-hidden">
+        <div v-show="allActiveCalls.length" className="shadow-xl rounded-md min-h-[40px] flex flex-row border overflow-hidden">
             <Draggable
-                v-show="showDraggableHandle"
+                v-show="false"
                 ref="draggableHandle"
             />
             <div>
@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, watchEffect } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watchEffect } from 'vue'
 import Draggable from '@/components/Draggable.vue'
 import {
     isOpenSIPSReady,
@@ -37,14 +37,20 @@ import CallIcon from '@/assets/icons/call.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
 import QuickCallActiveView from '@/views/QuickCallActiveView.vue'
 import { layoutMode, quickCallNumber } from '@/composables/useWidgetConfig'
+import { setWidgetElement } from '@/composables/useWidgetState'
+import OpenSIPSExternalWidgetAPI from '@/widget/OpenSIPSExternalWidgetAPI'
+import type { IWidgetAppProps } from '@/types/internal'
+
+/* Props */
+const props = defineProps<IWidgetAppProps>()
 
 /* Composable */
 const {
     startCall,
 } = useOpenSIPSJS()
 
-/* Computed */
-const showDraggableHandle = computed(() => layoutMode.value === 'floating')
+/* Data */
+const draggableHandle = ref<typeof Draggable>()
 
 /* Methods */
 function onCall () {
@@ -70,4 +76,16 @@ watchEffect(
         }
     }
 )
+
+onMounted(() => {
+    const draggableRoot = draggableHandle.value?.root as HTMLElement | undefined
+
+    setWidgetElement(props.widgetElement, draggableRoot)
+
+    props.widgetElement.dispatchEvent('widget:ready', OpenSIPSExternalWidgetAPI)
+})
+
+onBeforeUnmount(() => {
+    props.widgetElement.dispatchEvent('widget:destroy', undefined)
+})
 </script>
