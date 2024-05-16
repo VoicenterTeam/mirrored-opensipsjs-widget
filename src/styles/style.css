@@ -207,6 +207,10 @@
         border: none !important;
     }
 
+     .popper {
+         width: 250px;
+     }
+
     .draggable-area {
         background-color: var(--secondary-bg);
         border-right: 1px solid var(--border-lines);

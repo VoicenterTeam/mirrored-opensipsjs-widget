@@ -1,14 +1,26 @@
 <template>
     <div>
         <div v-show="!allActiveCalls.length">
-            <IncomingCallActionButton
-                color="success"
-                hover-color="additional-success-bg"
-                :icon="CallIcon"
-                :disabled="!isOpenSIPSInitialized"
-                size="xxxl"
-                @click="onCall"
-            />
+            <Popper
+                :show="showHintPopper"
+                arrow
+                @mouseover="showHintPopper = false"
+            >
+                <IncomingCallActionButton
+                    color="success"
+                    hover-color="additional-success-bg"
+                    :icon="CallIcon"
+                    :disabled="!isOpenSIPSInitialized"
+                    size="xxxl"
+                    @click="onCall"
+                />
+                <template #content>
+                    <div className="flex flex-col items-center">
+                        <div>We’re online!</div>
+                        <div>Click to call us via browser</div>
+                    </div>
+                </template>
+            </Popper>
         </div>
         <div v-show="allActiveCalls.length" className="shadow-xl rounded-md min-h-[40px] flex flex-row border overflow-hidden">
             <Draggable
@@ -23,7 +35,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, onMounted, ref, watchEffect } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watchEffect } from 'vue'
+import Popper from 'vue3-popper'
 import Draggable from '@/components/Draggable.vue'
 import {
     isOpenSIPSReady,
@@ -36,7 +49,7 @@ import {
 import CallIcon from '@/assets/icons/call.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
 import QuickCallActiveView from '@/views/QuickCallActiveView.vue'
-import { layoutMode, quickCallNumber } from '@/composables/useWidgetConfig'
+import { quickCallNumber } from '@/composables/useWidgetConfig'
 import { setWidgetElement } from '@/composables/useWidgetState'
 import OpenSIPSExternalWidgetAPI from '@/widget/OpenSIPSExternalWidgetAPI'
 import type { IWidgetAppProps } from '@/types/internal'
@@ -51,6 +64,7 @@ const {
 
 /* Data */
 const draggableHandle = ref<typeof Draggable>()
+const showHintPopper = ref<boolean>(true)
 
 /* Methods */
 function onCall () {
