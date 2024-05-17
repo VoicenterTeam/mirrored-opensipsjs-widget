@@ -6,93 +6,89 @@
     <title>OpenSIPS Widget</title>
 </head>
 <body>
-<!--    <script type="module" src="/src/main.ts"></script>-->
-    <script type="module" src="https://develop.mirrored-opensipsjs-widget-cdn.pages.dev/opensips-widget.es.js"></script>
+    <!--    <script type="module" src="/src/main.ts"></script>-->
+    <script type="module" src="https://opensipsjs-widget-cdn.pages.dev/opensips-widget.umd.js"></script>
 
     <opensips-widget id="openSIPSWidget"></opensips-widget>
 
     <script>
-        window.init = function (username, password, domain) {
-            const widget = document.getElementById('openSIPSWidget')
+        const widget = document.getElementById('openSIPSWidget')
 
-            let widgetAPI = null
+        let widgetAPI = null
+
+        async function onWidgetInitialized({detail: OpenSIPSExternalWidgetAPI}) {
+            console.log('on ready')
+            const themeSettings = {
+                colors: {
+                    primary: '#5E95E8',
+                    secondary: '#0d8099',
+                    'main-text': '#414C59',
+                    'secondary-text': '#8292A5',
+                    'button-pressed-text': '#FFF',
+                    'border-lines': '#DDD',
+                    'primary-bg': '#FFF',
+                    'secondary-bg': '#F0F2F4',
+                    'inactive-bg': '#B9C2CC',
+                    'success': '#7CC24F',
+                    'danger': '#EC2A2A',
+                    'additional-danger-bg': '#F44C4C',
+                    'additional-success-bg': '#75B8A0',
+                    'additional-bg': '#B0BFC2'
+                },
+                layoutConfig: {
+                    mode: 'fixed',
+                    type: 'quickCall',
+                    position: {
+                        top: '50px',
+                        anchor: 'top-center',
+                    }
+                },
+                images: {
+                    backgroundLogo: undefined
+                }
+            }
+            const callSettings = {
+                allowTransfer: true,
+                quickCallNumber: '665',
+                autoAnswer: {
+                    allowChange: true,
+                    defaultBehavior: false
+                },
+                outgoingCalls: true,
+                callerInfo: {
+                    displayName: true,
+                    callerId: {
+                        display: true,
+                        mask: true
+                    }
+                },
+                shrinkOnIdle: false,
+                ringingSound: '',
+                outgoingCallPlaceHolder: '',
+                outgoingInputRegexValidator: [
+                    /^\+?\d*$/
+                ]
+            }
+            const config = {
+                themeSettings,
+                callSettings
+            }
+
+            widgetAPI = new OpenSIPSExternalWidgetAPI(config)
+        }
+
+        window.init = function (username, password, domain) {
             const credentials = {
                 username: username,
                 password: password,
                 domain: domain
             }
 
-            async function onWidgetInitialized({detail: OpenSIPSExternalWidgetAPI}) {
-                console.log('on ready')
-                const themeSettings = {
-                    colors: {
-                        primary: '#5E95E8',
-                        secondary: '#0d8099',
-                        'main-text': '#414C59',
-                        'secondary-text': '#8292A5',
-                        'button-pressed-text': '#FFF',
-                        'border-lines': '#DDD',
-                        'primary-bg': '#FFF',
-                        'secondary-bg': '#F0F2F4',
-                        'inactive-bg': '#B9C2CC',
-                        'success': '#7CC24F',
-                        'danger': '#EC2A2A',
-                        'additional-danger-bg': '#F44C4C',
-                        'additional-success-bg': '#75B8A0',
-                        'additional-bg': '#B0BFC2'
-                    },
-                    layoutConfig: {
-                        mode: 'fixed',
-                        type: 'quickCall',
-                        position: {
-                            top: '50px',
-                            anchor: 'top-center',
-                        }
-                    },
-                    images: {
-                        backgroundLogo: undefined
-                    }
-                }
-                const callSettings = {
-                    allowTransfer: true,
-                    quickCallNumber: '665',
-                    autoAnswer: {
-                        allowChange: true,
-                        defaultBehavior: false
-                    },
-                    outgoingCalls: true,
-                    callerInfo: {
-                        displayName: true,
-                        callerId: {
-                            display: true,
-                            mask: true
-                        }
-                    },
-                    shrinkOnIdle: false,
-                    ringingSound: '',
-                    outgoingCallPlaceHolder: '',
-                    outgoingInputRegexValidator: [
-                        /^\+?\d*$/
-                    ]
-                }
-                const config = {
-                    themeSettings,
-                    callSettings
-                }
-
-                widgetAPI = new OpenSIPSExternalWidgetAPI(config)
-
-                setTimeout(
-                    async () => {
-                        console.log('CALLING LOGIN')
-                        await widgetAPI.login(credentials)
-                    },
-                    5000
-                )
-            }
-
-            widget.addEventListener('widget:ready', onWidgetInitialized)
+            widgetAPI.login(credentials)
         }
+
+        widget.addEventListener('widget:ready', onWidgetInitialized)
+
     </script>
 </body>
 </html>
