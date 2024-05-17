@@ -15,10 +15,7 @@
                     @click="onCall"
                 />
                 <template #content>
-                    <div className="flex flex-col items-center">
-                        <div>We’re online!</div>
-                        <div>Click to call us via browser</div>
-                    </div>
+                    <div v-html="text" />
                 </template>
             </Popper>
         </div>
@@ -35,7 +32,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, ref, watchEffect } from 'vue'
+import { onMounted, ref, watchEffect } from 'vue'
 import Popper from 'vue3-popper'
 import Draggable from '@/components/Draggable.vue'
 import {
@@ -50,17 +47,15 @@ import CallIcon from '@/assets/icons/call.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
 import QuickCallActiveView from '@/views/QuickCallActiveView.vue'
 import { quickCallNumber } from '@/composables/useWidgetConfig'
-import { setWidgetElement } from '@/composables/useWidgetState'
-import OpenSIPSExternalWidgetAPI from '@/widget/OpenSIPSExternalWidgetAPI'
 import type { IWidgetAppProps } from '@/types/internal'
 
 /* Emits */
 const emit = defineEmits<{
-  (event: 'ready', value: HTMLElement | undefined): void
+    (event: 'ready', value: HTMLElement | undefined): void
 }>()
 
 /* Props */
-const props = defineProps<IWidgetAppProps>()
+defineProps<IWidgetAppProps>()
 
 /* Composable */
 const {
@@ -70,6 +65,7 @@ const {
 /* Data */
 const draggableHandle = ref<typeof Draggable>()
 const showHintPopper = ref<boolean>(true)
+const text = ref('<p style="width: 250px; text-align: center;">We’re online! <br> Click to call us via browser</p>')
 
 /* Methods */
 function onCall () {
@@ -100,13 +96,5 @@ onMounted(() => {
     const draggableRoot = draggableHandle.value?.root as HTMLElement | undefined
 
     emit('ready', draggableRoot)
-    /*setWidgetElement(props.widgetElement, draggableRoot)
-
-    console.log('dispatch widget:ready')
-    props.widgetElement.dispatchEvent('widget:ready', OpenSIPSExternalWidgetAPI)*/
 })
-
-/*onBeforeUnmount(() => {
-    props.widgetElement.dispatchEvent('widget:destroy', undefined)
-})*/
 </script>
