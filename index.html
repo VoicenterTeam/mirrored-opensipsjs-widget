@@ -6,7 +6,8 @@
     <title>OpenSIPS Widget</title>
 </head>
 <body>
-    <script type="module" src="/src/main.ts"></script>
+    <!--    <script type="module" src="/src/main.ts"></script>-->
+    <script type="module" src="https://opensipsjs-widget-cdn.pages.dev/opensips-widget.umd.js"></script>
 
     <opensips-widget id="openSIPSWidget"></opensips-widget>
 
@@ -14,13 +15,9 @@
         const widget = document.getElementById('openSIPSWidget')
 
         let widgetAPI = null
-        const credentials = {
-            username: '',
-            password: '',
-            domain: ''
-        }
 
-        async function onWidgetInitialized ({ detail: OpenSIPSExternalWidgetAPI }) {
+        async function onWidgetInitialized({detail: OpenSIPSExternalWidgetAPI}) {
+            console.log('on ready')
             const themeSettings = {
                 colors: {
                     primary: '#5E95E8',
@@ -40,7 +37,7 @@
                 },
                 layoutConfig: {
                     mode: 'fixed',
-                    type: 'rounded',
+                    type: 'quickCall',
                     position: {
                         top: '50px',
                         anchor: 'top-center',
@@ -52,7 +49,6 @@
             }
             const callSettings = {
                 allowTransfer: true,
-                isQuickCall: false,
                 quickCallNumber: '665',
                 autoAnswer: {
                     allowChange: true,
@@ -70,7 +66,7 @@
                 ringingSound: '',
                 outgoingCallPlaceHolder: '',
                 outgoingInputRegexValidator: [
-                  /^\+?\d*$/
+                    /^\+?\d*$/
                 ]
             }
             const config = {
@@ -79,17 +75,20 @@
             }
 
             widgetAPI = new OpenSIPSExternalWidgetAPI(config)
+        }
 
-            setTimeout(
-                async () => {
-                    console.log('CALLING LOGIN')
-                    await widgetAPI.login(credentials)
-                },
-                5000
-            )
+        window.init = function (username, password, domain) {
+            const credentials = {
+                username: username,
+                password: password,
+                domain: domain
+            }
+
+            widgetAPI.login(credentials)
         }
 
         widget.addEventListener('widget:ready', onWidgetInitialized)
+
     </script>
 </body>
 </html>
