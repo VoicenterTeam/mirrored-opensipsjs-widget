@@ -26,6 +26,7 @@ export class OpenSIPSWidget extends HTMLElement implements OpenSIPSWidgetElement
 
     // Lifecycle hooks
     connectedCallback () {
+        console.log('connectedCallback')
         this.mountVueApp()
     }
 
@@ -37,6 +38,7 @@ export class OpenSIPSWidget extends HTMLElement implements OpenSIPSWidgetElement
     ): void
     public dispatchEvent (event: Event | keyof PublicWidget.EventMap, data?: PublicWidget.EventMap[keyof PublicWidget.EventMap]): boolean | void {
         if (typeof event === 'string') {
+            console.log('new CustomEvent', data)
             super.dispatchEvent(
                 new CustomEvent(event, { bubbles: true, detail: data })
             )
@@ -49,11 +51,13 @@ export class OpenSIPSWidget extends HTMLElement implements OpenSIPSWidgetElement
     }
 
     public disconnectedCallback () {
+        console.log('disconnectedCallback')
         removeListeners()
     }
 
     // Mount Vue application
     private mountVueApp () {
+        console.log('mountVueApp')
         const shadowRoot = this.attachShadow({ mode: 'open' })
         const div = document.createElement('div')
         shadowRoot.appendChild(div)
