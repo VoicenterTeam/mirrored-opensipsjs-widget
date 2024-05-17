@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, ref, watchEffect } from 'vue'
+import { onMounted, ref, watchEffect } from 'vue'
 import Popper from 'vue3-popper'
 import Draggable from '@/components/Draggable.vue'
 import {
@@ -50,8 +50,6 @@ import CallIcon from '@/assets/icons/call.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
 import QuickCallActiveView from '@/views/QuickCallActiveView.vue'
 import { quickCallNumber } from '@/composables/useWidgetConfig'
-import { setWidgetElement } from '@/composables/useWidgetState'
-import OpenSIPSExternalWidgetAPI from '@/widget/OpenSIPSExternalWidgetAPI'
 import type { IWidgetAppProps } from '@/types/internal'
 
 /* Emits */
@@ -100,13 +98,5 @@ onMounted(() => {
     const draggableRoot = draggableHandle.value?.root as HTMLElement | undefined
 
     emit('ready', draggableRoot)
-    /*setWidgetElement(props.widgetElement, draggableRoot)
-
-    console.log('dispatch widget:ready')
-    props.widgetElement.dispatchEvent('widget:ready', OpenSIPSExternalWidgetAPI)*/
 })
-
-/*onBeforeUnmount(() => {
-    props.widgetElement.dispatchEvent('widget:destroy', undefined)
-})*/
 </script>

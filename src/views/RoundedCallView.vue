@@ -9,12 +9,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import WidgetContent from '@/views/WidgetContent.vue'
 import Draggable from '@/components/Draggable.vue'
 import { layoutMode } from '@/composables/useWidgetConfig'
-import { setWidgetElement } from '@/composables/useWidgetState'
-import OpenSIPSExternalWidgetAPI from '@/widget/OpenSIPSExternalWidgetAPI'
 import type { IWidgetAppProps } from '@/types/internal'
 
 /* Emits */
@@ -35,14 +33,5 @@ onMounted(() => {
     const draggableRoot = draggableHandle.value?.root as HTMLElement | undefined
 
     emit('ready', draggableRoot)
-
-    /*setWidgetElement(props.widgetElement, draggableRoot)
-
-    console.log('rounded dispatch')
-    props.widgetElement.dispatchEvent('widget:ready', OpenSIPSExternalWidgetAPI)*/
 })
-
-/*onBeforeUnmount(() => {
-    props.widgetElement.dispatchEvent('widget:destroy', undefined)
-})*/
 </script>

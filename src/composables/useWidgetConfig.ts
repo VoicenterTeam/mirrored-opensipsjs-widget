@@ -37,7 +37,6 @@ const CENTER_POSITIONS: Record<string, string> = {
 
 /* Data */
 const widgetConfig = ref<IWidgetConfig>(getDefaultWidgetConfig())
-export const isConfigured = ref(false)
 
 /* Computed */
 export const widgetCallSettings = computed({
