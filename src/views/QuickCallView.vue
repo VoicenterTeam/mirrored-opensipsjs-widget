@@ -15,10 +15,7 @@
                     @click="onCall"
                 />
                 <template #content>
-                    <div className="flex flex-col items-center">
-                        <div>We’re online!</div>
-                        <div>Click to call us via browser</div>
-                    </div>
+                    <div v-html="text" />
                 </template>
             </Popper>
         </div>
@@ -54,11 +51,11 @@ import type { IWidgetAppProps } from '@/types/internal'
 
 /* Emits */
 const emit = defineEmits<{
-  (event: 'ready', value: HTMLElement | undefined): void
+    (event: 'ready', value: HTMLElement | undefined): void
 }>()
 
 /* Props */
-const props = defineProps<IWidgetAppProps>()
+defineProps<IWidgetAppProps>()
 
 /* Composable */
 const {
@@ -68,6 +65,7 @@ const {
 /* Data */
 const draggableHandle = ref<typeof Draggable>()
 const showHintPopper = ref<boolean>(true)
+const text = ref('<p style="width: 250px; text-align: center;">We’re online! <br> Click to call us via browser</p>')
 
 /* Methods */
 function onCall () {
