@@ -307,6 +307,10 @@ export function useOpenSIPSJS () {
         opensipsjs.setAutoAnswer(value)
     }
 
+    function sendDTMF (callId: string, value: string) {
+        opensipsjs.sendDTMF(callId, value)
+    }
+
     return {
         opensipsjs,
         startCall,
@@ -320,7 +324,8 @@ export function useOpenSIPSJS () {
         mergeCallsInRoom,
         setActiveRoom,
         terminateCall,
-        setAutoAnswer
+        setAutoAnswer,
+        sendDTMF
     }
 }
 

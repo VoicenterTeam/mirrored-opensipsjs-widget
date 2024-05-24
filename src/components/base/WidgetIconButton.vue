@@ -14,6 +14,7 @@ import type { Component } from 'vue'
 const props = withDefaults(
     defineProps<{
         color: ColorsType
+        pressedColor: ColorsType
         manual?: boolean | undefined
         icon: Component
         disabled?: boolean
@@ -27,6 +28,7 @@ const props = withDefaults(
     }>(),
     {
         pressed: undefined,
+        pressedColor: 'secondary-bg',
         size: 'base',
         disabled: false,
         additionalClasses: '',
@@ -81,7 +83,7 @@ const buttonClasses = computed(() => {
             return `
                 ${base}
                 pointer
-                bg-secondary-bg
+                bg-${props.pressedColor}
                 text-${props.color}
             `
         }
@@ -96,7 +98,7 @@ const buttonClasses = computed(() => {
         const primaryClasses = `
             ${base}
             pointer
-            bg-secondary-bg
+            bg-${props.pressedColor}
             text-${props.color}
             hover:bg-${props.color}
             hover:text-button-pressed-text

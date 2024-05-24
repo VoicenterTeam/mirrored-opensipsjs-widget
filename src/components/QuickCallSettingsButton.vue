@@ -1,6 +1,6 @@
 <template>
     <div class="settings-button_popper">
-        <BasePopper v-model="isPopoverOpened" class="--popper">
+        <BasePopper v-model="isPopoverOpened" class="--base-popper">
             <template #content>
                 <Settings />
             </template>

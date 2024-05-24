@@ -129,7 +129,7 @@
         border-width: var(--popper-theme-border-width);
         border-style: var(--popper-theme-border-style);
         border-color: var(--popper-theme-border-color);
-        box-shadow: var(--popper-theme-box-shadow);
+        /*box-shadow: var(--popper-theme-box-shadow);*/
         /*z-index: v-bind(zIndex);*/
     }
 
@@ -202,7 +202,7 @@
         left: -5px;
     }
 
-    .--popper {
+    .--base-popper {
         margin: 0px !important;
         border: none !important;
     }

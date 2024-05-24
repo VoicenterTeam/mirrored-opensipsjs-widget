@@ -6,7 +6,9 @@ import type {
     IWidgetConfig,
     IWidgetTheme,
     TLayoutMode,
-    TPosition
+    TPosition,
+    TKeypadMode,
+    TKeypadPosition
 } from '@/types/public-api'
 import { defaultTheme } from '@/enum/defaultTheme.enum'
 import { useWidgetState } from '@/composables/useWidgetState'
@@ -69,6 +71,12 @@ export const allowTransfer = computed({
         widgetCallSettings.value.allowTransfer = value
     }
 })
+export const showKeypad = computed({
+    get: () => widgetCallSettings.value.showKeypad,
+    set: (value: boolean) => {
+        widgetCallSettings.value.showKeypad = value
+    }
+})
 export const allowAutoAnswerSetup = computed({
     get: () => widgetCallSettings.value.autoAnswer.allowChange,
     set: (value: boolean) => {
@@ -121,6 +129,20 @@ export const bgLogoBase64 = computed({
     get: () => widgetThemeSettings.value.images.backgroundLogo || defaultLogo,
     set: (value: string | undefined) => {
         widgetThemeSettings.value.images.backgroundLogo = value
+    }
+})
+
+export const keypadMode = computed({
+    get: () => widgetThemeSettings.value.layoutConfig.keypadMode,
+    set: (value: TKeypadMode) => {
+        widgetThemeSettings.value.layoutConfig.keypadMode = value
+    }
+})
+
+export const keypadPosition = computed({
+    get: () => widgetThemeSettings.value.layoutConfig.keypadPosition,
+    set: (value: TKeypadPosition) => {
+        widgetThemeSettings.value.layoutConfig.keypadPosition = value
     }
 })
 

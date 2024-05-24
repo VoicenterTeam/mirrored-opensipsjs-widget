@@ -25,6 +25,20 @@
                     additional-classes="border-r border-border-lines"
                     @click="doMuteAgent" />
             </div>
+            <div v-if="showKeypad && keypadMode === 'manual'">
+              <WidgetIconButton
+                  color="primary"
+                  :icon="KeypadIcon"
+                  :pressed="showManualKeypad"
+                  :pressed-icon="KeypadIcon"
+                  additional-classes="border-r border-border-lines"
+                  @click="toggleManualKeypad" />
+            </div>
+            <KeypadIconButton
+                v-if="showKeypad && keypadMode === 'popover'"
+                className="border-r-1 border-border-lines"
+                @press="onKeypadPress"
+            />
             <div v-if="allowOutgoingCalls && props.showOutgoingButton" className="flex w-full">
                 <div v-if="isOutgoingCallInputOpen" className="w-full">
                     <InputOutgoingCall
@@ -59,14 +73,15 @@
 import type { UnwrapRef } from 'vue'
 import { onMounted, computed, ref } from 'vue'
 import SettingsIconButton from '@/components/SettingsIconButton.vue'
+import KeypadIconButton from '@/components/KeypadIconButton.vue'
 import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
 import MuteIcon from '@/assets/icons/mute.svg?component'
 import UnMuteIcon from '@/assets/icons/unmute.svg?component'
-import ExpandRoomsIcon from '@/assets/icons/expandRooms.svg?component'
+import KeypadIcon from '@/assets/icons/keypad.svg?component'
 import MergeIcon from '@/assets/icons/merge.svg?component'
 import CallIcon from '@/assets/icons/call2.svg?component'
 import { useOpenSIPSJS, isMuted, isMuteWhenJoin, allActiveCalls, currentActiveRoom } from '@/composables/opensipsjs'
-import { allowOutgoingCalls } from '@/composables/useWidgetConfig'
+import { allowOutgoingCalls, showKeypad, keypadMode } from '@/composables/useWidgetConfig'
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import InputOutgoingCall from '@/components/InputOutgoingCall.vue'
 
@@ -84,11 +99,14 @@ const props = withDefaults(
 
 const emit = defineEmits<{
     (e: 'merge-click', roomId: number): void
+    (e: 'key-press', value: string): void
+    (e: 'toggle-keypad'): void
 }>()
 
 const isExpandRoomsState = ref<boolean>(false)
 const isOutgoingCallInputOpen = ref<boolean>(false)
 const outgoingInputValue = ref<string>('')
+const showManualKeypad = ref<boolean>(false)
 
 const actionButtonWrapperClasses = computed(() => {
     const justifyStyle = isExpandRoomsState.value ? 'justify-between' : 'justify-start'
@@ -120,6 +138,16 @@ const showMergeButton = computed(() => {
     const callsInRoom = allActiveCalls.value.filter(call => call.roomId === currentActiveRoom.value)
     return callsInRoom.length === 2
 })
+
+const toggleManualKeypad = () => {
+    showManualKeypad.value = !showManualKeypad.value
+    emit('toggle-keypad')
+}
+
+const onKeypadPress = (value: string) => {
+    console.log('onKeypadPress', value)
+    emit('key-press', value)
+}
 
 const doMuteAgent = () => {
     if (!allActiveCalls.value.length) {

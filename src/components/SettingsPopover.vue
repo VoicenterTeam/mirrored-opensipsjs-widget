@@ -1,5 +1,5 @@
 <template>
-    <BasePopper>
+    <BasePopper class="--base-popper">
         <template #content>
             <div>
                 Some tooltip content Some tooltip content

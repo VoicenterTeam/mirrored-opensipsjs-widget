@@ -6,8 +6,8 @@
     <title>OpenSIPS Widget</title>
 </head>
 <body>
-    <!--    <script type="module" src="/src/main.ts"></script>-->
-    <script type="module" src="https://opensipsjs-widget-cdn.pages.dev/opensips-widget.umd.js"></script>
+        <script type="module" src="/src/main.ts"></script>
+<!--    <script type="module" src="https://opensipsjs-widget-cdn.pages.dev/opensips-widget.umd.js"></script>-->
 
     <opensips-widget id="openSIPSWidget"></opensips-widget>
 
@@ -36,12 +36,14 @@
                     'additional-bg': '#B0BFC2'
                 },
                 layoutConfig: {
-                    mode: 'fixed',
+                    mode: 'floating',
                     type: 'quickCall',
                     position: {
                         top: '50px',
                         anchor: 'top-center',
-                    }
+                    },
+                    keypadMode: 'manual',
+                    keypadPosition: 'bottom'
                 },
                 images: {
                     backgroundLogo: undefined
@@ -77,7 +79,7 @@
             widgetAPI = new OpenSIPSExternalWidgetAPI(config)
         }
 
-        window.init = function (username, password, domain) {
+        /*window.init = function (username, password, domain) {
             const credentials = {
                 username: username,
                 password: password,
@@ -85,7 +87,18 @@
             }
 
             widgetAPI.login(credentials)
+        }*/
+
+        const credentials = {
+            username: '',
+            password: '',
+            domain: ''
         }
+
+        setTimeout(() => {
+            widgetAPI.login(credentials)
+        }, 1000)
+
 
         widget.addEventListener('widget:ready', onWidgetInitialized)
 

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <BasePopper v-model="isPopoverOpened">
+        <BasePopper v-model="isPopoverOpened" class="--base-popper">
             <template #content>
                 <CallOptionsContent
                     :is-single-room="props.isSingleRoom"
