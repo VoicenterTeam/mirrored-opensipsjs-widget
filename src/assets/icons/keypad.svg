@@ -1,0 +1,11 @@
+<svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M5 2C5.27614 2 5.5 1.77614 5.5 1.5C5.5 1.22386 5.27614 1 5 1C4.72386 1 4.5 1.22386 4.5 1.5C4.5 1.77614 4.72386 2 5 2Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M8.5 2C8.77614 2 9 1.77614 9 1.5C9 1.22386 8.77614 1 8.5 1C8.22386 1 8 1.22386 8 1.5C8 1.77614 8.22386 2 8.5 2Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M1.5 2C1.77614 2 2 1.77614 2 1.5C2 1.22386 1.77614 1 1.5 1C1.22386 1 1 1.22386 1 1.5C1 1.77614 1.22386 2 1.5 2Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M5 5.5C5.27614 5.5 5.5 5.27614 5.5 5C5.5 4.72386 5.27614 4.5 5 4.5C4.72386 4.5 4.5 4.72386 4.5 5C4.5 5.27614 4.72386 5.5 5 5.5Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M8.5 5.5C8.77614 5.5 9 5.27614 9 5C9 4.72386 8.77614 4.5 8.5 4.5C8.22386 4.5 8 4.72386 8 5C8 5.27614 8.22386 5.5 8.5 5.5Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M1.5 5.5C1.77614 5.5 2 5.27614 2 5C2 4.72386 1.77614 4.5 1.5 4.5C1.22386 4.5 1 4.72386 1 5C1 5.27614 1.22386 5.5 1.5 5.5Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M5 9C5.27614 9 5.5 8.77614 5.5 8.5C5.5 8.22386 5.27614 8 5 8C4.72386 8 4.5 8.22386 4.5 8.5C4.5 8.77614 4.72386 9 5 9Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M8.5 9C8.77614 9 9 8.77614 9 8.5C9 8.22386 8.77614 8 8.5 8C8.22386 8 8 8.22386 8 8.5C8 8.77614 8.22386 9 8.5 9Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M1.5 9C1.77614 9 2 8.77614 2 8.5C2 8.22386 1.77614 8 1.5 8C1.22386 8 1 8.22386 1 8.5C1 8.77614 1.22386 9 1.5 9Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

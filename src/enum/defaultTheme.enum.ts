@@ -20,11 +20,13 @@ export const defaultTheme: IWidgetTheme = {
     },
     layoutConfig: {
         type: 'rounded',
-        mode: 'fixed',
+        mode: 'floating',
         position: {
             bottom: '20px',
             anchor: 'bottom-center'
-        }
+        },
+        keypadMode: 'popover',
+        keypadPosition: 'bottom'
     },
     images: {
         backgroundLogo: defaultLogo

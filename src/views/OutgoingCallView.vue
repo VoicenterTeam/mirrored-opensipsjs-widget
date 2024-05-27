@@ -38,6 +38,11 @@ const onCallClick = () => {
     emit('call', inputValue.value)
 }
 
+const typeDigit = (digit: string) => {
+  inputValue.value = inputValue.value + digit.toString()
+}
+
+defineExpose({ typeDigit })
 </script>
 
 <style scoped>

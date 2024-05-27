@@ -25,10 +25,7 @@ const { setTabIDWithActiveCall } = useActiveTab()
 const props = defineProps<IWidgetAppProps>()
 
 /* Computed */
-const componentView = computed(() => {
-    console.log('computed layoutType.value', layoutType.value)
-    return layoutTypeComponent[layoutType.value]
-})
+const componentView = computed(() => layoutTypeComponent[layoutType.value])
 
 let widgetReadyEmitted = false
 
@@ -36,7 +33,6 @@ let widgetReadyEmitted = false
 function onReady (draggableRoot: HTMLElement | undefined) {
     setWidgetElement(props.widgetElement, draggableRoot)
 
-    console.log('rounded dispatch')
     if (!widgetReadyEmitted) {
       widgetReadyEmitted = true
       props.widgetElement.dispatchEvent('widget:ready', OpenSIPSExternalWidgetAPI)

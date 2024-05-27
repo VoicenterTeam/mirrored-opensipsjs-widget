@@ -3,6 +3,7 @@ import { defaultRingingSound } from '@/utils/ringingSound'
 
 export const defaultCallSettings: ICallSettings = {
     quickCallNumber: '665',
+    showKeypad: true,
     allowTransfer: true,
     autoAnswer: {
         allowChange: false,

@@ -136,6 +136,10 @@ export type TPositionConfig = {
 
 export type TPosition = keyof Omit<TPositionConfig, 'anchor'>
 
+export type TKeypadMode = 'popover' | 'static' | 'manual'
+
+export type TKeypadPosition = 'top' | 'bottom'
+
 /**
  * Represents the base layout configuration for the widget.
  */
@@ -143,6 +147,8 @@ export interface IBaseLayoutConfig {
     mode: TLayoutMode
     type: TLayoutType
     position: TPositionConfig
+    keypadMode: TKeypadMode,
+    keypadPosition: TKeypadPosition
 }
 
 /**
@@ -178,6 +184,7 @@ export type ILayoutConfig = IFloatingLayoutConfig | IDockedLayoutConfig | IFixed
 export interface ICallSettings {
     quickCallNumber: string
     allowTransfer: boolean
+    showKeypad: boolean
     autoAnswer: IAutoAnswerSettings
     outgoingCalls: boolean
     callerInfo: ICallerInfoSettings

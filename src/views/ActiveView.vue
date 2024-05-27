@@ -1,5 +1,11 @@
 <template>
     <div :className="wrapperClasses">
+      <div
+          v-if="showTopKeypad"
+          class="flex items-center justify-center p-2 border-b-1 border-border-lines mb-2"
+      >
+        <Keypad @press="onKeypadKeyPress" />
+      </div>
         <RingingView
             v-if="incomingUnansweredCall && !transferringCall"
             :call="incomingUnansweredCall"
@@ -30,7 +36,7 @@
             @cancel="cancelMoving"
         />
         <div v-if="!isAnyActiveCall">
-            <OutgoingCallView v-if="allowOutgoingCalls" @call="onMakeOutgoingCall" />
+            <OutgoingCallView ref="outgoingCallView" v-if="allowOutgoingCalls" @call="onMakeOutgoingCall" />
             <div v-else className="flex min-h-[32px] bg-primary-bg justify-center items-center">
                 <img v-if="bgLogoBase64" :src="bgLogoBase64" className="logo-image">
             </div>
@@ -40,7 +46,15 @@
             :show-outgoing-button="isAnyActiveCall"
             :calls="activeCalls"
             @merge-click="onCallsMerge"
+            @toggle-keypad="toggleManualKeypad"
+            @key-press="onKeypadKeyPress"
         />
+        <div
+            v-if="showBottomKeypad"
+            class="flex items-center justify-center p-2"
+        >
+          <Keypad @press="onKeypadKeyPress" />
+        </div>
     </div>
 </template>
 
@@ -51,12 +65,13 @@ import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import ActionButtons from '@/components/ActionButtons.vue'
 import TransferView from '@/views/TransferView.vue'
 import RingingView from '@/views/RingingView.vue'
-import { allowShrinkOnIdle, allowOutgoingCalls, bgLogoBase64 } from '@/composables/useWidgetConfig'
-import { allActiveCalls, useOpenSIPSJS } from '@/composables/opensipsjs'
+import { allowShrinkOnIdle, allowOutgoingCalls, bgLogoBase64, showKeypad, keypadMode, keypadPosition } from '@/composables/useWidgetConfig'
+import { allActiveCalls, currentActiveRoom, useOpenSIPSJS } from '@/composables/opensipsjs'
 import ActiveCallsView from '@/views/ActiveCallsView.vue'
 import MoveView from '@/views/MoveView.vue'
 import OutgoingCallView from '@/views/OutgoingCallView.vue'
 import OutgoingCallInProgressView from '@/views/OutgoingCallInProgressView.vue'
+import Keypad from '@/components/Keypad.vue'
 
 const {
     transferCall,
@@ -65,11 +80,26 @@ const {
     mergeCallsInRoom,
     startCall,
     terminateCall,
+    sendDTMF,
     opensipsjs
 } = useOpenSIPSJS()
 
 const transferringCall = ref<string>('')
 const movingCall = ref<string>('')
+const outgoingCallView = ref<typeof OutgoingCallView>()
+const showManualKeypad = ref<boolean>(false)
+
+const showTopKeypad = computed(() => {
+  return showKeypad.value &&
+      (keypadMode.value === 'static' || (keypadMode.value === 'manual' && showManualKeypad.value)) &&
+      keypadPosition.value === 'top'
+})
+
+const showBottomKeypad = computed(() => {
+  return showKeypad.value &&
+      (keypadMode.value === 'static' || (keypadMode.value === 'manual' && showManualKeypad.value)) &&
+      keypadPosition.value === 'bottom'
+})
 
 const isAnyActiveCall = computed(() => {
     return allActiveCalls.value.length > 0
@@ -127,6 +157,22 @@ watchDebounced(
     },
     { debounce: 1000, maxWait: 1000 },
 )
+
+const toggleManualKeypad = () => {
+    showManualKeypad.value = !showManualKeypad.value
+}
+
+const onKeypadKeyPress = (key: string) => {
+    const callsInRoom = activeCalls.value.filter((call) => call.roomId === currentActiveRoom.value)
+    if (callsInRoom.length === 1) {
+        sendDTMF(callsInRoom[0]._id, key)
+        return
+    }
+
+    if (outgoingCallView.value) {
+        outgoingCallView.value.typeDigit(key)
+    }
+}
 
 const onTransferClick = (callId: string) => {
     transferringCall.value = callId

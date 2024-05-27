@@ -115,6 +115,42 @@
                         <el-form-item label="Bottom">
                             <el-input v-model="form.themeSettings.layoutConfig.position.bottom" />
                         </el-form-item>
+
+                        <el-form-item label="Keypad mode">
+                            <el-select v-model="form.themeSettings.layoutConfig.keypadMode">
+                                <el-option
+                                    key="popover"
+                                    label="popover"
+                                    value="popover"
+                                />
+                                <el-option
+                                    key="static"
+                                    label="static"
+                                    value="static"
+                                />
+                                <el-option
+                                    key="manual"
+                                    label="manual"
+                                    value="manual"
+                                />
+                            </el-select>
+                        </el-form-item>
+
+
+                      <el-form-item label="Keypad position">
+                          <el-select v-model="form.themeSettings.layoutConfig.keypadPosition">
+                              <el-option
+                                  key="top"
+                                  label="top"
+                                  value="top"
+                              />
+                              <el-option
+                                  key="bottom"
+                                  label="bottom"
+                                  value="bottom"
+                              />
+                          </el-select>
+                      </el-form-item>
                     </el-form>
                 </el-collapse-item>
 
@@ -122,6 +158,10 @@
                     <el-form label-position="left" label-width="auto">
                         <el-form-item label="Quick Call Number">
                           <el-input v-model="form.callSettings.quickCallNumber" />
+                        </el-form-item>
+
+                        <el-form-item label="Show Keypad">
+                          <el-switch v-model="form.callSettings.showKeypad" />
                         </el-form-item>
 
                         <el-form-item label="Allow Transfer">
