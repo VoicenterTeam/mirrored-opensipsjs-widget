@@ -145,7 +145,6 @@ const toggleManualKeypad = () => {
 }
 
 const onKeypadPress = (value: string) => {
-    console.log('onKeypadPress', value)
     emit('key-press', value)
 }
 
