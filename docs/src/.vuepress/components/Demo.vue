@@ -10,6 +10,10 @@
                 <input v-model="credentials.password">
             </label>
             <label>
+              JWT Token:
+              <input v-model="credentials.authorization_jwt">
+            </label>
+            <label>
                 Domain:
                 <input v-model="credentials.domain">
             </label>
@@ -38,6 +42,7 @@ import {
 type Credentials = {
     username: string
     password: string
+    authorization_jwt: string
     domain: string
 }
 
@@ -47,6 +52,7 @@ const credentials = useLocalStorage<Credentials>(
     {
         username: '',
         password: '',
+        authorization_jwt: '',
         domain: ''
     }
 )
@@ -55,7 +61,9 @@ const loggedIn = useLocalStorage<boolean>('loggedIn', false)
 const emit = defineEmits(['widget-api-init'])
 
 const credentialsValid = computed(() => {
-    return credentials.value.username && credentials.value.password && credentials.value.domain
+    return credentials.value.username &&
+        (credentials.value.password || credentials.value.authorization_jwt) &&
+        credentials.value.domain
 })
 
 function login () {
@@ -72,6 +80,7 @@ function logout () {
     credentials.value = {
         username: '',
         password: '',
+        authorization_jwt: '',
         domain: ''
     }
 
@@ -84,7 +93,22 @@ function onWidgetInit (widgetExternalAPI: IWidgetExternalAPI) {
 }
 function widgetLogin () {
     if (widgetAPI.value) {
-        widgetAPI.value.login(credentials.value)
+        const credentialsFinal = {
+            username: credentials.value.username,
+            domain: credentials.value.domain,
+            password: undefined,
+            authorization_jwt: undefined
+        }
+
+        if (credentials.value.password) {
+            credentialsFinal.password = credentials.value.password
+        }
+
+        if (credentials.value.authorization_jwt) {
+            credentialsFinal.authorization_jwt = credentials.value.authorization_jwt
+        }
+
+        widgetAPI.value.login(credentialsFinal)
     }
 }
 

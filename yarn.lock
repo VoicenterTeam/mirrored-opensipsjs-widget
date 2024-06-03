@@ -259,10 +259,10 @@
   resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-3.1.2.tgz#3cd52114e8871a0b5e7bd7d837469c032e503036"
   integrity sha512-3zxKNlvA3oNaKDYX0NBclgxTQ1xaFdL7PzwF6zj9tGFziKwmBa3Q/6XcJQxudlT81WxDjEhHmevvIC4Orc1LhQ==
 
-"@voicenter-team/opensips-js@^1.0.75":
-  version "1.0.75"
-  resolved "https://registry.yarnpkg.com/@voicenter-team/opensips-js/-/opensips-js-1.0.75.tgz#23cf014d24d7d7dec42604fca7005b2ef36d3e0b"
-  integrity sha512-Py6fq/3gYTKqGUjHTaezGCB+vUzvBewYjNSSxFuC7jLfLo4CoLvPzzMy0qlqXRE9q66Ls68Vi1SMZ8qtmXmhgA==
+"@voicenter-team/opensips-js@^1.0.81":
+  version "1.0.81"
+  resolved "https://registry.yarnpkg.com/@voicenter-team/opensips-js/-/opensips-js-1.0.81.tgz#8c0d864b70057ded20f3fbafd67019a8dd2393ff"
+  integrity sha512-t9HP3giBVsyYeeRWlZ13b0KECAZ5MHMsNd+mwvEkZ6j+Pn7X12zFkSVpAN9Rwwjer6Ke6bwpJpYMbSpd9opt3Q==
   dependencies:
     "@types/mime" "^3.0.1"
     generate-unique-id "^2.0.1"
@@ -270,6 +270,7 @@
     loglevel "^1.8.1"
     mime "^3.0.0"
     p-iteration "^1.1.8"
+    sdp-transform "2.14.1"
 
 "@volar/code-gen@0.40.13":
   version "0.40.13"
@@ -2055,6 +2056,11 @@ sass@^1.54.9:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"
     source-map-js ">=0.6.2 <2.0.0"
+
+sdp-transform@2.14.1:
+  version "2.14.1"
+  resolved "https://registry.yarnpkg.com/sdp-transform/-/sdp-transform-2.14.1.tgz#2bb443583d478dee217df4caa284c46b870d5827"
+  integrity sha512-RjZyX3nVwJyCuTo5tGPx+PZWkDMCg7oOLpSlhjDdZfwUoNqG1mM8nyj31IGHyaPWXhjbP7cdK3qZ2bmkJ1GzRw==
 
 sdp-transform@^2.14.1:
   version "2.14.2"

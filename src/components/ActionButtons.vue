@@ -150,7 +150,7 @@ const onKeypadPress = (value: string) => {
 
 const doMuteAgent = () => {
     if (!allActiveCalls.value.length) {
-        opensipsjs.setMuteWhenJoin(!isAgentMuted.value)
+        opensipsjs.audio.setMuteWhenJoin(!isAgentMuted.value)
     } else {
         muteAgent(!isAgentMuted.value)
     }
@@ -188,7 +188,7 @@ const onOutgoingInputClose = () => {
 }
 
 onMounted(() => {
-    opensipsjs.muteWhenJoin
+    opensipsjs.audio.muteWhenJoin
 })
 </script>
 
