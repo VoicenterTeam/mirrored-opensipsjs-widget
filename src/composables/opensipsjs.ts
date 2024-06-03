@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import OpenSIPSJS from '@voicenter-team/opensips-js'
-import type { ICall, IOpenSIPSJSOptions, IRoom, RoomChangeEmitType, ICallStatus } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { ICall, IOpenSIPSJSOptions, IRoom, RoomChangeEmitType, ICallStatus, IOpenSIPSConfiguration } from '@voicenter-team/opensips-js/src/types/rtc'
 import type { ISIPSCredentials } from '@/types/public-api'
 import type { AllActiveCallsStatusType, AllActiveCallsType, CallTimeType } from '@/types/opensips'
 import type { UnRegisterOptions } from 'jssip/lib/UA'
@@ -42,12 +42,21 @@ function isOpensips (opensipsJS: OpenSIPSJS | undefined): opensipsJS is OpenSIPS
 }
 
 function makeOpenSIPSJSOptions (credentials: ISIPSCredentials): IOpenSIPSJSOptions {
+    const configuration: IOpenSIPSConfiguration = {
+        session_timers: false,
+        uri: `sip:${credentials.username}@${credentials.domain}`
+    }
+
+    if (credentials.password) {
+        configuration.password = credentials.password
+    }
+
+    if (credentials.authorization_jwt) {
+        configuration.authorization_jwt = credentials.authorization_jwt
+    }
+
     return {
-        configuration: {
-            session_timers: false,
-            uri: `sip:${credentials.username}@${credentials.domain}`,
-            password: credentials.password,
-        },
+        configuration,
         socketInterfaces: [ `wss://${credentials.domain}` ],
         sipDomain: `${credentials.domain}`,
         sipOptions: {
@@ -55,6 +64,7 @@ function makeOpenSIPSJSOptions (credentials: ISIPSCredentials): IOpenSIPSJSOptio
             extraHeaders: [ 'X-Bar: bar' ],
             pcConfig: {},
         },
+        modules: ['audio']
     }
 }
 
@@ -208,7 +218,7 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
             registerOpenSIPSListeners(opensipsjs)
                 .on('ready', () => {
                     if (autoAnswerDefaultBehaviour.value) {
-                        opensipsjs.setAutoAnswer(true)
+                        opensipsjs.audio.setAutoAnswer(true)
                     }
 
                     resolve(opensipsjs)
@@ -252,63 +262,63 @@ export function unregisterOpenSIPS (options?: UnRegisterOptions | undefined) {
 
 export function useOpenSIPSJS () {
     function startCall (target: string, addToCurrentRoom = false) {
-        opensipsjs.initCall(target, addToCurrentRoom)
+        opensipsjs.audio.initCall(target, addToCurrentRoom)
     }
 
     function answerCall (callId: string) {
-        opensipsjs.answerCall(callId)
+        opensipsjs.audio.answerCall(callId)
     }
 
     function muteAgent (toMute: boolean) {
         if (toMute) {
-            opensipsjs.mute()
+            opensipsjs.audio.mute()
         } else {
-            opensipsjs.unmute()
+            opensipsjs.audio.unmute()
         }
     }
 
     function muteCaller (callId: string, toMute: boolean) {
         if (toMute) {
-            opensipsjs.muteCaller(callId)
+            opensipsjs.audio.muteCaller(callId)
         } else {
-            opensipsjs.unmuteCaller(callId)
+            opensipsjs.audio.unmuteCaller(callId)
         }
     }
 
     function holdCall (callId: string) {
-        opensipsjs.holdCall(callId)
+        opensipsjs.audio.holdCall(callId)
     }
 
     function unholdCall (callId: string) {
-        opensipsjs.unholdCall(callId)
+        opensipsjs.audio.unholdCall(callId)
     }
 
     async function moveCall (callId: string, roomId: number) {
-        await opensipsjs.moveCall(callId, roomId)
+        await opensipsjs.audio.moveCall(callId, roomId)
     }
 
     function transferCall (callId: string, target: string) {
-        opensipsjs.transferCall(callId, target)
+        opensipsjs.audio.transferCall(callId, target)
     }
 
     function mergeCallsInRoom (roomId: number) {
-        opensipsjs.mergeCall(roomId)
+        opensipsjs.audio.mergeCall(roomId)
     }
 
     function terminateCall (callId: string) {
-        opensipsjs.terminateCall(callId)
+        opensipsjs.audio.terminateCall(callId)
     }
 
     async function setActiveRoom (roomId: number | undefined) {
-        await opensipsjs.setActiveRoom(roomId)
+        await opensipsjs.audio.setActiveRoom(roomId)
     }
 
     function setAutoAnswer (value: boolean) {
-        opensipsjs.setAutoAnswer(value)
+        opensipsjs.audio.setAutoAnswer(value)
     }
 
     function sendDTMF (callId: string, value: string) {
-        opensipsjs.sendDTMF(callId, value)
+        opensipsjs.audio.sendDTMF(callId, value)
     }
 
     return {
@@ -331,10 +341,10 @@ export function useOpenSIPSJS () {
 
 export async function onMicrophoneChange (event: Event) {
     const target = event.target as HTMLSelectElement
-    await opensipsjs.setMicrophone(target.value)
+    await opensipsjs.audio.setMicrophone(target.value)
 }
 
 export async function onSpeakerChange (event: Event) {
     const target = event.target as HTMLSelectElement
-    await opensipsjs.setSpeaker(target.value)
+    await opensipsjs.audio.setSpeaker(target.value)
 }
