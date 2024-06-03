@@ -2,7 +2,7 @@
     <div :className="wrapperClasses">
       <div
           v-if="showTopKeypad"
-          class="flex items-center justify-center p-2 border-b-1 border-border-lines mb-2"
+          class="flex items-center justify-center p-2 border-b-1 border-border-lines"
       >
         <Keypad @press="onKeypadKeyPress" />
       </div>
