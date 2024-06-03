@@ -148,7 +148,7 @@ watchDebounced(
     incomingUnansweredCall,
     (incomingCallObject) => {
         try {
-            if (opensipsjs.autoAnswer && incomingCallObject) {
+            if (opensipsjs.audio.autoAnswer && incomingCallObject) {
                 answerCall(incomingCallObject._id)
             }
         } catch (err) {
