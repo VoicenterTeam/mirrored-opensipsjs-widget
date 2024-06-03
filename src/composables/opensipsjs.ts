@@ -103,7 +103,7 @@ function removeOldCallTimes (calls: Array<ICall>) {
 }
 
 function validateCredentials (credentials: ISIPSCredentials) {
-    if (!credentials.username || !credentials.password || !credentials.domain) {
+    if (!credentials.username || (!credentials.password && !credentials.authorization_jwt) || !credentials.domain) {
         throw new Error('Invalid credentials')
     }
 }

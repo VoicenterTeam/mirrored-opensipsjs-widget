@@ -241,6 +241,7 @@ import { getDefaultWidgetConfig } from '@/enum/defaultWidgetConfig.enum'
 type Credentials = {
     username: string
     password: string
+    authorization_jwt: string
     domain: string
 }
 
@@ -256,6 +257,7 @@ const credentials = useLocalStorage<Credentials>(
     {
         username: '',
         password: '',
+        authorization_jwt: '',
         domain: ''
     }
 )
