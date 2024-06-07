@@ -7,11 +7,10 @@ import styles from '@/styles/style.css?inline'
 
 import config from 'root/twind.config'
 import type { IWidgetAppProps } from '@/types/internal'
-import type { Widget as PublicWidget } from '@/types/public-api'
+import type { IWidgetExternalAPIConstructor, Widget as PublicWidget } from '@/types/public-api'
 
 import App from '@/App.vue'
 import { ActiveTabPlugin } from '@/plugins/activeTabPlugin'
-import type { OpenSIPSWidgetElement } from '@/types/opensips-widget'
 import { removeListeners } from '@/composables/useWidgetDraggable'
 
 const cssStyleSheet = new CSSStyleSheet()
@@ -19,7 +18,12 @@ cssStyleSheet.insertRule(styles)
 const sheet = cssom(cssStyleSheet)
 const tw = twind(config, sheet)
 
-export class OpenSIPSWidget extends HTMLElement implements OpenSIPSWidgetElement {
+interface OpenSIPSWidgetElementEventMap extends HTMLElementEventMap {
+    'widget:ready': CustomEvent<IWidgetExternalAPIConstructor>
+    'widget:destroy': CustomEvent<undefined>
+}
+
+export class OpenSIPSWidget extends HTMLElement {
     constructor () {
         super()
     }
@@ -46,6 +50,14 @@ export class OpenSIPSWidget extends HTMLElement implements OpenSIPSWidgetElement
         } else {
             throw new Error('Invalid event type')
         }
+    }
+
+    addEventListener<K extends keyof OpenSIPSWidgetElementEventMap> (
+        type: K,
+        listener: (this: OpenSIPSWidget, ev: OpenSIPSWidgetElementEventMap[K]) => any,
+        options?: boolean | AddEventListenerOptions
+    ): void {
+        super.addEventListener(type, listener as EventListenerOrEventListenerObject, options)
     }
 
     public disconnectedCallback () {
