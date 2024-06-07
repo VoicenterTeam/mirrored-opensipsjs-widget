@@ -17,7 +17,7 @@ import type { IWidgetAppProps } from '@/types/internal'
 
 /* Emits */
 const emit = defineEmits<{
-  (event: 'ready', value: HTMLElement | undefined): void
+    (event: 'ready', value: HTMLElement | undefined): void
 }>()
 
 /* Props */

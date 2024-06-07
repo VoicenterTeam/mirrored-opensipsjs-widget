@@ -1,11 +1,11 @@
 import { computed, ref } from 'vue'
-import type { OpenSIPSWidgetElement } from '@/types/opensips-widget'
+import type { OpenSIPSWidget } from '@/widget/OpenSIPSWidget'
 
 const isSettingsPageOpened = ref<boolean>(false)
-const widgetElement = ref<OpenSIPSWidgetElement>()
+const widgetElement = ref<OpenSIPSWidget>()
 const dragHandleElement = ref<HTMLElement>()
 
-export function setWidgetElement (element: OpenSIPSWidgetElement, dragHandle?: HTMLElement) {
+export function setWidgetElement (element: OpenSIPSWidget, dragHandle?: HTMLElement) {
     widgetElement.value = element
     dragHandleElement.value = dragHandle
 }

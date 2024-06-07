@@ -64,7 +64,7 @@ function makeOpenSIPSJSOptions (credentials: ISIPSCredentials): IOpenSIPSJSOptio
             extraHeaders: [ 'X-Bar: bar' ],
             pcConfig: {},
         },
-        modules: ['audio']
+        modules: [ 'audio' ]
     }
 }
 

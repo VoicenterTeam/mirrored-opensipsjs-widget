@@ -1,15 +1,15 @@
 <template>
-  <div className="grid grid-cols-3 gap-2 max-w-[250px] p-1">
-    <div v-for="(button) in buttons" :key="button">
-      <div
-          className="flex items-center justify-center w-12 h-8 rounded border font-semibold
+    <div className="grid grid-cols-3 gap-2 max-w-[250px] p-1">
+        <div v-for="(button) in buttons" :key="button">
+            <div
+                className="flex items-center justify-center w-12 h-8 rounded border font-semibold
           hover:bg-primary hover:text-button-pressed-text hover:border-none cursor-pointer"
-          @click="onPress(button)"
-      >
-        {{ button }}
-      </div>
+                @click="onPress(button)"
+            >
+                {{ button }}
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts" setup>
@@ -25,13 +25,13 @@ const { setAutoAnswer } = useOpenSIPSJS()
 
 
 const emit = defineEmits<{
-  (e: 'press', value: string): void
+    (e: 'press', value: string): void
 }>()
 
-const buttons = ['1', '2', '3', '4', '5', '6', '7', '8' ,'9', '*', '0', '#']
+const buttons = [ '1', '2', '3', '4', '5', '6', '7', '8' ,'9', '*', '0', '#' ]
 
 const onPress = (value: string) => {
-  emit('press', value)
+    emit('press', value)
 }
 /*watch(autoAnswerDefaultBehaviour, (newV) => {
     setAutoAnswer(newV)

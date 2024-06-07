@@ -26,13 +26,13 @@
                     @click="doMuteAgent" />
             </div>
             <div v-if="showKeypad && keypadMode === 'manual'">
-              <WidgetIconButton
-                  color="primary"
-                  :icon="KeypadIcon"
-                  :pressed="showManualKeypad"
-                  :pressed-icon="KeypadIcon"
-                  additional-classes="border-r border-border-lines"
-                  @click="toggleManualKeypad" />
+                <WidgetIconButton
+                    color="primary"
+                    :icon="KeypadIcon"
+                    :pressed="showManualKeypad"
+                    :pressed-icon="KeypadIcon"
+                    additional-classes="border-r border-border-lines"
+                    @click="toggleManualKeypad" />
             </div>
             <KeypadIconButton
                 v-if="showKeypad && keypadMode === 'popover'"
