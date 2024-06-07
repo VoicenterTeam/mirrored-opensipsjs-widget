@@ -32,6 +32,8 @@ function init () {
     widgetEl.addEventListener('widget:ready', ({ detail: OpenSIPSWidget }) => {
         const config: TWidgetConfigOptions = {
             callSettings: {
+                domain: 'wss07.voicenter.co',
+                showKeypad: false,
                 quickCallNumber: '665',
                 allowTransfer: true,
                 autoAnswer: {

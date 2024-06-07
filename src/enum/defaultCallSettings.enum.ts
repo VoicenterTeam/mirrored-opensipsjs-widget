@@ -2,6 +2,7 @@ import type { ICallSettings } from '@/types/public-api'
 import { defaultRingingSound } from '@/utils/ringingSound'
 
 export const defaultCallSettings: ICallSettings = {
+    domain: 'wss07.voicenter.co',
     quickCallNumber: '665',
     showKeypad: true,
     allowTransfer: true,

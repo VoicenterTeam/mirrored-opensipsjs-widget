@@ -23,8 +23,8 @@ export namespace Widget {
  */
 export interface ISIPSCredentials {
     username: string
-    password: string
-    authorization_jwt: string
+    password?: string
+    authorization_jwt?: string
     domain: string
 }
 
@@ -183,6 +183,7 @@ export type ILayoutConfig = IFloatingLayoutConfig | IDockedLayoutConfig | IFixed
  * Represents the call settings for the widget.
  */
 export interface ICallSettings {
+    domain: string
     quickCallNumber: string
     allowTransfer: boolean
     showKeypad: boolean

@@ -49,6 +49,7 @@
                 }
             }
             const callSettings = {
+                domain: 'wss07.voicenter.co',
                 allowTransfer: true,
                 quickCallNumber: '665',
                 autoAnswer: {
@@ -97,7 +98,6 @@
         setTimeout(() => {
             widgetAPI.login(credentials)
         }, 1000)
-
 
         widget.addEventListener('widget:ready', onWidgetInitialized)
 

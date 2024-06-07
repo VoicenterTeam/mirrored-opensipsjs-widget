@@ -27,6 +27,7 @@
     "@voicenter-team/opensips-js": "^1.0.81",
     "@vueuse/core": "^10.9.0",
     "construct-style-sheets-polyfill": "^3.1.0",
+    "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",
     "regenerator-runtime": "^0.13.11",
     "v-loading-directive": "^1.0.4",

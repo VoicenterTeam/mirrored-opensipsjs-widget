@@ -38,6 +38,7 @@ import Widget from './Widget.vue'
 import {
     IWidgetExternalAPI
 } from '@/types/public-api'
+import { getQueryParams } from '@/helpers/queryParam'
 
 type Credentials = {
     username: string
@@ -113,7 +114,13 @@ function widgetLogin () {
 }
 
 onMounted(() => {
-    if (loggedIn.value) {
+    const token = getQueryParams('token')
+    const username = getQueryParams('username')
+    const loginWithQueryParams = token && username
+
+    if (loggedIn.value || loginWithQueryParams) {
+        loggedIn.value = true
+
         widgetLogin()
     }
 })

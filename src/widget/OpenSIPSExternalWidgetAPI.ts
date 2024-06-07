@@ -1,3 +1,4 @@
+import { jwtDecode } from "jwt-decode";
 import type {
     ISIPSCredentials,
     IWidgetExternalAPI,
@@ -6,12 +7,27 @@ import type {
 } from '@/types/public-api'
 import { getConfig, setConfig } from '@/composables/useWidgetConfig'
 import { useOpenSIPSJS, startOpenSIPS } from '@/composables/opensipsjs'
+import { getQueryParams } from '@/helpers/queryParam'
 import type { ListenerCallbackFnType, ListenersKeyType } from '@voicenter-team/opensips-js/src/types/listeners'
 
 const OpenSIPSExternalWidgetAPI: IWidgetExternalAPIConstructor = class OpenSIPSExternalWidgetAPI implements IWidgetExternalAPI {
     private opensipsjs
 
-    constructor (config: TWidgetConfigOptions) {
+    constructor (options: TWidgetConfigOptions) {
+        const config = { ...options }
+
+        const token = getQueryParams('token')
+
+        if (token && config.callSettings && config.themeSettings) {
+            config.themeSettings.layoutConfig.type = 'quickCall'
+
+            const decoded = jwtDecode(token) as { to: string }
+
+            if (decoded?.to) {
+                config.callSettings.quickCallNumber = decoded.to
+            }
+        }
+
         setConfig(config)
 
         const { opensipsjs } = useOpenSIPSJS()
@@ -36,6 +52,21 @@ const OpenSIPSExternalWidgetAPI: IWidgetExternalAPIConstructor = class OpenSIPSE
     }
 
     public async login (credentials: ISIPSCredentials) {
+        const config = getConfig()
+
+        credentials.domain = config.callSettings.domain
+
+        const token = getQueryParams('token')
+        if (token) {
+            delete credentials.password
+            credentials.authorization_jwt = `Bearer ${token}`
+        }
+
+        const username = getQueryParams('username')
+        if (username) {
+            credentials.username = username
+        }
+
         await startOpenSIPS(credentials)
 
         return this

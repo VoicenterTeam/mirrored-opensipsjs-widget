@@ -59,6 +59,12 @@ export const widgetThemeSettings = computed({
         }
     }
 })
+export const domain = computed({
+    get: () => widgetCallSettings.value.domain,
+    set: (value: string) => {
+        widgetCallSettings.value.domain = value
+    }
+})
 export const quickCallNumber = computed({
     get: () => widgetCallSettings.value.quickCallNumber,
     set: (value: string) => {
@@ -216,8 +222,33 @@ function setWidgetPosition (settings: IWidgetTheme, widgetRootEl: HTMLElement) {
     }
 }
 
+export function mergeThemeSettings (defaultConfig: IWidgetTheme, config: Partial<IWidgetTheme>) {
+    const resultingConfig: IWidgetTheme = {
+        colors: defaultConfig.colors,
+        images: defaultConfig.images,
+        layoutConfig: defaultConfig.layoutConfig
+    }
+
+    resultingConfig.colors = {
+        ...resultingConfig.colors,
+        ...config.colors
+    }
+
+    resultingConfig.images = {
+        ...resultingConfig.images,
+        ...config.images
+    }
+
+    resultingConfig.layoutConfig = {
+        ...resultingConfig.layoutConfig,
+        ...config.layoutConfig
+    }
+
+    return resultingConfig
+}
+
 export function setThemeSettings (settings: Partial<IWidgetTheme>, widgetRootEl: HTMLElement) {
-    const mergedTheme: IWidgetTheme = merge(defaultTheme, settings)
+    const mergedTheme: IWidgetTheme = mergeThemeSettings(defaultTheme, settings)
 
     widgetThemeSettings.value = mergedTheme
 

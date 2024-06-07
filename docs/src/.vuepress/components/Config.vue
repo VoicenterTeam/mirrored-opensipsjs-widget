@@ -156,6 +156,10 @@
 
                 <el-collapse-item title="Call Settings" name="callSettings">
                     <el-form label-position="left" label-width="auto">
+                        <el-form-item label="Domain">
+                          <el-input v-model="form.callSettings.domain" />
+                        </el-form-item>
+
                         <el-form-item label="Quick Call Number">
                           <el-input v-model="form.callSettings.quickCallNumber" />
                         </el-form-item>
@@ -334,7 +338,7 @@ function indentJSON (jsonString: string) {
     return jsonString
 }
 function onWidgetInit (widgetExternalAPI: IWidgetExternalAPI) {
-    widgetAPI.value = widgetExternalAPI.setConfig(finalForm.value)
+    //widgetAPI.value = widgetExternalAPI.setConfig(finalForm.value)
 
     finalForm.value = widgetExternalAPI.getConfig()
 }
