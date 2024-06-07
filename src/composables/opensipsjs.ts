@@ -38,7 +38,7 @@ export const isMuteWhenJoin = ref<boolean>(false)
  * @param opensipsJS
  */
 function isOpensips (opensipsJS: OpenSIPSJS | undefined): opensipsJS is OpenSIPSJS {
-    return opensipsjs !== undefined
+    return opensipsJS !== undefined
 }
 
 function makeOpenSIPSJSOptions (credentials: ISIPSCredentials): IOpenSIPSJSOptions {
