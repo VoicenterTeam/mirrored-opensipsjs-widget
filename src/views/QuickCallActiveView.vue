@@ -49,10 +49,10 @@
                         @click="toggleManualKeypad" />
                 </div>
                 <KeypadIconButton
-                      v-if="showKeypad && keypadMode === 'popover'"
-                      @press="onKeypadKeyPress"
+                    v-if="showKeypad && keypadMode === 'popover'"
+                    @press="onKeypadKeyPress"
                 />
-              </div>
+            </div>
         </div>
         <div
             v-if="showBottomKeypad"
@@ -64,10 +64,10 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, ref} from 'vue'
+import { computed, ref } from 'vue'
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import DeclineIcon from '@/assets/icons/decline.svg?component'
-import {allActiveCalls, isMuted, callTimes, currentActiveRoom, useOpenSIPSJS} from '@/composables/opensipsjs'
+import { allActiveCalls, isMuted, callTimes, currentActiveRoom, useOpenSIPSJS } from '@/composables/opensipsjs'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
 import QuickCallSettingsButton from '@/components/QuickCallSettingsButton.vue'
 import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
@@ -77,7 +77,7 @@ import MuteIcon from '@/assets/icons/mute.svg?component'
 import UnMuteIcon from '@/assets/icons/unmute.svg?component'
 import KeypadIcon from '@/assets/icons/keypad.svg?component'
 import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
-import { keypadMode, keypadPosition, showKeypad } from "@/composables/useWidgetConfig";
+import { keypadMode, keypadPosition, showKeypad } from '@/composables/useWidgetConfig'
 
 const {
     terminateCall,

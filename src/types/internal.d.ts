@@ -1,8 +1,8 @@
-import type { OpenSIPSWidgetElement } from '@/types/opensips-widget'
+import type { OpenSIPSWidget } from '@/widget/OpenSIPSWidget'
 
 /**
  * Represents the props for the WidgetApp component.
  */
 export interface IWidgetAppProps {
-    widgetElement: OpenSIPSWidgetElement
+    widgetElement: OpenSIPSWidget
 }

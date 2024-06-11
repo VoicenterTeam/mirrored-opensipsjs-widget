@@ -12,7 +12,6 @@ import { setWidgetElement } from '@/composables/useWidgetState'
 import OpenSIPSExternalWidgetAPI from '@/widget/OpenSIPSExternalWidgetAPI'
 import QuickCallView from '@/views/QuickCallView.vue'
 import type { IWidgetAppProps } from '@/types/internal'
-import { getDefaultWidgetConfig } from '@/enum/defaultWidgetConfig.enum'
 
 const layoutTypeComponent = {
     'rounded': RoundedCallView,
@@ -34,10 +33,9 @@ function onReady (draggableRoot: HTMLElement | undefined) {
     setWidgetElement(props.widgetElement, draggableRoot)
 
     if (!widgetReadyEmitted) {
-      widgetReadyEmitted = true
-      props.widgetElement.dispatchEvent('widget:ready', OpenSIPSExternalWidgetAPI)
+        widgetReadyEmitted = true
+        props.widgetElement.dispatchEvent('widget:ready', OpenSIPSExternalWidgetAPI)
     }
-
 }
 
 watch(allActiveCalls, (calls) => {

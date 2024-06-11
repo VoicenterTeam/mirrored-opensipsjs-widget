@@ -39,7 +39,7 @@ const onCallClick = () => {
 }
 
 const typeDigit = (digit: string) => {
-  inputValue.value = inputValue.value + digit.toString()
+    inputValue.value = inputValue.value + digit.toString()
 }
 
 defineExpose({ typeDigit })

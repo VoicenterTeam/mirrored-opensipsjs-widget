@@ -1,11 +1,11 @@
 <template>
     <div :className="wrapperClasses">
-      <div
-          v-if="showTopKeypad"
-          class="flex items-center justify-center p-2 border-b-1 border-border-lines"
-      >
-        <Keypad @press="onKeypadKeyPress" />
-      </div>
+        <div
+            v-if="showTopKeypad"
+            class="flex items-center justify-center p-2 border-b-1 border-border-lines"
+        >
+            <Keypad @press="onKeypadKeyPress" />
+        </div>
         <RingingView
             v-if="incomingUnansweredCall && !transferringCall"
             :call="incomingUnansweredCall"
@@ -36,7 +36,7 @@
             @cancel="cancelMoving"
         />
         <div v-if="!isAnyActiveCall">
-            <OutgoingCallView ref="outgoingCallView" v-if="allowOutgoingCalls" @call="onMakeOutgoingCall" />
+            <OutgoingCallView v-if="allowOutgoingCalls" ref="outgoingCallView" @call="onMakeOutgoingCall" />
             <div v-else className="flex min-h-[32px] bg-primary-bg justify-center items-center">
                 <img v-if="bgLogoBase64" :src="bgLogoBase64" className="logo-image">
             </div>
@@ -53,7 +53,7 @@
             v-if="showBottomKeypad"
             class="flex items-center justify-center p-2"
         >
-          <Keypad @press="onKeypadKeyPress" />
+            <Keypad @press="onKeypadKeyPress" />
         </div>
     </div>
 </template>
@@ -90,15 +90,15 @@ const outgoingCallView = ref<typeof OutgoingCallView>()
 const showManualKeypad = ref<boolean>(false)
 
 const showTopKeypad = computed(() => {
-  return showKeypad.value &&
-      (keypadMode.value === 'static' || (keypadMode.value === 'manual' && showManualKeypad.value)) &&
-      keypadPosition.value === 'top'
+    return showKeypad.value &&
+        (keypadMode.value === 'static' || (keypadMode.value === 'manual' && showManualKeypad.value)) &&
+        keypadPosition.value === 'top'
 })
 
 const showBottomKeypad = computed(() => {
-  return showKeypad.value &&
-      (keypadMode.value === 'static' || (keypadMode.value === 'manual' && showManualKeypad.value)) &&
-      keypadPosition.value === 'bottom'
+    return showKeypad.value &&
+        (keypadMode.value === 'static' || (keypadMode.value === 'manual' && showManualKeypad.value)) &&
+        keypadPosition.value === 'bottom'
 })
 
 const isAnyActiveCall = computed(() => {

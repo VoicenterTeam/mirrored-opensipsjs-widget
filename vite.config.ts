@@ -2,7 +2,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import svgLoader from 'vite-svg-loader'
-import { viteStaticCopy } from 'vite-plugin-static-copy'
+import dts from 'vite-plugin-dts'
 
 export default defineConfig({
     define: {
@@ -11,14 +11,9 @@ export default defineConfig({
     plugins: [
         vue(),
         svgLoader(),
-        viteStaticCopy({
-            targets: [
-                {
-                    src: 'src/types/*',
-                    dest: 'types'
-                }
-            ]
-        })
+        dts({
+            copyDtsFiles: true
+        }),
     ],
     resolve: {
         alias: {
@@ -32,5 +27,12 @@ export default defineConfig({
             name: 'OpenSIPSWidget',
             fileName: (format) => `opensips-widget.${format}.js`
         },
+        rollupOptions: {
+            output: {
+                globals: {
+                    vue: 'Vue'
+                }
+            }
+        }
     }
 })

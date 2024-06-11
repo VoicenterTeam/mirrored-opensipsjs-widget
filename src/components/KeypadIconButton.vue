@@ -30,13 +30,13 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'press', value: string): void
+    (e: 'press', value: string): void
 }>()
 
 const isPopoverOpened = ref(false)
 
 const onPress = (value: string) => {
-  emit('press', value)
+    emit('press', value)
 }
 
 const openSettingsPopover = () => {

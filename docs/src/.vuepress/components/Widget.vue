@@ -11,8 +11,8 @@ import {
     IWidgetExternalAPI,
     TWidgetConfigOptions
 } from '@/types/public-api'
-import type { OpenSIPSWidgetElement } from '@/types/opensips-widget'
 import { defaultRingingSound } from '@/utils/ringingSound'
+import {OpenSIPSWidget} from '@/widget/OpenSIPSWidget'
 
 /* Data */
 const widgetAPI = ref<null | IWidgetExternalAPI>()
@@ -27,7 +27,7 @@ function init () {
         return
     }
 
-    const widgetEl = document.createElement('opensips-widget') as OpenSIPSWidgetElement
+    const widgetEl = document.createElement('opensips-widget') as OpenSIPSWidget
 
     widgetEl.addEventListener('widget:ready', ({ detail: OpenSIPSWidget }) => {
         const config: TWidgetConfigOptions = {
