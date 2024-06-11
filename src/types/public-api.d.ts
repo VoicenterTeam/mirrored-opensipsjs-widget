@@ -23,8 +23,8 @@ export namespace Widget {
  */
 export interface ISIPSCredentials {
     username: string
-    password: string
-    authorization_jwt: string
+    password?: string
+    authorization_jwt?: string
     domain: string
 }
 
