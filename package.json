@@ -1,6 +1,6 @@
 {
   "name": "@voicenter-team/opensipsjs-widget",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "author": "Bohdan Konechnyi",
   "main": "dist/opensips-widget.es.js",
   "types": "dist/opensips-widget.d.ts",
@@ -25,7 +25,7 @@
     "@twind/core": "^1.1.3",
     "@twind/preset-autoprefix": "^1.0.7",
     "@twind/preset-tailwind": "^1.1.4",
-    "@voicenter-team/opensips-js": "^1.0.82",
+    "@voicenter-team/opensips-js": "^1.0.83",
     "@vueuse/core": "^10.9.0",
     "construct-style-sheets-polyfill": "^3.1.0",
     "lodash": "^4.17.21",
