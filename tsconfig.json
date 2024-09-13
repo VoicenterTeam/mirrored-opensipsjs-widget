@@ -1,7 +1,8 @@
 {
   "include": [
     "src/**/*",
-    "src/**/*.d.ts"
+    "src/**/*.d.ts",
+    "docs/tsconfig.json"
   ],
   "exclude": ["node_modules"],
   "compilerOptions": {

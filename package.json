@@ -11,7 +11,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "dev:documentation": "npm run build && cd docs && npm install && npm run dev",
+    "dev:documentation": "yarn build && cd docs && yarn && yarn dev",
     "build": "vite build",
     "build:documentation": "npm run build && cd docs && npm install && npm run build",
     "preview": "vite preview",
@@ -40,6 +40,8 @@
     "@types/node": "18.8.0",
     "@vitejs/plugin-vue": "3.1.2",
     "@vue/eslint-config-typescript": "^11.0.3",
+    "@voicenter-team/eslint-config-vue": "1.0.21",
+    "@vue/eslint-config-standard": "8.0.1",
     "@vue/tsconfig": "^0.4.0",
     "eslint": "8.5.0",
     "eslint-plugin-vue": "9.0.0",

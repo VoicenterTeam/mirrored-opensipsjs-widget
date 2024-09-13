@@ -1,25 +1,25 @@
 <template>
     <div
-       ref="wrapperRef"
+        ref="wrapperRef"
     />
 </template>
 
 <script lang="ts" setup>
 import 'root'
 import { onMounted, ref } from 'vue'
-import {
+import type {
     IWidgetExternalAPI,
     TWidgetConfigOptions
 } from '@/types/public-api'
 import { defaultRingingSound } from '@/utils/ringingSound'
-import {OpenSIPSWidget} from '@/widget/OpenSIPSWidget'
+import type { OpenSIPSWidget } from '@/widget/OpenSIPSWidget'
 
 /* Data */
 const widgetAPI = ref<null | IWidgetExternalAPI>()
 const wrapperRef = ref(null)
 
 /* Emits */
-const emit = defineEmits(['widget-api-init'])
+const emit = defineEmits([ 'widget-api-init' ])
 
 /* Methods */
 function init () {

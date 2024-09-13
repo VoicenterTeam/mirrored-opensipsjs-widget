@@ -1,5 +1,23 @@
 <template>
     <div>
+        <VcForm
+            ref="formRef"
+            :model="credentials"
+        >
+            <VcFormItem
+                label="Username"
+                prop="username"
+                icon="vc-lc-user-round"
+                :rules="[
+                    { required: true, message: 'Username is required' }
+                ]"
+            >
+                <VcInput
+                    v-model="credentials.username"
+                />
+            </VcFormItem>
+        </VcForm>
+
         <form v-if="!loggedIn" @submit.prevent="login">
             <label>
                 Username:
@@ -10,8 +28,8 @@
                 <input v-model="credentials.password">
             </label>
             <label>
-              JWT Token:
-              <input v-model="credentials.authorization_jwt">
+                JWT Token:
+                <input v-model="credentials.authorization_jwt">
             </label>
             <label>
                 Domain:
@@ -32,10 +50,9 @@
 
 <script lang="ts" setup>
 import 'root'
-import { ref, onMounted, computed } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
 import Widget from './Widget.vue'
-import {
+import type {
     IWidgetExternalAPI
 } from '@/types/public-api'
 
@@ -58,7 +75,7 @@ const credentials = useLocalStorage<Credentials>(
 )
 const loggedIn = useLocalStorage<boolean>('loggedIn', false)
 
-const emit = defineEmits(['widget-api-init'])
+const emit = defineEmits([ 'widget-api-init' ])
 
 const credentialsValid = computed(() => {
     return credentials.value.username &&
