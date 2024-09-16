@@ -10,6 +10,7 @@
     "yarn": ">= 1.22.4"
   },
   "scripts": {
+    "prepublish": "node scripts/prepublish.js",
     "dev": "vite",
     "dev:documentation": "yarn build && cd docs && yarn && yarn dev",
     "docs-build": "yarn build && cd docs && yarn && yarn run build",
@@ -40,10 +41,12 @@
     "@types/lodash": "^4.14.196",
     "@types/node": "18.8.0",
     "@vitejs/plugin-vue": "3.1.2",
+    "@voicenter-team/aws-uploader": "^1.0.2",
     "@voicenter-team/eslint-config-vue": "1.0.21",
     "@vue/eslint-config-standard": "8.0.1",
     "@vue/eslint-config-typescript": "^11.0.3",
     "@vue/tsconfig": "^0.4.0",
+    "dotenv": "^16.4.5",
     "eslint": "8.5.0",
     "eslint-plugin-vue": "9.0.0",
     "npm-run-all": "^4.1.5",
