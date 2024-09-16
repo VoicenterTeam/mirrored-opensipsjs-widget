@@ -29,7 +29,6 @@
 </template>
 
 <script setup lang="ts">
-import 'root'
 import Widget from '~/components/example/Widget.vue'
 import Config from '~/components/example/Config.vue'
 import type {

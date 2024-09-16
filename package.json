@@ -2,8 +2,8 @@
   "name": "@voicenter-team/opensipsjs-widget",
   "version": "0.0.9",
   "author": "Bohdan Konechnyi",
-  "main": "dist/opensips-widget.es.js",
-  "types": "dist/opensips-widget.d.ts",
+  "main": "dist/opensipsjs-widget.es.js",
+  "types": "dist/opensipsjs-widget.d.ts",
   "engines": {
     "node": ">= 16",
     "npm": "please-use-yarn",
