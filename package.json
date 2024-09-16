@@ -12,7 +12,7 @@
   "scripts": {
     "dev": "vite",
     "dev:documentation": "yarn build && cd docs && yarn && yarn dev",
-    "docs-build": "yarn build && && cd docs && yarn && yarn run build",
+    "docs-build": "yarn build && cd docs && yarn && yarn run build",
     "build": "vite build",
     "build:documentation": "npm run build && cd docs && npm install && npm run build",
     "preview": "vite preview",
