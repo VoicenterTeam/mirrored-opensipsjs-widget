@@ -6,20 +6,29 @@
 
 <script lang="ts" setup>
 import 'root'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, onBeforeUnmount, watch } from 'vue'
 import type {
+    IWidgetConfig,
     IWidgetExternalAPI,
-    TWidgetConfigOptions
 } from '@/types/public-api'
-import { defaultRingingSound } from '@/utils/ringingSound'
 import type { OpenSIPSWidget } from '@/widget/OpenSIPSWidget'
+import { useLocalStorage } from '@vueuse/core'
+import { WIDGET_CONFIG_STORAGE_KEY } from '~/enum/storage.enum'
+import { getDefaultWidgetConfig } from '@/enum/defaultWidgetConfig.enum'
 
 /* Data */
-const widgetAPI = ref<null | IWidgetExternalAPI>()
-const wrapperRef = ref(null)
+const widgetConfig = useLocalStorage<IWidgetConfig>(
+    WIDGET_CONFIG_STORAGE_KEY,
+    getDefaultWidgetConfig()
+)
+const wrapperRef = ref<HTMLElement | null>(null)
+let widgetEl: OpenSIPSWidget
+let widgetAPI: IWidgetExternalAPI
 
 /* Emits */
-const emit = defineEmits([ 'widget-api-init' ])
+const emit = defineEmits<{
+    (e: 'widget-api-init', payload: IWidgetExternalAPI): void
+}>()
 
 /* Methods */
 function init () {
@@ -27,57 +36,16 @@ function init () {
         return
     }
 
-    const widgetEl = document.createElement('opensips-widget') as OpenSIPSWidget
+    widgetEl = document.createElement('opensips-widget') as OpenSIPSWidget
 
-    widgetEl.addEventListener('widget:ready', ({ detail: OpenSIPSWidget }) => {
-        const config: TWidgetConfigOptions = {
-            callSettings: {
-                quickCallNumber: '665',
-                allowTransfer: true,
-                autoAnswer: {
-                    allowChange: true,
-                    defaultBehavior: false
-                },
-                outgoingCalls: true,
-                callerInfo: {
-                    displayName: true,
-                    callerId: {
-                        display: true,
-                        mask: false
-                    }
-                },
-                shrinkOnIdle: false,
-                ringingSound: defaultRingingSound,
-                outgoingCallPlaceHolder: 'Enter number'
-            },
-            themeSettings: {
-                colors: {
-                    primary: '#5E95E8',
-                    secondary: '#0d8099',
-                    'main-text': '#414C59',
-                    'secondary-text': '#8292A5',
-                    'button-pressed-text': '#FFF',
-                    'border-lines': '#DDD',
-                    'primary-bg': '#FFF',
-                    'secondary-bg': '#F0F2F4',
-                    'inactive-bg': '#B9C2CC',
-                    'success': '#7CC24F',
-                    'danger': '#EC2A2A',
-                    'additional-danger-bg': '#F44C4C',
-                    'additional-success-bg': '#75B8A0',
-                    'additional-bg': '#B0BFC2'
-                },
-                layoutConfig: {
-                    type: 'rounded',
-                    mode: 'floating'
-                }
-            }
+    widgetEl.addEventListener(
+        'widget:ready',
+        ({ detail: OpenSIPSWidget }) => {
+            widgetAPI = new OpenSIPSWidget(widgetConfig.value)
+
+            emit('widget-api-init', widgetAPI)
         }
-
-        widgetAPI.value = new OpenSIPSWidget(config)
-
-        emit('widget-api-init', widgetAPI.value)
-    })
+    )
 
     widgetEl.style.zIndex = '99999'
 
@@ -85,4 +53,24 @@ function init () {
 }
 
 onMounted(init)
+onBeforeUnmount(() => {
+    if (widgetEl) {
+        widgetEl.remove()
+    }
+})
+
+/* Watch */
+watch(
+    widgetConfig,
+    (config) => {
+        if (widgetAPI) {
+            console.log('Setting config', config)
+            widgetAPI.setConfig(config)
+        }
+    },
+    {
+        deep: true,
+        immediate: true
+    }
+)
 </script>

@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, reactive } from 'vue'
 import merge from 'lodash/merge'
 import type {
     TWidgetConfigOptions,
@@ -38,25 +38,19 @@ const CENTER_POSITIONS: Record<string, string> = {
 }
 
 /* Data */
-const widgetConfig = ref<IWidgetConfig>(getDefaultWidgetConfig())
+const widgetConfig = reactive<IWidgetConfig>(getDefaultWidgetConfig())
 
 /* Computed */
 export const widgetCallSettings = computed({
-    get: () => widgetConfig.value.callSettings,
+    get: () => widgetConfig.callSettings,
     set: (value: ICallSettings) => {
-        widgetConfig.value = {
-            ...widgetConfig.value,
-            callSettings: value
-        }
+        widgetConfig.callSettings = value
     }
 })
 export const widgetThemeSettings = computed({
-    get: () => widgetConfig.value.themeSettings,
+    get: () => widgetConfig.themeSettings,
     set: (value: IWidgetTheme) => {
-        widgetConfig.value = {
-            ...widgetConfig.value,
-            themeSettings: value
-        }
+        widgetConfig.themeSettings = value
     }
 })
 export const quickCallNumber = computed({
@@ -164,7 +158,7 @@ export const layoutMode = computed(() => widgetThemeSettings.value.layoutConfig.
 
 /* Methods */
 export function setCallSettingsPermissions (settings: Partial<ICallSettings>) {
-    widgetCallSettings.value = merge(widgetCallSettings.value, settings)
+    widgetCallSettings.value = merge({}, widgetCallSettings.value, settings)
 }
 
 function setWidgetPosition (settings: IWidgetTheme, widgetRootEl: HTMLElement) {
@@ -217,7 +211,7 @@ function setWidgetPosition (settings: IWidgetTheme, widgetRootEl: HTMLElement) {
 }
 
 export function setThemeSettings (settings: Partial<IWidgetTheme>, widgetRootEl: HTMLElement) {
-    const mergedTheme: IWidgetTheme = merge(defaultTheme, settings)
+    const mergedTheme: IWidgetTheme = merge({}, defaultTheme, settings)
 
     widgetThemeSettings.value = mergedTheme
 
@@ -245,7 +239,7 @@ export function setConfig (config: Partial<TWidgetConfigOptions>) {
 }
 
 export function getConfig (): IWidgetConfig {
-    return cloneDeep(widgetConfig.value)
+    return cloneDeep(widgetConfig)
 }
 
 

@@ -8,7 +8,9 @@ import type { UnRegisterOptions } from 'jssip/lib/UA'
 import { autoAnswerDefaultBehaviour } from '@/composables/useWidgetConfig'
 
 /* Main */
-let opensipsjs: OpenSIPSJS
+const state: { opensipsjs: OpenSIPSJS | undefined } = {
+    opensipsjs: undefined
+}
 
 /* State */
 export const isOpenSIPSReady = ref<boolean>(false)
@@ -140,7 +142,7 @@ function processCallsTime (calls: AllActiveCallsType) {
  */
 function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
     return opensipsJS
-        .on('ready', (value: boolean) => {
+        .on('connection', (value: boolean) => {
             isOpenSIPSReady.value = value
         })
         .on('changeActiveInputMediaDevice', (value: string) => {
@@ -213,12 +215,14 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
 
             const opensipsOptions = makeOpenSIPSJSOptions(credentials)
 
-            opensipsjs = new OpenSIPSJS(opensipsOptions)
+            const opensipsjs = new OpenSIPSJS(opensipsOptions)
 
-            registerOpenSIPSListeners(opensipsjs)
-                .on('ready', () => {
+            state.opensipsjs = opensipsjs
+
+            registerOpenSIPSListeners(state.opensipsjs)
+                .on('connection', () => {
                     if (autoAnswerDefaultBehaviour.value) {
-                        opensipsjs.audio.setAutoAnswer(true)
+                        state.opensipsjs?.audio.setAutoAnswer(true)
                     }
 
                     resolve(opensipsjs)
@@ -233,96 +237,96 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
 }
 
 export function tryRegisterOpenSIPS () {
-    if (isOpensips(opensipsjs)) {
-        opensipsjs.register()
+    if (isOpensips(state.opensipsjs)) {
+        state.opensipsjs?.register()
 
-        return opensipsjs
+        return state.opensipsjs
     }
 }
 
 // TODO: check if this properly restarts receiving events
 export function beginOpenSIPS () {
-    if (isOpensips(opensipsjs)) {
-        opensipsjs.begin()
+    if (isOpensips(state.opensipsjs)) {
+        state.opensipsjs?.begin()
     }
 }
 
 // TODO: check if this properly stops receiving events and frees resources
 export function stopOpenSIPS () {
-    if (isOpensips(opensipsjs)) {
-        opensipsjs.stop()
+    if (isOpensips(state.opensipsjs)) {
+        state.opensipsjs?.stop()
     }
 }
 
 export function unregisterOpenSIPS (options?: UnRegisterOptions | undefined) {
-    if (isOpensips(opensipsjs)) {
-        opensipsjs.unregister(options)
+    if (isOpensips(state.opensipsjs)) {
+        state.opensipsjs?.unregister(options)
     }
 }
 
 export function useOpenSIPSJS () {
     function startCall (target: string, addToCurrentRoom = false) {
-        opensipsjs.audio.initCall(target, addToCurrentRoom)
+        state.opensipsjs?.audio.initCall(target, addToCurrentRoom)
     }
 
     function answerCall (callId: string) {
-        opensipsjs.audio.answerCall(callId)
+        state.opensipsjs?.audio.answerCall(callId)
     }
 
     function muteAgent (toMute: boolean) {
         if (toMute) {
-            opensipsjs.audio.mute()
+            state.opensipsjs?.audio.mute()
         } else {
-            opensipsjs.audio.unmute()
+            state.opensipsjs?.audio.unmute()
         }
     }
 
     function muteCaller (callId: string, toMute: boolean) {
         if (toMute) {
-            opensipsjs.audio.muteCaller(callId)
+            state.opensipsjs?.audio.muteCaller(callId)
         } else {
-            opensipsjs.audio.unmuteCaller(callId)
+            state.opensipsjs?.audio.unmuteCaller(callId)
         }
     }
 
     function holdCall (callId: string) {
-        opensipsjs.audio.holdCall(callId)
+        state.opensipsjs?.audio.holdCall(callId)
     }
 
     function unholdCall (callId: string) {
-        opensipsjs.audio.unholdCall(callId)
+        state.opensipsjs?.audio.unholdCall(callId)
     }
 
     async function moveCall (callId: string, roomId: number) {
-        await opensipsjs.audio.moveCall(callId, roomId)
+        await state.opensipsjs?.audio.moveCall(callId, roomId)
     }
 
     function transferCall (callId: string, target: string) {
-        opensipsjs.audio.transferCall(callId, target)
+        state.opensipsjs?.audio.transferCall(callId, target)
     }
 
     function mergeCallsInRoom (roomId: number) {
-        opensipsjs.audio.mergeCall(roomId)
+        state.opensipsjs?.audio.mergeCall(roomId)
     }
 
     function terminateCall (callId: string) {
-        opensipsjs.audio.terminateCall(callId)
+        state.opensipsjs?.audio.terminateCall(callId)
     }
 
     async function setActiveRoom (roomId: number | undefined) {
-        await opensipsjs.audio.setActiveRoom(roomId)
+        await state.opensipsjs?.audio.setActiveRoom(roomId)
     }
 
     function setAutoAnswer (value: boolean) {
-        opensipsjs.audio.setAutoAnswer(value)
+        state.opensipsjs?.audio.setAutoAnswer(value)
     }
 
     function sendDTMF (callId: string, value: string) {
-        opensipsjs.audio.sendDTMF(callId, value)
+        state.opensipsjs?.audio.sendDTMF(callId, value)
     }
 
     return {
-        opensipsjs,
+        state,
         startCall,
         answerCall,
         muteAgent,
@@ -341,10 +345,10 @@ export function useOpenSIPSJS () {
 
 export async function onMicrophoneChange (event: Event) {
     const target = event.target as HTMLSelectElement
-    await opensipsjs.audio.setMicrophone(target.value)
+    await state.opensipsjs?.audio.setMicrophone(target.value)
 }
 
 export async function onSpeakerChange (event: Event) {
     const target = event.target as HTMLSelectElement
-    await opensipsjs.audio.setSpeaker(target.value)
+    await state.opensipsjs?.audio.setSpeaker(target.value)
 }

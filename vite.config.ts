@@ -12,20 +12,21 @@ export default defineConfig({
         vue(),
         svgLoader(),
         dts({
+            rollupTypes: true,
             copyDtsFiles: true
         }),
     ],
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url)),
-            'root': fileURLToPath(new URL('./', import.meta.url))
+            root: fileURLToPath(new URL('./', import.meta.url))
         }
     },
     build: {
         lib: {
             entry: './src/main.ts',
             name: 'OpenSIPSWidget',
-            fileName: (format) => `opensips-widget.${format}.js`
+            fileName: (format) => `opensipsjs-widget.${format}.js`
         },
         rollupOptions: {
             output: {

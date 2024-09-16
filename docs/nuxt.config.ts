@@ -32,13 +32,14 @@ export default defineNuxtConfig({
     ],
     uiTypedoc: {
         typesGenerate: true,
-        entryPoints: [ resolve(__dirname, '../library/index.d.ts') ]
+        entryPoints: [ resolve(__dirname, '../dist/opensips-widget.d.ts') ]
     },
     css: [
         '@voicenter-team/voicenter-ui-plus/library/style.css',
         './assets/css/tailwind.css'
     ],
     alias: {
-        '@': resolve(__dirname, '../src')
+        '@': resolve(__dirname, '../src'),
+        root: resolve(__dirname, '../')
     }
 })

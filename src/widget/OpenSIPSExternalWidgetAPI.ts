@@ -9,14 +9,14 @@ import { useOpenSIPSJS, startOpenSIPS } from '@/composables/opensipsjs'
 import type { ListenerCallbackFnType, ListenersKeyType } from '@voicenter-team/opensips-js/src/types/listeners'
 
 const OpenSIPSExternalWidgetAPI: IWidgetExternalAPIConstructor = class OpenSIPSExternalWidgetAPI implements IWidgetExternalAPI {
-    private opensipsjs
+    private state
 
     constructor (config: TWidgetConfigOptions) {
         setConfig(config)
 
-        const { opensipsjs } = useOpenSIPSJS()
+        const { state } = useOpenSIPSJS()
 
-        this.opensipsjs = opensipsjs
+        this.state = state
     }
 
     public setConfig (config: TWidgetConfigOptions) {
@@ -30,7 +30,7 @@ const OpenSIPSExternalWidgetAPI: IWidgetExternalAPIConstructor = class OpenSIPSE
     }
 
     public on <T extends ListenersKeyType> (event: T, listener: ListenerCallbackFnType<T>) {
-        this.opensipsjs.on(event, listener)
+        this.state.opensipsjs?.on(event, listener)
 
         return this
     }

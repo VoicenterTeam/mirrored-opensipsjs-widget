@@ -1,254 +1,249 @@
 <template>
     <div>
-        <!--        <Demo @widget-api-init="onWidgetInit" />-->
-
-        <div class="element-styling">
-            <h2
-                id="configTheme"
-                tabindex="-1"
+        <div>
+            <VcCollapse
+                v-model="collapseModel"
             >
-                <a class="header-anchor" href="#config-theme" aria-hidden="true">#</a>
-                Theme configuration
-            </h2>
-
-            <VcCollapse>
-                <VcCollapseItem title="Colors" name="colors">
-                    0
-                    <!--                    <el-form label-position="left" label-width="auto" inline>-->
-                    <!--                        <el-row>-->
-                    <!--                            <el-col v-for="[name, value] in Object.entries(form.themeSettings.colors)" :key="name" :span="8">-->
-                    <!--                                <el-form-item :label="name">-->
-                    <!--                                    <el-color-picker :model-value="value" @change="onColorChange($event, name)" />-->
-                    <!--                                </el-form-item>-->
-                    <!--                            </el-col>-->
-                    <!--                        </el-row>-->
-                    <!--                    </el-form>-->
+                <VcCollapseItem
+                    title="Colors"
+                    name="colors"
+                >
+                    <VcForm
+                        label-position="left"
+                        label-width="auto"
+                        inline
+                    >
+                        <div class="grid grid-rows-4 grid-flow-col gap-4">
+                            <VcFormItem
+                                v-for="[name, value] in Object.entries(form.themeSettings.colors)"
+                                :key="name"
+                                :label="name"
+                            >
+                                <VcColorPicker
+                                    :model-value="value"
+                                    @change="onColorChange($event, name)"
+                                />
+                            </VcFormItem>
+                        </div>
+                    </VcForm>
                 </VcCollapseItem>
 
-                <VcCollapseItem title="Layout" name="layout">
-                    1
-                    <!--                    <el-form label-position="left" label-width="auto" inline>-->
-                    <!--                        <el-form-item label="Type">-->
-                    <!--                            <el-select v-model="form.themeSettings.layoutConfig.type">-->
-                    <!--                                <el-option-->
-                    <!--                                    key="rounded"-->
-                    <!--                                    label="Rounded"-->
-                    <!--                                    value="rounded"-->
-                    <!--                                />-->
-                    <!--                                <el-option-->
-                    <!--                                    key="quickCall"-->
-                    <!--                                    label="Quick Call"-->
-                    <!--                                    value="quickCall"-->
-                    <!--                                />-->
-                    <!--                            </el-select>-->
-                    <!--                        </el-form-item>-->
+                <VcCollapseItem
+                    title="Layout"
+                    name="layout"
+                >
+                    <VcForm
+                        label-position="left"
+                        label-width="auto"
+                    >
+                        <VcFormItem label="Type">
+                            <VcSelect
+                                v-model="form.themeSettings.layoutConfig.type"
+                                :options="layoutConfigTypeOptions"
+                                :config="selectConfig"
+                            />
+                        </VcFormItem>
 
-                    <!--                        <el-form-item label="Mode">-->
-                    <!--                            <el-select v-model="form.themeSettings.layoutConfig.mode">-->
-                    <!--                                <el-option-->
-                    <!--                                    key="floating"-->
-                    <!--                                    label="Floating"-->
-                    <!--                                    value="floating"-->
-                    <!--                                />-->
-                    <!--                                <el-option-->
-                    <!--                                    key="docked"-->
-                    <!--                                    label="Docked"-->
-                    <!--                                    value="docked"-->
-                    <!--                                />-->
-                    <!--                                <el-option-->
-                    <!--                                    key="fixed"-->
-                    <!--                                    label="Fixed"-->
-                    <!--                                    value="fixed"-->
-                    <!--                                />-->
-                    <!--                            </el-select>-->
-                    <!--                        </el-form-item>-->
+                        <VcFormItem label="Mode">
+                            <VcSelect
+                                v-model="form.themeSettings.layoutConfig.mode"
+                                :options="layoutConfigModeOptions"
+                                :config="selectConfig"
+                            />
+                        </VcFormItem>
 
-                    <!--                        <el-form-item label="Anchor">-->
-                    <!--                            <el-select v-model="form.themeSettings.layoutConfig.position.anchor">-->
-                    <!--                                <el-option-->
-                    <!--                                    key="none"-->
-                    <!--                                    label="None"-->
-                    <!--                                    :value="null"-->
-                    <!--                                />-->
-                    <!--                                <el-option-->
-                    <!--                                    key="bottom-center"-->
-                    <!--                                    label="Bottom Center"-->
-                    <!--                                    value="bottom-center"-->
-                    <!--                                />-->
-                    <!--                                <el-option-->
-                    <!--                                    key="top-center"-->
-                    <!--                                    label="Top Center"-->
-                    <!--                                    value="top-center"-->
-                    <!--                                />-->
-                    <!--                                <el-option-->
-                    <!--                                    key="center"-->
-                    <!--                                    label="Center"-->
-                    <!--                                    value="center"-->
-                    <!--                                />-->
-                    <!--                            </el-select>-->
-                    <!--                        </el-form-item>-->
+                        <VcFormItem label="Anchor">
+                            <VcSelect
+                                v-model="form.themeSettings.layoutConfig.position.anchor"
+                                :options="layoutConfigAnchorOptions"
+                                :config="selectConfig"
+                            />
+                        </VcFormItem>
 
-                    <!--                        <el-form-item label="Logo">-->
-                    <!--                            <ImageUploader v-model="form.themeSettings.images.backgroundLogo" :max-size="1024 * 1024" />-->
-                    <!--                        </el-form-item>-->
+                        <VcFormItem label="Logo">
+                            <FileUploader
+                                v-model="form.themeSettings.images.backgroundLogo"
+                                accept="image/*"
+                                label="Logo"
+                                :file-size-limit="1024 * 1024"
+                            />
+                        </VcFormItem>
 
-                    <!--                        <p>Position</p>-->
+                        <p>Position</p>
 
-                    <!--                        <el-form-item label="Left">-->
-                    <!--                            <el-input v-model="form.themeSettings.layoutConfig.position.left" />-->
-                    <!--                        </el-form-item>-->
+                        <VcFormItem label="Left">
+                            <VcInput v-model="form.themeSettings.layoutConfig.position.left" />
+                        </VcFormItem>
 
-                    <!--                        <el-form-item label="Top">-->
-                    <!--                            <el-input v-model="form.themeSettings.layoutConfig.position.top" />-->
-                    <!--                        </el-form-item>-->
+                        <VcFormItem label="Top">
+                            <VcInput v-model="form.themeSettings.layoutConfig.position.top" />
+                        </VcFormItem>
 
-                    <!--                        <el-form-item label="Right">-->
-                    <!--                            <el-input v-model="form.themeSettings.layoutConfig.position.right" />-->
-                    <!--                        </el-form-item>-->
+                        <VcFormItem label="Right">
+                            <VcInput v-model="form.themeSettings.layoutConfig.position.right" />
+                        </VcFormItem>
 
-                    <!--                        <el-form-item label="Bottom">-->
-                    <!--                            <el-input v-model="form.themeSettings.layoutConfig.position.bottom" />-->
-                    <!--                        </el-form-item>-->
+                        <VcFormItem label="Bottom">
+                            <VcInput v-model="form.themeSettings.layoutConfig.position.bottom" />
+                        </VcFormItem>
 
-                    <!--                        <el-form-item label="Keypad mode">-->
-                    <!--                            <el-select v-model="form.themeSettings.layoutConfig.keypadMode">-->
-                    <!--                                <el-option-->
-                    <!--                                    key="popover"-->
-                    <!--                                    label="popover"-->
-                    <!--                                    value="popover"-->
-                    <!--                                />-->
-                    <!--                                <el-option-->
-                    <!--                                    key="static"-->
-                    <!--                                    label="static"-->
-                    <!--                                    value="static"-->
-                    <!--                                />-->
-                    <!--                                <el-option-->
-                    <!--                                    key="manual"-->
-                    <!--                                    label="manual"-->
-                    <!--                                    value="manual"-->
-                    <!--                                />-->
-                    <!--                            </el-select>-->
-                    <!--                        </el-form-item>-->
+                        <VcFormItem label="Keypad mode">
+                            <VcSelect
+                                v-model="form.themeSettings.layoutConfig.keypadMode"
+                                :options="layoutConfigKeypadModeOptions"
+                                :config="selectConfig"
+                            />
+                        </VcFormItem>
 
 
-                    <!--                        <el-form-item label="Keypad position">-->
-                    <!--                            <el-select v-model="form.themeSettings.layoutConfig.keypadPosition">-->
-                    <!--                                <el-option-->
-                    <!--                                    key="top"-->
-                    <!--                                    label="top"-->
-                    <!--                                    value="top"-->
-                    <!--                                />-->
-                    <!--                                <el-option-->
-                    <!--                                    key="bottom"-->
-                    <!--                                    label="bottom"-->
-                    <!--                                    value="bottom"-->
-                    <!--                                />-->
-                    <!--                            </el-select>-->
-                    <!--                        </el-form-item>-->
-                    <!--                    </el-form>-->
+                        <VcFormItem label="Keypad position">
+                            <VcSelect
+                                v-model="form.themeSettings.layoutConfig.keypadPosition"
+                                :options="layoutConfigKeypadPositionOptions"
+                                :config="selectConfig"
+                            />
+                        </VcFormItem>
+                    </VcForm>
                 </VcCollapseItem>
 
-                <VcCollapseItem title="Call Settings" name="callSettings">
-                    2
-                    <!--                    <el-form label-position="left" label-width="auto">-->
-                    <!--                        <el-form-item label="Quick Call Number">-->
-                    <!--                            <el-input v-model="form.callSettings.quickCallNumber" />-->
-                    <!--                        </el-form-item>-->
+                <VcCollapseItem
+                    title="Call Settings"
+                    name="callSettings"
+                >
+                    <VcForm
+                        label-position="left"
+                        label-width="auto"
+                    >
+                        <VcFormItem label="Quick Call Number">
+                            <VcInput v-model="form.callSettings.quickCallNumber" />
+                        </VcFormItem>
 
-                    <!--                        <el-form-item label="Show Keypad">-->
-                    <!--                            <el-switch v-model="form.callSettings.showKeypad" />-->
-                    <!--                        </el-form-item>-->
+                        <VcFormItem label="Show Keypad">
+                            <VcSwitch v-model="form.callSettings.showKeypad" />
+                        </VcFormItem>
 
-                    <!--                        <el-form-item label="Allow Transfer">-->
-                    <!--                            <el-switch v-model="form.callSettings.allowTransfer" />-->
-                    <!--                        </el-form-item>-->
+                        <VcFormItem label="Allow Transfer">
+                            <VcSwitch v-model="form.callSettings.allowTransfer" />
+                        </VcFormItem>
 
-                    <!--                        <el-form-item label="Outgoing Calls">-->
-                    <!--                            <el-switch v-model="form.callSettings.outgoingCalls" />-->
-                    <!--                        </el-form-item>-->
+                        <VcFormItem label="Outgoing Calls">
+                            <VcSwitch v-model="form.callSettings.outgoingCalls" />
+                        </VcFormItem>
 
-                    <!--                        <el-form-item label="Shrink on Idle">-->
-                    <!--                            <el-switch v-model="form.callSettings.shrinkOnIdle" />-->
-                    <!--                        </el-form-item>-->
+                        <VcFormItem label="Shrink on Idle">
+                            <VcSwitch v-model="form.callSettings.shrinkOnIdle" />
+                        </VcFormItem>
 
-                    <!--                        <el-form-item label="Display Name">-->
-                    <!--                            <el-switch v-model="form.callSettings.callerInfo.displayName" />-->
-                    <!--                        </el-form-item>-->
+                        <VcFormItem label="Display Name">
+                            <VcSwitch v-model="form.callSettings.callerInfo.displayName" />
+                        </VcFormItem>
 
-                    <!--                        <el-form-item label="Display Caller ID">-->
-                    <!--                            <el-switch v-model="form.callSettings.callerInfo.callerId.display" />-->
-                    <!--                        </el-form-item>-->
+                        <VcFormItem label="Display Caller ID">
+                            <VcSwitch v-model="form.callSettings.callerInfo.callerId.display" />
+                        </VcFormItem>
 
-                    <!--                        <el-form-item label="Mask Caller ID">-->
-                    <!--                            <el-switch v-model="form.callSettings.callerInfo.callerId.mask" />-->
-                    <!--                        </el-form-item>-->
+                        <VcFormItem label="Mask Caller ID">
+                            <VcSwitch v-model="form.callSettings.callerInfo.callerId.mask" />
+                        </VcFormItem>
 
-                    <!--                        <el-form-item label="Allow changing auto-answer option">-->
-                    <!--                            <el-switch v-model="form.callSettings.autoAnswer.allowChange" />-->
-                    <!--                        </el-form-item>-->
+                        <VcFormItem label="Allow changing auto-answer option">
+                            <VcSwitch v-model="form.callSettings.autoAnswer.allowChange" />
+                        </VcFormItem>
 
-                    <!--                        <el-form-item label="Default auto-answer behaviour">-->
-                    <!--                            <el-switch v-model="form.callSettings.autoAnswer.defaultBehavior" />-->
-                    <!--                        </el-form-item>-->
+                        <VcFormItem label="Default auto-answer behaviour">
+                            <VcSwitch v-model="form.callSettings.autoAnswer.defaultBehavior" />
+                        </VcFormItem>
 
-                    <!--                        <el-form-item label="Outgoing call placeholder">-->
-                    <!--                            <el-input v-model="form.callSettings.outgoingCallPlaceHolder" />-->
-                    <!--                        </el-form-item>-->
+                        <VcFormItem label="Outgoing call placeholder">
+                            <VcInput v-model="form.callSettings.outgoingCallPlaceHolder" />
+                        </VcFormItem>
 
-                    <!--                        <el-form-item label="Outgoing call input regex validator (put regex in square brackets and use coma separator)">-->
-                    <!--                            <el-input v-model="outgoingInputRegexModel" />-->
-                    <!--                        </el-form-item>-->
+                        <VcFormItem label="Outgoing call input regex validator (put regex in square brackets and use coma separator)">
+                            <VcInput v-model="outgoingInputRegexModel" />
+                        </VcFormItem>
 
-                    <!--                        <el-form-item label="Ringing Sound">-->
-                    <!--                            <AudioUploader v-model="form.callSettings.ringingSound" :max-size="1024 * 1024" />-->
-                    <!--                        </el-form-item>-->
-                    <!--                    </el-form>-->
+                        <VcFormItem label="Ringing Sound">
+                            <FileUploader
+                                v-model="form.callSettings.ringingSound"
+                                accept="audio/*"
+                                :file-size-limit="1024 * 1024"
+                                label="Ringing Sound"
+                            />
+                        </VcFormItem>
+                    </VcForm>
                 </VcCollapseItem>
             </VcCollapse>
 
-            <br>
-
-            <!--            <el-form-item>-->
-            <!--                <el-button type="primary" @click="save">Save</el-button>-->
-            <!--                <el-button @click="reset">Reset</el-button>-->
-            <!--            </el-form-item>-->
+            <div>
+                <VcButton
+                    color="primary"
+                    @click="save"
+                >
+                    Save
+                </VcButton>
+                <VcButton
+                    color="destructive"
+                    @click="reset"
+                >
+                    Reset
+                </VcButton>
+            </div>
         </div>
 
         <div class="code-example-wrapper">
-            <VcButton class="copy-button" @click="copyToClipboard">
+            <VcButton
+                class="copy-button"
+                @click="copyToClipboard"
+            >
                 Copy
             </VcButton>
-            <div ref="widgetCodeExampleRef" v-html="widgetCodeExampleHTML" />
+            <prism
+                :key="codeExampleKey"
+                language="html"
+            >
+                {{ widgetCodeExample }}
+            </prism>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch, onMounted, nextTick } from 'vue'
-import prismjs from 'prismjs'
+import { version } from 'root/package.json'
+import { computed, ref, watch } from 'vue'
+import cloneDeep from 'lodash/cloneDeep'
+import 'prismjs'
+import 'prismjs/themes/prism.css'
+import Prism from 'vue-prism-component'
 import { useLocalStorage } from '@vueuse/core'
-// import Demo from './Demo.vue'
-import AudioUploader from './AudioUploader.vue'
-import ImageUploader from './ImageUploader.vue'
-import type { TWidgetConfigOptions, IWidgetExternalAPI } from '@/types/public-api'
+import FileUploader from './FileUploader.vue'
+// import ImageUploader from './ImageUploader.vue'
+import type { IWidgetConfig } from '@/types/public-api'
 import { getDefaultWidgetConfig } from '@/enum/defaultWidgetConfig.enum'
+import type { Credentials } from '~/composable/useAuthorisation'
+import { VcFormItem, VcInput, VcSwitch, VcSelect } from '@voicenter-team/voicenter-ui-plus'
+import { CREDENTIALS_STORAGE_KEY, WIDGET_CONFIG_STORAGE_KEY } from '~/enum/storage.enum'
 
-type Credentials = {
-    username: string
-    password: string
-    authorization_jwt: string
-    domain: string
+/* Types */
+type OptionType = {
+    label: string
+    value: string | null
 }
 
-const widgetCodeExampleRef = ref()
-const finalForm = useLocalStorage<TWidgetConfigOptions>(
-    'finalForm',
+/* Emits */
+const emit = defineEmits<{
+    (e: 'change'): void
+}>()
+
+/* Data */
+const codeExampleKey = ref(Date.now())
+const collapseModel = ref<Array<string>>([])
+const finalForm = useLocalStorage<IWidgetConfig>(
+    WIDGET_CONFIG_STORAGE_KEY,
     getDefaultWidgetConfig()
 )
-const form = ref<TWidgetConfigOptions>(JSON.parse(JSON.stringify(finalForm.value)) as TWidgetConfigOptions)
-const widgetAPI = ref<IWidgetExternalAPI>()
+const form = ref<IWidgetConfig>(cloneDeep(finalForm.value))
 const credentials = useLocalStorage<Credentials>(
-    'credentials',
+    CREDENTIALS_STORAGE_KEY,
     {
         username: '',
         password: '',
@@ -256,10 +251,79 @@ const credentials = useLocalStorage<Credentials>(
         domain: ''
     }
 )
-
 const values = getDefaultWidgetConfig().callSettings.outgoingInputRegexValidator
 const defaultOutgoingInputValidator = values.map((value) => `[${value}]`).join(',')
 const outgoingInputRegexModel = ref<string>(defaultOutgoingInputValidator)
+const selectConfig = {
+    valueKey: 'value',
+    labelKey: 'label',
+} as const
+const layoutConfigTypeOptions: Array<OptionType> = [
+    {
+        label: 'Rounded',
+        value: 'rounded'
+    },
+    {
+        label: 'Quick Call',
+        value: 'quickCall'
+    }
+]
+const layoutConfigModeOptions: Array<OptionType> = [
+    {
+        label: 'Floating',
+        value: 'floating'
+    },
+    {
+        label: 'Docked',
+        value: 'docked'
+    },
+    {
+        label: 'Fixed',
+        value: 'fixed'
+    }
+]
+const layoutConfigAnchorOptions: Array<OptionType> = [
+    {
+        label: 'None',
+        value: null
+    },
+    {
+        label: 'Bottom Center',
+        value: 'bottom-center'
+    },
+    {
+        label: 'Top Center',
+        value: 'top-center'
+    },
+    {
+        label: 'Center',
+        value: 'center'
+    }
+]
+const layoutConfigKeypadModeOptions: Array<OptionType> = [
+    {
+        label: 'Popover',
+        value: 'popover'
+    },
+    {
+        label: 'Static',
+        value: 'static'
+    },
+    {
+        label: 'Manual',
+        value: 'manual'
+    }
+]
+const layoutConfigKeypadPositionOptions: Array<OptionType> = [
+    {
+        label: 'Top',
+        value: 'top'
+    },
+    {
+        label: 'Bottom',
+        value: 'bottom'
+    }
+]
 
 /* Computed */
 const widgetCodeExample = computed(() => {
@@ -267,8 +331,8 @@ const widgetCodeExample = computed(() => {
     const callSettingsJSON = indentJSON(JSON.stringify(finalForm.value.callSettings, null, 4))
     const credentialsJSON = indentJSON(JSON.stringify(credentials.value, null, 4))
 
-    const code = `
-<script type="module" src="${__OPENSIPS_WIDGET_CDN__}"><\/script>
+    return `
+<script type="module" src="https://cdn.opensipsjs.org/opensipsjs-widget/${version}/opensips-widget.es.js"><\/script>
 
 <opensips-widget id="openSIPSWidget"><\/opensips-widget>
 
@@ -296,28 +360,9 @@ const widgetCodeExample = computed(() => {
 
     widget.addEventListener('widget:ready', onWidgetInitialized)
 <\/script>`
-
-    return code
-})
-const widgetCodeExampleHTML = computed(() => {
-    const code = `​${widgetCodeExample.value}`
-
-    const sanitizedCode = code
-        .trim()
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/\//g, '&#47;')
-        .replace(/\\/g, '&#92;')
-
-    return `
-        <pre>
-            <code class="language-markup">
-                ${sanitizedCode}
-            </code>
-        </pre>
-    `
 })
 
+/* Mounted */
 function indentJSON (jsonString: string) {
     const lines = jsonString.split('\n')
 
@@ -328,12 +373,7 @@ function indentJSON (jsonString: string) {
 
     return jsonString
 }
-function onWidgetInit (widgetExternalAPI: IWidgetExternalAPI) {
-    widgetAPI.value = widgetExternalAPI.setConfig(finalForm.value)
-
-    finalForm.value = widgetExternalAPI.getConfig()
-}
-function onColorChange (value, name) {
+function onColorChange (value: string | null, name: string) {
     form.value = {
         ...form.value,
         themeSettings: {
@@ -346,12 +386,7 @@ function onColorChange (value, name) {
     }
 }
 function reset () {
-    if (widgetAPI.value) {
-        widgetAPI.value.setConfig(getDefaultWidgetConfig())
-
-        form.value = widgetAPI.value.getConfig()
-        finalForm.value = widgetAPI.value.getConfig()
-    }
+    finalForm.value = getDefaultWidgetConfig()
 }
 function extractValuesFromBrackets (inputString: string): string[] {
     const regex = /\[([^\]]+)\]/g
@@ -372,27 +407,16 @@ function saveRegexValidators () {
         form.value.callSettings.outgoingInputRegexValidator.push(value)
     })
 }
-
 function save () {
     saveRegexValidators()
 
-    if (widgetAPI.value) {
-        widgetAPI.value.setConfig(form.value)
+    finalForm.value = cloneDeep(form.value)
 
-        form.value = widgetAPI.value.getConfig()
-        finalForm.value = widgetAPI.value.getConfig()
-    }
-}
-function printCodeExample () {
-    if (widgetCodeExampleRef.value) {
-        widgetCodeExampleRef.value.innerHTML = widgetCodeExampleHTML.value
+    codeExampleKey.value = Date.now()
 
-        nextTick(() => {
-            prismjs.highlightAll()
-        })
-    }
+    emit('change')
 }
-const copyToClipboard = async () => {
+async function copyToClipboard () {
     try {
         await navigator.clipboard.writeText(widgetCodeExample.value)
     } catch (err) {
@@ -400,29 +424,31 @@ const copyToClipboard = async () => {
     }
 }
 
+/* Watcher */
 watch(
-    widgetCodeExampleHTML,
-    () => {
-        printCodeExample()
+    finalForm,
+    (newValue) => {
+        if (JSON.stringify(newValue) !== JSON.stringify(form.value)) {
+            form.value = cloneDeep(newValue)
+        }
     },
     {
+        deep: true,
         immediate: true
     }
 )
-
-onMounted(() => {
-    printCodeExample()
-})
 </script>
 
 <style lang="scss" scoped>
 .code-example-wrapper {
-  position: relative;
+    position: relative;
+    max-width: 100%;
+    overflow: auto;
 
-  .copy-button {
-    position: absolute;
-    left: 5px;
-    top: 5px;
-  }
+    .copy-button {
+        position: absolute;
+        left: 5px;
+        top: 5px;
+    }
 }
 </style>

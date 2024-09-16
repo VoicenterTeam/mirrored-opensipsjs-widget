@@ -1,3 +1,11 @@
+<template>
+    <div class="example-page w-full h-full">
+        <ClientOnly>
+            <ExampleContent />
+        </ClientOnly>
+    </div>
+</template>
+
 <script setup lang="ts">
 useSeoMeta({
     titleTemplate: '%s | OpenSIPSJS',
@@ -7,11 +15,3 @@ useSeoMeta({
     ogDescription: 'This library is a wrapper over the opensips-js implementation.'
 })
 </script>
-
-<template>
-    <div class="example-page w-full h-full">
-        <ClientOnly>
-            <LazyExampleContent />
-        </ClientOnly>
-    </div>
-</template>

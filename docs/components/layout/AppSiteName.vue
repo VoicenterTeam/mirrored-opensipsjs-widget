@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { version } from '../../package.json'
+import { version } from 'root/package.json'
 
 const { seo } = useAppConfig()
 const siteVersion = version

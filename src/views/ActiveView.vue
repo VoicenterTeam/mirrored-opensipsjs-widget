@@ -81,7 +81,7 @@ const {
     startCall,
     terminateCall,
     sendDTMF,
-    opensipsjs
+    state
 } = useOpenSIPSJS()
 
 const transferringCall = ref<string>('')
@@ -148,7 +148,7 @@ watchDebounced(
     incomingUnansweredCall,
     (incomingCallObject) => {
         try {
-            if (opensipsjs.audio.autoAnswer && incomingCallObject) {
+            if (state?.opensipsjs?.audio.autoAnswer && incomingCallObject) {
                 answerCall(incomingCallObject._id)
             }
         } catch (err) {

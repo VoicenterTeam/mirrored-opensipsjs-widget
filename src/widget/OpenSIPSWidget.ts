@@ -7,7 +7,7 @@ import styles from '@/styles/style.css?inline'
 
 import config from 'root/twind.config'
 import type { IWidgetAppProps } from '@/types/internal'
-import type { IWidgetExternalAPIConstructor, Widget as PublicWidget } from '@/types/public-api'
+import type { OpenSIPSWidgetElementEventMap, Widget as PublicWidget } from '@/types/public-api'
 
 import App from '@/App.vue'
 import { ActiveTabPlugin } from '@/plugins/activeTabPlugin'
@@ -17,11 +17,6 @@ const cssStyleSheet = new CSSStyleSheet()
 cssStyleSheet.insertRule(styles)
 const sheet = cssom(cssStyleSheet)
 const tw = twind(config, sheet)
-
-interface OpenSIPSWidgetElementEventMap extends HTMLElementEventMap {
-    'widget:ready': CustomEvent<IWidgetExternalAPIConstructor>
-    'widget:destroy': CustomEvent<undefined>
-}
 
 export class OpenSIPSWidget extends HTMLElement {
     constructor () {
@@ -42,7 +37,10 @@ export class OpenSIPSWidget extends HTMLElement {
     public dispatchEvent (event: Event | keyof PublicWidget.EventMap, data?: PublicWidget.EventMap[keyof PublicWidget.EventMap]): boolean | void {
         if (typeof event === 'string') {
             super.dispatchEvent(
-                new CustomEvent(event, { bubbles: true, detail: data })
+                new CustomEvent(event, {
+                    bubbles: true,
+                    detail: data
+                })
             )
             return
         } else if (event instanceof Event) {

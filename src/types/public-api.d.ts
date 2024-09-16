@@ -1,4 +1,4 @@
-import type { ListenerCallbackFnType, ListenersKeyType } from 'opensips-js/src/types/listeners'
+import type { ListenerCallbackFnType, ListenersKeyType } from '@voicenter-team/opensips-js/src/types/listeners'
 
 export namespace Widget {
     /**
@@ -92,7 +92,7 @@ export interface IWidgetExternalAPI {
     /**
      * Returns current widget configuration.
      */
-    getConfig: () => TWidgetConfigOptions
+    getConfig: () => IWidgetConfig
 
     /**
      * Logs in to the SIP server.
@@ -212,4 +212,9 @@ export interface ICallerInfoSettings {
         display: boolean
         mask: boolean
     }
+}
+
+export interface OpenSIPSWidgetElementEventMap extends HTMLElementEventMap {
+    'widget:ready': CustomEvent<IWidgetExternalAPIConstructor>
+    'widget:destroy': CustomEvent<undefined>
 }

@@ -1,5 +1,10 @@
 <template>
-    <component :is="componentView" v-if="true" :widget-element="widgetElement" @ready="onReady"/>
+    <component
+        :is="componentView"
+        :key="layoutType"
+        :widget-element="widgetElement"
+        @ready="onReady"
+    />
 </template>
 
 <script lang="ts" setup>

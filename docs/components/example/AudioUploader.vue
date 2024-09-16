@@ -1,22 +1,32 @@
 <template>
     <div>
-        <FileUploader v-model="soundData" accept="audio/*" v-bind="$attrs" :max-size="maxSize" />
+        <VcFileUploader
+            v-model="soundData"
+            accept="audio/*"
+            v-bind="$attrs"
+            :max-size="maxSize"
+        />
 
-        <audio v-if="soundData" controls :src="soundData" loop></audio>
+        <audio
+            v-if="soundData"
+            controls
+            :src="soundData"
+            loop
+        />
     </div>
 </template>
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import FileUploader from './FileUploader.vue'
+import VcFileUploader from '@voicenter-team/voicenter-ui-plus'
 
 const props = defineProps<{
-        modelValue: string,
-        maxSize?: number
-    }>()
+    modelValue: string,
+    maxSize?: number
+}>()
 
 const emit = defineEmits<{
-    'update:modelValue': (value: string) => void
+    (e: 'update:modelValue', payload: string): void
 }>()
 
 const soundData = computed({

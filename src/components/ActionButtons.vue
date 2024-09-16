@@ -71,7 +71,7 @@
 
 <script lang="ts" setup>
 import type { UnwrapRef } from 'vue'
-import { onMounted, computed, ref } from 'vue'
+import { computed, ref } from 'vue'
 import SettingsIconButton from '@/components/SettingsIconButton.vue'
 import KeypadIconButton from '@/components/KeypadIconButton.vue'
 import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
@@ -85,7 +85,7 @@ import { allowOutgoingCalls, showKeypad, keypadMode } from '@/composables/useWid
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import InputOutgoingCall from '@/components/InputOutgoingCall.vue'
 
-const { muteAgent, startCall, opensipsjs } = useOpenSIPSJS()
+const { muteAgent, startCall, state } = useOpenSIPSJS()
 
 const props = withDefaults(
     defineProps<{
@@ -150,7 +150,7 @@ const onKeypadPress = (value: string) => {
 
 const doMuteAgent = () => {
     if (!allActiveCalls.value.length) {
-        opensipsjs.audio.setMuteWhenJoin(!isAgentMuted.value)
+        state?.opensipsjs?.audio.setMuteWhenJoin(!isAgentMuted.value)
     } else {
         muteAgent(!isAgentMuted.value)
     }
@@ -186,10 +186,6 @@ const onOutgoingInputClose = () => {
     isOutgoingCallInputOpen.value = false
     outgoingInputValue.value = ''
 }
-
-onMounted(() => {
-    opensipsjs.audio.muteWhenJoin
-})
 </script>
 
 <style scoped>
