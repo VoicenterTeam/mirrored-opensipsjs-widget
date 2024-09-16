@@ -32,7 +32,7 @@ export default defineNuxtConfig({
     ],
     uiTypedoc: {
         typesGenerate: true,
-        entryPoints: [ resolve(__dirname, '../dist/opensips-widget.d.ts') ]
+        entryPoints: [ resolve(__dirname, '../dist/opensipsjs-widget.d.ts') ]
     },
     css: [
         '@voicenter-team/voicenter-ui-plus/library/style.css',

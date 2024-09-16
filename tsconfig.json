@@ -2,7 +2,7 @@
   "include": [
     "src/**/*",
     "src/**/*.d.ts",
-    "dist/opensips-widget.d.ts",
+    "dist/opensipsjs-widget.d.ts",
     "docs/tsconfig.json"
   ],
   "exclude": ["node_modules"],
