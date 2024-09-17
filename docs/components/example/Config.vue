@@ -19,6 +19,12 @@
                                 :key="name"
                                 :label="name"
                             >
+                                <template
+                                    v-if="name in CONFIG_DESCRIPTION.themeSettings.colors"
+                                    #info-text
+                                >
+                                    <p v-html="CONFIG_DESCRIPTION.themeSettings.colors[name]" />
+                                </template>
                                 <VcColorPicker
                                     :model-value="value"
                                     @change="onColorChange($event, name)"
@@ -36,7 +42,12 @@
                         label-position="left"
                         label-width="auto"
                     >
-                        <VcFormItem label="Type">
+                        <VcFormItem
+                            label="Type"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.layoutConfig.type" />
+                            </template>
                             <VcSelect
                                 v-model="form.themeSettings.layoutConfig.type"
                                 :options="layoutConfigTypeOptions"
@@ -44,7 +55,12 @@
                             />
                         </VcFormItem>
 
-                        <VcFormItem label="Mode">
+                        <VcFormItem
+                            label="Mode"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.layoutConfig.mode" />
+                            </template>
                             <VcSelect
                                 v-model="form.themeSettings.layoutConfig.mode"
                                 :options="layoutConfigModeOptions"
@@ -52,7 +68,12 @@
                             />
                         </VcFormItem>
 
-                        <VcFormItem label="Anchor">
+                        <VcFormItem
+                            label="Anchor"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.layoutConfig.position.anchor" />
+                            </template>
                             <VcSelect
                                 v-model="form.themeSettings.layoutConfig.position.anchor"
                                 :options="layoutConfigAnchorOptions"
@@ -60,7 +81,12 @@
                             />
                         </VcFormItem>
 
-                        <VcFormItem label="Logo">
+                        <VcFormItem
+                            label="Logo"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.images.backgroundLogo" />
+                            </template>
                             <FileUploader
                                 v-model="form.themeSettings.images.backgroundLogo"
                                 accept="image/*"
@@ -71,23 +97,48 @@
 
                         <p>Position</p>
 
-                        <VcFormItem label="Left">
+                        <VcFormItem
+                            label="Left"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.layoutConfig.position.left" />
+                            </template>
                             <VcInput v-model="form.themeSettings.layoutConfig.position.left" />
                         </VcFormItem>
 
-                        <VcFormItem label="Top">
+                        <VcFormItem
+                            label="Top"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.layoutConfig.position.top" />
+                            </template>
                             <VcInput v-model="form.themeSettings.layoutConfig.position.top" />
                         </VcFormItem>
 
-                        <VcFormItem label="Right">
+                        <VcFormItem
+                            label="Right"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.layoutConfig.position.right" />
+                            </template>
                             <VcInput v-model="form.themeSettings.layoutConfig.position.right" />
                         </VcFormItem>
 
-                        <VcFormItem label="Bottom">
+                        <VcFormItem
+                            label="Bottom"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.layoutConfig.position.bottom" />
+                            </template>
                             <VcInput v-model="form.themeSettings.layoutConfig.position.bottom" />
                         </VcFormItem>
 
-                        <VcFormItem label="Keypad mode">
+                        <VcFormItem
+                            label="Keypad mode"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.layoutConfig.keypadMode" />
+                            </template>
                             <VcSelect
                                 v-model="form.themeSettings.layoutConfig.keypadMode"
                                 :options="layoutConfigKeypadModeOptions"
@@ -96,7 +147,12 @@
                         </VcFormItem>
 
 
-                        <VcFormItem label="Keypad position">
+                        <VcFormItem
+                            label="Keypad position"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.layoutConfig.keypadPosition" />
+                            </template>
                             <VcSelect
                                 v-model="form.themeSettings.layoutConfig.keypadPosition"
                                 :options="layoutConfigKeypadPositionOptions"
@@ -114,55 +170,121 @@
                         label-position="left"
                         label-width="auto"
                     >
-                        <VcFormItem label="Quick Call Number">
+                        <VcFormItem
+                            label="Quick Call Number"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.callSettings.quickCallNumber" />
+                            </template>
                             <VcInput v-model="form.callSettings.quickCallNumber" />
                         </VcFormItem>
 
-                        <VcFormItem label="Show Keypad">
+                        <VcFormItem
+                            label="Show Keypad"
+                            :info-text="CONFIG_DESCRIPTION.callSettings.showKeypad"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.callSettings.showKeypad" />
+                            </template>
                             <VcSwitch v-model="form.callSettings.showKeypad" />
                         </VcFormItem>
 
-                        <VcFormItem label="Allow Transfer">
+                        <VcFormItem
+                            label="Allow Transfer"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.callSettings.allowTransfer" />
+                            </template>
                             <VcSwitch v-model="form.callSettings.allowTransfer" />
                         </VcFormItem>
 
-                        <VcFormItem label="Outgoing Calls">
+                        <VcFormItem
+                            label="Outgoing Calls"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.callSettings.outgoingCalls" />
+                            </template>
                             <VcSwitch v-model="form.callSettings.outgoingCalls" />
                         </VcFormItem>
 
-                        <VcFormItem label="Shrink on Idle">
+                        <VcFormItem
+                            label="Shrink on Idle"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.callSettings.shrinkOnIdle" />
+                            </template>
                             <VcSwitch v-model="form.callSettings.shrinkOnIdle" />
                         </VcFormItem>
 
-                        <VcFormItem label="Display Name">
+                        <VcFormItem
+                            label="Display Name"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.callSettings.callerInfo.displayName" />
+                            </template>
                             <VcSwitch v-model="form.callSettings.callerInfo.displayName" />
                         </VcFormItem>
 
-                        <VcFormItem label="Display Caller ID">
+                        <VcFormItem
+                            label="Display Caller ID"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.callSettings.callerInfo.callerId.display" />
+                            </template>
                             <VcSwitch v-model="form.callSettings.callerInfo.callerId.display" />
                         </VcFormItem>
 
-                        <VcFormItem label="Mask Caller ID">
+                        <VcFormItem
+                            label="Mask Caller ID"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.callSettings.callerInfo.callerId.mask" />
+                            </template>
                             <VcSwitch v-model="form.callSettings.callerInfo.callerId.mask" />
                         </VcFormItem>
 
-                        <VcFormItem label="Allow changing auto-answer option">
+                        <VcFormItem
+                            label="Allow changing auto-answer option"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.callSettings.autoAnswer.allowChange" />
+                            </template>
                             <VcSwitch v-model="form.callSettings.autoAnswer.allowChange" />
                         </VcFormItem>
 
-                        <VcFormItem label="Default auto-answer behaviour">
+                        <VcFormItem
+                            label="Default auto-answer behaviour"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.callSettings.autoAnswer.defaultBehavior" />
+                            </template>
                             <VcSwitch v-model="form.callSettings.autoAnswer.defaultBehavior" />
                         </VcFormItem>
 
-                        <VcFormItem label="Outgoing call placeholder">
+                        <VcFormItem
+                            label="Outgoing call placeholder"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.callSettings.outgoingCallPlaceHolder" />
+                            </template>
                             <VcInput v-model="form.callSettings.outgoingCallPlaceHolder" />
                         </VcFormItem>
 
-                        <VcFormItem label="Outgoing call input regex validator (put regex in square brackets and use coma separator)">
+                        <VcFormItem
+                            label="Outgoing call input regex validator (put regex in square brackets and use coma separator)"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.callSettings.outgoingInputRegexValidator" />
+                            </template>
                             <VcInput v-model="outgoingInputRegexModel" />
                         </VcFormItem>
 
-                        <VcFormItem label="Ringing Sound">
+                        <VcFormItem
+                            label="Ringing Sound"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.callSettings.ringingSound" />
+                            </template>
                             <FileUploader
                                 v-model="form.callSettings.ringingSound"
                                 accept="audio/*"
@@ -216,12 +338,12 @@ import 'prismjs/themes/prism.css'
 import Prism from 'vue-prism-component'
 import { useLocalStorage } from '@vueuse/core'
 import FileUploader from './FileUploader.vue'
-// import ImageUploader from './ImageUploader.vue'
 import type { IWidgetConfig } from '@/types/public-api'
 import { getDefaultWidgetConfig } from '@/enum/defaultWidgetConfig.enum'
 import type { Credentials } from '~/composable/useAuthorisation'
 import { VcFormItem, VcInput, VcSwitch, VcSelect } from '@voicenter-team/voicenter-ui-plus'
 import { CREDENTIALS_STORAGE_KEY, WIDGET_CONFIG_STORAGE_KEY } from '~/enum/storage.enum'
+import { CONFIG_DESCRIPTION } from '~/enum/fields-description.enum'
 
 /* Types */
 type OptionType = {

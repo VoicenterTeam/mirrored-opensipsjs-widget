@@ -1,4 +1,4 @@
-export function getCallerInfo (number: string, name: string = '', displayName: boolean = true, useMask: boolean = false) {
+export function getCallerInfo (number: string, name = '', displayName = true, useMask = false) {
     const onlyNumber = number[0] === '+' ? number.slice(1) : number
 
     if (name && displayName) {
@@ -15,7 +15,7 @@ export function getCallerInfo (number: string, name: string = '', displayName: b
     }
 }
 
-export function getCallerNumber (number: string, useMask: boolean = false) {
+export function getCallerNumber (number: string, useMask = false) {
     const hasPlus = number[0] === '+'
     const onlyNumber = hasPlus ? number.slice(1) : number
 

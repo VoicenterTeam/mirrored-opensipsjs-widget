@@ -45,7 +45,6 @@ export type ColorsType =
     | 'danger'
     | 'additional-danger-bg'
     | 'additional-success-bg'
-    | 'additional-bg'
 
 export interface ImagesConfig {
     backgroundLogo?: string

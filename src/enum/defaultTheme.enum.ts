@@ -12,11 +12,10 @@ export const defaultTheme: IWidgetTheme = {
         'primary-bg': '#FFF',
         'secondary-bg': '#F0F2F4',
         'inactive-bg': '#B9C2CC',
-        'success': '#7CC24F',
-        'danger': '#EC2A2A',
+        success: '#7CC24F',
+        danger: '#EC2A2A',
         'additional-danger-bg': '#F44C4C',
         'additional-success-bg': '#75B8A0',
-        'additional-bg': '#B0BFC2'
     },
     layoutConfig: {
         type: 'rounded',
