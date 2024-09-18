@@ -258,6 +258,12 @@ export function stopOpenSIPS () {
     }
 }
 
+export function disconnectOpenSIPS () {
+    if (isOpensips(state.opensipsjs)) {
+        state.opensipsjs?.disconnect()
+    }
+}
+
 export function unregisterOpenSIPS (options?: UnRegisterOptions | undefined) {
     if (isOpensips(state.opensipsjs)) {
         state.opensipsjs?.unregister(options)

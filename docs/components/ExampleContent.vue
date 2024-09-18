@@ -8,21 +8,21 @@
             class="flex justify-center"
         >
             <div
-                v-if="isLoggedIn"
                 class="w-full max-w-screen-2xl bg-gray-100 p-8 rounded"
             >
-                <VcButton @click="onLogout">
+                <VcButton
+                    v-if="isLoggedIn"
+                    @click="onLogout"
+                >
                     Logout
                 </VcButton>
 
-                <Config />
-            </div>
+                <LoginComponent
+                    v-else
+                    @login="onLogin"
+                />
 
-            <div
-                v-else
-                class="w-full max-w-lg bg-gray-100 p-8 rounded"
-            >
-                <LoginComponent @login="onLogin" />
+                <Config />
             </div>
         </div>
     </div>
@@ -46,6 +46,10 @@ function onLogin (payload: Credentials) {
 }
 function onLogout () {
     logOut()
+
+    if (widgetAPI) {
+        widgetAPI.disconnect()
+    }
 }
 function onWidgetInit (widgetExternalAPI: IWidgetExternalAPI) {
     widgetAPI = widgetExternalAPI

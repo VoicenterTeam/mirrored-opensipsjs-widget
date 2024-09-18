@@ -99,6 +99,11 @@ export interface IWidgetExternalAPI {
      * @param credentials
      */
     login: (credentials: ISIPSCredentials) => Promise<IWidgetExternalAPI>
+
+    /**
+     * Disconnects the SIP.
+     */
+    disconnect: () => IWidgetExternalAPI
 }
 
 export interface IWidgetExternalAPIConstructor {
