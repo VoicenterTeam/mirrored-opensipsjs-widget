@@ -29,7 +29,10 @@ async function deploy() {
         await uploader.proceedUploadDirectory(
             S3_BUCKET,
             directoryPathToDeploy,
-            targetDir
+            targetDir,
+            {
+                ACL: 'public-read',
+            }
         )
 
         console.log('Deployment and backup completed successfully.')

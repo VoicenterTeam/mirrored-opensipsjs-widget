@@ -1,6 +1,6 @@
 {
   "name": "@voicenter-team/opensipsjs-widget",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Bohdan Konechnyi",
   "main": "dist/opensipsjs-widget.es.js",
   "types": "dist/opensipsjs-widget.d.ts",
@@ -42,7 +42,7 @@
     "@types/lodash": "^4.14.196",
     "@types/node": "18.8.0",
     "@vitejs/plugin-vue": "3.1.2",
-    "@voicenter-team/aws-uploader": "^1.0.4",
+    "@voicenter-team/aws-uploader": "^1.0.6",
     "@voicenter-team/eslint-config-vue": "1.0.21",
     "@vue/eslint-config-standard": "8.0.1",
     "@vue/eslint-config-typescript": "^11.0.3",

@@ -1435,10 +1435,10 @@
   resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-3.1.2.tgz#3cd52114e8871a0b5e7bd7d837469c032e503036"
   integrity sha512-3zxKNlvA3oNaKDYX0NBclgxTQ1xaFdL7PzwF6zj9tGFziKwmBa3Q/6XcJQxudlT81WxDjEhHmevvIC4Orc1LhQ==
 
-"@voicenter-team/aws-uploader@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@voicenter-team/aws-uploader/-/aws-uploader-1.0.4.tgz#561c764084a92600930d07147bb32e1ce6254609"
-  integrity sha512-O2bcluCzj/DFipA215iSmPC78cvQyBhXsQx4Ly2+CeNMIcDtkvb38M14u8Y2/6yawyhQT5JGvg4hBn6wjsuvQw==
+"@voicenter-team/aws-uploader@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@voicenter-team/aws-uploader/-/aws-uploader-1.0.6.tgz#c4d6597645a440bd865a6981e6f4b4b7361c468f"
+  integrity sha512-LQpVAdZ3AlixjjgyVPm5EHtaVc8fU5ju3jv9AExb0oiqKyKtNmX9jmg/vM8Dhwo9Zc6zCHZa4cPo4EK7arR2DQ==
   dependencies:
     "@aws-sdk/client-s3" "^3.348.0"
     mime-types "^2.1.35"
