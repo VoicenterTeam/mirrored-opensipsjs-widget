@@ -1,39 +1,25 @@
-import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
+import path from 'path'
 import vue from '@vitejs/plugin-vue'
-import svgLoader from 'vite-svg-loader'
-import dts from 'vite-plugin-dts'
+import htmlPlugin from 'vite-plugin-html-config'
+import { version } from './package.json'
+import {fileURLToPath, URL} from "node:url";
 
 export default defineConfig({
-    define: {
-        'process.env': {}
-    },
     plugins: [
         vue(),
-        svgLoader(),
-        dts({
-            rollupTypes: true,
-            copyDtsFiles: true
-        }),
+        htmlPlugin({
+            title: `Call History v${version}`
+        })
     ],
     resolve: {
         alias: {
-            '@': fileURLToPath(new URL('./src', import.meta.url)),
-            root: fileURLToPath(new URL('./', import.meta.url))
+            '@': path.resolve(__dirname, './src'),
+            root: path.resolve(__dirname, './')
         }
     },
     build: {
-        lib: {
-            entry: './src/main.ts',
-            name: 'OpenSIPSWidget',
-            fileName: (format) => `opensipsjs-widget.${format}.js`
-        },
-        rollupOptions: {
-            output: {
-                globals: {
-                    vue: 'Vue'
-                }
-            }
-        }
+        modulePreload: false,
+        cssCodeSplit: false
     }
 })

@@ -1,5 +1,10 @@
-import { ref } from 'vue'
-import OpenSIPSJS from '@voicenter-team/opensips-js'
+import { ref, computed, watch, nextTick } from 'vue'
+import OpenSIPSJS, {
+    ScreenSharePlugin,
+    WhiteBoardPlugin,
+    StreamMaskPlugin,
+    ScreenShareWhiteBoardPlugin
+} from '@voicenter-team/opensips-js'
 import type { ICall, IOpenSIPSJSOptions, IRoom, RoomChangeEmitType, ICallStatus, IOpenSIPSConfiguration } from '@voicenter-team/opensips-js/src/types/rtc'
 import type { ISIPSCredentials } from '@/types/public-api'
 import type { AllActiveCallsStatusType, AllActiveCallsType, CallTimeType } from '@/types/opensips'
@@ -15,6 +20,7 @@ const state: { opensipsjs: OpenSIPSJS | undefined } = {
 /* State */
 export const isOpenSIPSReady = ref<boolean>(false)
 export const isOpenSIPSInitialized = ref<boolean>(false)
+export const usedWidgetShadowRootEl = ref<HTMLElement>()
 
 /* Device management */
 export const activeInputDevice = ref<string>('')
@@ -33,6 +39,77 @@ export const allCallStatuses = ref<Array<ICallStatus>>([])
 /* Call settings */
 export const isMuted = ref<boolean>(false)
 export const isMuteWhenJoin = ref<boolean>(false)
+
+export const conferenceStarted = ref<boolean>(false)
+export const streamSources = ref<Array<unknown>>([])
+export const mainSource = ref<Array<unknown>>(null)
+export const sourcesExceptMain = computed(() => {
+    if (!mainSource.value) {
+        return streamSources.value
+    }
+
+    if (isPresentationWhiteboardEnabled.value || isImageWhiteboardEnabled.value) {
+        return [ ...streamSources.value ]
+    }
+
+    return streamSources.value.filter(s => s.id !== mainSource.value.id)
+})
+export const microphoneOnModel = ref<boolean>(true)
+export const videoOnModel = ref<boolean>(true)
+
+export const isWithBokehMaskEffect = ref<boolean>(false)
+export const isWithBgImgMaskEffect = ref<boolean>(false)
+
+export const isScreenSharing = ref<boolean>(false)
+export const isScreenShareWhiteboardEnabled = ref<boolean>(false)
+export const isPresentationWhiteboardEnabled = ref<boolean>(false)
+export const isImageWhiteboardEnabled = ref<boolean>(false)
+export const isWhiteboardEnabled = computed(() => {
+    return isScreenShareWhiteboardEnabled.value ||
+        isPresentationWhiteboardEnabled.value ||
+        isImageWhiteboardEnabled.value
+})
+
+watch(streamSources,
+    (newSources, oldSources) => {
+        const newParticipant = newSources?.find((newSource) => {
+            if (!oldSources) {
+                return true // If oldSources is undefined, return the first newSource
+            }
+
+            return !oldSources.some((oldSource) => oldSource.id === newSource.id)
+        })
+
+        //const talkingStream = newSources.find(source => source.state && source.state.isTalking)
+
+        if (!newSources) {
+            return
+        }
+
+        if (
+            newSources.length > 0 &&
+            newParticipant && newParticipant.name === 'Screen Share' &&
+            newParticipant.sender === 'me'
+        ) {
+            mainSource.value = newParticipant
+        } else if (newSources.length > 0 && (!mainSource.value || mainSource.value.type === 'publisher'/* && state.mainSource.name !== 'Screen Share'*/ || newSources.length === 1)) {
+            mainSource.value = streamSources.value.find((source) => source.type === 'subscriber')
+
+            if (!mainSource.value) {
+                mainSource.value = streamSources.value.find((source) => source.type === 'publisher' /*&& source.name !== 'Screen Share'*/)
+            }
+        } /*else if (talkingStream) {
+                state.mainSource = talkingStream
+            }*/ else if (newSources.length === 0 && mainSource.value) {
+            //DeviceManager.stopStreamTracks(state.mainSource.stream)
+            mainSource.value = undefined
+        }
+    },
+    {
+        //immediate: true,
+        deep: true
+    }
+)
 
 /**
  * Helper function to check if OpenSIPSJS is initialized (instance is created)
@@ -66,7 +143,7 @@ function makeOpenSIPSJSOptions (credentials: ISIPSCredentials): IOpenSIPSJSOptio
             extraHeaders: [ 'X-Bar: bar' ],
             pcConfig: {},
         },
-        modules: [ 'audio' ]
+        modules: [ 'audio', 'video' ]
     }
 }
 
@@ -201,6 +278,57 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
             const statuses = Object.values(data)
             allCallStatuses.value = [ ...statuses ]
         })
+        .on('conferenceStart', () => {
+            conferenceStarted.value = true
+        })
+        .on('conferenceEnd', () => {
+            conferenceStarted.value = false
+            mainSource.value = null
+            streamSources.value = []
+        })
+        .on('changeMainVideoStream', (data) => {
+            data.id = Date.now()
+            data.type = 'publisher'
+
+            if (!streamSources.value.length) {
+                mainSource.value = data
+            }
+
+            const filteredSources = streamSources.value.filter((source) => {
+                return source.name !== data.name || source.type !== data.type
+            })
+
+            streamSources.value = [ ...filteredSources, data ]
+        })
+        .on('memberJoin', (data) => {
+            streamSources.value = [ ...streamSources.value, data ]
+        })
+        .on('memberHangup', (data) => {
+            const index = streamSources.value.findIndex(s => s.sender === data.sender)
+
+            if (index !== -1) {
+                streamSources.value.splice(index, 1)
+                streamSources.value = [ ...streamSources.value ]
+            }
+        })
+        .on('startScreenShare', (data) => {
+            data.id = Date.now()
+            data.name = 'Screen Share'
+
+            if (!streamSources.value.length) {
+                mainSource.value = data
+            }
+
+            streamSources.value = [ ...streamSources.value, data ]
+        })
+        .on('stopScreenShare', () => {
+            isScreenSharing.value = false
+            streamSources.value = streamSources.value.filter((s) => !(s.name === 'Screen Share' && s.sender === 'me'))
+
+            if (isScreenShareWhiteboardEnabled.value) {
+                isScreenShareWhiteboardEnabled.value = false
+            }
+        })
 }
 
 /**
@@ -216,6 +344,86 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
             const opensipsOptions = makeOpenSIPSJSOptions(credentials)
 
             const opensipsjs = new OpenSIPSJS(opensipsOptions)
+
+            const screenSharePlugin = new ScreenSharePlugin()
+
+            const rootDocument = document.querySelector('opensips-widget')
+            const shadowRootDocument = rootDocument.shadowRoot
+
+            const screenShareWhiteBoardPlugin = new ScreenShareWhiteBoardPlugin(screenSharePlugin, {
+                selectors: {
+                    document: shadowRootDocument
+                }
+            })
+
+            //console.log('this', this)
+
+            /*Object.defineProperty(window, 'document', {
+                value: shadowRootDocument,
+                writable: true,
+                configurable: true,
+            })*/
+
+            /*const originalGetElementById = Document.prototype.getElementById
+            Document.prototype.getElementById = function (id) {
+                // Attempt to get from Shadow Root first
+                const fromShadow = shadowRootDocument.getElementById(id)
+                if (fromShadow) return fromShadow
+
+                // Fallback to the real document
+                return originalGetElementById.call(this, id)
+            }
+
+            const originalGetElementsByClassName = Document.prototype.getElementsByClassName
+            Document.prototype.getElementsByClassName = function (className) {
+                // Try the shadow root first
+                const shadowResults = shadowRootDocument.getElementsByClassName(className)
+                if (shadowResults.length > 0) {
+                    return shadowResults
+                }
+                // Fallback to real document
+                return originalGetElementsByClassName.call(this, className)
+            }*/
+
+            /*const originalCreateElement = Document.prototype.createElement
+            Document.prototype.createElement = function (tagName, options) {
+                // If you want newly created elements to belong to the same ownerDocument
+                // as the shadow root, do something like this:
+                const doc = shadowRootDocument.ownerDocument
+                return doc.createElement(tagName, options)
+            }
+
+            const originalAddEventListener = Document.prototype.addEventListener
+            Document.prototype.addEventListener = function (type, listener, options) {
+                // Divert all event listeners to the shadow root’s event target
+                return shadowRootDocument.addEventListener(type, listener, options)
+            }*/
+
+            //const konvaDrawerContainer = shadowRootDocument.getElementById('presentationCanvasWrapper')
+            //console.log('konvaDrawerContainer', konvaDrawerContainer)
+
+            const whiteBoardPlugin = new WhiteBoardPlugin({
+                mode: 'whiteboard',
+                selectors: {
+                    container: 'presentation-video-container',
+                    drawerContainer: 'presentationCanvasWrapper',
+                    //konvaContainer: konvaDrawerContainer,
+                    document: shadowRootDocument
+                }
+            })
+
+            const streamMaskPlugin = new StreamMaskPlugin({
+                //effect: 'backgroundImageEffect',
+                effect: 'bokehEffect',
+                //base64Image: base64Image
+            }, {
+                immediate: false
+            })
+
+            opensipsjs.use(screenSharePlugin)
+            opensipsjs.use(streamMaskPlugin)
+            opensipsjs.use(whiteBoardPlugin)
+            opensipsjs.use(screenShareWhiteBoardPlugin)
 
             state.opensipsjs = opensipsjs
 
@@ -331,6 +539,229 @@ export function useOpenSIPSJS () {
         state.opensipsjs?.audio.sendDTMF(callId, value)
     }
 
+    function initVideoCall (target: string, name: string) {
+        state.opensipsjs?.video.initCall(target, name)
+    }
+
+    function hangupVideoCall () {
+        state.opensipsjs?.video.stop()
+    }
+
+    function enableAudio () {
+        if (microphoneOnModel.value) {
+            return
+        }
+
+        microphoneOnModel.value = true
+        state.opensipsjs?.video.startAudio()
+    }
+
+    function disableAudio () {
+        if (!microphoneOnModel.value) {
+            return
+        }
+
+        microphoneOnModel.value = false
+        state.opensipsjs?.video.stopAudio()
+    }
+
+    function enableVideo () {
+        if (videoOnModel.value) {
+            return
+        }
+
+        videoOnModel.value = true
+        state.opensipsjs?.video.startVideo()
+    }
+
+    function disableVideo () {
+        if (!videoOnModel.value) {
+            return
+        }
+
+        videoOnModel.value = false
+        state.opensipsjs?.video.stopVideo()
+    }
+
+    function selectMainSource (source) {
+        if (!source || !source.id) {
+            return
+        }
+
+        const sourceId = source.id
+        mainSource.value = streamSources.value.find((source) => source.id === sourceId)
+    }
+
+    function changeMediaConstraints (constraints) {
+        state.opensipsjs?.video.changeMediaConstraints(constraints)
+    }
+
+    async function enableScreenShare (value: boolean) {
+        if (value === isScreenSharing.value) {
+            return
+        }
+
+        isScreenSharing.value = value
+
+        if (value) {
+            state.opensipsjs?.getPlugin('ScreenShare').connect({})
+        } else {
+            if (isScreenShareWhiteboardEnabled.value) {
+                //await enableScreenShareWhiteboard(false)
+                await terminateScreenShareWhiteboard()
+            }
+            state.opensipsjs?.getPlugin('ScreenShare').kill()
+        }
+    }
+
+    function enablePresentationWhiteboard () {
+        isPresentationWhiteboardEnabled.value = true
+
+        nextTick()
+            .then(() => {
+                const plugin = state.opensipsjs?.getPlugin('WhiteBoard')
+
+                if (!plugin) {
+                    throw new Error('No WhiteBoard plugin available')
+                }
+
+                plugin.setMode('whiteboard')
+                plugin.connect()
+
+                //state.opensipsjs?.getPlugin('WhiteBoard').connect()
+                //.then(resolve)
+            })
+        /*return new Promise((resolve) => {
+            nextTick()
+                .then(() => {
+                    state.opensipsjs?.getPlugin('WhiteBoard').connect()
+                    //.then(resolve)
+                })
+        })*/
+        /*setTimeout(() => {
+            state.opensipsjs?.getPlugin('WhiteBoard').connect()
+        }, 10000)*/
+    }
+
+    function terminatePresentationWhiteboard () {
+        isPresentationWhiteboardEnabled.value = false
+
+        nextTick()
+            .then(() => {
+                state.opensipsjs?.getPlugin('WhiteBoard').kill()
+            })
+    }
+
+    function enableImageWhiteboard (imageSrc: string) {
+        isImageWhiteboardEnabled.value = true
+
+        return new Promise((resolve) => {
+            nextTick()
+                .then(() => {
+                    const plugin = state.opensipsjs?.getPlugin('WhiteBoard')
+
+                    if (!plugin) {
+                        throw new Error('No WhiteBoard plugin available')
+                    }
+
+                    plugin.setMode('imageWhiteboard', imageSrc)
+                    plugin.connect()
+
+                    resolve()
+                    /*janusPhoneKit.enableWhiteboard(CONFERENCING_MODE.IMAGE_WHITEBOARD, enable, imageSrc)
+                        .then(resolve)*/
+                })
+        })
+    }
+
+    function terminateImageWhiteboard () {
+        isImageWhiteboardEnabled.value = false
+
+        nextTick()
+            .then(() => {
+                state.opensipsjs?.getPlugin('WhiteBoard').kill()
+            })
+    }
+
+    /*function enablePresentationWhiteboard () {
+        isPresentationWhiteboardEnabled.value = true
+
+        nextTick()
+            .then(() => {
+                state.opensipsjs?.getPlugin('WhiteBoard').connect()
+                //.then(resolve)
+            })
+    }*/
+
+    async function applyBokehMaskEffect () {
+        if (!videoOnModel.value) {
+            return
+        }
+
+        try {
+            const newVal = !isWithBokehMaskEffect.value
+            state.opensipsjs?.getPlugin('StreamMask').connect()
+            //const stream = await janusPhoneKit.enableBokehEffectMask()
+
+            isWithBokehMaskEffect.value = newVal
+
+            //updatePublisherStream(stream)
+            //processOrientationChange()
+        } catch (e) {
+            console.error('Error when enabling bokeh mask effect:', e)
+        }
+    }
+
+    function applyBackgroundImgMaskEffect () {
+
+    }
+
+    function enableScreenShareWhiteboard () {
+        if (isScreenShareWhiteboardEnabled.value) {
+            return
+        }
+
+        isScreenShareWhiteboardEnabled.value = true
+
+        return new Promise((resolve) => {
+            nextTick()
+                .then(() => {
+                    state.opensipsjs?.getPlugin('ScreenShareWhiteboard')
+                        .connect()
+                        .then(resolve)
+                })
+        })
+    }
+
+    function terminateScreenShareWhiteboard () {
+        if (!isScreenShareWhiteboardEnabled.value) {
+            return
+        }
+
+        isScreenShareWhiteboardEnabled.value = false
+
+        return new Promise((resolve) => {
+            nextTick()
+                .then(() => {
+                    state.opensipsjs?.getPlugin('ScreenShareWhiteboard')
+                        .kill()
+                        .then(resolve)
+                })
+        })
+    }
+
+    function setupDrawerOptions (option) {
+        state.opensipsjs?.getPlugin('WhiteBoard')?.setupDrawerOptions(option)
+    }
+
+    function setupScreenShareDrawerOptions (option) {
+        state.opensipsjs?.getPlugin('ScreenShareWhiteboard').setupScreenShareDrawerOptions(option)
+    }
+
+    function setupMaskVisualizationConfig () {
+
+    }
+
     return {
         state,
         startCall,
@@ -345,7 +776,27 @@ export function useOpenSIPSJS () {
         setActiveRoom,
         terminateCall,
         setAutoAnswer,
-        sendDTMF
+        sendDTMF,
+        initVideoCall,
+        hangupVideoCall,
+        enableAudio,
+        disableAudio,
+        enableVideo,
+        disableVideo,
+        changeMediaConstraints,
+        selectMainSource,
+        enableScreenShare,
+        enablePresentationWhiteboard,
+        terminatePresentationWhiteboard,
+        enableImageWhiteboard,
+        terminateImageWhiteboard,
+        applyBokehMaskEffect,
+        applyBackgroundImgMaskEffect,
+        enableScreenShareWhiteboard,
+        terminateScreenShareWhiteboard,
+        setupDrawerOptions,
+        setupScreenShareDrawerOptions,
+        setupMaskVisualizationConfig
     }
 }
 

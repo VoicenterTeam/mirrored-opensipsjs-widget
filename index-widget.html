@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/svg/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Call History Widget AI</title>
+<!--      <link rel="stylesheet" href="widget/style.css">-->
+  </head>
+  <body class="bg-primary" style="background-color: #0b9c60; color: white">
+    <div id="app"></div>
+    <call-history-widget id="call-history-widget"></call-history-widget>
+<!--    <script type="module" src="/src/main.ts"></script>-->
+    <script type="module" src="src/widget.ce.ts"></script>
+<!--    <script type="module" src="widget/call-history-widget.umd.js"></script>-->
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const callId = urlParams.get('id');
+        const token = urlParams.get('token');
+        const widget = document.getElementById('call-history-widget')
+        const options = {
+            callId: callId,
+            token: token,
+            tabsList: [
+                'general',
+                'relatedCalls',
+                'IVR',
+                'queueData',
+                'ai_data'
+            ],
+            colors: {
+                "uiColors": {
+                    "placeholders": "#10A299",
+                    "light-bg": "#BAD6D4",
+                    "main-bg": "#5F8E8B",
+                    "card-bg-color": "#BAD6D4",
+                    "card-shadow-color": "#06817A",
+                    "message-agent-bg-color": "#CDEEEC",
+                    "message-client-bg-color": "#078C84",
+                    "message-active-border-color": "#00D6C9",
+                    "ui-lines": "#608C8A"
+                }
+            },
+        }
+        widget.addEventListener('widget:ready', () => {
+            setTimeout(() => {
+                widget.initData(options)
+            }, 1000)
+        })
+        widget.addEventListener('open:related-call', (callId) => {
+            console.log('open related call page', callId)
+        })
+    </script>
+  </body>
+</html>

@@ -1,13 +1,27 @@
-import { OpenSIPSWidget } from '@/widget/OpenSIPSWidget'
+import { createApp } from 'vue'
+import '@voicenter-team/voicenter-ui-plus/library/style.css'
+//import './styles/style.css'
+import App from './App.vue'
+import { ActiveTabPlugin } from '@/plugins/activeTabPlugin'
 
-export type * from '@/types/public-api'
+/* UI */
+import UI from '@voicenter-team/voicenter-ui-plus'
+import Popper from 'vue3-popper'
+import VLoading from 'v-loading-directive'
 
-customElements.define('opensips-widget', OpenSIPSWidget)
+const app = createApp(App)
 
-declare global {
-    interface HTMLElementTagNameMap {
-        'opensips-widget': OpenSIPSWidget
-    }
-}
+app
+    .use(UI, {
+        entityComponentsEnabled: false,
+        themeConfig: {
+            type: 'local',
+            themeName: 'red'
+        },
+        injectIconFont: true
+    })
+    .use(ActiveTabPlugin)
+    .component('Popper', Popper)
+    .directive('loading', VLoading)
 
-export { OpenSIPSWidget }
+app.mount('#app')

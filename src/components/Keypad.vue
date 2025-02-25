@@ -2,7 +2,7 @@
     <div className="grid grid-cols-3 gap-2 max-w-[250px] p-1">
         <div v-for="(button) in buttons" :key="button">
             <div
-                className="flex items-center justify-center w-12 h-8 rounded border font-semibold
+                className="flex items-center justify-center w-12 h-8 rounded border border-border-lines font-semibold
           hover:bg-primary hover:text-button-pressed-text hover:border-none cursor-pointer"
                 @click="onPress(button)"
             >

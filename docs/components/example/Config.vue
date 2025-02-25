@@ -46,10 +46,10 @@
                             label="Type"
                         >
                             <template #info-text>
-                                <p v-html="CONFIG_DESCRIPTION.themeSettings.layoutConfig.type" />
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.audioConfig.layoutConfig.type" />
                             </template>
                             <VcSelect
-                                v-model="form.themeSettings.layoutConfig.type"
+                                v-model="form.themeSettings.audioConfig.layoutConfig.type"
                                 :options="layoutConfigTypeOptions"
                                 :config="selectConfig"
                             />
@@ -59,10 +59,10 @@
                             label="Mode"
                         >
                             <template #info-text>
-                                <p v-html="CONFIG_DESCRIPTION.themeSettings.layoutConfig.mode" />
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.audioConfig.layoutConfig.mode" />
                             </template>
                             <VcSelect
-                                v-model="form.themeSettings.layoutConfig.mode"
+                                v-model="form.themeSettings.audioConfig.layoutConfig.mode"
                                 :options="layoutConfigModeOptions"
                                 :config="selectConfig"
                             />
@@ -72,10 +72,10 @@
                             label="Anchor"
                         >
                             <template #info-text>
-                                <p v-html="CONFIG_DESCRIPTION.themeSettings.layoutConfig.position.anchor" />
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.audioConfig.layoutConfig.position.anchor" />
                             </template>
                             <VcSelect
-                                v-model="form.themeSettings.layoutConfig.position.anchor"
+                                v-model="form.themeSettings.audioConfig.layoutConfig.position.anchor"
                                 :options="layoutConfigAnchorOptions"
                                 :config="selectConfig"
                             />
@@ -101,46 +101,46 @@
                             label="Left"
                         >
                             <template #info-text>
-                                <p v-html="CONFIG_DESCRIPTION.themeSettings.layoutConfig.position.left" />
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.audioConfig.layoutConfig.position.left" />
                             </template>
-                            <VcInput v-model="form.themeSettings.layoutConfig.position.left" />
+                            <VcInput v-model="form.themeSettings.audioConfig.layoutConfig.position.left" />
                         </VcFormItem>
 
                         <VcFormItem
                             label="Top"
                         >
                             <template #info-text>
-                                <p v-html="CONFIG_DESCRIPTION.themeSettings.layoutConfig.position.top" />
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.audioConfig.layoutConfig.position.top" />
                             </template>
-                            <VcInput v-model="form.themeSettings.layoutConfig.position.top" />
+                            <VcInput v-model="form.themeSettings.audioConfig.layoutConfig.position.top" />
                         </VcFormItem>
 
                         <VcFormItem
                             label="Right"
                         >
                             <template #info-text>
-                                <p v-html="CONFIG_DESCRIPTION.themeSettings.layoutConfig.position.right" />
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.audioConfig.layoutConfig.position.right" />
                             </template>
-                            <VcInput v-model="form.themeSettings.layoutConfig.position.right" />
+                            <VcInput v-model="form.themeSettings.audioConfig.layoutConfig.position.right" />
                         </VcFormItem>
 
                         <VcFormItem
                             label="Bottom"
                         >
                             <template #info-text>
-                                <p v-html="CONFIG_DESCRIPTION.themeSettings.layoutConfig.position.bottom" />
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.audioConfig.layoutConfig.position.bottom" />
                             </template>
-                            <VcInput v-model="form.themeSettings.layoutConfig.position.bottom" />
+                            <VcInput v-model="form.themeSettings.audioConfig.layoutConfig.position.bottom" />
                         </VcFormItem>
 
                         <VcFormItem
                             label="Keypad mode"
                         >
                             <template #info-text>
-                                <p v-html="CONFIG_DESCRIPTION.themeSettings.layoutConfig.keypadMode" />
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.audioConfig.layoutConfig.keypadMode" />
                             </template>
                             <VcSelect
-                                v-model="form.themeSettings.layoutConfig.keypadMode"
+                                v-model="form.themeSettings.audioConfig.layoutConfig.keypadMode"
                                 :options="layoutConfigKeypadModeOptions"
                                 :config="selectConfig"
                             />
@@ -151,10 +151,10 @@
                             label="Keypad position"
                         >
                             <template #info-text>
-                                <p v-html="CONFIG_DESCRIPTION.themeSettings.layoutConfig.keypadPosition" />
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.audioConfig.layoutConfig.keypadPosition" />
                             </template>
                             <VcSelect
-                                v-model="form.themeSettings.layoutConfig.keypadPosition"
+                                v-model="form.themeSettings.audioConfig.layoutConfig.keypadPosition"
                                 :options="layoutConfigKeypadPositionOptions"
                                 :config="selectConfig"
                             />

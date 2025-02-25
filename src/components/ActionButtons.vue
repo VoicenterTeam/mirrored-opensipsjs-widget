@@ -1,5 +1,5 @@
 <template>
-    <div :className="actionButtonWrapperClasses">
+    <div :class="actionButtonWrapperClasses">
         <!--        <div :className="expandWrapperClasses">
             <div>
                 <WidgetIconButton
@@ -13,9 +13,9 @@
                 <div/>
             </div>
         </div>-->
-        <div className="flex w-full">
+        <div class="flex w-full">
             <slot name="prefix-buttons" />
-            <SettingsIconButton className="border-r-1 border-border-lines" />
+            <SettingsIconButton class="border-r border-border-lines" />
             <div>
                 <WidgetIconButton
                     color="primary"
@@ -23,7 +23,8 @@
                     :pressed="isAgentMuted"
                     :pressed-icon="UnMuteIcon"
                     additional-classes="border-r border-border-lines"
-                    @click="doMuteAgent" />
+                    @click="doMuteAgent"
+                />
             </div>
             <div v-if="showKeypad && keypadMode === 'manual'">
                 <WidgetIconButton
@@ -32,15 +33,22 @@
                     :pressed="showManualKeypad"
                     :pressed-icon="KeypadIcon"
                     additional-classes="border-r border-border-lines"
-                    @click="toggleManualKeypad" />
+                    @click="toggleManualKeypad"
+                />
             </div>
             <KeypadIconButton
                 v-if="showKeypad && keypadMode === 'popover'"
-                className="border-r-1 border-border-lines"
+                class="border-r border-border-lines"
                 @press="onKeypadPress"
             />
-            <div v-if="allowOutgoingCalls && props.showOutgoingButton" className="flex w-full">
-                <div v-if="isOutgoingCallInputOpen" className="w-full">
+            <div
+                v-if="allowOutgoingCalls && props.showOutgoingButton"
+                class="flex w-full"
+            >
+                <div
+                    v-if="isOutgoingCallInputOpen"
+                    class="w-full"
+                >
                     <InputOutgoingCall
                         v-model="outgoingInputValue"
                         @call="onOutgoingCallClick"
@@ -53,9 +61,9 @@
                         :icon="CallIcon"
                         :use-focus-effect="false"
                         :additional-classes="outgoingCallButtonClasses"
-                        @click="onOutgoingCallClick" />
+                        @click="onOutgoingCallClick"
+                    />
                 </div>
-
             </div>
             <slot name="suffix-buttons" />
         </div>
@@ -64,7 +72,8 @@
                 color="primary"
                 :icon="MergeIcon"
                 additional-classes="border-l border-border-lines"
-                @click="onMergeClick" />
+                @click="onMergeClick"
+            />
         </div>
     </div>
 </template>

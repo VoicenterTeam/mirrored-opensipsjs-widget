@@ -41,6 +41,11 @@ const OpenSIPSExternalWidgetAPI: IWidgetExternalAPIConstructor = class OpenSIPSE
         return this
     }
 
+    public async initVideoCall (target: string, name: string) {
+        const { initVideoCall } = useOpenSIPSJS()
+        initVideoCall(target, name)
+    }
+
     public disconnect () {
         disconnectOpenSIPS()
 

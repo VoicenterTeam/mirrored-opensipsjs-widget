@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <iframe
+            id="callHistoryFrame"
+            src="http://localhost:5173/ai/call-history?id=2024071111243601243aa8c3b7d23f0a&injected=true"
+            width="1200"
+            height="600"
+            title="Child History Page"
+    ></iframe>
+</body>
+<script>
+    /* Here logic inject token */
+    const iframe = document.getElementById('callHistoryFrame');
+    const token = 'eyJraWQiOiIwZmI2NjNhMS04ZDRhLTRmODEtOTE0YS04M2QzOTYwMDVmOTMiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjE3MjA3MTYwNTguMCwiSnd0TG9naW5EZXRhaWxzIjp7IkxvZ2luVHlwZSI6IkFjY291bnQiLCJJc0FkbWluIjpmYWxzZSwiVG9wQWNjb3VudElEIjo4MzYsIkFjY291bnRJRCI6NjQwLCJVc2VySUQiOm51bGwsIlVzZXJQZXJtaXNzaW9ucyI6bnVsbCwiVXNlclBlcm1pc3Npb25zTGlzdCI6W10sIkV4cGlyYXRpb25UaW1lIjoiMjAyNC0wNy0xMVQxOTo0MDo1Ny41NDg0NjY1KzAzOjAwIiwiV29ya2VySUQiOjB9fQ.m-XsKsaw2rHZZe0ousDVHtBPP-T41-ket4SnyG6k3jrpdpj0EFx-_2U3MRgq8ie6nLRjRL5ul4o1B0yQnSK70WgRvWd6GvqaV8RivxQwWGh75drw6VLIWY06UvGTUTbFDVkLwiatIj0KES9798sXVhH-p_dfE12faCCD37W0WPivMaK0u76jsl_pBZbtEGilqYyh3pjYdTicqZOXd3ZRr3yNnRBTtDBm1uzZ7GTt9ccwY_74Qoyc3xdR7uJ5uUfyhnenNOv4oymUl37IJOHGLDfTYY-nUadbjLx_Cj27VBSKnDWK2wvYYJAxlcF5T7EDGSoB2L67YQCbTfhG7vcFXw'
+    window.addEventListener('message', (event) => {
+        // if (event.origin !== window.location.origin) {
+        //     return; // Ignore messages from unknown origins
+        // }
+        console.log(event.data)
+        if (event.data.type === 'ready' && event.data.initiator === 'VoicenterCallHistory') {
+
+            // Initialize with the received token
+            console.log('Received ready:')
+            // Perform any necessary initialization with the token here
+            iframe.contentWindow.postMessage({ type: 'token', data: token }, '*')
+        }
+    })
+</script>
+</html>

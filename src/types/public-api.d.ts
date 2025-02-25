@@ -50,13 +50,23 @@ export interface ImagesConfig {
     backgroundLogo?: string
 }
 
+export interface IWidgetAudioConfig {
+    images: ImagesConfig
+    layoutConfig: ILayoutConfig
+}
+
+export interface IWidgetVideoConfig {
+    test?: string
+}
+
 /**
  * Represents the configuration options for the widget theme.
  */
 export interface IWidgetTheme {
     colors: Record<ColorsType, string>
-    images: ImagesConfig
-    layoutConfig: ILayoutConfig
+    widgetType: TWidgetType
+    audioConfig?: IWidgetAudioConfig
+    videoConfig?: IWidgetVideoConfig
 }
 
 export interface IWidgetConfig {
@@ -109,6 +119,11 @@ export interface IWidgetExternalAPI {
 export interface IWidgetExternalAPIConstructor {
     new (config: TWidgetConfigOptions): IWidgetExternalAPI
 }
+
+/**
+ * Represents the widget types.
+ */
+export type TWidgetType = 'audio' | 'video'
 
 /**
  * Represents the layout modes for the widget.

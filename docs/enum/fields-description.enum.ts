@@ -103,60 +103,63 @@ export const CONFIG_DESCRIPTION = {
             'additional-danger-bg': 'Background color for danger buttons when pressed.',
             'additional-success-bg': 'Background color for success buttons when pressed.'
         },
-        images: {
-            backgroundLogo: 'If the outgoing calls option is disabled, this icon will be displayed in the background of the widget.'
-        },
-        layoutConfig: {
-            mode:
-                'Defines the widget’s positioning and behavior on the page. Supports the following options:' +
-                '<br>' +
-                '<ul>' +
-                '<li><strong>floating</strong> - The widget floats above all content and can be dragged by the user.</li>' +
-                '<li><strong>docked</strong> - The widget is placed directly where it appears in the HTML, relative to other content.</li>' +
-                '<li><strong>fixed</strong> - The widget is fixed above all content at a specific position on the screen, configured in the <code>position</code> options.</li>' +
-                '</ul>',
-            type:
-                'Defines the layout of the widget. Supports the following options:' +
-                '<br>' +
-                '<ul>' +
-                '<li><strong>rounded</strong> - A rounded widget layout that offers some idle functionality.</li>' +
-                '<li><strong>quickCall</strong> - In idle view, the widget is just a call action button that initiates a call to the number defined in <code>Call Settings Quick Call Number</code> when clicked.</li>' +
-                '</ul>',
-            position: {
-                left:
-                    'If not specified, defaults to <code>auto</code>.' +
-                    '<br>' +
-                    'Accepts any valid CSS value.',
-                top:
-                    'If not specified, defaults to <code>auto</code>.' +
-                    '<br>' +
-                    'Accepts any valid CSS value.',
-                right:
-                    'If not specified, defaults to <code>auto</code>.' +
-                    '<br>' +
-                    'Accepts any valid CSS value.',
-                bottom:
-                    'If not specified, defaults to <code>auto</code>.' +
-                    '<br>' +
-                    'Accepts any valid CSS value.',
-                anchor:
-                    'Sets a predefined position for the widget; should be used only in floating or fixed modes.' +
-                    '<br>' +
-                    'If the anchor is specified, position parameters opposite to the anchor value will be ignored.' +
-                    '<br>' +
-                    'For example, if the anchor is <code>bottom-center</code>, only the bottom parameter will be used.'
+        widgetType: 'audio',
+        audioConfig: {
+            images: {
+                backgroundLogo: 'If the outgoing calls option is disabled, this icon will be displayed in the background of the widget.'
             },
-            keypadMode:
-                'If <code>Call Settings Show Keypad</code> is enabled, this option configures the keypad behavior.' +
-                '<br>' +
-                'Supports the following options:' +
-                '<br>' +
-                '<ul>' +
-                '<li><strong>popover</strong> - The keypad appears when hovering over the keypad button.</li>' +
-                '<li><strong>static</strong> - The keypad is always visible as part of the widget.</li>' +
-                '<li><strong>manual</strong> - The keypad appears when the keypad button is clicked.</li>' +
-                '</ul>',
-            keypadPosition: 'Affects the positioning of the keypad when enabled. Applicable only in static keypad mode.'
+            layoutConfig: {
+                mode:
+                    'Defines the widget’s positioning and behavior on the page. Supports the following options:' +
+                    '<br>' +
+                    '<ul>' +
+                    '<li><strong>floating</strong> - The widget floats above all content and can be dragged by the user.</li>' +
+                    '<li><strong>docked</strong> - The widget is placed directly where it appears in the HTML, relative to other content.</li>' +
+                    '<li><strong>fixed</strong> - The widget is fixed above all content at a specific position on the screen, configured in the <code>position</code> options.</li>' +
+                    '</ul>',
+                type:
+                    'Defines the layout of the widget. Supports the following options:' +
+                    '<br>' +
+                    '<ul>' +
+                    '<li><strong>rounded</strong> - A rounded widget layout that offers some idle functionality.</li>' +
+                    '<li><strong>quickCall</strong> - In idle view, the widget is just a call action button that initiates a call to the number defined in <code>Call Settings Quick Call Number</code> when clicked.</li>' +
+                    '</ul>',
+                position: {
+                    left:
+                        'If not specified, defaults to <code>auto</code>.' +
+                        '<br>' +
+                        'Accepts any valid CSS value.',
+                    top:
+                        'If not specified, defaults to <code>auto</code>.' +
+                        '<br>' +
+                        'Accepts any valid CSS value.',
+                    right:
+                        'If not specified, defaults to <code>auto</code>.' +
+                        '<br>' +
+                        'Accepts any valid CSS value.',
+                    bottom:
+                        'If not specified, defaults to <code>auto</code>.' +
+                        '<br>' +
+                        'Accepts any valid CSS value.',
+                    anchor:
+                        'Sets a predefined position for the widget; should be used only in floating or fixed modes.' +
+                        '<br>' +
+                        'If the anchor is specified, position parameters opposite to the anchor value will be ignored.' +
+                        '<br>' +
+                        'For example, if the anchor is <code>bottom-center</code>, only the bottom parameter will be used.'
+                },
+                keypadMode:
+                    'If <code>Call Settings Show Keypad</code> is enabled, this option configures the keypad behavior.' +
+                    '<br>' +
+                    'Supports the following options:' +
+                    '<br>' +
+                    '<ul>' +
+                    '<li><strong>popover</strong> - The keypad appears when hovering over the keypad button.</li>' +
+                    '<li><strong>static</strong> - The keypad is always visible as part of the widget.</li>' +
+                    '<li><strong>manual</strong> - The keypad appears when the keypad button is clicked.</li>' +
+                    '</ul>',
+                keypadPosition: 'Affects the positioning of the keypad when enabled. Applicable only in static keypad mode.'
+            }
         }
     },
     callSettings: {

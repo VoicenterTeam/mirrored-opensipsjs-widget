@@ -11,16 +11,18 @@
 import { computed, watch } from 'vue'
 import { allActiveCalls } from '@/composables/opensipsjs'
 import RoundedCallView from '@/views/RoundedCallView.vue'
-import { layoutType } from '@/composables/useWidgetConfig'
+import { layoutType, widgetType } from '@/composables/useWidgetConfig'
 import { useActiveTab } from '@/plugins/activeTabPlugin'
 import { setWidgetElement } from '@/composables/useWidgetState'
 import OpenSIPSExternalWidgetAPI from '@/widget/OpenSIPSExternalWidgetAPI'
 import QuickCallView from '@/views/QuickCallView.vue'
+import VideoCallView from '@/views/VideoCallView.vue'
 import type { IWidgetAppProps } from '@/types/internal'
 
 const layoutTypeComponent = {
-    'rounded': RoundedCallView,
-    'quickCall': QuickCallView
+    rounded: RoundedCallView,
+    quickCall: QuickCallView,
+    video: VideoCallView
 }
 
 const { setTabIDWithActiveCall } = useActiveTab()
@@ -29,7 +31,13 @@ const { setTabIDWithActiveCall } = useActiveTab()
 const props = defineProps<IWidgetAppProps>()
 
 /* Computed */
-const componentView = computed(() => layoutTypeComponent[layoutType.value])
+const componentView = computed(() => {
+    if (widgetType.value === 'video') {
+        return layoutTypeComponent['video']
+    } else {
+        return layoutTypeComponent[layoutType.value]
+    }
+})
 
 let widgetReadyEmitted = false
 
@@ -39,7 +47,7 @@ function onReady (draggableRoot: HTMLElement | undefined) {
 
     if (!widgetReadyEmitted) {
         widgetReadyEmitted = true
-        props.widgetElement.dispatchEvent('widget:ready', OpenSIPSExternalWidgetAPI)
+        props.widgetElement.emit('widget:ready', OpenSIPSExternalWidgetAPI)
     }
 }
 

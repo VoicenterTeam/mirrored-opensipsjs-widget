@@ -6,3 +6,7 @@
         </template>
     </Popper>
 </template>
+
+<script lang="ts" setup>
+import Popper from "vue3-popper";
+</script>

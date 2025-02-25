@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport'
+          content='width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title>Document</title></head>
+<body>
+<style>* {-webkit-print-color-adjust: exact;}a {text-decoration: none;display: flex;align-items: center;gap: 4px;}a.btn {color: white;display: flex; line-height: normal;gap: 2px;font-size: 11px;justify-content: center;align-items: center;padding: 6px 8px;background-color: rgb(38, 117, 255);border-radius: 6px;}.head-1 {text-transform: uppercase;font-weight: 600;color: rgb(122, 134, 153);font-size: 11px;margin-bottom: 6px;}.details {display: flex;flex-direction: column;font-size: 12px;font-weight: 500;color: #263148;}</style>
+<div class="pdf-header-block">
+    <div style="width: 100%; direction: ltr">
+        <div style="display: flex; padding: 0px 30px 12px; justify-content: space-between; align-items: center;">
+            <div>
+                <img
+                        src="data:image/png;base64,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"
+                        alt="logo"
+                        style="width: 120px; height: 32px; object-fit: contain;"
+                >
+            </div>
+            <div style="display: flex; align-items: flex-end; gap: 4px;">
+                <div class="details">
+                    <div class="head-1">
+                        {{ $t('callHistoryView.mainData.caller') }}
+                    </div>
+                    <div>
+                        {{ cdrData?.caller_no }}
+                    </div>
+                </div>
+                <div style="display: flex; align-items: flex-end; padding-bottom: 4px;">
+                    <svg
+                            width="12"
+                            height="10"
+                            viewBox="0 0 16 15"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                                d="M8.22727 14.5256L6.7642 13.0767L11.1463 8.6946H0.5V6.57812H11.1463L6.7642 2.20312L8.22727 0.747159L15.1165 7.63636L8.22727 14.5256Z"
+                                fill="#7A8699"
+                        />
+                    </svg>
+                </div>
+                <div class="details">
+                    <div class="head-1">
+                        {{ $t('callHistoryView.mainData.destination') }}
+                    </div>
+                    <div>{{ cdrData?.target_no }}</div>
+                </div>
+            </div>
+            <div class="details">
+                <div class="head-1">
+                    {{ $t('callHistoryView.mainData.callTime') }}
+                </div>
+                <div>{{ pdfDate }}</div>
+            </div>
+            <div class="details">
+                <div class="head-1">
+                    {{ $t('callHistoryView.mainData.duration') }}
+                </div>
+                <div>{{ getParsedMessageTimeFromSeconds(cdrData?.sec_total || 0) }}</div>
+            </div>
+            <div class="details">
+                <div class="head-1">
+                    {{ $t('callHistoryView.mainData.type') }}
+                </div>
+                <div>{{ cdrData?.cdr_type_name }}</div>
+            </div>
+            <div>
+                <a
+                        :href="target"
+                        class="btn"
+                        target="_blank"
+                >
+                    <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="12"
+                            height="13"
+                            viewBox="0 0 12 13"
+                            fill="none"
+                    >
+                        <path
+                                d="M11 6.5C11 9.26142 8.76142 11.5 6 11.5M11 6.5C11 3.73858 8.76142 1.5 6 1.5M11 6.5H1M6 11.5C3.23858 11.5 1 9.26142 1 6.5M6 11.5C4.71612 10.1519 4 8.36163 4 6.5C4 4.63837 4.71612 2.84808 6 1.5M6 11.5C7.28388 10.1519 8 8.36163 8 6.5C8 4.63837 7.28388 2.84808 6 1.5M1 6.5C1 3.73858 3.23858 1.5 6 1.5"
+                                stroke="white"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                        />
+                    </svg>
+                    <span>
+                            {{ $t('callHistoryView.openPdfLink') }}
+                        </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -75,14 +75,14 @@ const buttonClasses = computed(() => {
         if (props.pressed) {
             return `
                 ${base}
-                pointer
+                cursor-pointer
                 bg-${props.color}
                 text-button-pressed-text
             `
         } else {
             return `
                 ${base}
-                pointer
+                cursor-pointer
                 bg-${props.pressedColor}
                 text-${props.color}
             `
@@ -97,7 +97,7 @@ const buttonClasses = computed(() => {
     } else {
         const primaryClasses = `
             ${base}
-            pointer
+            cursor-pointer
             bg-${props.pressedColor}
             text-${props.color}
             hover:bg-${props.color}

@@ -120,23 +120,23 @@ export const ringingSoundBase64 = computed({
     }
 })
 export const bgLogoBase64 = computed({
-    get: () => widgetThemeSettings.value.images.backgroundLogo || defaultLogo,
+    get: () => widgetThemeSettings.value.audioConfig.images.backgroundLogo || defaultLogo,
     set: (value: string | undefined) => {
-        widgetThemeSettings.value.images.backgroundLogo = value
+        widgetThemeSettings.value.audioConfig.images.backgroundLogo = value
     }
 })
 
 export const keypadMode = computed({
-    get: () => widgetThemeSettings.value.layoutConfig.keypadMode,
+    get: () => widgetThemeSettings.value.audioConfig.layoutConfig.keypadMode,
     set: (value: TKeypadMode) => {
-        widgetThemeSettings.value.layoutConfig.keypadMode = value
+        widgetThemeSettings.value.audioConfig.layoutConfig.keypadMode = value
     }
 })
 
 export const keypadPosition = computed({
-    get: () => widgetThemeSettings.value.layoutConfig.keypadPosition,
+    get: () => widgetThemeSettings.value.audioConfig.layoutConfig.keypadPosition,
     set: (value: TKeypadPosition) => {
-        widgetThemeSettings.value.layoutConfig.keypadPosition = value
+        widgetThemeSettings.value.audioConfig.layoutConfig.keypadPosition = value
     }
 })
 
@@ -152,9 +152,12 @@ export const outgoingInputRegexValidator = computed({
         widgetCallSettings.value.outgoingInputRegexValidator = value
     }
 })
-export const layoutType = computed(() => widgetThemeSettings.value.layoutConfig.type)
 
-export const layoutMode = computed(() => widgetThemeSettings.value.layoutConfig.mode)
+export const widgetType = computed(() => widgetThemeSettings.value.widgetType)
+
+export const layoutType = computed(() => widgetThemeSettings.value.audioConfig.layoutConfig.type)
+
+export const layoutMode = computed(() => widgetThemeSettings.value.audioConfig.layoutConfig.mode)
 
 /* Methods */
 export function setCallSettingsPermissions (settings: Partial<ICallSettings>) {
@@ -162,46 +165,46 @@ export function setCallSettingsPermissions (settings: Partial<ICallSettings>) {
 }
 
 function setWidgetPosition (settings: IWidgetTheme, widgetRootEl: HTMLElement) {
-    widgetRootEl.style.position = POSITION_MODE_MAP[settings.layoutConfig.mode] || 'unset'
+    widgetRootEl.style.position = POSITION_MODE_MAP[settings.audioConfig.layoutConfig.mode] || 'unset'
 
     for (const [ key, oppositeKey ] of Object.entries(POSITION_MAP) as [ TPosition, TPosition ][]) {
-        const value = settings.layoutConfig.position[key]
+        const value = settings.audioConfig.layoutConfig.position[key]
 
         if (value !== undefined) {
-            widgetThemeSettings.value.layoutConfig.position[key] = widgetRootEl.style[key] = toCssValue(value, 'unset')
+            widgetThemeSettings.value.audioConfig.layoutConfig.position[key] = widgetRootEl.style[key] = toCssValue(value, 'unset')
 
-            if (!settings.layoutConfig.position[oppositeKey]) {
-                widgetThemeSettings.value.layoutConfig.position[oppositeKey] = widgetRootEl.style[oppositeKey] = 'unset'
+            if (!settings.audioConfig.layoutConfig.position[oppositeKey]) {
+                widgetThemeSettings.value.audioConfig.layoutConfig.position[oppositeKey] = widgetRootEl.style[oppositeKey] = 'unset'
             }
         }
     }
 
-    if (settings.layoutConfig.mode === 'floating') {
-        widgetThemeSettings.value.layoutConfig.position.right = widgetRootEl.style.right = 'unset'
-        widgetThemeSettings.value.layoutConfig.position.bottom = widgetRootEl.style.bottom = 'unset'
+    if (settings.audioConfig.layoutConfig.mode === 'floating') {
+        widgetThemeSettings.value.audioConfig.layoutConfig.position.right = widgetRootEl.style.right = 'unset'
+        widgetThemeSettings.value.audioConfig.layoutConfig.position.bottom = widgetRootEl.style.bottom = 'unset'
     } else {
-        const anchor = widgetThemeSettings.value.layoutConfig.position.anchor = settings.layoutConfig.position.anchor
+        const anchor = widgetThemeSettings.value.audioConfig.layoutConfig.position.anchor = settings.audioConfig.layoutConfig.position.anchor
 
         if (anchor) {
-            widgetThemeSettings.value.layoutConfig.position.left = widgetRootEl.style.left = CENTER_POSITIONS.horizontal
-            widgetThemeSettings.value.layoutConfig.position.right = widgetRootEl.style.right = 'unset'
+            widgetThemeSettings.value.audioConfig.layoutConfig.position.left = widgetRootEl.style.left = CENTER_POSITIONS.horizontal
+            widgetThemeSettings.value.audioConfig.layoutConfig.position.right = widgetRootEl.style.right = 'unset'
 
             switch (anchor) {
                 case 'bottom-center':
-                    widgetThemeSettings.value.layoutConfig.position.bottom = widgetRootEl.style.bottom = toCssValue(settings.layoutConfig.position.bottom, '0px')
-                    widgetThemeSettings.value.layoutConfig.position.top = widgetRootEl.style.top = 'unset'
+                    widgetThemeSettings.value.audioConfig.layoutConfig.position.bottom = widgetRootEl.style.bottom = toCssValue(settings.audioConfig.layoutConfig.position.bottom, '0px')
+                    widgetThemeSettings.value.audioConfig.layoutConfig.position.top = widgetRootEl.style.top = 'unset'
                     widgetRootEl.style.transform = 'translateX(-50%)'
 
                     break
                 case 'top-center':
-                    widgetThemeSettings.value.layoutConfig.position.bottom = widgetRootEl.style.bottom = 'unset'
-                    widgetThemeSettings.value.layoutConfig.position.top = widgetRootEl.style.top = toCssValue(settings.layoutConfig.position.top, '0px')
+                    widgetThemeSettings.value.audioConfig.layoutConfig.position.bottom = widgetRootEl.style.bottom = 'unset'
+                    widgetThemeSettings.value.audioConfig.layoutConfig.position.top = widgetRootEl.style.top = toCssValue(settings.audioConfig.layoutConfig.position.top, '0px')
                     widgetRootEl.style.transform = 'translateX(-50%)'
 
                     break
                 case 'center':
-                    widgetThemeSettings.value.layoutConfig.position.bottom = widgetRootEl.style.bottom = 'unset'
-                    widgetThemeSettings.value.layoutConfig.position.top = widgetRootEl.style.top = CENTER_POSITIONS.vertical
+                    widgetThemeSettings.value.audioConfig.layoutConfig.position.bottom = widgetRootEl.style.bottom = 'unset'
+                    widgetThemeSettings.value.audioConfig.layoutConfig.position.top = widgetRootEl.style.top = CENTER_POSITIONS.vertical
                     widgetRootEl.style.transform = 'translate(-50%, -50%)'
 
                     break
@@ -231,7 +234,7 @@ export function setConfig (config: Partial<TWidgetConfigOptions>) {
     setCallSettingsPermissions(config.callSettings ?? {})
     setThemeSettings(config.themeSettings ?? {}, widgetElement)
 
-    if (widgetThemeSettings.value.layoutConfig.mode === 'floating') {
+    if (widgetThemeSettings.value.audioConfig.layoutConfig.mode === 'floating') {
         enableDraggable(dragHandleElement, widgetElement)
     } else {
         disableDraggable()

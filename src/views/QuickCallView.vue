@@ -19,7 +19,10 @@
                 </template>
             </Popper>
         </div>
-        <div v-show="allActiveCalls.length" className="shadow-xl rounded-md min-h-[40px] flex flex-row border overflow-hidden">
+        <div
+            v-show="allActiveCalls.length"
+            className="shadow-xl rounded-md min-h-[40px] flex flex-row border overflow-hidden"
+        >
             <Draggable
                 v-show="false"
                 ref="draggableHandle"
@@ -47,20 +50,14 @@ import CallIcon from '@/assets/icons/call.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
 import QuickCallActiveView from '@/views/QuickCallActiveView.vue'
 import { quickCallNumber } from '@/composables/useWidgetConfig'
-import type { IWidgetAppProps } from '@/types/internal'
 
 /* Emits */
 const emit = defineEmits<{
     (event: 'ready', value: HTMLElement | undefined): void
 }>()
 
-/* Props */
-defineProps<IWidgetAppProps>()
-
 /* Composable */
-const {
-    startCall,
-} = useOpenSIPSJS()
+const { startCall } = useOpenSIPSJS()
 
 /* Data */
 const draggableHandle = ref<typeof Draggable>()

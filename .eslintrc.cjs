@@ -1,15 +1,14 @@
 /* eslint-env node */
 module.exports = {
     root: true,
+    parser: 'vue-eslint-parser',
     extends: '@voicenter-team/vue',
-    env: {
-        'vue/setup-compiler-macros': true,
-        es2021: true,
-        node: true
+    globals: {
+        JQuery: 'readonly',
     },
+    env: {},
     ignorePatterns: [
         'src/vendors/*',
-        'scripts/*',
-        'docs'
+        'scripts/*'
     ]
 }

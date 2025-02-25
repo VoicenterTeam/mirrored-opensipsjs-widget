@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import 'root'
+//import 'root'
 import { onMounted, ref, onBeforeUnmount, watch } from 'vue'
 import type {
     IWidgetConfig,
@@ -36,12 +36,14 @@ function init () {
         return
     }
 
+    console.log('in init')
     widgetEl = document.createElement('opensips-widget') as OpenSIPSWidget
 
     widgetEl.addEventListener(
         'widget:ready',
         ({ detail: OpenSIPSWidget }) => {
             widgetAPI = new OpenSIPSWidget(widgetConfig.value)
+
 
             emit('widget-api-init', widgetAPI)
         }

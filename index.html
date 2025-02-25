@@ -1,15 +1,19 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenSIPS Widget</title>
-</head>
-<body>
-        <script type="module" src="/src/main.ts"></script>
-<!--    <script type="module" src="https://opensipsjs-widget-cdn.pages.dev/opensips-widget.umd.js"></script>-->
-
+  <head>
+    <meta charset="UTF-8" />
+<!--    <link rel="icon" type="image/svg+xml" href="/vite.svg" />-->
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Opensips Widget</title>
+  </head>
+  <body>
+    <div id="app"></div>
     <opensips-widget id="openSIPSWidget"></opensips-widget>
+    <button id="joinRoomButton" style="visibility: hidden" @click="initVideoCall">Join Room</button>
+
+    <script type="module" src="src/widget.ce.ts"></script>
+<!--    <script type="module" src="/widget/opensipsjs-widget.mjs"></script>-->
 
     <script>
         const widget = document.getElementById('openSIPSWidget')
@@ -34,18 +38,21 @@
                     'additional-success-bg': '#75B8A0',
                     'additional-bg': '#B0BFC2'
                 },
-                layoutConfig: {
-                    mode: 'floating',
-                    type: 'rounded',
-                    position: {
-                        top: '50px',
-                        anchor: 'top-center',
+                widgetType: 'video',
+                audioConfig: {
+                    layoutConfig: {
+                        mode: 'floating',
+                        type: 'rounded',
+                        position: {
+                            top: '50px',
+                            anchor: 'top-center',
+                        },
+                        keypadMode: 'popover',
+                        keypadPosition: 'bottom'
                     },
-                    keypadMode: 'manual',
-                    keypadPosition: 'bottom'
-                },
-                images: {
-                    backgroundLogo: undefined
+                    images: {
+                        backgroundLogo: undefined
+                    }
                 }
             }
             const callSettings = {
@@ -76,31 +83,26 @@
             }
 
             widgetAPI = new OpenSIPSExternalWidgetAPI(config)
-        }
 
-        /*window.init = function (username, password, domain) {
             const credentials = {
-                username: username,
-                password: password,
-                domain: domain
+                username: '',
+                password: '',
+                domain: ''
             }
 
             widgetAPI.login(credentials)
-        }*/
 
-        const credentials = {
-            username: '',
-            password: '',
-            domain: ''
+            function initVideoCall() {
+                widgetAPI.initVideoCall('abcd', 'user1')
+            }
+
+            const joinRoomButtonEl = document.getElementById('joinRoomButton')
+            joinRoomButtonEl.style.visibility = 'visible'
+            joinRoomButtonEl.addEventListener('click', initVideoCall)
         }
-
-        setTimeout(() => {
-            widgetAPI.login(credentials)
-        }, 1000)
-
 
         widget.addEventListener('widget:ready', onWidgetInitialized)
 
     </script>
-</body>
+  </body>
 </html>

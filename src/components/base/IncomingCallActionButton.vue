@@ -61,7 +61,7 @@ const iconSize = computed(() => {
 })
 const buttonClasses = computed(() => {
     let base = `
-        pointer
+        cursor-pointer
         ${props.usePadding ? 'p-1' : ''}
         ${props.additionalClasses}
         ${props.disabled ? 'opacity-50 cursor-not-allowed' : ''}

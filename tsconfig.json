@@ -1,46 +1,43 @@
 {
-  "include": [
-    "src/**/*",
-    "src/**/*.d.ts",
-    "dist/opensipsjs-widget.d.ts",
-    "docs/tsconfig.json"
-  ],
-  "exclude": ["node_modules"],
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "lib": ["ESNext","ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "baseUrl": ".",
+
+    /* Bundler mode */
     "moduleResolution": "Node",
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
-    "lib": [
-      "dom",
-      "ESNext"
-    ],
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "noEmit": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "typeRoots": ["./src/types/declarations"],
     "types": [
       "vite/client"
     ],
-    "declaration": true,
-    "esModuleInterop": true,
     "paths": {
+      "~/*": [
+        "./*"
+      ],
       "@/*": [
         "./src/*"
-      ],
-      "root/*": [
-        "./*"
       ]
-    },
-    "useDefineForClassFields": true,
-    "strict": true,
-    "jsx": "preserve",
-    "sourceMap": true,
-    "isolatedModules": true,
-    "declarationDir": "dist/types",
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "importHelpers": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
-    "baseUrl": ".",
-    "emitDeclarationOnly": true
-  }
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "docs/tsconfig.json"],
+  "exclude": ["public/**/*", "node_modules"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

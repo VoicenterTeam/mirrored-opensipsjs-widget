@@ -9,11 +9,11 @@
                 @keyup.enter.prevent="onKeyPressed"
             >
             <div v-if="inputValue" className="w-4 h-4 text-secondary-text">
-                <button :className="buttonClasses" @click="onClose">
+                <div :className="buttonClasses" @click="onClose">
                     <div className="w-2 h-2">
                         <CloseIcon />
                     </div>
-                </button>
+                </div>
             </div>
         </div>
     </div>
@@ -45,7 +45,7 @@ const emit = defineEmits<{
 const inputValue = useVModel(props, 'modelValue', emit) as WritableComputedRef<string>
 
 const wrapperClasses = computed(() => {
-    return `flex w-[156px] bg-${props.bgColor} border rounded p-0.5`
+    return `flex w-[156px] bg-${props.bgColor} border border-border-lines rounded p-0.5`
 })
 
 const inputClasses = computed(() => {
@@ -53,7 +53,7 @@ const inputClasses = computed(() => {
 })
 
 const buttonClasses = computed(() => {
-    return `p-1 pointer bg-${props.bgColor}`
+    return `p-1 cursor-pointer bg-${props.bgColor}`
 })
 
 const onKeyPressed = () => {

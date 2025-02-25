@@ -9,6 +9,7 @@
                 color="primary"
                 pressed-color="primary-bg"
                 :icon="KeypadIcon"
+                :use-focus-effect="true"
                 :additional-classes="props.buttonClasses"
                 @click="openSettingsPopover" />
         </BasePopper>
