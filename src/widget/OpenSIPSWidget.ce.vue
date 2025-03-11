@@ -21,11 +21,13 @@ import VideoCallView from '@/views/VideoCallView.vue'
 import {
     usedWidgetShadowRootEl
 } from '@/composables/opensipsjs'
+import PhoneView from '@/views/PhoneView.vue'
 
 const layoutTypeComponent = {
     rounded: RoundedCallView,
     quickCall: QuickCallView,
-    video: VideoCallView
+    video: VideoCallView,
+    phoneView: PhoneView
 }
 
 const { setTabIDWithActiveCall } = useActiveTab()
