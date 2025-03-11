@@ -1,13 +1,15 @@
 import { defineConfig } from 'vite'
 import path from 'path'
+import svgLoader from 'vite-svg-loader'
 import vue from '@vitejs/plugin-vue'
 import htmlPlugin from 'vite-plugin-html-config'
 import { version } from './package.json'
-import {fileURLToPath, URL} from "node:url";
+import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig({
     plugins: [
         vue(),
+        svgLoader(),
         htmlPlugin({
             title: `Call History v${version}`
         })
