@@ -32,6 +32,7 @@ export const activeOutputDevice = ref<string>('')
 export const outputDevicesList = ref<Array<MediaDeviceInfo>>([])
 export const ringingDevicesList = ref<Array<MediaDeviceInfo>>([])
 export const activeRingingDevice = ref<string>('default')
+export const microphoneInputLevel = ref<number>(2)
 
 /* Calls management */
 export const allActiveCalls = ref<Array<ICall>>([])
@@ -41,6 +42,7 @@ export const allCallStatuses = ref<Array<ICallStatus>>([])
 
 /* Call settings */
 export const isMuted = ref<boolean>(false)
+export const isDND = ref<boolean>(false)
 export const isMuteWhenJoin = ref<boolean>(false)
 export const originalStream = ref<MediaStream | null>(null)
 
@@ -119,6 +121,18 @@ watch(streamSources,
 
 watch(speakerVolume, (newValue) => {
     state.opensipsjs?.audio.setSpeakerVolume(newValue)
+})
+
+watch(isMuteWhenJoin, (newValue) => {
+    state.opensipsjs?.audio.setMuteWhenJoin(newValue)
+})
+
+watch(isDND, (newValue) => {
+    state.opensipsjs?.audio.setDND(newValue)
+})
+
+watch(microphoneInputLevel, (newValue) => {
+    state.opensipsjs?.audio.setMicrophoneSensitivity(newValue)
 })
 
 /**
@@ -240,6 +254,9 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
         })
         .on('changeIsMuted', (value: boolean) => {
             isMuted.value = value
+        })
+        .on('changeIsDND', (value) => {
+            isDND.value = value
         })
         .on('changeMuteWhenJoin', (value: boolean) => {
             isMuteWhenJoin.value = value
@@ -552,8 +569,21 @@ export function useOpenSIPSJS () {
         state.opensipsjs?.audio.sendDTMF(callId, value)
     }
 
+    function setDND (value: boolean) {
+        state.opensipsjs?.audio.setDND(value)
+    }
+
+    function setMuteWhenJoin (value: boolean) {
+        isMuteWhenJoin.value = value
+    }
+
     function setSpeakerVolume (value: number) {
         speakerVolume.value = value
+    }
+
+    function setMicrophoneSensitivity (value: number) {
+        microphoneInputLevel.value = value
+        state.opensipsjs?.audio.setMicrophoneSensitivity(value)
     }
 
     function initVideoCall (target: string, name: string) {
@@ -794,7 +824,10 @@ export function useOpenSIPSJS () {
         terminateCall,
         setAutoAnswer,
         sendDTMF,
+        setDND,
+        setMuteWhenJoin,
         setSpeakerVolume,
+        setMicrophoneSensitivity,
         initVideoCall,
         hangupVideoCall,
         enableAudio,
