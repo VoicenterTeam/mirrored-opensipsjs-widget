@@ -1,10 +1,13 @@
 import { ref, computed, watch, nextTick } from 'vue'
 import OpenSIPSJS, {
-    ScreenSharePlugin,
-    WhiteBoardPlugin,
-    StreamMaskPlugin,
-    ScreenShareWhiteBoardPlugin
+//ScreenSharePlugin,
+//WhiteBoardPlugin,
+//StreamMaskPlugin,
+//ScreenShareWhiteBoardPlugin
 } from '@voicenter-team/opensips-js'
+import { ScreenSharePlugin } from '@voicenter-team/opensips-js-screen-share'
+import { WhiteBoardPlugin } from '@voicenter-team/opensips-js-whiteboard'
+import { ScreenShareWhiteBoardPlugin } from '@voicenter-team/opensips-js-screen-share-whiteboard'
 import type { ICall, IOpenSIPSJSOptions, IRoom, RoomChangeEmitType, ICallStatus, IOpenSIPSConfiguration } from '@voicenter-team/opensips-js/src/types/rtc'
 import type { ISIPSCredentials } from '@/types/public-api'
 import type { AllActiveCallsStatusType, AllActiveCallsType, CallTimeType } from '@/types/opensips'
@@ -412,16 +415,16 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
                 }
             })
 
-            const streamMaskPlugin = new StreamMaskPlugin({
+            /*const streamMaskPlugin = new StreamMaskPlugin({
                 //effect: 'backgroundImageEffect',
                 effect: 'bokehEffect',
                 //base64Image: base64Image
             }, {
                 immediate: false
-            })
+            })*/
 
             opensipsjs.use(screenSharePlugin)
-            opensipsjs.use(streamMaskPlugin)
+            //opensipsjs.use(streamMaskPlugin)
             opensipsjs.use(whiteBoardPlugin)
             opensipsjs.use(screenShareWhiteBoardPlugin)
 

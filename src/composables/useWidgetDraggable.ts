@@ -30,7 +30,10 @@ function ensureInBounds (x: number, y: number): { x: number, y: number } {
     x = Math.min(Math.max(x, 0), windowWidth - widgetWidth)
     y = Math.min(Math.max(y, 0), windowHeight - widgetHeight)
 
-    return { x, y }
+    return {
+        x,
+        y
+    }
 }
 
 function drag (e: MouseEvent) {

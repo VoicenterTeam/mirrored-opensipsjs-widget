@@ -28,7 +28,10 @@
     "dist"
   ],
   "dependencies": {
-    "@voicenter-team/opensips-js": "^1.0.125",
+    "@voicenter-team/opensips-js": "^1.0.130",
+    "@voicenter-team/opensips-js-screen-share": "^0.0.2",
+    "@voicenter-team/opensips-js-screen-share-whiteboard": "^0.0.1",
+    "@voicenter-team/opensips-js-whiteboard": "^0.0.1",
     "@voicenter-team/voicenter-ui-plus": "0.6.7",
     "@vueuse/core": "^10.9.0",
     "construct-style-sheets-polyfill": "^3.1.0",
