@@ -42,6 +42,9 @@ export const allCallStatuses = ref<Array<ICallStatus>>([])
 /* Call settings */
 export const isMuted = ref<boolean>(false)
 export const isMuteWhenJoin = ref<boolean>(false)
+export const originalStream = ref<MediaStream | null>(null)
+
+export const speakerVolume = ref<number>(1)
 
 export const conferenceStarted = ref<boolean>(false)
 export const streamSources = ref<Array<unknown>>([])
@@ -113,6 +116,10 @@ watch(streamSources,
         deep: true
     }
 )
+
+watch(speakerVolume, (newValue) => {
+    state.opensipsjs?.audio.setSpeakerVolume(newValue)
+})
 
 /**
  * Helper function to check if OpenSIPSJS is initialized (instance is created)
@@ -236,6 +243,9 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
         })
         .on('changeMuteWhenJoin', (value: boolean) => {
             isMuteWhenJoin.value = value
+        })
+        .on('changeActiveStream', (value) => {
+            originalStream.value = value
         })
         .on('changeAvailableDeviceList', (devices: Array<MediaDeviceInfo>) => {
             const inputDevices = devices.filter(d => d.kind === 'audioinput')
@@ -542,6 +552,10 @@ export function useOpenSIPSJS () {
         state.opensipsjs?.audio.sendDTMF(callId, value)
     }
 
+    function setSpeakerVolume (value: number) {
+        speakerVolume.value = value
+    }
+
     function initVideoCall (target: string, name: string) {
         state.opensipsjs?.video.initCall(target, name)
     }
@@ -780,6 +794,7 @@ export function useOpenSIPSJS () {
         terminateCall,
         setAutoAnswer,
         sendDTMF,
+        setSpeakerVolume,
         initVideoCall,
         hangupVideoCall,
         enableAudio,
