@@ -42,7 +42,7 @@ export const currentActiveRoom = ref<number | undefined>(undefined)
 export const allCallStatuses = ref<Array<ICallStatus>>([])
 
 export const activeCalls = computed(() => {
-    const calls = {}
+    const calls: {[key: string]: ICall} = {}
 
     allActiveCalls.value.forEach((call) => {
         calls[call._id] = call
