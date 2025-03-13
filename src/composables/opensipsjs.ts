@@ -5,6 +5,7 @@ import OpenSIPSJS, {
 //StreamMaskPlugin,
 //ScreenShareWhiteBoardPlugin
 } from '@voicenter-team/opensips-js'
+import { ITimeData } from '@voicenter-team/opensips-js/src/types/timer'
 import { ScreenSharePlugin } from '@voicenter-team/opensips-js-screen-share'
 import { WhiteBoardPlugin } from '@voicenter-team/opensips-js-whiteboard'
 import { ScreenShareWhiteBoardPlugin } from '@voicenter-team/opensips-js-screen-share-whiteboard'
@@ -40,6 +41,16 @@ export const allRooms = ref<Array<IRoom>>([])
 export const currentActiveRoom = ref<number | undefined>(undefined)
 export const allCallStatuses = ref<Array<ICallStatus>>([])
 
+export const activeCalls = computed(() => {
+    const calls = {}
+
+    allActiveCalls.value.forEach((call) => {
+        calls[call._id] = call
+    })
+
+    return calls
+})
+
 /* Call settings */
 export const isMuted = ref<boolean>(false)
 export const isDND = ref<boolean>(false)
@@ -47,6 +58,10 @@ export const isMuteWhenJoin = ref<boolean>(false)
 export const originalStream = ref<MediaStream | null>(null)
 
 export const speakerVolume = ref<number>(1)
+export const callTime = ref<{ [key: string]: ITimeData }>({})
+export const callMetrics = ref<{ [key: string]: unknown }>({})
+
+/* Video conferencing */
 
 export const conferenceStarted = ref<boolean>(false)
 export const streamSources = ref<Array<unknown>>([])
@@ -307,6 +322,12 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
         .on('changeCallStatus', (data: AllActiveCallsStatusType) => {
             const statuses = Object.values(data)
             allCallStatuses.value = [ ...statuses ]
+        })
+        .on('changeCallTime', (data) => {
+            callTime.value = { ...data }
+        })
+        .on('changeCallMetrics', (data) => {
+            callMetrics.value = { ...data }
         })
         .on('conferenceStart', () => {
             conferenceStarted.value = true
