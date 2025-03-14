@@ -93,7 +93,6 @@
                 username: '',
                 password: '',
                 domain: ''
-
             }
 
             widgetAPI.login(credentials)
@@ -102,9 +101,9 @@
                 widgetAPI.initVideoCall('abcd', 'user1')
             }
 
-            const joinRoomButtonEl = document.getElementById('joinRoomButton')
-            joinRoomButtonEl.style.visibility = 'visible'
-            joinRoomButtonEl.addEventListener('click', initVideoCall)
+            // const joinRoomButtonEl = document.getElementById('joinRoomButton')
+            // joinRoomButtonEl.style.visibility = 'visible'
+            // joinRoomButtonEl.addEventListener('click', initVideoCall)
         }
 
         widget.addEventListener('widget:ready', onWidgetInitialized)

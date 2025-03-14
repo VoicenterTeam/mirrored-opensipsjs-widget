@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-//import 'root'
+import 'root'
 import { onMounted, ref, onBeforeUnmount, watch } from 'vue'
 import type {
     IWidgetConfig,

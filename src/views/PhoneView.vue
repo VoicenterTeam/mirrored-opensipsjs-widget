@@ -138,7 +138,7 @@ useVsipProvide({
     getActiveCallsInRoom
 })
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .main-wrapper {
   height: 100%;
   min-height: 400px;

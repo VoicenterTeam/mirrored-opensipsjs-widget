@@ -49,10 +49,10 @@ const plugins =  [
 const cssConfigs ={
     postcss: {
         plugins: [
-            /*selectorReplace({
+            selectorReplace({
                 before: [ ':root' ],
                 after: [ ':host' ]
-            }),*/
+            }),
             tailwindcss(),
             autoprefixer({})
         ]

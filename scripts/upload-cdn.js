@@ -12,7 +12,7 @@ const S3_SECRET_ACCESS_KEY = process.env.S3_SECRET_ACCESS_KEY
 
 const targetDir = `cdn/opensipsjs-widget/v${version}`
 
-const directoryPathToDeploy = path.join(process.cwd(), 'dist')
+const directoryPathToDeploy = path.join(process.cwd(), 'widget')
 
 const uploader = new Uploader({
     region: S3_REGION,

@@ -2034,10 +2034,10 @@
     sdp-transform "2.14.1"
     uuid "^10.0.0"
 
-"@voicenter-team/voicenter-ui-plus@0.6.7":
-  version "0.6.7"
-  resolved "https://registry.yarnpkg.com/@voicenter-team/voicenter-ui-plus/-/voicenter-ui-plus-0.6.7.tgz#2a9895c7166658f46f066b217a445f6c86a5af79"
-  integrity sha512-Rt7AHOOwIwjvZkbUKszZ5taQ6q2WLAV3Xq7uC8l3d50dhmYdNHk42Y1mjIZxQeyyIdqJYBFwrwP7MufrbP/zYA==
+"@voicenter-team/voicenter-ui-plus@0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@voicenter-team/voicenter-ui-plus/-/voicenter-ui-plus-0.7.1.tgz#c6f0ea798b914f86726dda0a3dd428d4ff3b5d54"
+  integrity sha512-fz2jlLHg42UvSstkU9bkfo4DCcJ2hYgSP6USlKCThkledXwxDUbFp8+bS8V21PrvyluvmMi9oQs1xZPOCXZEOQ==
   dependencies:
     "@vuepic/vue-datepicker" "3.0.0"
     date-fns "^2.29.2"
@@ -2046,10 +2046,9 @@
     libphonenumber-js "^1.10.13"
     lodash "^4.17.21"
     maska "^1.5.0"
-    vue "^3.4.14"
+    vue "^3.2.37"
     vue-advanced-cropper "^2.8.3"
     wavesurfer.js "^7.7.15"
-    webfontloader "^1.6.28"
     xlsx "0.18.5"
 
 "@volar/language-core@2.4.11", "@volar/language-core@~2.4.11":
@@ -5604,7 +5603,7 @@ vue3-popper@^1.5.0:
     "@popperjs/core" "^2.9.2"
     debounce "^1.2.1"
 
-"vue@^2.x || ^3.x", vue@^3.4.14, vue@^3.5.12:
+"vue@^2.x || ^3.x", vue@^3.2.37, vue@^3.5.12:
   version "3.5.13"
   resolved "https://registry.yarnpkg.com/vue/-/vue-3.5.13.tgz#9f760a1a982b09c0c04a867903fc339c9f29ec0a"
   integrity sha512-wmeiSMxkZCSc+PM2w2VRsOYAZC8GdipNFRTsLSfodVqI9mbejKeXEGr8SckuLnrQPGe3oJN5c3K0vpoU9q/wCQ==
@@ -5619,11 +5618,6 @@ wavesurfer.js@^7.7.15:
   version "7.9.0"
   resolved "https://registry.yarnpkg.com/wavesurfer.js/-/wavesurfer.js-7.9.0.tgz#03a8ab15c46464521cfcbfc4d6d90d3608f0ac7a"
   integrity sha512-ZzyHn+htSsZ0omPSYaAbhnoMqlLVO1lR8b+hACMBEvpZmkScJn0AmQkBo2a5u5UtOuCVc0Xv/tM+KtJVv5yvtQ==
-
-webfontloader@^1.6.28:
-  version "1.6.28"
-  resolved "https://registry.yarnpkg.com/webfontloader/-/webfontloader-1.6.28.tgz#db786129253cb6e8eae54c2fb05f870af6675bae"
-  integrity sha512-Egb0oFEga6f+nSgasH3E0M405Pzn6y3/9tOVanv/DLfa1YBIgcv90L18YyWnvXkRbIM17v5Kv6IT2N6g1x5tvQ==
 
 which-boxed-primitive@^1.1.0, which-boxed-primitive@^1.1.1:
   version "1.1.1"

@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@nuxt/content": "^2.13.2",
-    "@voicenter-team/voicenter-ui-plus": "^0.5.20",
+    "@voicenter-team/voicenter-ui-plus": "^0.7.1",
     "@vueuse/core": "^11.0.3",
     "lodash": "^4.17.21",
     "prismjs": "^1.29.0",

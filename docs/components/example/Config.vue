@@ -88,7 +88,7 @@
                                 <p v-html="CONFIG_DESCRIPTION.themeSettings.images.backgroundLogo" />
                             </template>
                             <FileUploader
-                                v-model="form.themeSettings.images.backgroundLogo"
+                                v-model="form.themeSettings.audioConfig.images.backgroundLogo"
                                 accept="image/*"
                                 label="Logo"
                                 :file-size-limit="1024 * 1024"

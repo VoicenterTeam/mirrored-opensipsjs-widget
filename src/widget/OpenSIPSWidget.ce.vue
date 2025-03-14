@@ -23,7 +23,6 @@ import PhoneView from '@/views/PhoneView.vue'
 import {
     usedWidgetShadowRootEl
 } from '@/composables/opensipsjs'
-import PhoneView from '@/views/PhoneView.vue'
 
 const layoutTypeComponent = {
     rounded: RoundedCallView,
