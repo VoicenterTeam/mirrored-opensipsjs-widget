@@ -388,6 +388,10 @@ const layoutConfigTypeOptions: Array<OptionType> = [
     {
         label: 'Quick Call',
         value: 'quickCall'
+    },
+    {
+        label: 'Phone',
+        value: 'phoneView'
     }
 ]
 const layoutConfigModeOptions: Array<OptionType> = [
