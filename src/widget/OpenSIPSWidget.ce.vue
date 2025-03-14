@@ -18,6 +18,8 @@ import { setWidgetElement } from '@/composables/useWidgetState'
 import OpenSIPSExternalWidgetAPI from '@/widget/OpenSIPSExternalWidgetAPI'
 import QuickCallView from '@/views/QuickCallView.vue'
 import VideoCallView from '@/views/VideoCallView.vue'
+import PhoneView from '@/views/PhoneView.vue'
+
 import {
     usedWidgetShadowRootEl
 } from '@/composables/opensipsjs'
@@ -25,7 +27,8 @@ import {
 const layoutTypeComponent = {
     rounded: RoundedCallView,
     quickCall: QuickCallView,
-    video: VideoCallView
+    video: VideoCallView,
+    phoneView: PhoneView
 }
 
 const { setTabIDWithActiveCall } = useActiveTab()

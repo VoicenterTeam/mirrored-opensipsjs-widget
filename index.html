@@ -9,8 +9,10 @@
   </head>
   <body>
     <div id="app"></div>
-    <opensips-widget id="openSIPSWidget"></opensips-widget>
-    <button id="joinRoomButton" style="visibility: hidden" @click="initVideoCall">Join Room</button>
+    <div>
+        <opensips-widget id="openSIPSWidget"></opensips-widget>
+    </div>
+    <!--    <button id="joinRoomButton" style="visibility: hidden" @click="initVideoCall">Join Room</button>-->
 
     <script type="module" src="src/widget.ce.ts"></script>
 <!--    <script type="module" src="/widget/opensipsjs-widget.mjs"></script>-->
@@ -38,14 +40,17 @@
                     'additional-success-bg': '#75B8A0',
                     'additional-bg': '#B0BFC2'
                 },
-                widgetType: 'video',
+                widgetType: 'audio',
                 audioConfig: {
                     layoutConfig: {
-                        mode: 'floating',
-                        type: 'rounded',
+                        mode: 'docked',
+                        type: 'phoneView',
                         position: {
-                            top: '50px',
-                            anchor: 'top-center',
+                            top: 'auto',
+                            left: 'auto',
+                            bottom: 'auto',
+                            right: 'auto',
+                            anchor: null,
                         },
                         keypadMode: 'popover',
                         keypadPosition: 'bottom'
@@ -85,9 +90,10 @@
             widgetAPI = new OpenSIPSExternalWidgetAPI(config)
 
             const credentials = {
-                username: '',
-                password: '',
-                domain: ''
+                username: 'F8Sntaw0',
+                password: 'rqmJMK2wZvBsFkWa',
+                domain: 'sip09.voicenter.co'
+
             }
 
             widgetAPI.login(credentials)
