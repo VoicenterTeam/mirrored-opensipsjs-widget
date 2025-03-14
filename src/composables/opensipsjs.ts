@@ -56,6 +56,7 @@ export const isMuted = ref<boolean>(false)
 export const isDND = ref<boolean>(false)
 export const isMuteWhenJoin = ref<boolean>(false)
 export const originalStream = ref<MediaStream | null>(null)
+export const callAddingInProgress = ref<string | undefined>()
 
 export const speakerVolume = ref<number>(1)
 export const callTime = ref<{ [key: string]: ITimeData }>({})
@@ -278,6 +279,9 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
         })
         .on('changeActiveStream', (value) => {
             originalStream.value = value
+        })
+        .on('callAddingInProgressChanged', (value) => {
+            callAddingInProgress.value = value
         })
         .on('changeAvailableDeviceList', (devices: Array<MediaDeviceInfo>) => {
             const inputDevices = devices.filter(d => d.kind === 'audioinput')
