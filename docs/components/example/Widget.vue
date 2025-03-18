@@ -5,7 +5,9 @@
 </template>
 
 <script lang="ts" setup>
-import '../../../widget/opensipsjs-widget.umd'
+// If dev
+// import '../../../widget/opensipsjs-widget.umd'
+import { version } from 'root/package.json'
 import { onMounted, ref, onBeforeUnmount, watch } from 'vue'
 import type {
     IWidgetConfig,
@@ -37,6 +39,15 @@ function init () {
     }
 
     console.log('in init')
+
+    if (!customElements.get('opensips-widget')) {
+        const script = document.createElement('script')
+        script.src = `https://cdn.opensipsjs.org/opensipsjs-widget/v${version}/opensipsjs-widget.umd.js`
+        script.type = 'module'
+
+        document.body.appendChild(script)
+    }
+
     widgetEl = document.createElement('opensips-widget') as OpenSIPSWidget
 
     widgetEl.addEventListener(
