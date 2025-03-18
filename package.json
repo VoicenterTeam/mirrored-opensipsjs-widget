@@ -1,6 +1,6 @@
 {
   "name": "@voicenter-team/opensipsjs-widget",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "author": "Bohdan Konechnyi",
   "main": "dist/opensipsjs-widget.es.js",
   "types": "dist/opensipsjs-widget.d.ts",
