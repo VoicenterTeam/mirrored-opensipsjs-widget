@@ -1,6 +1,6 @@
 {
   "name": "@voicenter-team/opensipsjs-widget",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": "Bohdan Konechnyi",
   "main": "dist/opensipsjs-widget.es.js",
   "types": "dist/opensipsjs-widget.d.ts",
@@ -11,7 +11,7 @@
   },
   "scripts": {
     "postpublish": "yarn upload-cdn",
-    "upload-cdn": "yarn build && node scripts/upload-cdn.js",
+    "upload-cdn": "yarn build-widget && node scripts/upload-cdn.js",
     "dev": "vite",
     "dev-widget": "vite --config vite-widget.config.ts",
     "build-widget": "vite build --config vite-widget.config.ts",
