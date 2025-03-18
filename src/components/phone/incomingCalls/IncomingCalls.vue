@@ -8,14 +8,14 @@
             :key="call._id"
             :call="call"
         />
-        <HideAllButton
-            v-if="visibleCalls.length"
-        />
+<!--        <HideAllButton-->
+<!--            v-if="visibleCalls.length"-->
+<!--        />-->
     </div>
 </template>
 
 <script lang="ts" setup>
-import HideAllButton from '@/components/phone/common/HideAllButton.vue'
+//import HideAllButton from '@/components/phone/common/HideAllButton.vue'
 import { useIncomingCalls } from '@/composables/phone/useIncomingCalls.ts'
 import IncomingCallRow from '@/components/phone/incomingCalls/IncomingCallRow.vue'
 /* Data */
