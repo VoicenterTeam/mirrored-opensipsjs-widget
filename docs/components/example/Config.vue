@@ -43,7 +43,20 @@
                         label-width="auto"
                     >
                         <VcFormItem
-                            label="Type"
+                            label="Widget Type"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.widgetType" />
+                            </template>
+                            <VcSelect
+                                v-model="form.themeSettings.widgetType"
+                                :options="widgetTypeOptions"
+                                :config="selectConfig"
+                            />
+                        </VcFormItem>
+
+                        <VcFormItem
+                            label="Audio Layout Type"
                         >
                             <template #info-text>
                                 <p v-html="CONFIG_DESCRIPTION.themeSettings.audioConfig.layoutConfig.type" />
@@ -392,6 +405,16 @@ const layoutConfigTypeOptions: Array<OptionType> = [
     {
         label: 'Phone',
         value: 'phoneView'
+    }
+]
+const widgetTypeOptions: Array<OptionType> = [
+    {
+        label: 'audio',
+        value: 'audio'
+    },
+    {
+        label: 'video',
+        value: 'video'
     }
 ]
 const layoutConfigModeOptions: Array<OptionType> = [

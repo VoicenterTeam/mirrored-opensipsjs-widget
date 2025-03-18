@@ -5,6 +5,7 @@ import selectorReplace from 'postcss-selector-replace'
 import autoprefixer from 'autoprefixer'
 import tailwindcss from 'tailwindcss'
 import svgLoader from 'vite-svg-loader'
+import dts from 'vite-plugin-dts'
 
 // eslint-disable-next-line quotes
 const define = "'production'"
@@ -22,7 +23,7 @@ const widgetBuild = {
         entry: './src/widget.ce.ts',
         name: 'OpenSIPSWidget',
         fileName: 'opensipsjs-widget',
-        // formats: [ 'es', 'umd' ], // Support ES module and UMD
+        formats: [ 'es', 'umd' ], // Support ES module and UMD
     },
     rollupOptions: {
         input: {
@@ -44,6 +45,10 @@ const plugins =  [
         },
     }),
     svgLoader(),
+    dts({
+        rollupTypes: true,
+        copyDtsFiles: true
+    }),
 ]
 
 const cssConfigs ={

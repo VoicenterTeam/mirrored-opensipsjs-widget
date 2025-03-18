@@ -20,7 +20,6 @@ const widget = defineCustomElement(OpenSIPSWidget, {
             .directive('loading', VLoading)
     },
     styles: [ styles1, styles2 ],
-    //shadowRoot: false
 })
 
 customElements.define('opensips-widget', widget)

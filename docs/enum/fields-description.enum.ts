@@ -123,6 +123,7 @@ export const CONFIG_DESCRIPTION = {
                     '<ul>' +
                     '<li><strong>rounded</strong> - A rounded widget layout that offers some idle functionality.</li>' +
                     '<li><strong>quickCall</strong> - In idle view, the widget is just a call action button that initiates a call to the number defined in <code>Call Settings Quick Call Number</code> when clicked.</li>' +
+                    '<li><strong>phone</strong> - Looks like a phone</li>' +
                     '</ul>',
                 position: {
                     left:
