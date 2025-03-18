@@ -1,117 +1,123 @@
 <template>
     <span :id="`volume-level-${deviceId}`">
         <canvas
-            :id="`canvas-${deviceId}`"
+            :id="`canvas-${deviceId}`" 
+            ref="canvas"
             class="volume-canvas"
         />
     </span>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-export default defineComponent({
-    name: 'VolumeLevelIndicator',
-    props: {
-        stream: {
-            type: Object as PropType<MediaStream | null>,
-            required: true,
-        },
-        deviceId: {
-            type: String,
-            required: true
-        },
-        height: {
-            type: Number,
-            default: 20
-        },
-        lineWidth: {
-            type: Number,
-            default: 4
-        }
-    },
-    data () {
-        return {
-            interval: undefined as number | undefined
-        }
-    },
-    methods: {
-        getMaxSmallIndicatorHeight (value: number) {
-            const halfLineHeight = this.height / 4
-            return value < halfLineHeight ? value : halfLineHeight
-        },
-        getVolumeLevelBar (stream: MediaStream, deviceId: string) {
-            clearInterval(this.interval)
-            const audioContext = new AudioContext()
-            const analyser = audioContext.createAnalyser()
-            const microphone = audioContext.createMediaStreamSource(stream)
-            const javascriptNode = audioContext.createScriptProcessor(2048, 1, 1)
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount, watch, defineProps } from 'vue'
 
-            analyser.smoothingTimeConstant = 0.8
-            analyser.fftSize = 1024
+//* Props *//
+interface Props {
+    stream: MediaStream | null,
+    deviceId: string,
+    height?: number,
+    lineWidth?:number
+}
+const props = withDefaults(
+    defineProps<Props>(),
+    {
+        height: 20,
+        lineWidth: 4,
+    }
+)
 
-            microphone.connect(analyser)
-            analyser.connect(javascriptNode)
-            javascriptNode.connect(audioContext.destination)
+// Reactive state
+const interval = ref<number | undefined>(undefined)
 
-            const canvas = document.getElementById(`canvas-${deviceId}`) as HTMLCanvasElement
 
-            const indicatorWidth = this.lineWidth * 5
-            const halfLineHeight = this.height / 2
+const canvas = ref<HTMLCanvasElement | null>(null)
 
-            canvas.setAttribute('width', `${indicatorWidth}`)
-            canvas.setAttribute('height', `${this.height}`)
+// Helper functions
+const getMaxSmallIndicatorHeight = (value: number) => {
+    const halfLineHeight = props.height / 4
+    return value < halfLineHeight ? value : halfLineHeight
+}
 
-            const canvasContext = canvas.getContext('2d') as CanvasRenderingContext2D
+const getVolumeLevelBar = (stream: MediaStream) => {
+    if (interval.value) {
+        clearInterval(interval.value)
+    }
+    const audioContext = new AudioContext()
+    const analyser = audioContext.createAnalyser()
+    const microphone = audioContext.createMediaStreamSource(stream)
+    const javascriptNode = audioContext.createScriptProcessor(2048, 1, 1)
 
-            this.interval = window.setInterval(() => {
-                const array = new Uint8Array(analyser.frequencyBinCount)
-                analyser.getByteFrequencyData(array)
-                let values = 0
+    analyser.smoothingTimeConstant = 0.8
+    analyser.fftSize = 1024
 
-                const length = array.length
-                for (let i = 0; i < length; i++) {
-                    values += (array[i])
-                }
+    microphone.connect(analyser)
+    analyser.connect(javascriptNode)
+    javascriptNode.connect(audioContext.destination)
 
-                const average = values / length
+    // Make sure the canvas ref is not null before accessing it
+    if (canvas.value) {
+        const indicatorWidth = props.lineWidth * 5
+        const halfLineHeight = props.height / 2
 
-                canvasContext.fillStyle = getComputedStyle(document.body).getPropertyValue('--primary')
-                const halfValue = average / 2
-                canvasContext.clearRect(0, halfLineHeight, this.lineWidth, halfLineHeight)
-                canvasContext.fillRect(0, halfLineHeight, this.lineWidth, this.getMaxSmallIndicatorHeight(halfValue))
-                canvasContext.clearRect(0, halfLineHeight, this.lineWidth, -halfLineHeight)
-                canvasContext.fillRect(0, halfLineHeight, this.lineWidth, 0 - this.getMaxSmallIndicatorHeight(halfValue))
+        canvas.value.setAttribute('width', `${indicatorWidth}`)
+        canvas.value.setAttribute('height', `${props.height}`)
 
-                canvasContext.clearRect(this.lineWidth * 2, halfLineHeight, this.lineWidth, halfLineHeight)
-                canvasContext.fillRect(this.lineWidth * 2, halfLineHeight, this.lineWidth, average)
-                canvasContext.clearRect(this.lineWidth * 2, halfLineHeight, this.lineWidth, -halfLineHeight)
-                canvasContext.fillRect(this.lineWidth * 2, halfLineHeight, this.lineWidth, 0 - average)
+        const canvasContext = canvas.value.getContext('2d') as CanvasRenderingContext2D
 
-                canvasContext.clearRect(this.lineWidth * 4, halfLineHeight, this.lineWidth, halfLineHeight)
-                canvasContext.fillRect(this.lineWidth * 4, halfLineHeight, this.lineWidth, this.getMaxSmallIndicatorHeight(halfValue))
-                canvasContext.clearRect(this.lineWidth * 4, halfLineHeight, this.lineWidth, -halfLineHeight)
-                canvasContext.fillRect(this.lineWidth * 4, halfLineHeight, this.lineWidth, 0 - this.getMaxSmallIndicatorHeight(halfValue))
-            }, 50)
-        },
-        runIndicator () {
-            if (this.stream?.getTracks().length) {
-                this.getVolumeLevelBar(this.stream, this.deviceId)
+        interval.value = window.setInterval(() => {
+            const array = new Uint8Array(analyser.frequencyBinCount)
+            analyser.getByteFrequencyData(array)
+            let values = 0
+
+            for (let i = 0; i < array.length; i++) {
+                values += array[i]
             }
-        }
+
+            const average = values / array.length
+            const halfValue = average / 2
+
+            canvasContext.fillStyle = getComputedStyle(document.body).getPropertyValue('--primary')
+            canvasContext.clearRect(0, halfLineHeight, props.lineWidth, halfLineHeight)
+            canvasContext.fillRect(0, halfLineHeight, props.lineWidth, getMaxSmallIndicatorHeight(halfValue))
+            canvasContext.clearRect(0, halfLineHeight, props.lineWidth, -halfLineHeight)
+            canvasContext.fillRect(0, halfLineHeight, props.lineWidth, 0 - getMaxSmallIndicatorHeight(halfValue))
+
+            canvasContext.clearRect(props.lineWidth * 2, halfLineHeight, props.lineWidth, halfLineHeight)
+            canvasContext.fillRect(props.lineWidth * 2, halfLineHeight, props.lineWidth, average)
+            canvasContext.clearRect(props.lineWidth * 2, halfLineHeight, props.lineWidth, -halfLineHeight)
+            canvasContext.fillRect(props.lineWidth * 2, halfLineHeight, props.lineWidth, 0 - average)
+
+            canvasContext.clearRect(props.lineWidth * 4, halfLineHeight, props.lineWidth, halfLineHeight)
+            canvasContext.fillRect(props.lineWidth * 4, halfLineHeight, props.lineWidth, getMaxSmallIndicatorHeight(halfValue))
+            canvasContext.clearRect(props.lineWidth * 4, halfLineHeight, props.lineWidth, -halfLineHeight)
+            canvasContext.fillRect(props.lineWidth * 4, halfLineHeight, props.lineWidth, 0 - getMaxSmallIndicatorHeight(halfValue))
+        }, 50)
+    }
+}
+
+const runIndicator = () => {
+    if (props.stream?.getTracks().length) {
+        getVolumeLevelBar(props.stream)
+    }
+}
+
+// Watchers
+watch(
+    () => props.stream,
+    () => {
+        runIndicator()
     },
-    watch: {
-        stream: {
-            deep: true,
-            handler () {
-                this.runIndicator()
-            }
-        }
-    },
-    mounted () {
-        this.runIndicator()
-    },
-    unmounted () {
-        clearInterval(this.interval)
+    { deep: true }
+)
+
+// Lifecycle hooks
+onMounted(() => {
+    runIndicator()
+})
+
+onBeforeUnmount(() => {
+    if (interval.value) {
+        clearInterval(interval.value)
     }
 })
 </script>
