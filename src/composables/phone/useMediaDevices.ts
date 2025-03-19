@@ -100,12 +100,18 @@ export async function setDefaultMediaDevices () {
         const preferableInputDevice = devices.find(
             (device) => device.deviceId === parsed.audioInput && device.kind === 'audioinput')
 
+        const inputDefaultDevice = devices.find(
+            (device) => device.deviceId === 'default' && device.kind === 'audioinput')
 
         const preferableOutputDevice = devices.find(
             (device) => device.deviceId === parsed.audioOutput && device.kind === 'audiooutput')
 
-        inputMediaDeviceValue.value =  preferableInputDevice?.deviceId || 'default'
-        outputMediaDeviceValue.value = preferableOutputDevice?.deviceId || 'default'
+        const outputDefaultDevice = devices.find(
+            (device) => device.deviceId === 'default' && device.kind === 'audiooutput')
+
+        inputMediaDeviceValue.value =  preferableInputDevice?.deviceId || inputDefaultDevice?.deviceId || ''
+
+        outputMediaDeviceValue.value = preferableOutputDevice?.deviceId || outputDefaultDevice?.deviceId || ''
 
     } catch (e) {
         console.error(e)
