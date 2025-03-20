@@ -6,9 +6,9 @@ import OpenSIPSJS, {
 //ScreenShareWhiteBoardPlugin
 } from '@voicenter-team/opensips-js'
 import { ITimeData } from '@voicenter-team/opensips-js/src/types/timer'
-import { ScreenSharePlugin } from '@voicenter-team/opensips-js-screen-share'
-import { WhiteBoardPlugin } from '@voicenter-team/opensips-js-whiteboard'
-import { ScreenShareWhiteBoardPlugin } from '@voicenter-team/opensips-js-screen-share-whiteboard'
+// import { ScreenSharePlugin } from '@voicenter-team/opensips-js-screen-share'
+// import { WhiteBoardPlugin } from '@voicenter-team/opensips-js-whiteboard'
+// import { ScreenShareWhiteBoardPlugin } from '@voicenter-team/opensips-js-screen-share-whiteboard'
 import type { ICall, IOpenSIPSJSOptions, IRoom, RoomChangeEmitType, ICallStatus, IOpenSIPSConfiguration } from '@voicenter-team/opensips-js/src/types/rtc'
 import type { ISIPSCredentials } from '@/types/public-api'
 import type { AllActiveCallsStatusType, AllActiveCallsType, CallTimeType } from '@/types/opensips'
@@ -408,16 +408,16 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
 
             const opensipsjs = new OpenSIPSJS(opensipsOptions)
 
-            const screenSharePlugin = new ScreenSharePlugin()
+            // const screenSharePlugin = new ScreenSharePlugin()
 
-            const rootDocument = document.querySelector('opensips-widget')
-            const shadowRootDocument = rootDocument.shadowRoot
+            // const rootDocument = document.querySelector('opensips-widget')
+            // const shadowRootDocument = rootDocument.shadowRoot
 
-            const screenShareWhiteBoardPlugin = new ScreenShareWhiteBoardPlugin(screenSharePlugin, {
-                selectors: {
-                    document: shadowRootDocument
-                }
-            })
+            // const screenShareWhiteBoardPlugin = new ScreenShareWhiteBoardPlugin(screenSharePlugin, {
+            //     selectors: {
+            //         document: shadowRootDocument
+            //     }
+            // })
 
             //console.log('this', this)
 
@@ -465,15 +465,15 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
             //const konvaDrawerContainer = shadowRootDocument.getElementById('presentationCanvasWrapper')
             //console.log('konvaDrawerContainer', konvaDrawerContainer)
 
-            const whiteBoardPlugin = new WhiteBoardPlugin({
-                mode: 'whiteboard',
-                selectors: {
-                    container: 'presentation-video-container',
-                    drawerContainer: 'presentationCanvasWrapper',
-                    //konvaContainer: konvaDrawerContainer,
-                    document: shadowRootDocument
-                }
-            })
+            // const whiteBoardPlugin = new WhiteBoardPlugin({
+            //     mode: 'whiteboard',
+            //     selectors: {
+            //         container: 'presentation-video-container',
+            //         drawerContainer: 'presentationCanvasWrapper',
+            //         //konvaContainer: konvaDrawerContainer,
+            //         document: shadowRootDocument
+            //     }
+            // })
 
             /*const streamMaskPlugin = new StreamMaskPlugin({
                 //effect: 'backgroundImageEffect',
@@ -483,10 +483,10 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
                 immediate: false
             })*/
 
-            opensipsjs.use(screenSharePlugin)
+            // opensipsjs.use(screenSharePlugin)
             //opensipsjs.use(streamMaskPlugin)
-            opensipsjs.use(whiteBoardPlugin)
-            opensipsjs.use(screenShareWhiteBoardPlugin)
+            // opensipsjs.use(whiteBoardPlugin)
+            // opensipsjs.use(screenShareWhiteBoardPlugin)
 
             state.opensipsjs = opensipsjs
 
