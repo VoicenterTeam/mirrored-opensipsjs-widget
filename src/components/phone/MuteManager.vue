@@ -3,11 +3,11 @@
         <div
             class="h-5 w-5 flex justify-center items-center rounded-sm cursor-pointer"
             :class="{
-                'vc-lc-mic-off': isMuted,
-                'vc-lc-mic': !isMuted,
-                'active': isMuted
+                'vc-lc-mic-off': muted,
+                'vc-lc-mic': !muted,
+                'active': muted
             }"
-            :style="{ color: isMuted ? 'var(--destructive)' : 'var(--primary)' }"
+            :style="{ color: muted ? 'var(--destructive)' : 'var(--primary)' }"
             @click="toggleMute"
         />
 
@@ -21,15 +21,15 @@
 </template>
 <script setup lang="ts">
 import VolumeIndicator from '@/components/phone/VolumeIndicator.vue'
-import { isMuted, originalStream, useOpenSIPSJS } from '@/composables/opensipsjs'
+import { muted, originalStream, useOpenSIPSJS } from '@/composables/opensipsjs'
 
 
 /* Data */
-const { muteAgent  } = useOpenSIPSJS()
+const { mute  } = useOpenSIPSJS()
 
 /* Methods */
 const toggleMute = () => {
-    muteAgent(!isMuted)
+    mute(!muted.value)
 }
 </script>
 <style lang="scss" scoped>
