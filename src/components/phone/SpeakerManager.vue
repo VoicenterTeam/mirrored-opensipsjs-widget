@@ -29,6 +29,7 @@
         </div>
         <VcSlider
             v-model="speakerPlayerVolume"
+            :show-tooltip="false"
             placement="left"
         />
     </div>
