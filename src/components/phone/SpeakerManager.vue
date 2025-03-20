@@ -80,10 +80,17 @@ const onSpeakerUnmute = () => {
 
 
   .el-slider__runway {
-    .el-slider__button-wrapper .el-slider__button {
-      height: 15px;
-      width: 15px;
+    .el-slider__button-wrapper {
+      height: auto;
+      width: auto;
+      top: -10px;
+      .el-slider__button {
+        height: 15px;
+        width: 15px;
+      }
     }
+
+
   }
 }
 
