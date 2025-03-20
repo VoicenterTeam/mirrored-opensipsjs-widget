@@ -578,6 +578,10 @@ export function useOpenSIPSJS () {
         state.opensipsjs?.audio.mergeCall(roomId)
     }
 
+    function mergeCallByIds (firstCallId: string, secondCallId: string) {
+        state.opensipsjs?.audio.mergeCallByIds(firstCallId, secondCallId)
+    }
+
     function terminateCall (callId: string) {
         state.opensipsjs?.audio.terminateCall(callId)
     }
@@ -845,6 +849,7 @@ export function useOpenSIPSJS () {
         moveCall,
         transferCall,
         mergeCallsInRoom,
+        mergeCallByIds,
         setActiveRoom,
         terminateCall,
         setAutoAnswer,
