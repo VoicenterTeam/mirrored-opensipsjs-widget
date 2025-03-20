@@ -2034,6 +2034,21 @@
     sdp-transform "2.14.1"
     uuid "^10.0.0"
 
+"@voicenter-team/opensips-js@^1.0.133":
+  version "1.0.133"
+  resolved "https://registry.yarnpkg.com/@voicenter-team/opensips-js/-/opensips-js-1.0.133.tgz#ff6ce39be4aedd1510a14c050759046e04394b44"
+  integrity sha512-z8KIs0AuYmDSGKoadOF4MYayohtwFGk5FzeNsW89mzEldgddTBwxGFBodObLkzMvCKKfKhdy/CAiansbgUvihQ==
+  dependencies:
+    "@types/mime" "^3.0.1"
+    generate-unique-id "^2.0.1"
+    jssip "3.10.0"
+    konva "^9.3.16"
+    loglevel "^1.8.1"
+    mime "^3.0.0"
+    p-iteration "^1.1.8"
+    sdp-transform "2.14.1"
+    uuid "^10.0.0"
+
 "@voicenter-team/voicenter-ui-plus@0.7.1":
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/@voicenter-team/voicenter-ui-plus/-/voicenter-ui-plus-0.7.1.tgz#c6f0ea798b914f86726dda0a3dd428d4ff3b5d54"

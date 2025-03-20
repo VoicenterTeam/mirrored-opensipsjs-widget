@@ -23,6 +23,7 @@ const state: { opensipsjs: OpenSIPSJS | undefined } = {
 
 /* State */
 export const isOpenSIPSReady = ref<boolean>(false)
+export const isOpenSIPSReconnecting = ref<boolean>(false)
 export const isOpenSIPSInitialized = ref<boolean>(false)
 export const usedWidgetShadowRootEl = ref<HTMLElement>()
 
@@ -261,6 +262,9 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
     return opensipsJS
         .on('connection', (value: boolean) => {
             isOpenSIPSReady.value = value
+        })
+        .on('reconnecting', (value: boolean) => {
+            isOpenSIPSReconnecting.value = value
         })
         .on('changeActiveInputMediaDevice', (value: string) => {
             activeInputDevice.value = value

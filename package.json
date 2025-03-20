@@ -28,7 +28,7 @@
     "dist"
   ],
   "dependencies": {
-    "@voicenter-team/opensips-js": "^1.0.130",
+    "@voicenter-team/opensips-js": "^1.0.133",
     "@voicenter-team/opensips-js-screen-share": "^0.0.2",
     "@voicenter-team/opensips-js-screen-share-whiteboard": "^0.0.1",
     "@voicenter-team/opensips-js-whiteboard": "^0.0.1",
