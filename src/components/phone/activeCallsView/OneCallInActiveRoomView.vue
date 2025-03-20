@@ -9,7 +9,7 @@
         class="py-2 px-3"
     />
     <OneCallControlButtonsBlock
-        class="px-5 m-auto"
+        class="px-5"
     />
 </template>
 <script setup lang="ts">

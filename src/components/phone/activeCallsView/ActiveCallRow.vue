@@ -11,11 +11,11 @@
                 <i class="vc-lc-circle-pause" />
             </div>
 
-<!--            <VolumeLevelIndicator-->
-<!--                v-else-if="audioTag"-->
-<!--                :device-id="callId"-->
-<!--                :stream="audioTag.srcObject"-->
-<!--            />-->
+            <VolumeLevelIndicator
+                v-else-if="audioTag"
+                :device-id="callId"
+                :stream="audioTag.srcObject"
+            />
         </div>
         <div class="flex-1 grow call-data-wrapper truncate mr-1">
             <div class="caller font-semibold truncate">
@@ -71,18 +71,17 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 // import AudioQualityIndicator from '@/ui/phoneDialer/components/webRtcPhone/dialPad/mainBlock/AudioQualityIndicator.vue'
-// import VolumeLevelIndicator from '@/components/phone/common/VolumeLevelIndicator.vue'
-//import useCallActions from '@/composables/phone/useCallActions.ts'
+import VolumeLevelIndicator from '@/components/phone/common/VolumeLevelIndicator.vue'
 import { ActionsTriggerObjectType } from '@/constants/phone.ts'
 import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
-
+import useCallActions from '@/composables/phone/useCallActions.ts'
 import HoldTimer from '@/components/phone/common/HoldTimer.vue'
 import { useOpenSIPSJS } from '@/composables/opensipsjs.ts'
 
 
 /* Data */
 
-// const { onActionsToggle, actionsPopupType } = useCallActions()
+const { onActionsToggle, actionsPopupType } = useCallActions()
 const { holdCall, unholdCall, terminateCall } = useOpenSIPSJS()
 
 type Props = {
@@ -96,8 +95,7 @@ const props = defineProps<Props>()
 
 /* Computed */
 const active = computed(() => {
-    //return props.callId === actionsPopupType.value?.callId
-    return false
+    return props.callId === actionsPopupType.value?.callId
 })
 
 const isCallOnHold = computed(() => {
@@ -109,10 +107,10 @@ const onCallEnd = () => {
     terminateCall(props.callId)
 }
 const onActionsClick = () => {
-    // onActionsToggle({
-    //     initiator: ActionsTriggerObjectType.separate,
-    //     callId: props.callId
-    // })
+    onActionsToggle({
+        initiator: ActionsTriggerObjectType.separate,
+        callId: props.callId
+    })
 }
 const onCallHold = () => {
     holdCall(props.callId)

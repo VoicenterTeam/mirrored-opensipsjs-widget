@@ -14,7 +14,7 @@
         <VolumeIndicator
             :stream="originalStream"
             :bar-height="7"
-            :bar-width="125"
+            :bar-width="250"
             :sensitivity="2"
         />
     </div>
@@ -34,7 +34,8 @@ const toggleMute = () => {
 </script>
 <style lang="scss" scoped>
 .sensitivity-block {
-  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
   .active {
     background-color:
         color-mix(in srgb, var(--destructive) var(--dynamic-percentage-10), transparent);

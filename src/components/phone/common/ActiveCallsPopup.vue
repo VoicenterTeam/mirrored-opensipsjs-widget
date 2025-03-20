@@ -20,27 +20,27 @@
                 :duration="activeRoomDuration"
             />
         </div>
-        <!--        <div-->
-        <!--            v-if="isMergeButtonVisible || isConferenceButtonVisible"-->
-        <!--            class="calls-manage-buttons-block  flex items-center justify-between p-4 gap-x-1"-->
-        <!--        >-->
-        <!--            <button-->
-        <!--                v-if="isMergeButtonVisible"-->
-        <!--                class="merge h-8 flex items-center justify-center gap-x-1"-->
-        <!--                @click="handleCallsMerge"-->
-        <!--            >-->
-        <!--                <i class="vc-lc-merge text-base" />-->
-        <!--                <div>{{ getTranslation('dialPad.merge.all') }}</div>-->
-        <!--            </button>-->
-        <!--            <button-->
-        <!--                v-if="isConferenceButtonVisible"-->
-        <!--                class="conference merge h-8 flex items-center justify-center gap-x-1"-->
-        <!--                @click="handleCallsConference"-->
-        <!--            >-->
-        <!--                <i class="vc-lc-share-2 text-base" />-->
-        <!--                <div>{{ getTranslation('dialPad.conference.all') }}</div>-->
-        <!--            </button>-->
-        <!--        </div>-->
+        <div
+            v-if="isMergeButtonVisible || isConferenceButtonVisible"
+            class="calls-manage-buttons-block  flex items-center justify-between p-4 gap-x-1"
+        >
+            <button
+                v-if="isMergeButtonVisible"
+                class="merge h-8 flex items-center justify-center gap-x-1"
+                @click="handleCallsMerge"
+            >
+                <i class="vc-lc-merge text-base" />
+                <div>merge all</div>
+            </button>
+            <button
+                v-if="isConferenceButtonVisible"
+                class="conference merge h-8 flex items-center justify-center gap-x-1"
+                @click="handleCallsConference"
+            >
+                <i class="vc-lc-share-2 text-base" />
+                <div>conference all</div>
+            </button>
+        </div>
         <div
             :class="{'mb-12': roomsWithoutActive.length === 1}"
             class="not-active-calls-wrapper mb-4 overflow-auto"
@@ -63,12 +63,13 @@ import PopupHeader from '@/components/phone/common/PopupHeader.vue'
 import ActiveCallPopupRow from '@/components/phone/common/ActiveCallPopupRow.vue'
 import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
-import { currentActiveRoom } from '@/composables/opensipsjs'
+import { currentActiveRoom, allRooms, activeCalls, useOpenSIPSJS } from '@/composables/opensipsjs'
 
 
 /* Data */
-const { callsInActiveRoom, roomsWithoutActive } = useVsipInject()
+const { callsInActiveRoom, roomsWithoutActive, getActiveCallsInRoom } = useVsipInject()
 const { onActiveCallsPopupToggle } = usePhoneState()
+const { moveCall } = useOpenSIPSJS()
 const { getRoomTitle, getDuration, getFirstCallIdInRoom, getCaller, getRoomDuration } = useRoomData()
 
 /* Computed */
@@ -87,35 +88,36 @@ const closeCallsPopup = ()  => {
     onActiveCallsPopupToggle(false)
 }
 
-// const isConferenceButtonVisible = computed(() => {
-//     return Object.keys(activeRooms.value).length > 1
-// })
-//
-// const isMergeButtonVisible = computed(() => {
-//     const rooms = Object.values(activeRooms.value)
-//
-//     if (rooms.length !== 2) return false
-//
-//     const [ room1, room2 ] = rooms
-//
-//     return [ room1, room2 ].every(room => getActiveCallsInRoom(room.roomId).length === 1)
-// })
+const isConferenceButtonVisible = computed(() => {
+    return Object.keys(allRooms.value).length > 1
+})
+
+const isMergeButtonVisible = computed(() => {
+    const rooms = Object.values(allRooms.value)
+
+    if (rooms.length !== 2) return false
+
+    const [ room1, room2 ] = rooms
+
+    return [ room1, room2 ].every(room => getActiveCallsInRoom(room.roomId).length === 1)
+})
 
 /* Methods */
-// const handleCallsMerge = () => {
-//     const ids = Object.keys(activeCalls.value)
-//
-//     const [ callId1, callId2 ] = ids
-//
-//     mergeCallByIds(callId1, callId2)
-// }
-// const handleCallsConference = () => {
-//     const [ room ] = Object.values(activeRooms.value)
-//
-//     if (room) {
-//         Object.values(activeCalls.value).forEach(call => moveCall(call._id, room.roomId))
-//     }
-// }
+const handleCallsMerge = () => {
+    const ids = Object.keys(activeCalls.value)
+
+    const [ callId1, callId2 ] = ids
+
+    //mergeCallByIds(callId1, callId2)
+}
+const handleCallsConference = () => {
+    const [ room ] = Object.values(allRooms.value)
+
+    if (room) {
+        Object.values(activeCalls.value).forEach(call => moveCall(call._id, room.roomId))
+    }
+}
+
 /* OnBeforeUnmount */
 onBeforeUnmount(() => {
     onActiveCallsPopupToggle(false)

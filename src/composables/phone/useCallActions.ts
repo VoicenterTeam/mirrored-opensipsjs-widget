@@ -8,19 +8,47 @@ import { ActionsObjectType } from '@/types/phone'
 import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
 
 const actionsPopupType = ref<null | ActionsPopupInitiator>(null)
-
+const callToMove = ref<string | undefined>(undefined)
+const callToTransfer = ref<string | undefined>(undefined)
 
 export default function useCallActions () {
 
     /* Data */
-    const { callsInActiveRoom } = useVsipInject()
+    const { callsInActiveRoom, roomsWithoutActive } = useVsipInject()
     const { phoneNumber, onPhoneNumberChange, keyPadTrigger, onKeyPadToggle } = usePhoneState()
-    const { startCall } = useOpenSIPSJS()
+    const { startCall, transferCall } = useOpenSIPSJS()
 
     /* Methods */
     const onActionsToggle = (value: null | ActionsPopupInitiator) => {
         actionsPopupType.value = value
     }
+    const onCallToTransferChange =  (callId: string | undefined) => {
+        callToTransfer.value = callId
+    }
+    const onCallToMoveChange =  (callId: string | undefined) => {
+        callToMove.value = callId
+    }
+    const handleCallMove = () => {
+        const activeCall = actionsPopupType.value?.callId
+        onActionsToggle(null)
+        onCallToMoveChange(activeCall)
+    }
+
+    const handleCallTransfer = () => {
+        const activeCall = actionsPopupType.value?.callId
+        onActionsToggle(null)
+        onCallToTransferChange(activeCall)
+    }
+
+    const onCallTransfer = (phone: string) => {
+        if(!callToTransfer.value) {
+            return
+        }
+
+        transferCall( callToTransfer.value, phone)
+        onCallToTransferChange(undefined)
+    }
+
     const capitalizeFirstLetter =  (input: string) => {
         return  input.trim().replace(/^\w/, char => char.toUpperCase()) || ''
     }
@@ -38,11 +66,11 @@ export default function useCallActions () {
         onPhoneNumberChange('')
     }
     const shouldIncludeAction = (action: ActionsObjectType) => {
-        // const isMoveAction = action.title === capitalizeFirstLetter(self.$t('dialPad.actions.move'))
-        //
-        // if (roomsWithoutActive.value.length === 0 && isMoveAction) {
-        //     return false
-        // }
+        const isMoveAction = action.title === capitalizeFirstLetter('move')
+
+        if (roomsWithoutActive.value.length === 0 && isMoveAction) {
+            return false
+        }
 
         return true
     }
@@ -56,8 +84,8 @@ export default function useCallActions () {
     const separateCallActionsBaseConfig = computed(() => {
         return [ [
             // createAction('vc-lc-circle-pause', 'var(--red-icon-phone)', 'dialPad.actions.mute.recording', handleCallRecord),
-            // createAction('vc-lc-forward', 'var(--blue-actions-button)', 'dialPad.actions.transfer', handleCallTransfer),
-            // createAction('vc-lc-git-pull-request-arrow', 'var(--blue-actions-button)', 'dialPad.actions.move', handleCallMove),
+            createAction('vc-lc-forward', 'var(--blue-actions-button)', 'transfer', handleCallTransfer),
+            createAction('vc-lc-git-pull-request-arrow', 'var(--blue-actions-button)', 'move', handleCallMove),
             // createAction('vc-lc-clipboard-pen', 'var(--time-grey)', 'dialPad.actions.fill.form', handleCallFormFill),
         ] ]
     })
@@ -73,7 +101,7 @@ export default function useCallActions () {
     ])
     const singleCallActionsBaseConfig = [ [
         createAction('vc-lc-phone', 'var(--blue-bg)', 'new call', () => onKeyPadToggle(KeyPadTriggerObjectType.new_call)),
-        // createAction('vc-lc-git-pull-request-arrow', 'var(--blue-actions-button)', 'dialPad.actions.move', handleCallMove),
+        createAction('vc-lc-git-pull-request-arrow', 'var(--blue-actions-button)', 'move', handleCallMove),
     ] ]
     const multipleActions = computed(() => {
         if (!displayAllControls.value) {
@@ -109,7 +137,13 @@ export default function useCallActions () {
     return {
         initCall,
         onActionsToggle,
+        onCallToMoveChange,
+        handleCallMove,
+        onCallTransfer,
+        onCallToTransferChange,
         actionsConfig,
+        callToMove,
+        callToTransfer,
         actionsPopupType,
         displayAllControls
     }
