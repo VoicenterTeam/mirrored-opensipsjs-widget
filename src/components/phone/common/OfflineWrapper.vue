@@ -25,7 +25,7 @@ import { isOpenSIPSReady } from '@/composables/opensipsjs'
 
 <style lang="scss" scoped>
 .offline-wrapper {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
