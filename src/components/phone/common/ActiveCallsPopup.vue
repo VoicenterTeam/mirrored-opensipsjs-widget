@@ -69,7 +69,7 @@ import { currentActiveRoom, allRooms, activeCalls, useOpenSIPSJS } from '@/compo
 /* Data */
 const { callsInActiveRoom, roomsWithoutActive, getActiveCallsInRoom } = useVsipInject()
 const { onActiveCallsPopupToggle } = usePhoneState()
-const { moveCall } = useOpenSIPSJS()
+const { moveCall, mergeCallByIds } = useOpenSIPSJS()
 const { getRoomTitle, getDuration, getFirstCallIdInRoom, getCaller, getRoomDuration } = useRoomData()
 
 /* Computed */
@@ -108,7 +108,7 @@ const handleCallsMerge = () => {
 
     const [ callId1, callId2 ] = ids
 
-    //mergeCallByIds(callId1, callId2)
+    mergeCallByIds(callId1, callId2)
 }
 const handleCallsConference = () => {
     const [ room ] = Object.values(allRooms.value)
