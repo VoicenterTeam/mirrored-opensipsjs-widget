@@ -63,7 +63,7 @@ export const callTime = ref<{ [key: string]: ITimeData }>({})
 export const callMetrics = ref<{ [key: string]: unknown }>({})
 
 export const muted = computed(() => {
-    return isMuted.value || isMuteWhenJoin.value
+    return allActiveCalls.value.length ? isMuted.value : isMuteWhenJoin.value
 })
 
 /* Video conferencing */
