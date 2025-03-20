@@ -31,8 +31,8 @@ let interval: number | undefined
 /* Constants */
 const BAR_WIDTH = 1.75
 const BAR_HEIGHT = 7
-const NUMBER_OF_BARS = 39
-const BAR_SPACING = 1.5
+const NUMBER_OF_BARS = 59
+const BAR_SPACING = 2.5
 const DEFAULT_BAR_COLOR = '#D5DBDF'
 
 /* Utility Functions */

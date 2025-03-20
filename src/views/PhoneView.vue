@@ -1,9 +1,10 @@
 <template>
     <div
-        class="main-wrapper relative"
+        class="main-wrapper p-2 relative"
         :style="{ ...dynamicStyle }"
     >
         <component :is="phoneUI" />
+        <OfflineWrapper />
         <IncomingCalls v-if="visibleCalls.length" />
     </div>
 </template>
@@ -11,6 +12,7 @@
 import { computed, ref, watch } from 'vue'
 import type { IRoom, ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import { allRooms } from '@/composables/opensipsjs'
+import OfflineWrapper from '@/components/phone/common/OfflineWrapper.vue'
 import NoActiveCallsView from '@/components/phone/NoActiveCallsView.vue'
 import ActiveCallsWithKeypadView from '@/components/phone/ActiveCallsWithKeypadView.vue'
 import ActiveCallsWithActionButtonsView from '@/components/phone/ActiveCallsWithActionButtonsView.vue'
@@ -28,6 +30,7 @@ const phoneUIConfig = {
     callsWithActionButtons: ActiveCallsWithActionButtonsView,
     callsWithKeyPad: ActiveCallsWithKeypadView
 }
+
 const { visibleCalls } = useIncomingCalls()
 const callersData = ref<GenericObjectType<CallUserDataType>>({})
 const  { keyPadTrigger, onKeyPadToggle } = usePhoneState()
@@ -51,6 +54,7 @@ watch(
                 delete callersData.value[id]
             }
         }
+
     },
     {
         immediate: true,
@@ -65,6 +69,7 @@ watch(currentActiveRoom, () => {
         onKeyPadToggle(undefined)
     }
 })
+
 const getPercentage = (lightValue: number, darkValue: number) => {
     // return isDark.value ? darkValue : lightValue
     return lightValue

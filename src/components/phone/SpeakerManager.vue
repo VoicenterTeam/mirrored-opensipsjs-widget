@@ -1,27 +1,40 @@
 <template>
-    <div class="flex gap-x-1 items-center volume-block">
+    <div
+        class="
+          flex
+          gap-x-1
+          items-center
+          volume-block
+        "
+    >
         <div
-            class="h-5 w-5 flex justify-center items-center rounded-sm"
-            :class="{'active': isSpeakerMuted || !speakerPlayerVolume }"
+            v-if="isSpeakerMuted||!speakerPlayerVolume"
+            class="h-5 w-5 flex justify-center items-center active rounded-sm"
         >
             <i
-                :class="{
-                    'cursor-pointer text-base vc-lc-volume-x': isSpeakerMuted || !speakerPlayerVolume,
-                    'vc-lc-volume-1 cursor-pointer text-base': !isSpeakerMuted && speakerPlayerVolume
-                }"
-                :style="{ color: isSpeakerMuted || !speakerPlayerVolume ? 'var(--destructive)' : 'var(--primary)' }"
-                @click="toggleMute"
+                class="cursor-pointer text-base vc-lc-volume-x"
+                :style="{ color: 'var(--destructive)' }"
+                @click="onSpeakerUnmute"
             />
         </div>
-        <!--        <RangeSlider-->
-        <!--            v-model="speakerPlayerVolume"-->
-        <!--            class="volume-slider"-->
-        <!--        />-->
+        <div
+            v-else
+            class="h-5 w-5 flex justify-center items-center rounded-sm"
+        >
+            <i
+                class="vc-lc-volume-1 cursor-pointer text-base"
+                :style="{ color: 'var(--primary)' }"
+                @click="onSpeakerMute"
+            />
+        </div>
+        <VcSlider
+            v-model="speakerPlayerVolume"
+            placement="left"
+        />
     </div>
 </template>
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
-//import RangeSlider from '@/components/phone/RangeSlider.vue'
 import { speakerVolume, useOpenSIPSJS, } from '@/composables/opensipsjs'
 
 /* Data */
@@ -48,33 +61,28 @@ const onSpeakerUnmute = () => {
     setSpeakerVolume(speakerPlayerVolume.value/100)
 }
 
-const toggleMute = () => {
-    if (isSpeakerMuted.value || !speakerPlayerVolume.value) {
-        onSpeakerUnmute()
-    } else {
-        onSpeakerMute()
-    }
-}
 </script>
 <style lang="scss" scoped>
-.volume-block {
-  .volume-slider {
-    flex:1;
-    :deep() {
-      .vue-slider {
-        height: 2px !important;
-        .vue-slider-process {
-         // @apply bg-blue-icon #{!important};
-        }
-      }
-    }
-  }
-}
-.volume-block, .sensitivity-block {
-  flex: 1;
+.volume-block{
   .active {
     background-color:
         color-mix(in srgb, var(--destructive) var(--dynamic-percentage-10), transparent);
+  }
+}
+</style>
+<style lang="scss">
+.el-slider {
+  max-width: 250px;
+  .el-slider__runway, .el-slider__bar  {
+    height: 2px;
+  }
+
+
+  .el-slider__runway {
+    .el-slider__button-wrapper .el-slider__button {
+      height: 15px;
+      width: 15px;
+    }
   }
 }
 

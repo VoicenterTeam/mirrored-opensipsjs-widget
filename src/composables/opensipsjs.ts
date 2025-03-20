@@ -63,6 +63,10 @@ export const speakerVolume = ref<number>(1)
 export const callTime = ref<{ [key: string]: ITimeData }>({})
 export const callMetrics = ref<{ [key: string]: unknown }>({})
 
+export const muted = computed(() => {
+    return allActiveCalls.value.length ? isMuted.value : isMuteWhenJoin.value
+})
+
 /* Video conferencing */
 
 export const conferenceStarted = ref<boolean>(false)
@@ -554,6 +558,14 @@ export function useOpenSIPSJS () {
         }
     }
 
+    function mute (toMute: boolean) {
+        if (allActiveCalls.value.length) {
+            muteAgent(toMute)
+        } else {
+            setMuteWhenJoin(toMute)
+        }
+    }
+
     function muteCaller (callId: string, toMute: boolean) {
         if (toMute) {
             state.opensipsjs?.audio.muteCaller(callId)
@@ -580,6 +592,10 @@ export function useOpenSIPSJS () {
 
     function mergeCallsInRoom (roomId: number) {
         state.opensipsjs?.audio.mergeCall(roomId)
+    }
+
+    function mergeCallByIds (firstCallId: string, secondCallId: string) {
+        state.opensipsjs?.audio.mergeCallByIds(firstCallId, secondCallId)
     }
 
     function terminateCall (callId: string) {
@@ -843,12 +859,14 @@ export function useOpenSIPSJS () {
         startCall,
         answerCall,
         muteAgent,
+        mute,
         muteCaller,
         holdCall,
         unholdCall,
         moveCall,
         transferCall,
         mergeCallsInRoom,
+        mergeCallByIds,
         setActiveRoom,
         terminateCall,
         setAutoAnswer,

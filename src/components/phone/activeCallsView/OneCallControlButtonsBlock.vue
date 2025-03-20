@@ -17,6 +17,7 @@ import CallActionButton from '@/components/phone/activeCallsView/CallActionButto
 import { ControlButtonObjectType } from '@/types/phone'
 import { isMuted, useOpenSIPSJS } from '@/composables/opensipsjs'
 import { KeyPadTriggerObjectType } from '@/constants/phone.ts'
+import useCallActions from '@/composables/phone/useCallActions.ts'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
 import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
 
@@ -24,15 +25,16 @@ import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
 const { holdCall, unholdCall, muteAgent } = useOpenSIPSJS()
 const { callsInActiveRoom } = useVsipInject()
 const  { onKeyPadToggle } = usePhoneState()
-// const {  onCallToTransferChange } = useCallTransfer()
+const {  onCallToTransferChange } = useCallActions()
 
 /* Methods */
 const currentCall = computed(() => {
     return callsInActiveRoom.value[0] || {}
 })
-// const handleCallTransfer = () => {
-//     onCallToTransferChange(currentCall.value._id)
-// }
+
+const handleCallTransfer = () => {
+    onCallToTransferChange(currentCall.value._id)
+}
 
 const oneActiveCallButtons = computed(() => {
     const buttons: ControlButtonObjectType[]  = [
@@ -42,12 +44,12 @@ const oneActiveCallButtons = computed(() => {
             name: 'add caller',
             action: () => onKeyPadToggle(KeyPadTriggerObjectType.add_caller)
         },
-        // {
-        //     type: 'blueButton',
-        //     src: 'vc-lc-forward',
-        //     name: 'transfer',
-        //     action: () => handleCallTransfer()
-        // },
+        {
+            type: 'blueButton',
+            src: 'vc-lc-forward',
+            name: 'transfer',
+            action: () => handleCallTransfer()
+        },
         {
             type: isMuted.value ? 'redButton-with-bg': 'whiteButton',
             src: 'vc-lc-mic',
@@ -73,8 +75,10 @@ const oneActiveCallButtons = computed(() => {
 </script>
 <style lang="scss">
 .keypad-wrapper {
+  align-self: center;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  max-width: 400px;
 }
 
 </style>

@@ -9,7 +9,7 @@
             :max-height="maxHeight"
         />
         <div
-            class="keypad-wrapper gap-x-5 gap-y-8 px-1 w-full"
+            class="keypad-wrapper py-1 gap-x-5 gap-y-8 px-1 w-full"
         >
             <CallActionButton
                 v-for="(button, index) in controlButtonsConfig"
@@ -24,21 +24,21 @@
     </div>
 </template>
 <script setup lang="ts">
-import { computed, watch } from 'vue'
+import { computed } from 'vue'
 import { useVsipInject } from '@/composables/phone/useVsipProvideInject'
 import CallsCompactView from '@/components/phone/common/CallsCompactView.vue'
 import { KeyPadTriggerObjectType } from '@/constants/phone.ts'
 import { usePhoneState } from '@/composables/phone/usePhoneState'
-import { isMuted, useOpenSIPSJS } from '@/composables/opensipsjs'
+import { isMuted, useOpenSIPSJS, currentActiveRoom } from '@/composables/opensipsjs'
 import CallActionButton from '@/components/phone/activeCallsView/CallActionButton.vue'
 import MultipleCallsActiveRoom from '@/components/phone/activeCallsView/MultipleCallsActiveRoom.vue'
-
+import useCallActions from '@/composables/phone/useCallActions.ts'
 /* Data */
 const { onKeyPadToggle } = usePhoneState()
-const { muteAgent, holdCall, unholdCall } = useOpenSIPSJS()
+const { muteAgent, holdCall, unholdCall, mergeCallsInRoom } = useOpenSIPSJS()
 
 // const { isCallsMergeWarningEnabled } = useUserData()
-// const { displayAllControls } = useCallActions()
+const { displayAllControls } = useCallActions()
 const { roomsWithoutActive, callsInActiveRoom, lengthOfCallsWithoutIncoming, activeRoomsWithoutIncoming } = useVsipInject()
 
 /* Methods */
@@ -77,30 +77,28 @@ const getControlButtonsConfig = () => {
         },
     ]
 
-    return baseConfig
-
-    // if (isTwoCallsInActiveRoom.value) {
-    //     // return [
-    //     //     baseConfig[0],
-    //     //     {
-    //     //         type: 'whiteButton',
-    //     //         src: 'vc-lc-merge',
-    //     //         name: 'merge',
-    //     //         action: () => onCallMergeModalHandle()
-    //     //     },
-    //     //     ...baseConfig.slice(1)
-    //     // ]
-    // }else if(!displayAllControls.value) {
-    //     return [
-    //         ...baseConfig.slice(2)
-    //     ]
-    // } else {
-    //     return [
-    //         ...baseConfig
-    //     ]
-    // }
+    if (isTwoCallsInActiveRoom.value) {
+        return [
+            baseConfig[0],
+            {
+                type: 'whiteButton',
+                src: 'vc-lc-merge',
+                name: 'merge',
+                action: () => onCallMergeHandle()
+            },
+            ...baseConfig.slice(1)
+        ]
+    }else if(!displayAllControls.value) {
+        return [
+            ...baseConfig.slice(2)
+        ]
+    } else {
+        return [
+            ...baseConfig
+        ]
+    }
 }
-//
+
 // const onCallMergeModalHandle = () => {
 //     if(!isCallsMergeWarningEnabled.value) {
 //         onCallMergeModalTrigger(true)
@@ -112,7 +110,12 @@ const getControlButtonsConfig = () => {
 //     }
 //
 // }
-
+const onCallMergeHandle = () => {
+    if(!currentActiveRoom.value) {
+        return
+    }
+    mergeCallsInRoom(currentActiveRoom.value)
+}
 const unHoldAllCalls = () => {
     callsInActiveRoom.value.forEach((call) => {
         unholdCall(call._id)
@@ -165,6 +168,8 @@ const maxHeight  = computed(() => {
 </script>
 <style scoped lang="scss">
 .keypad-wrapper {
+  max-width: 400px;
+  align-self: center;
   margin: auto;
 }
 </style>
