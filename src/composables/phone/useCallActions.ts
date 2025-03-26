@@ -6,7 +6,7 @@ import { ActionsPopupInitiator } from '@/types/phone'
 import { ActionsTriggerObjectType } from '@/constants/phone.ts'
 import { ActionsObjectType } from '@/types/phone'
 import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
-
+import { isOnlyDigits } from '@/helpers/general.ts'
 const actionsPopupType = ref<null | ActionsPopupInitiator>(null)
 const callToMove = ref<string | undefined>(undefined)
 const callToTransfer = ref<string | undefined>(undefined)
@@ -53,7 +53,7 @@ export default function useCallActions () {
         return  input.trim().replace(/^\w/, char => char.toUpperCase()) || ''
     }
     const initCall = () => {
-        if( !phoneNumber.value ) {
+        if( !phoneNumber.value || !isOnlyDigits(phoneNumber.value ) ) {
             return
         }
         const addToCurrentRoom = keyPadTrigger.value === KeyPadTriggerObjectType.add_caller
