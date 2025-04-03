@@ -542,8 +542,8 @@ export function unregisterOpenSIPS (options?: UnRegisterOptions | undefined) {
 }
 
 export function useOpenSIPSJS () {
-    function startCall (target: string, addToCurrentRoom = false) {
-        state.opensipsjs?.audio.initCall(target, addToCurrentRoom)
+    function startCall (target: string, addToCurrentRoom = false, holdOtherCalls: boolean = false) {
+        state.opensipsjs?.audio.initCall(target, addToCurrentRoom, holdOtherCalls)
     }
 
     function answerCall (callId: string) {

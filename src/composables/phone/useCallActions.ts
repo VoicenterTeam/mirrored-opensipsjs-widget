@@ -60,7 +60,7 @@ export default function useCallActions () {
         //const holdRestCalls = addToCurrentRoom // If addToCurrentRoom is true, holdRestCalls will also be true
         // add holdRestCalls to start call method
 
-        startCall(phoneNumber.value, addToCurrentRoom)
+        startCall(phoneNumber.value, addToCurrentRoom, true)
 
         onKeyPadToggle(undefined)
         onPhoneNumberChange('')
