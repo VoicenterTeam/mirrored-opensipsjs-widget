@@ -2,6 +2,7 @@
     <div ref="widgetWrapper">
         <component
             :is="componentView"
+            v-if="widgetType"
             :key="layoutType"
             @ready="onReady"
         />
@@ -9,10 +10,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { allActiveCalls } from '@/composables/opensipsjs'
 import RoundedCallView from '@/views/RoundedCallView.vue'
-import { layoutType, widgetType } from '@/composables/useWidgetConfig'
+import { applySettingsToWidgetRootEl, layoutType, widgetType } from '@/composables/useWidgetConfig'
 import { useActiveTab } from '@/plugins/activeTabPlugin'
 import { setWidgetElement } from '@/composables/useWidgetState'
 import OpenSIPSExternalWidgetAPI from '@/widget/OpenSIPSExternalWidgetAPI'
@@ -43,14 +44,16 @@ const widgetWrapper = ref()
 
 /* Computed */
 const componentView = computed(() => {
+    if (!widgetType.value) {
+        return null
+    }
+
     if (widgetType.value === 'video') {
         return layoutTypeComponent['video']
     } else {
         return layoutTypeComponent[layoutType.value]
     }
 })
-
-let widgetReadyEmitted = false
 
 /* Methods */
 function onReady (draggableRoot: HTMLElement | undefined) {
@@ -65,15 +68,22 @@ function onReady (draggableRoot: HTMLElement | undefined) {
     }
 
     usedWidgetShadowRootEl.value = widgetWrapper.value
+
     setWidgetElement(rootNode.host, draggableRoot)
 
-    if (!widgetReadyEmitted) {
-        widgetReadyEmitted = true
-        emit('widget:ready', { detail: OpenSIPSExternalWidgetAPI })
-    }
+    applySettingsToWidgetRootEl(
+        rootNode.host,
+        draggableRoot
+    )
 }
 
 watch(allActiveCalls, (calls) => {
     setTabIDWithActiveCall(!!(calls && calls.length))
 })
+
+onMounted(
+    () => {
+        emit('widget:ready', { detail: OpenSIPSExternalWidgetAPI })
+    }
+)
 </script>

@@ -17,7 +17,7 @@ export const defaultTheme/*: IWidgetTheme*/ = {
         'additional-danger-bg': '#F44C4C',
         'additional-success-bg': '#75B8A0',
     },
-    widgetType: 'audio',
+    widgetType: undefined,
     audioConfig: {
         layoutConfig: {
             type: 'rounded',

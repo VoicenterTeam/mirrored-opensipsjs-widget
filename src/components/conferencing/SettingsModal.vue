@@ -200,7 +200,7 @@ async function setMediaDevices () {
     cameraList.value = devices.filter(d => d.kind === 'videoinput')
 
     const selectedDevices = localStorage.getItem('selectedDevices')
-    const parsed = JSON.parse(selectedDevices)
+    const parsed = JSON.parse(selectedDevices || '{}')
 
     const audioInput = parsed.audioInput || 'default'
     const audioOutput = parsed.audioOutput || 'default'
