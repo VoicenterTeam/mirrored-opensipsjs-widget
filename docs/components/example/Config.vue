@@ -376,10 +376,10 @@ const finalForm = useLocalStorage<IWidgetConfig>(
     WIDGET_CONFIG_STORAGE_KEY,
     getDefaultWidgetConfig()
 )
-const versionStorage = useLocalStorage<string>()(
-    VERSION_STORAGE_KEY,
-    ''
-)
+// const versionStorage = useLocalStorage<string>()(
+//     VERSION_STORAGE_KEY,
+//     ''
+// )
 const form = ref<IWidgetConfig>(cloneDeep(finalForm.value))
 const credentials = useLocalStorage<Credentials>(
     CREDENTIALS_STORAGE_KEY,
