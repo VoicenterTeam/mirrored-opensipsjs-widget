@@ -1,5 +1,8 @@
 <template>
-    <div ref="root" className="flex w-6 z-50 cursor-grab draggable-area">
+    <div
+        ref="root"
+        class="flex w-6 z-50 cursor-grab draggable-area"
+    >
         <DragDrop color="var(--border-lines)" />
     </div>
 </template>

@@ -9,9 +9,11 @@
             ref="draggableHandle"
             class="draggable"
         />
-        <component :is="phoneUI" />
-        <OfflineWrapper />
-        <IncomingCalls v-if="visibleCalls.length" />
+        <div class="phone-view-wrapper">
+            <component :is="phoneUI" />
+            <OfflineWrapper />
+            <IncomingCalls v-if="visibleCalls.length" />
+        </div>
     </div>
 </template>
 <script lang="ts" setup>
@@ -172,10 +174,14 @@ onMounted(() => {
 
     &.has-draggable {
         @apply flex;
+
+        .phone-view-wrapper {
+            @apply pl-2;
+        }
     }
 
-    .draggable {
-        @apply mr-2;
+    .phone-view-wrapper {
+        @apply w-full relative;
     }
 }
 </style>
