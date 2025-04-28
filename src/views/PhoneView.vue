@@ -1,15 +1,21 @@
 <template>
     <div
-        class="main-wrapper p-2 relative"
+        class="main-wrapper relative"
+        :class="{ 'has-draggable': showDraggableHandle }"
         :style="{ ...dynamicStyle }"
     >
+        <Draggable
+            v-show="showDraggableHandle"
+            ref="draggableHandle"
+            class="draggable"
+        />
         <component :is="phoneUI" />
         <OfflineWrapper />
         <IncomingCalls v-if="visibleCalls.length" />
     </div>
 </template>
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import type { IRoom, ICall } from '@voicenter-team/opensips-js/src/types/rtc'
 import { allRooms } from '@/composables/opensipsjs'
 import OfflineWrapper from '@/components/phone/common/OfflineWrapper.vue'
@@ -23,6 +29,13 @@ import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
 import { KeyPadTriggerObjectType } from '@/constants/phone.ts'
 import IncomingCalls from '@/components/phone/incomingCalls/IncomingCalls.vue'
 import { useIncomingCalls } from '@/composables/phone/useIncomingCalls.ts'
+import Draggable from '@/components/Draggable.vue'
+import { showDraggableHandle } from '@/composables/useWidgetConfig'
+
+/* Emit */
+const emit = defineEmits<{
+    (event: 'ready', value: HTMLElement | undefined): void
+}>()
 
 /* Data */
 const phoneUIConfig = {
@@ -31,12 +44,12 @@ const phoneUIConfig = {
     callsWithKeyPad: ActiveCallsWithKeypadView
 }
 
+const draggableHandle = ref<typeof Draggable>()
 const { visibleCalls } = useIncomingCalls()
 const callersData = ref<GenericObjectType<CallUserDataType>>({})
-const  { keyPadTrigger, onKeyPadToggle } = usePhoneState()
+const { keyPadTrigger, onKeyPadToggle } = usePhoneState()
 
 /* Watchers */
-
 watch(
     activeCalls,
     (calls) => {
@@ -142,11 +155,27 @@ useVsipProvide({
     roomsWithoutActive,
     getActiveCallsInRoom
 })
+
+/* Hooks */
+onMounted(() => {
+    const draggableRoot = draggableHandle.value?.root as HTMLElement | undefined
+
+    emit('ready', draggableRoot)
+})
 </script>
 <style lang="scss" scoped>
 .main-wrapper {
   height: 100%;
   min-height: 400px;
   min-width: 300px;
+    @apply bg-primary-bg;
+
+    &.has-draggable {
+        @apply flex;
+    }
+
+    .draggable {
+        @apply mr-2;
+    }
 }
 </style>

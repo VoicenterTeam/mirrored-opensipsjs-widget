@@ -9,10 +9,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import WidgetContent from '@/views/WidgetContent.vue'
 import Draggable from '@/components/Draggable.vue'
-import { layoutMode } from '@/composables/useWidgetConfig'
+import { showDraggableHandle } from '@/composables/useWidgetConfig'
 
 /* Emits */
 const emit = defineEmits<{
@@ -21,9 +21,6 @@ const emit = defineEmits<{
 
 /* Data */
 const draggableHandle = ref<typeof Draggable>()
-
-/* Computed */
-const showDraggableHandle = computed(() => layoutMode.value === 'floating')
 
 onMounted(() => {
     const draggableRoot = draggableHandle.value?.root as HTMLElement | undefined

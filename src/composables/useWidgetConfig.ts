@@ -159,6 +159,8 @@ export const layoutType = computed(() => widgetThemeSettings.value.audioConfig.l
 
 export const layoutMode = computed(() => widgetThemeSettings.value.audioConfig.layoutConfig.mode)
 
+export const showDraggableHandle = computed(() => layoutMode.value === 'floating')
+
 /* Methods */
 export function setCallSettingsPermissions (settings: Partial<ICallSettings>) {
     widgetCallSettings.value = merge({}, widgetCallSettings.value, settings)

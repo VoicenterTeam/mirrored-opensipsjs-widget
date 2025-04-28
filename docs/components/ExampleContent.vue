@@ -1,10 +1,8 @@
 <template>
     <div class="example pt-10">
-        <div class="bg-white">
-            <Widget
-                @widget-api-init="onWidgetInit"
-            />
-        </div>
+        <Widget
+            @widget-api-init="onWidgetInit"
+        />
 
         <div
             class="flex justify-center"
