@@ -355,7 +355,7 @@ import type { IWidgetConfig } from '@/types/public-api'
 import { getDefaultWidgetConfig } from '@/enum/defaultWidgetConfig.enum'
 import type { Credentials } from '~/composable/useAuthorisation'
 import { VcFormItem, VcInput, VcSwitch, VcSelect } from '@voicenter-team/voicenter-ui-plus'
-import { CREDENTIALS_STORAGE_KEY, WIDGET_CONFIG_STORAGE_KEY } from '~/enum/storage.enum'
+import { CREDENTIALS_STORAGE_KEY, VERSION_STORAGE_KEY, WIDGET_CONFIG_STORAGE_KEY } from '~/enum/storage.enum'
 import { CONFIG_DESCRIPTION } from '~/enum/fields-description.enum'
 
 /* Types */
@@ -375,6 +375,10 @@ const collapseModel = ref<Array<string>>([])
 const finalForm = useLocalStorage<IWidgetConfig>(
     WIDGET_CONFIG_STORAGE_KEY,
     getDefaultWidgetConfig()
+)
+const versionStorage = useLocalStorage<string>()(
+    VERSION_STORAGE_KEY,
+    ''
 )
 const form = ref<IWidgetConfig>(cloneDeep(finalForm.value))
 const credentials = useLocalStorage<Credentials>(
@@ -572,6 +576,20 @@ async function copyToClipboard () {
         console.error('Failed to copy text: ', err)
     }
 }
+function maybeClearConfig () {
+    const [ currentMajor ] = version.split('.')
+    const [ storageMajor ] = versionStorage.split('.')
+
+    if (currentMajor !== storageMajor) {
+        // Major changed - clear configuration
+        finalForm.value = getDefaultWidgetConfig()
+    }
+
+    versionStorage.value = version
+}
+
+/* Created */
+maybeClearConfig()
 
 /* Watcher */
 watch(
