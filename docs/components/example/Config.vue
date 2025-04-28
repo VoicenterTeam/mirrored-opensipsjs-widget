@@ -576,20 +576,20 @@ async function copyToClipboard () {
         console.error('Failed to copy text: ', err)
     }
 }
-function maybeClearConfig () {
-    const [ currentMajor ] = version.split('.')
-    const [ storageMajor ] = versionStorage.split('.')
-
-    if (currentMajor !== storageMajor) {
-        // Major changed - clear configuration
-        finalForm.value = getDefaultWidgetConfig()
-    }
-
-    versionStorage.value = version
-}
+// function maybeClearConfig () {
+//     const [ currentMajor ] = version.split('.')
+//     const [ storageMajor ] = versionStorage.split('.')
+//
+//     if (currentMajor !== storageMajor) {
+//         // Major changed - clear configuration
+//         finalForm.value = getDefaultWidgetConfig()
+//     }
+//
+//     versionStorage.value = version
+// }
 
 /* Created */
-maybeClearConfig()
+// maybeClearConfig()
 
 /* Watcher */
 watch(
