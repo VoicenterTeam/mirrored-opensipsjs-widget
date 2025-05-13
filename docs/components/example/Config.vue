@@ -485,7 +485,7 @@ const widgetCodeExample = computed(() => {
     const credentialsJSON = indentJSON(JSON.stringify(credentials.value, null, 4))
 
     return `
-<script type="module" src="https://cdn.opensipsjs.org/opensipsjs-widget/v${version}/opensipsjs-widget.es.js"><\/script>
+<script type="module" src="https://cdn.opensipsjs.org/opensipsjs-widget/v${version}/opensipsjs-widget.mjs"><\/script>
 
 <opensips-widget id="openSIPSWidget"><\/opensips-widget>
 
