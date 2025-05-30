@@ -171,6 +171,11 @@ export const CONFIG_DESCRIPTION = {
             allowChange: 'If auto-answer is enabled, this determines whether the user can change it.',
             defaultBehavior: 'When enabled, incoming calls are answered automatically.'
         },
+        callWaiting: 'Determines whether incoming calls are waiting to be answered when user already has another active session',
+        DND: {
+            allowChange: 'If DND is enabled, this determines whether the user can change it.',
+            defaultBehavior: 'When enabled, user will not be able to make calls.'
+        },
         outgoingCalls: 'Allows the user to make outgoing calls.',
         callerInfo: {
             displayName: 'Determines whether to display the caller\'s name during a call, if available.',

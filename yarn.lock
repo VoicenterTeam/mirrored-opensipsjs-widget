@@ -2049,6 +2049,40 @@
     sdp-transform "2.14.1"
     uuid "^10.0.0"
 
+"@voicenter-team/opensips-js@^1.0.145":
+  version "1.0.145"
+  resolved "https://registry.npmjs.org/@voicenter-team/opensips-js/-/opensips-js-1.0.145.tgz#c93ffff3265e065109fa26bcd7ea23572c27388b"
+  integrity sha512-/juP/CRnlyoGrswcuB7e3ujixRsCdMHxxsboy+w7yexmC9facGwXAkHJlcYawKp2SxC4MuKMbMH2SPxA9Ua+Xw==
+  dependencies:
+    "@types/mime" "^3.0.1"
+    generate-unique-id "^2.0.1"
+    jssip "3.10.0"
+    konva "^9.3.16"
+    loglevel "^1.8.1"
+    mime "^3.0.0"
+    p-iteration "^1.1.8"
+    sdp-transform "2.14.1"
+    uuid "^10.0.0"
+
+"@voicenter-team/opensipsjs-widget@0.2.4":
+  version "0.2.4"
+  resolved "https://registry.npmjs.org/@voicenter-team/opensipsjs-widget/-/opensipsjs-widget-0.2.4.tgz#f845504345209c7a98574b20ee9b35c07cb4e7be"
+  integrity sha512-BxsFWnBcDQcVyOTUb99INXatQR19riQ6+V93zAZx13R5whinsUCjvfRzDYMH3bvilCHY78nOcw9NsMfZuCrBUQ==
+  dependencies:
+    "@voicenter-team/opensips-js" "^1.0.145"
+    "@voicenter-team/opensips-js-screen-share" "^0.0.2"
+    "@voicenter-team/opensips-js-screen-share-whiteboard" "^0.0.1"
+    "@voicenter-team/opensips-js-whiteboard" "^0.0.1"
+    "@voicenter-team/voicenter-ui-plus" "0.7.1"
+    "@vueuse/core" "^10.9.0"
+    construct-style-sheets-polyfill "^3.1.0"
+    lodash "^4.17.21"
+    regenerator-runtime "^0.13.11"
+    v-loading-directive "^1.0.4"
+    vue "^3.5.12"
+    vue-slider-component "^3.2.24"
+    vue3-popper "^1.5.0"
+
 "@voicenter-team/voicenter-ui-plus@0.7.1":
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/@voicenter-team/voicenter-ui-plus/-/voicenter-ui-plus-0.7.1.tgz#c6f0ea798b914f86726dda0a3dd428d4ff3b5d54"

@@ -83,6 +83,24 @@ export const autoAnswerDefaultBehaviour = computed({
         widgetCallSettings.value.autoAnswer.defaultBehavior = value
     }
 })
+export const allowDNDSetup = computed({
+    get: () => widgetCallSettings.value.DND.allowChange,
+    set: (value: boolean) => {
+        widgetCallSettings.value.DND.allowChange = value
+    }
+})
+export const DNDDefaultBehaviour = computed({
+    get: () => widgetCallSettings.value.DND.defaultBehavior,
+    set: (value: boolean) => {
+        widgetCallSettings.value.DND.defaultBehavior = value
+    }
+})
+export const callWaitingDefaultBehaviour = computed({
+    get: () => widgetCallSettings.value.callWaiting,
+    set: (value: boolean) => {
+        widgetCallSettings.value.callWaiting = value
+    }
+})
 export const allowOutgoingCalls = computed({
     get: () => widgetCallSettings.value.outgoingCalls,
     set: (value: boolean) => {

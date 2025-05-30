@@ -14,7 +14,7 @@ import type { ISIPSCredentials } from '@/types/public-api'
 import type { AllActiveCallsStatusType, AllActiveCallsType, CallTimeType } from '@/types/opensips'
 import type { UnRegisterOptions } from 'jssip/lib/UA'
 
-import { autoAnswerDefaultBehaviour } from '@/composables/useWidgetConfig'
+import { DNDDefaultBehaviour, autoAnswerDefaultBehaviour, callWaitingDefaultBehaviour } from '@/composables/useWidgetConfig'
 
 /* Main */
 const state: { opensipsjs: OpenSIPSJS | undefined } = {
@@ -502,6 +502,14 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
                 .on('connection', () => {
                     if (autoAnswerDefaultBehaviour.value) {
                         state.opensipsjs?.audio.setAutoAnswer(true)
+                    }
+
+                    if(callWaitingDefaultBehaviour.value !== isCallWaitingEnabled.value) {
+                        state.opensipsjs?.audio.setCallWaiting(callWaitingDefaultBehaviour.value)
+                    }
+
+                    if(DNDDefaultBehaviour.value !== isDND.value ) {
+                        state.opensipsjs?.audio.setDND(DNDDefaultBehaviour.value)
                     }
 
                     resolve(opensipsjs)

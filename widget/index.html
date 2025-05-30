@@ -14,7 +14,8 @@
         <opensips-widget id="openSIPSWidget"></opensips-widget>
     </div>
     <!--    <button id="joinRoomButton" style="visibility: hidden" @click="initVideoCall">Join Room</button>-->
-
+
+
 <!--    <script type="module" src="/widget/opensipsjs-widget.mjs"></script>-->
 
     <script>
@@ -67,6 +68,11 @@
                     allowChange: true,
                     defaultBehavior: false
                 },
+                DND: {
+                    allowChange: false,
+                    defaultBehavior: false
+                },
+                callWaiting: true,
                 outgoingCalls: true,
                 callerInfo: {
                     displayName: true,
