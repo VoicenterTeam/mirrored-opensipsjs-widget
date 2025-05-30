@@ -4,6 +4,7 @@
         <MuteManager
             class="item"
         />
+        <DNDButton v-if="allowDNDSetup" />
         <VcPopover
             :teleported="false"
             triggers="click"
@@ -59,6 +60,8 @@ import SpeakerManager from '@/components/phone/SpeakerManager.vue'
 import MuteManager from '@/components/phone/MuteManager.vue'
 import InputDeviceOption from '@/components/phone/common/InputDeviceOption.vue'
 import { getMediaDevicesList, outputMediaDeviceValue, inputMediaDeviceValue } from '@/composables/phone/useMediaDevices.ts'
+import DNDButton from '@/components/phone/DNDButton.vue'
+import { allowDNDSetup } from '@/composables/useWidgetConfig'
 
 /* Data */
 const  mediaConfigOptions = {

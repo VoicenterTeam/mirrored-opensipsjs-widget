@@ -273,6 +273,32 @@
                             </template>
                             <VcSwitch v-model="form.callSettings.autoAnswer.defaultBehavior" />
                         </VcFormItem>
+                        <VcFormItem
+                            label="Allow changing DND option"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.callSettings.DND.allowChange" />
+                            </template>
+                            <VcSwitch v-model="form.callSettings.DND.allowChange" />
+                        </VcFormItem>
+
+                        <VcFormItem
+                            label="Default DND behaviour"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.callSettings.DND.defaultBehavior" />
+                            </template>
+                            <VcSwitch v-model="form.callSettings.DND.defaultBehavior" />
+                        </VcFormItem>
+
+                        <VcFormItem
+                            label="Incoming call waiting behaviour"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.callSettings.callWaiting" />
+                            </template>
+                            <VcSwitch v-model="form.callSettings.callWaiting" />
+                        </VcFormItem>
 
                         <VcFormItem
                             label="Outgoing call placeholder"

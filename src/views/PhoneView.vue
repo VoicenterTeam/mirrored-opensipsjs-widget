@@ -19,7 +19,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import type { IRoom, ICall } from '@voicenter-team/opensips-js/src/types/rtc'
-import { allRooms } from '@/composables/opensipsjs'
+import { allRooms, useOpenSIPSJS } from '@/composables/opensipsjs'
 import OfflineWrapper from '@/components/phone/common/OfflineWrapper.vue'
 import NoActiveCallsView from '@/components/phone/NoActiveCallsView.vue'
 import ActiveCallsWithKeypadView from '@/components/phone/ActiveCallsWithKeypadView.vue'
@@ -32,7 +32,7 @@ import { KeyPadTriggerObjectType } from '@/constants/phone.ts'
 import IncomingCalls from '@/components/phone/incomingCalls/IncomingCalls.vue'
 import { useIncomingCalls } from '@/composables/phone/useIncomingCalls.ts'
 import Draggable from '@/components/Draggable.vue'
-import { showDraggableHandle } from '@/composables/useWidgetConfig'
+import { callWaitingDefaultBehaviour, DNDDefaultBehaviour, showDraggableHandle } from '@/composables/useWidgetConfig'
 
 /* Emit */
 const emit = defineEmits<{
@@ -45,13 +45,19 @@ const phoneUIConfig = {
     callsWithActionButtons: ActiveCallsWithActionButtonsView,
     callsWithKeyPad: ActiveCallsWithKeypadView
 }
-
+const { setCallWaiting, setDND } = useOpenSIPSJS()
 const draggableHandle = ref<typeof Draggable>()
 const { visibleCalls } = useIncomingCalls()
 const callersData = ref<GenericObjectType<CallUserDataType>>({})
 const { keyPadTrigger, onKeyPadToggle } = usePhoneState()
 
 /* Watchers */
+watch(callWaitingDefaultBehaviour, (newV) => {
+    setCallWaiting(newV)
+})
+watch(DNDDefaultBehaviour, (newV) => {
+    setDND(newV)
+})
 watch(
     activeCalls,
     (calls) => {
@@ -85,7 +91,7 @@ watch(currentActiveRoom, () => {
     }
 })
 
-const getPercentage = (lightValue: number, darkValue: number) => {
+const getPercentage = (lightValue: number) => {
     // return isDark.value ? darkValue : lightValue
     return lightValue
 }
@@ -107,7 +113,7 @@ const phoneUI = computed(() => {
     if(!activeRoomsWithoutIncoming.value.length) {
         return phoneUIConfig.mainUI
     } else if(activeRoomsWithoutIncoming.value && keyPadTrigger.value || activeRoomsWithoutIncoming.value && !currentActiveRoom.value) {
-        return  phoneUIConfig.callsWithKeyPad
+        return phoneUIConfig.callsWithKeyPad
     }
     return phoneUIConfig.callsWithActionButtons
 })

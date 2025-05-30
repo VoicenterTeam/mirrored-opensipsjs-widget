@@ -9,6 +9,11 @@ export const defaultCallSettings/*: ICallSettings*/ = {
         allowChange: false,
         defaultBehavior: false
     },
+    DND: {
+        allowChange: false,
+        defaultBehavior: false
+    },
+    callWaiting: true,
     outgoingCalls: false,
     callerInfo: {
         displayName: true,

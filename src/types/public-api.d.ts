@@ -206,7 +206,9 @@ export interface ICallSettings {
     allowTransfer: boolean
     showKeypad: boolean
     autoAnswer: IAutoAnswerSettings
+    DND: IDNDSettings
     outgoingCalls: boolean
+    callWaiting: boolean
     callerInfo: ICallerInfoSettings
     shrinkOnIdle: boolean
     ringingSound: string
@@ -221,7 +223,10 @@ export interface IAutoAnswerSettings {
     allowChange: boolean
     defaultBehavior: boolean
 }
-
+export interface IDNDSettings {
+    allowChange: boolean
+    defaultBehavior: boolean
+}
 /**
  * Represents the caller information settings for the widget.
  */
