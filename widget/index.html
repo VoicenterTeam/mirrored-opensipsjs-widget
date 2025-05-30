@@ -10,10 +10,12 @@
   </head>
   <body>
     <div id="app"></div>
-    <opensips-widget id="openSIPSWidget"></opensips-widget>
-
-<!--    <script type="module" src="/src/widget.ce.ts"></script>-->
-
+    <div>
+        <opensips-widget id="openSIPSWidget"></opensips-widget>
+    </div>
+    <!--    <button id="joinRoomButton" style="visibility: hidden" @click="initVideoCall">Join Room</button>-->
+
+<!--    <script type="module" src="/widget/opensipsjs-widget.mjs"></script>-->
 
     <script>
         const widget = document.getElementById('openSIPSWidget')
@@ -38,14 +40,17 @@
                     'additional-success-bg': '#75B8A0',
                     'additional-bg': '#B0BFC2'
                 },
-                widgetType: 'video',
+                widgetType: 'audio',
                 audioConfig: {
                     layoutConfig: {
-                        mode: 'floating',
-                        type: 'rounded',
+                        mode: 'docked',
+                        type: 'phoneView',
                         position: {
-                            top: '50px',
-                            anchor: 'top-center',
+                            top: 'auto',
+                            left: 'auto',
+                            bottom: 'auto',
+                            right: 'auto',
+                            anchor: null,
                         },
                         keypadMode: 'popover',
                         keypadPosition: 'bottom'
@@ -83,17 +88,23 @@
             }
 
             widgetAPI = new OpenSIPSExternalWidgetAPI(config)
-        }
 
-        const credentials = {
-            username: '',
-            password: '',
-            domain: ''
-        }
+            const credentials = {
+                username: '',
+                password: '',
+                domain: ''
+            }
 
-        setTimeout(() => {
             widgetAPI.login(credentials)
-        }, 1000)
+
+            function initVideoCall() {
+                widgetAPI.initVideoCall('abcd', 'user1')
+            }
+
+            // const joinRoomButtonEl = document.getElementById('joinRoomButton')
+            // joinRoomButtonEl.style.visibility = 'visible'
+            // joinRoomButtonEl.addEventListener('click', initVideoCall)
+        }
 
         widget.addEventListener('widget:ready', onWidgetInitialized)
 

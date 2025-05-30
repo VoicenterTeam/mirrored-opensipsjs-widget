@@ -58,6 +58,7 @@ export const isDND = ref<boolean>(false)
 export const isMuteWhenJoin = ref<boolean>(false)
 export const originalStream = ref<MediaStream | null>(null)
 export const callAddingInProgress = ref<string | undefined>()
+export const isCallWaitingEnabled = ref<boolean>(true)
 
 export const speakerVolume = ref<number>(1)
 export const callTime = ref<{ [key: string]: ITimeData }>({})
@@ -71,7 +72,7 @@ export const muted = computed(() => {
 
 export const conferenceStarted = ref<boolean>(false)
 export const streamSources = ref<Array<unknown>>([])
-export const mainSource = ref<Array<unknown>>(null)
+export const mainSource = ref<unknown>(null)
 export const sourcesExceptMain = computed(() => {
     if (!mainSource.value) {
         return streamSources.value
@@ -154,6 +155,10 @@ watch(isDND, (newValue) => {
 
 watch(microphoneInputLevel, (newValue) => {
     state.opensipsjs?.audio.setMicrophoneSensitivity(newValue)
+})
+
+watch(isCallWaitingEnabled, (newValue) => {
+    state.opensipsjs?.audio.setCallWaiting(newValue)
 })
 
 /**
@@ -284,6 +289,9 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
         })
         .on('changeMuteWhenJoin', (value: boolean) => {
             isMuteWhenJoin.value = value
+        })
+        .on('changeIsCallWaiting', (value) => {
+            isCallWaitingEnabled.value = value
         })
         .on('changeActiveStream', (value) => {
             originalStream.value = value
@@ -606,6 +614,10 @@ export function useOpenSIPSJS () {
         await state.opensipsjs?.audio.setActiveRoom(roomId)
     }
 
+    async function setCallWaiting (state: boolean) {
+        state.opensipsjs?.audio.setCallWaiting(state)
+    }
+
     function setAutoAnswer (value: boolean) {
         state.opensipsjs?.audio.setAutoAnswer(value)
     }
@@ -868,6 +880,7 @@ export function useOpenSIPSJS () {
         mergeCallsInRoom,
         mergeCallByIds,
         setActiveRoom,
+        setCallWaiting,
         terminateCall,
         setAutoAnswer,
         sendDTMF,
