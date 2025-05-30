@@ -402,7 +402,6 @@ const finalForm = useLocalStorage<IWidgetConfig>(
     WIDGET_CONFIG_STORAGE_KEY,
     getDefaultWidgetConfig()
 )
-console.log('finalForm', cloneDeep(finalForm))
 // const versionStorage = useLocalStorage<string>()(
 //     VERSION_STORAGE_KEY,
 //     ''
