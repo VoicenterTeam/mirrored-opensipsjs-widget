@@ -5,7 +5,11 @@
             v-if="widgetType"
             :key="layoutType"
             @ready="onReady"
-        />
+        >
+            <template #top>
+                <slot name="top" />
+            </template>
+        </component>
     </div>
 </template>
 

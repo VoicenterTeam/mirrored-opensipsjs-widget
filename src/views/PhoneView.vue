@@ -10,6 +10,7 @@
             class="draggable"
         />
         <div class="phone-view-wrapper">
+            <slot name="top" />
             <component :is="phoneUI" />
             <OfflineWrapper />
             <IncomingCalls v-if="visibleCalls.length" />
