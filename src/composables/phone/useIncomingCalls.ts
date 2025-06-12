@@ -1,5 +1,5 @@
 import { ref, watch, computed } from 'vue'
-import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { ICall } from 'opensips-js/src/types/rtc'
 import { activeCalls } from '@/composables/opensipsjs'
 
 /* Data */

@@ -1,4 +1,4 @@
-import type { ListenerCallbackFnType, ListenersKeyType } from '@voicenter-team/opensips-js/src/types/listeners'
+import type { ListenerCallbackFnType, ListenersKeyType } from 'opensips-js/src/types/listeners'
 
 export namespace Widget {
     /**

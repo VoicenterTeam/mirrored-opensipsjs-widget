@@ -1,5 +1,5 @@
 import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
-import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { ICall } from 'opensips-js/src/types/rtc'
 import { callTime } from '@/composables/opensipsjs'
 
 export const useRoomData = () => {

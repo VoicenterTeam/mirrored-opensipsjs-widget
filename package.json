@@ -1,6 +1,6 @@
 {
-  "name": "@voicenter-team/opensipsjs-widget",
-  "version": "0.2.7",
+  "name": "opensips-js-widget",
+  "version": "0.2.8",
   "author": "Bohdan Konechnyi",
   "main": "widget/opensipsjs-widget.mjs",
   "types": "widget/opensipsjs-widget.d.ts",
@@ -28,11 +28,10 @@
     "dist"
   ],
   "dependencies": {
-    "@voicenter-team/opensips-js": "^1.0.145",
-    "@voicenter-team/opensips-js-screen-share": "^0.0.2",
-    "@voicenter-team/opensips-js-screen-share-whiteboard": "^0.0.1",
-    "@voicenter-team/opensips-js-whiteboard": "^0.0.1",
-    "@voicenter-team/opensipsjs-widget": "0.2.4",
+    "opensips-js": "^0.1.2",
+    "opensips-js-screen-share": "^0.0.1",
+    "opensips-js-screen-share-whiteboard": "^0.0.1",
+    "opensips-js-whiteboard": "^0.0.1",
     "@voicenter-team/voicenter-ui-plus": "0.7.1",
     "@vueuse/core": "^10.9.0",
     "construct-style-sheets-polyfill": "^3.1.0",

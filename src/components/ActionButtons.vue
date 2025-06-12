@@ -91,7 +91,7 @@ import MergeIcon from '@/assets/icons/merge.svg?component'
 import CallIcon from '@/assets/icons/call2.svg?component'
 import { useOpenSIPSJS, isMuted, isMuteWhenJoin, allActiveCalls, currentActiveRoom } from '@/composables/opensipsjs'
 import { allowOutgoingCalls, showKeypad, keypadMode } from '@/composables/useWidgetConfig'
-import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { ICall } from 'opensips-js/src/types/rtc'
 import InputOutgoingCall from '@/components/InputOutgoingCall.vue'
 
 const { muteAgent, startCall, state } = useOpenSIPSJS()

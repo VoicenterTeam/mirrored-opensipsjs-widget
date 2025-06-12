@@ -19,7 +19,7 @@
 </template>
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import type { IRoom, ICall } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { IRoom, ICall } from 'opensips-js/src/types/rtc'
 import { allRooms, useOpenSIPSJS } from '@/composables/opensipsjs'
 import OfflineWrapper from '@/components/phone/common/OfflineWrapper.vue'
 import NoActiveCallsView from '@/components/phone/NoActiveCallsView.vue'

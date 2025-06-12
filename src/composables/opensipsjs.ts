@@ -4,12 +4,12 @@ import OpenSIPSJS, {
 //WhiteBoardPlugin,
 //StreamMaskPlugin,
 //ScreenShareWhiteBoardPlugin
-} from '@voicenter-team/opensips-js'
-import { ITimeData } from '@voicenter-team/opensips-js/src/types/timer'
-// import { ScreenSharePlugin } from '@voicenter-team/opensips-js-screen-share'
-// import { WhiteBoardPlugin } from '@voicenter-team/opensips-js-whiteboard'
-// import { ScreenShareWhiteBoardPlugin } from '@voicenter-team/opensips-js-screen-share-whiteboard'
-import type { ICall, IOpenSIPSJSOptions, IRoom, RoomChangeEmitType, ICallStatus, IOpenSIPSConfiguration } from '@voicenter-team/opensips-js/src/types/rtc'
+} from 'opensips-js'
+import { ITimeData } from 'opensips-js/src/types/timer'
+// import { ScreenSharePlugin } from 'opensips-js-screen-share'
+// import { WhiteBoardPlugin } from 'opensips-js-whiteboard'
+// import { ScreenShareWhiteBoardPlugin } from 'opensips-js-screen-share-whiteboard'
+import type { ICall, IOpenSIPSJSOptions, IRoom, RoomChangeEmitType, ICallStatus, IOpenSIPSConfiguration } from 'opensips-js/src/types/rtc'
 import type { ISIPSCredentials } from '@/types/public-api'
 import type { AllActiveCallsStatusType, AllActiveCallsType, CallTimeType } from '@/types/opensips'
 import type { UnRegisterOptions } from 'jssip/lib/UA'

@@ -6,7 +6,7 @@ import type {
 } from '@/types/public-api'
 import { getConfig, setConfig } from '@/composables/useWidgetConfig'
 import { useOpenSIPSJS, startOpenSIPS, disconnectOpenSIPS } from '@/composables/opensipsjs'
-import type { ListenerCallbackFnType, ListenersKeyType } from '@voicenter-team/opensips-js/src/types/listeners'
+import type { ListenerCallbackFnType, ListenersKeyType } from 'opensips-js/src/types/listeners'
 
 const OpenSIPSExternalWidgetAPI: IWidgetExternalAPIConstructor = class OpenSIPSExternalWidgetAPI implements IWidgetExternalAPI {
     private state

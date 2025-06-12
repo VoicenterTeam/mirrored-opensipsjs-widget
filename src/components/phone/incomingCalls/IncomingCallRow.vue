@@ -28,7 +28,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { ICall } from 'opensips-js/src/types/rtc'
 import CallButton from '@/components/phone/common/CallButton.vue'
 import HangupButton from '@/components/phone/common/HangupButton.vue'
 //import ActionsButton from '@/ui/phoneDialer/components/common/ActionsButton.vue'

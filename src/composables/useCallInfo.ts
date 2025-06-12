@@ -1,6 +1,6 @@
 import { unref, computed } from 'vue'
 import type { MaybeRef } from 'vue'
-import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { ICall } from 'opensips-js/src/types/rtc'
 import { getCallerNumber } from '@/helpers/callerHelper'
 import { displayCallerInfoIdMask } from '@/composables/useWidgetConfig'
 

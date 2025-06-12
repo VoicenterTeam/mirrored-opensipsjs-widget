@@ -35,7 +35,7 @@ import { ActionsTriggerObjectType } from '@/constants/phone.ts'
 import ActiveCallsPopup from '@/components/phone/common/ActiveCallsPopup.vue'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
 import { activeCalls } from '@/composables/opensipsjs.ts'
-import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { ICall } from 'opensips-js/src/types/rtc'
 
 /* Data */
 const { actionsPopupType, actionsConfig, callToMove, callToTransfer,  onActionsToggle, onCallToTransferChange } = useCallActions()
@@ -65,10 +65,10 @@ watch(
 
 /* Methods */
 const handlePopupsClosing = (newCalls: { [key: string]: ICall}) => {
-  const isTransferSelectedCallStillPresent = Object.values(newCalls).some(call => call._id === callToTransfer?.value)
-  if(!isTransferSelectedCallStillPresent) {
-    onCallToTransferChange(undefined)
-  }
+    const isTransferSelectedCallStillPresent = Object.values(newCalls).some(call => call._id === callToTransfer?.value)
+    if(!isTransferSelectedCallStillPresent) {
+        onCallToTransferChange(undefined)
+    }
 }
 watch(
     activeCalls,
@@ -81,7 +81,7 @@ watch(
     }
 )
 
- 
+
 /* Computed */
 
 const isOneActiveCallInActiveRoom = computed(() => {

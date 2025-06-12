@@ -36,9 +36,20 @@
             @cancel="cancelMoving"
         />
         <div v-if="!isAnyActiveCall">
-            <OutgoingCallView v-if="allowOutgoingCalls" ref="outgoingCallView" @call="onMakeOutgoingCall" />
-            <div v-else className="flex min-h-[32px] bg-primary-bg justify-center items-center">
-                <img v-if="bgLogoBase64" :src="bgLogoBase64" className="logo-image">
+            <OutgoingCallView
+                v-if="allowOutgoingCalls"
+                ref="outgoingCallView"
+                @call="onMakeOutgoingCall"
+            />
+            <div
+                v-else
+                className="flex min-h-[32px] bg-primary-bg justify-center items-center"
+            >
+                <img
+                    v-if="bgLogoBase64"
+                    :src="bgLogoBase64"
+                    className="logo-image"
+                >
             </div>
         </div>
         <ActionButtons
@@ -61,7 +72,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 import { watchDebounced } from '@vueuse/core'
-import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { ICall } from 'opensips-js/src/types/rtc'
 import ActionButtons from '@/components/ActionButtons.vue'
 import TransferView from '@/views/TransferView.vue'
 import RingingView from '@/views/RingingView.vue'
@@ -155,7 +166,10 @@ watchDebounced(
             console.error(err)
         }
     },
-    { debounce: 1000, maxWait: 1000 },
+    {
+        debounce: 1000,
+        maxWait: 1000
+    },
 )
 
 const toggleManualKeypad = () => {

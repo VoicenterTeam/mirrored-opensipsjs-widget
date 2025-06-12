@@ -1,5 +1,5 @@
 import { InjectionKey, provide, inject, ComputedRef, Ref } from 'vue'
-import type { ICall, IRoom } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { ICall, IRoom } from 'opensips-js/src/types/rtc'
 import { GenericObjectType, CallUserDataType } from '@/types/phone'
 
 

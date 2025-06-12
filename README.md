@@ -2,7 +2,7 @@
 
 A Vue 3-based custom web component for integrating OpenSIPS VoIP (Voice over Internet Protocol) functionalities into any web application. This widget wraps the OpenSIPS-JS implementation, providing a ready-to-use UI for SIP (Session Initiation Protocol) communication.
 
-[![npm version](https://img.shields.io/npm/v/@voicenter-team/opensipsjs-widget.svg)](https://www.npmjs.com/package/@voicenter-team/opensipsjs-widget)
+[![npm version](https://img.shields.io/npm/v/opensips-js-widget.svg)](https://www.npmjs.com/package/opensips-js-widget)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ## Features
@@ -39,10 +39,10 @@ A Vue 3-based custom web component for integrating OpenSIPS VoIP (Voice over Int
 
 ```bash
 # Using npm
-npm install @voicenter-team/opensipsjs-widget
+npm install opensips-js-widget
 
 # Using yarn
-yarn add @voicenter-team/opensipsjs-widget
+yarn add opensips-js-widget
 ```
 
 ### CDN
@@ -94,7 +94,7 @@ document.querySelector('opensips-widget').addEventListener('widget:ready', ({ de
 ### JavaScript Import
 
 ```javascript
-import '@voicenter-team/opensipsjs-widget';
+import 'opensips-js-widget';
 
 // After your DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {

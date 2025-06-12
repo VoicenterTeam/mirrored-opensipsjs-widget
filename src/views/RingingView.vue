@@ -1,10 +1,16 @@
 <template>
     <div className="flex min-h-[60px] justify-around items-center bg-primary-bg">
         <div className="flex flex-col items-center justify-evenly w-[92px] mx-3">
-            <span v-if="displayCallerInfoName" className="text-xs text-main-text font-medium">
+            <span
+                v-if="displayCallerInfoName"
+                className="text-xs text-main-text font-medium"
+            >
                 {{ callerName }}
             </span>
-            <span v-if="displayCallerInfoId" className="text-xs text-main-text font-medium">
+            <span
+                v-if="displayCallerInfoId"
+                className="text-xs text-main-text font-medium"
+            >
                 {{ callerNumber }}
             </span>
         </div>
@@ -15,14 +21,16 @@
                 :icon="CallIcon"
                 :disabled="answerClicked"
                 size="xxxl"
-                @click="answerIncomingCall" />
+                @click="answerIncomingCall"
+            />
             <IncomingCallActionButton
                 color="danger"
                 hover-color="additional-danger-bg"
                 :icon="DeclineIcon"
                 size="xxxl"
                 additional-classes=""
-                @click="declineIncomingCall" />
+                @click="declineIncomingCall"
+            />
             <IncomingCallActionButton
                 v-if="allowTransfer"
                 color="secondary"
@@ -30,9 +38,13 @@
                 :icon="TransferIcon"
                 size="xxxl"
                 additional-classes=""
-                @click="transferIncomingCall" />
+                @click="transferIncomingCall"
+            />
         </div>
-        <div v-else class="flex">
+        <div
+            v-else
+            class="flex"
+        >
             <!--            Answering...-->
             <div className="flex items-center mx-2 w-[46px]">
                 <span className="text-xs text-main-text font-medium">
@@ -46,7 +58,8 @@
                 :icon="DeclineIcon"
                 size="xxxl"
                 additional-classes=""
-                @click="declineIncomingCall" />
+                @click="declineIncomingCall"
+            />
         </div>
     </div>
 </template>
@@ -57,7 +70,7 @@ import CallIcon from '@/assets/icons/call.svg?component'
 import DeclineIcon from '@/assets/icons/decline.svg?component'
 import TransferIcon from '@/assets/icons/transferCall.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
-import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { ICall } from 'opensips-js/src/types/rtc'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import { callTimes } from '@/composables/opensipsjs'
 import useCallInfo from '@/composables/useCallInfo'

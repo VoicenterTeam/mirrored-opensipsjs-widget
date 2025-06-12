@@ -1,16 +1,28 @@
 <template>
     <div :className="wrapperClasses">
-        <div  v-if="!isMultiCallMode" className="flex flex-col items-center justify-evenly w-[92px] mx-3">
-            <span v-if="displayCallerInfoName" className="text-xs text-main-text font-medium">
+        <div
+            v-if="!isMultiCallMode"
+            className="flex flex-col items-center justify-evenly w-[92px] mx-3"
+        >
+            <span
+                v-if="displayCallerInfoName"
+                className="text-xs text-main-text font-medium"
+            >
                 {{ callerName }}
             </span>
-            <span v-if="displayCallerInfoId" className="text-xs text-main-text font-medium">
+            <span
+                v-if="displayCallerInfoId"
+                className="text-xs text-main-text font-medium"
+            >
                 {{ callerNumber }}
             </span>
         </div>
-        <div v-else className="p-0.5">
+        <div
+            v-else
+            className="p-0.5"
+        >
             <div className="overflow-hidden mx-3 text-main-text w-[92px] max-w-[92px] font-medium text-xs text-ellipsis whitespace-nowrap">
-                {{callerName}} {{callerNumber}}
+                {{ callerName }} {{ callerNumber }}
             </div>
         </div>
         <div className="flex items-center mx-1">
@@ -19,13 +31,15 @@
                 color="primary"
                 :icon="HoldIcon"
                 :size="holdIconSize"
-                @click="putOnHold" />
+                @click="putOnHold"
+            />
             <IncomingCallActionButton
                 v-else
                 color="primary"
                 :icon="OnHoldIcon"
                 :size="holdIconSize"
-                @click="unHoldCall" />
+                @click="unHoldCall"
+            />
         </div>
         <div className="flex items-center mx-1">
             <IncomingCallActionButton
@@ -33,13 +47,15 @@
                 color="primary"
                 :icon="SoundOnIcon"
                 :size="soundOnIconSize"
-                @click="doMuteCaller" />
+                @click="doMuteCaller"
+            />
             <IncomingCallActionButton
                 v-else
                 color="primary"
                 :icon="SoundOffIcon"
                 :size="soundOffIconSize"
-                @click="unmuteCaller" />
+                @click="unmuteCaller"
+            />
         </div>
 
         <div className="flex items-center mx-2 w-[46px]">
@@ -56,7 +72,8 @@
                 :use-padding="!isMultiCallMode"
                 :additional-classes="declineButtonClasses"
                 :size="declineIconSize"
-                @click="declineIncomingCall" />
+                @click="declineIncomingCall"
+            />
         </div>
 
         <div v-if="!props.isSingleRoom || props.isSingleRoom && allowTransfer">
@@ -69,7 +86,6 @@
             />
         </div>
     </div>
-
 </template>
 
 <script lang="ts" setup>
@@ -82,7 +98,7 @@ import SoundOnIcon from '@/assets/icons/soundOn.svg?component'
 import SoundOffIcon from '@/assets/icons/soundOff.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
 import CallOptionsIconButton from '@/components/CallOptionsIconButton.vue'
-import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { ICall } from 'opensips-js/src/types/rtc'
 import { useOpenSIPSJS, callTimes, allRooms } from '@/composables/opensipsjs'
 import useCallInfo from '@/composables/useCallInfo'
 import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'

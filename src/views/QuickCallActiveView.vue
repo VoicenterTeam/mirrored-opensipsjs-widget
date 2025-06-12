@@ -10,7 +10,10 @@
             <div v-if="outgoingUnansweredCall">
                 <span class="text-base text-main-text font-medium">Dialing...</span>
             </div>
-            <div v-else class="flex items-center justify-around w-full">
+            <div
+                v-else
+                class="flex items-center justify-around w-full"
+            >
                 <span class="text-base text-main-text font-medium">Customer Support</span>
                 <div className="flex items-center mx-2 w-[46px]">
                     <span className="text-base text-main-text font-medium">
@@ -24,12 +27,14 @@
                     v-if="isMuted"
                     color="primary"
                     :icon="UnMuteIcon"
-                    @click="doMuteAgent" />
+                    @click="doMuteAgent"
+                />
                 <IncomingCallActionButton
                     v-else
                     color="primary"
                     :icon="MuteIcon"
-                    @click="doMuteAgent" />
+                    @click="doMuteAgent"
+                />
 
                 <QuickCallSettingsButton />
 
@@ -38,7 +43,8 @@
                     hover-color="additional-danger-bg"
                     :icon="DeclineIcon"
                     size="lg"
-                    @click="hangupCall" />
+                    @click="hangupCall"
+                />
 
                 <div v-if="showKeypad && keypadMode === 'manual'">
                     <WidgetIconButton
@@ -46,7 +52,8 @@
                         pressed-color="primary-bg"
                         :icon="KeypadIcon"
                         :pressed="showManualKeypad"
-                        @click="toggleManualKeypad" />
+                        @click="toggleManualKeypad"
+                    />
                 </div>
                 <KeypadIconButton
                     v-if="showKeypad && keypadMode === 'popover'"
@@ -65,7 +72,7 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { ICall } from 'opensips-js/src/types/rtc'
 import DeclineIcon from '@/assets/icons/decline.svg?component'
 import { allActiveCalls, isMuted, callTimes, currentActiveRoom, useOpenSIPSJS } from '@/composables/opensipsjs'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'

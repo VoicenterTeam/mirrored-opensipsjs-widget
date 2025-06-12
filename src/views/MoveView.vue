@@ -5,10 +5,16 @@
                 Move
             </span>
             <div className="flex items-center flex-col justify-evenly px-2">
-                <span v-if="displayCallerInfoName" className="text-main-text font-medium">
+                <span
+                    v-if="displayCallerInfoName"
+                    className="text-main-text font-medium"
+                >
                     {{ movingCallerName }}
                 </span>
-                <span v-if="displayCallerInfoId" className="text-main-text font-medium">
+                <span
+                    v-if="displayCallerInfoId"
+                    className="text-main-text font-medium"
+                >
                     {{ movingCallerNumber }}
                 </span>
             </div>
@@ -19,8 +25,15 @@
 
         <div className="px-2">
             <!--            <BaseInput v-model="target" />-->
-            <select id="callerToMoveToEl" v-model="target">
-                <option v-for="(item, key) in roomsList" :key="key" :value="item.roomId">
+            <select
+                id="callerToMoveToEl"
+                v-model="target"
+            >
+                <option
+                    v-for="(item, key) in roomsList"
+                    :key="key"
+                    :value="item.roomId"
+                >
                     {{ item.roomId }}
                 </option>
             </select>
@@ -33,7 +46,8 @@
                     hover-color="additional-success-bg"
                     :icon="CheckmarkIcon"
                     size="lg"
-                    @click="doMove" />
+                    @click="doMove"
+                />
             </div>
             <div className="rounded-r overflow-hidden">
                 <WidgetIconButton
@@ -42,7 +56,8 @@
                     :icon="CloseIcon"
                     size="lg"
                     additional-classes=""
-                    @click="cancelMoving" />
+                    @click="cancelMoving"
+                />
             </div>
         </div>
     </div>
@@ -53,7 +68,7 @@ import { ref, computed } from 'vue'
 import CheckmarkIcon from '@/assets/icons/checkmark.svg?component'
 import CloseIcon from '@/assets/icons/close2.svg?component'
 import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
-import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { ICall } from 'opensips-js/src/types/rtc'
 import { allActiveCalls, allRooms } from '@/composables/opensipsjs'
 import {
     displayCallerInfoId,

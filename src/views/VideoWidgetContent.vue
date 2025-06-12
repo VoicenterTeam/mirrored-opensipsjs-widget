@@ -78,7 +78,7 @@ import {
 } from '@/composables/opensipsjs'
 import MainSource from '@/components/conferencing/MainSource.vue'
 import BottomActions from '@/components/conferencing/BottomActions.vue'
-import type { ICall } from '@voicenter-team/opensips-js/src/types/rtc'
+import type { ICall } from 'opensips-js/src/types/rtc'
 
 const { initVideoCall, selectMainSource, enableScreenShare, enablePresentationWhiteboard } = useOpenSIPSJS()
 
