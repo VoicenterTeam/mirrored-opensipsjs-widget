@@ -133,7 +133,7 @@ export type TLayoutMode = 'floating' | 'docked' | 'fixed'
 /**
  * Represents the layout types for the widget.
  */
-export type TLayoutType = 'rounded' | 'quickCall'
+export type TLayoutType = 'rounded' | 'quickCall' | 'phoneView'
 
 /**
  * Represents the anchor position for the widget.
