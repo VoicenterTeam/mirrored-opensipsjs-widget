@@ -1,6 +1,6 @@
 {
   "name": "opensips-js-widget",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "author": "Bohdan Konechnyi",
   "main": "widget/opensipsjs-widget.mjs",
   "types": "widget/opensipsjs-widget.d.ts",
@@ -25,7 +25,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "files": [
-    "dist"
+    "widget"
   ],
   "dependencies": {
     "opensips-js": "^0.1.2",

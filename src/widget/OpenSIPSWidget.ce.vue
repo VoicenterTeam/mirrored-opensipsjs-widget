@@ -28,6 +28,7 @@ import PhoneView from '@/views/PhoneView.vue'
 import {
     usedWidgetShadowRootEl
 } from '@/composables/opensipsjs'
+import type { IWidgetExternalAPIConstructor } from '@/types/public-api'
 
 const layoutTypeComponent = {
     rounded: RoundedCallView,
@@ -42,7 +43,9 @@ defineOptions({
     inheritAttrs: false
 })
 
-const emit = defineEmits([ 'widget:ready' ])
+const emit = defineEmits<{
+    (e: 'widget:ready', payload: { detail: IWidgetExternalAPIConstructor }): void
+}>()
 
 const widgetWrapper = ref()
 

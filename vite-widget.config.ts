@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite'
-import path, { resolve } from 'path'
+import { CSSOptions, BuildOptions, defineConfig } from 'vite'
+import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import selectorReplace from 'postcss-selector-replace'
 import autoprefixer from 'autoprefixer'
@@ -10,7 +10,7 @@ import dts from 'vite-plugin-dts'
 // eslint-disable-next-line quotes
 const define = "'production'"
 
-const widgetBuild = {
+const widgetBuild: BuildOptions = {
     outDir: 'widget',
     copyPublicDir: false,
     sourcemap: true,
@@ -24,12 +24,7 @@ const widgetBuild = {
         name: 'OpenSIPSWidget',
         fileName: 'opensipsjs-widget',
         formats: [ 'es', 'umd' ], // Support ES module and UMD
-    },
-    rollupOptions: {
-        input: {
-            main: resolve(__dirname, 'index.html')
-        },
-    },
+    }
 }
 
 const plugins =  [
@@ -47,11 +42,14 @@ const plugins =  [
     svgLoader(),
     dts({
         rollupTypes: true,
-        copyDtsFiles: true
+        copyDtsFiles: true,
+        skipDiagnostics: true,
+        staticImport: true,
+        insertTypesEntry: false
     }),
 ]
 
-const cssConfigs ={
+const cssConfigs: CSSOptions ={
     postcss: {
         plugins: [
             selectorReplace({
