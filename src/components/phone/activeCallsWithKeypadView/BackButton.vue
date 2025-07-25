@@ -5,11 +5,12 @@
     >
         <i class="vc-lc-arrow-left text-xs" />
         <div class="title">
-            Back
+            {{ getTranslation('audio.back') }}
         </div>
     </button>
 </template>
 <script setup lang="ts">
+import { getTranslation } from '@/plugins/translator'
 
 /* Emits */
 const emit = defineEmits<{

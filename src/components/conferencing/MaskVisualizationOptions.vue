@@ -10,13 +10,13 @@
                     size="large"
                     @click="openPopover"
                 >
-                    Blur options
+                    {{ getTranslation('video.blur.options') }}
                 </VcButton>
             </template>
 
             <div class="p-5">
                 <div class="mb-2">
-                    <label>Blur amount</label>
+                    <label>{{ getTranslation('video.blur.amount') }}</label>
                     <div class="w-full">
                         <VcSlider
                             v-model="blurAmountModel"
@@ -28,7 +28,7 @@
                 </div>
 
                 <VcButton @click="closePopover">
-                    Close
+                    {{ getTranslation('common.close') }}
                 </VcButton>
             </div>
         </VcPopover>
@@ -39,6 +39,7 @@
 import { ref, watch, computed } from 'vue'
 import { VcPopover, VcSlider, VcButton } from '@voicenter-team/voicenter-ui-plus'
 import { debounce } from 'lodash'
+import { getTranslation } from '@/plugins/translator'
 
 import {
     usedWidgetShadowRootEl

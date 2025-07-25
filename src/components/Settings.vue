@@ -2,16 +2,22 @@
     <div className="max-w-[250px]">
         <MediaDevicesSettings />
 
-        <div v-if="showAutoAnswerSetup" class="flex items-center mt-2">
+        <div
+            v-if="showAutoAnswerSetup"
+            class="flex items-center mt-2"
+        >
             <label>
                 <div className="inline-block w-4 h-4 text-primary">
                     <AutoAnswerIcon />
                 </div>
-                Auto answer
+                {{ getTranslation('audio.auto.answer') }}
             </label>
             <div class="inline-block ml-2">
                 <div className="pt-[4px]">
-                    <BaseSwitch v-model="autoAnswerDefaultBehaviour" :disabled="!allowAutoAnswerSetup"/>
+                    <BaseSwitch
+                        v-model="autoAnswerDefaultBehaviour"
+                        :disabled="!allowAutoAnswerSetup"
+                    />
                 </div>
             </div>
         </div>
@@ -26,6 +32,7 @@ import AutoAnswerIcon from '@/assets/icons/autoAnswer.svg?component'
 // import MicrophoneIcon from '@/assets/icons/mute.svg?component'
 import { autoAnswerDefaultBehaviour, allowAutoAnswerSetup } from '@/composables/useWidgetConfig'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
+import { getTranslation } from '@/plugins/translator'
 
 const { setAutoAnswer } = useOpenSIPSJS()
 

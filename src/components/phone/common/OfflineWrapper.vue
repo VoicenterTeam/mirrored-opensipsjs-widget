@@ -8,10 +8,10 @@
                 <i class="vc-icon-unplug text-3xl" />
             </div>
             <div class="offline-header text-2xl font-semibold text-center mb-5">
-                <span>No connection</span>
+                <span>{{ getTranslation('audio.no.connection') }}</span>
             </div>
             <div class="offline-description text-lg text-center mb-8">
-                <p>No socket connection</p>
+                <p>{{ getTranslation('audio.no.socket.connection') }}</p>
             </div>
         </div>
     </div>
@@ -19,7 +19,7 @@
 
 <script lang="ts" setup>
 import { isOpenSIPSReady } from '@/composables/opensipsjs'
-
+import { getTranslation } from '@/plugins/translator'
 
 </script>
 

@@ -60,11 +60,19 @@ export interface IWidgetVideoConfig {
 }
 
 /**
+ * The language of the widget:
+ */
+export type LangType =
+    'en'
+    | 'he'
+
+/**
  * Represents the configuration options for the widget theme.
  */
 export interface IWidgetTheme {
     colors: Record<ColorsType, string>
     widgetType: TWidgetType
+    lang: LangType
     audioConfig?: IWidgetAudioConfig
     videoConfig?: IWidgetVideoConfig
 }
@@ -208,6 +216,7 @@ export interface ICallSettings {
     autoAnswer: IAutoAnswerSettings
     DND: IDNDSettings
     outgoingCalls: boolean
+    mergeCalls: boolean
     callWaiting: boolean
     callerInfo: ICallerInfoSettings
     shrinkOnIdle: boolean

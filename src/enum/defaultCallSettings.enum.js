@@ -15,6 +15,7 @@ export const defaultCallSettings/*: ICallSettings*/ = {
     },
     callWaiting: true,
     outgoingCalls: false,
+    mergeCalls: true,
     callerInfo: {
         displayName: true,
         callerId: {

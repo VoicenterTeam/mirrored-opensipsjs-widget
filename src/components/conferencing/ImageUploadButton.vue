@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { VcFileUploader } from '@voicenter-team/voicenter-ui-plus'
-import { FileUploaded } from '@voicenter-team/voicenter-ui-plus/library/types/components/VcFileUploader/VcFileUploader.types'
+//import { FileUploaded } from '@voicenter-team/voicenter-ui-plus/library/types/components/VcFileUploader/VcFileUploader.types'
 
 export interface Props {
     buttonText?: string
@@ -44,10 +44,10 @@ const buttonText = computed(() => {
 })
 
 const fileSizeLimit = ref<number>(5242880) // Bytes (in binary) - 5MB
-const file = ref<FileUploaded | null>(null)
-const files = ref<Array<FileUploaded>>([])
+const file = ref<File | null>(null)
+const files = ref<Array<File>>([])
 
-const onFileChange = (newFiles: FileUploaded[]) => {
+const onFileChange = (newFiles: File[]) => {
     files.value = newFiles
     file.value = files.value[0]
 

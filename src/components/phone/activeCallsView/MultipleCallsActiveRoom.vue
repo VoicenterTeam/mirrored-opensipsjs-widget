@@ -1,7 +1,7 @@
 <template>
     <div class="active-calls-wrapper mb-2">
         <div class="header p-2 uppercase font-semibold overflow-hidden h-8">
-            Participants
+            {{ getTranslation('audio.participants') }}
         </div>
         <div
             class="rows-wrapper overflow-auto phone-dialer-custom-scroll"
@@ -23,7 +23,7 @@
 import ActiveCallRow from './ActiveCallRow.vue'
 import { useVsipInject } from '@/composables/phone/useVsipProvideInject'
 import { callTime } from '@/composables/opensipsjs'
-
+import { getTranslation } from '@/plugins/translator'
 
 const { callsInActiveRoom, callersData } = useVsipInject()
 

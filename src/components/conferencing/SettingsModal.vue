@@ -1,7 +1,7 @@
 <template>
     <VcModal
         :visible="modalVisibleModel"
-        header="Device settings"
+        :header="getTranslation('video.device.settings')"
         :breakpoints="{
             '960px': '80vw', '680px': '95vw'
         }"
@@ -14,7 +14,7 @@
             :model="settingsModel"
         >
             <VcFormItem
-                label="Microphone"
+                :label="getTranslation('video.microphone')"
                 prop="audioInput"
                 :rules="[required]"
             >
@@ -26,7 +26,7 @@
                 />
             </VcFormItem>
             <VcFormItem
-                label="Speakers"
+                :label="getTranslation('video.speakers')"
                 prop="audioOutput"
                 :rules="[required]"
             >
@@ -38,7 +38,7 @@
                 />
             </VcFormItem>
             <VcFormItem
-                label="Camera"
+                :label="getTranslation('video.camera')"
                 prop="videoInput"
                 :rules="[required]"
             >
@@ -54,13 +54,13 @@
         <template #footer>
             <div class="flex justify-between w-full">
                 <VcButton @click="submitModal">
-                    Submit
+                    {{ getTranslation('common.submit') }}
                 </VcButton>
                 <VcButton
                     color="secondary"
                     @click="closeModal"
                 >
-                    Close
+                    {{ getTranslation('common.close') }}
                 </VcButton>
             </div>
         </template>
@@ -73,6 +73,7 @@ import { useVModel } from '@vueuse/core'
 import { VcForm, VcFormItem, VcButton, VcModal } from '@voicenter-team/voicenter-ui-plus'
 import useValidationRules from '@/composables/useValidationRules.ts'
 import { useOpenSIPSJS } from '@/composables/opensipsjs.ts'
+import { getTranslation } from '@/plugins/translator'
 
 const { changeMediaConstraints } = useOpenSIPSJS()
 

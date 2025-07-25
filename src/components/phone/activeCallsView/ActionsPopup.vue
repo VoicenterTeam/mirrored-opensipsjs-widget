@@ -15,7 +15,7 @@
                     :class="{'subheader': caller }"
                     class="title font-bold text-base"
                 >
-                    Actions
+                    {{ getTranslation('audio.actions') }}
                 </div>
             </div>
         </PopupHeader>
@@ -47,6 +47,8 @@ import ActionRow from './ActionRow.vue'
 import PopupHeader from '@/components/phone/common/PopupHeader.vue'
 import { ActionsObjectType } from '@/types/phone'
 import useCallActions from '@/composables/phone/useCallActions.ts'
+import { getTranslation } from '@/plugins/translator'
+
 const {  onActionsToggle } = useCallActions()
 
 /* Props */

@@ -17,6 +17,7 @@ import { useWidgetDraggable } from '@/composables/useWidgetDraggable'
 import { toCssValue } from '@/helpers/cssHelper'
 import { cloneDeep } from 'lodash'
 import { defaultLogo } from '@/utils/defaultLogo'
+import { setLanguage } from '@/plugins/translator'
 
 /* Const */
 const POSITION_MODE_MAP: Record<TLayoutMode, string> = {
@@ -107,6 +108,12 @@ export const allowOutgoingCalls = computed({
         widgetCallSettings.value.outgoingCalls = value
     }
 })
+export const allowMergeCalls = computed({
+    get: () => widgetCallSettings.value.mergeCalls,
+    set: (value: boolean) => {
+        widgetCallSettings.value.mergeCalls = value
+    }
+})
 export const displayCallerInfoName = computed({
     get: () => widgetCallSettings.value.callerInfo.displayName,
     set: (value: boolean) => {
@@ -137,6 +144,15 @@ export const ringingSoundBase64 = computed({
         widgetCallSettings.value.ringingSound = value
     }
 })
+
+export const language = computed({
+    get: () => widgetThemeSettings.value.lang,
+    set: (value: TKeypadMode) => {
+        widgetThemeSettings.value.lang = value
+        setLanguage(value)
+    }
+})
+
 export const bgLogoBase64 = computed({
     get: () => widgetThemeSettings.value.audioConfig.images.backgroundLogo || defaultLogo,
     set: (value: string | undefined) => {
@@ -304,6 +320,8 @@ export function setThemeSettings (settings: Partial<IWidgetTheme>) {
         ...mergedTheme,
         position: buildPositionSettings(mergedTheme)
     }
+
+    setLanguage(widgetThemeSettings.value.lang)
 }
 
 export function setConfig (config: Partial<TWidgetConfigOptions>) {

@@ -6,7 +6,7 @@
                     {{ caller }}
                 </div>
                 <div class="subheader font-bold text-xl">
-                    transfer call
+                    {{ getTranslation('audio.transfer.call') }}
                 </div>
             </div>
         </PopupHeader>
@@ -15,7 +15,7 @@
                 <VcInput
                     :model-value="searchQuery"
                     class="input-wrapper h-10"
-                    placeholder="type number"
+                    :placeholder="getTranslation('audio.type.number')"
                     @update:modelValue="onInput"
                     @keyup.enter="handleTransfer"
                 />
@@ -33,7 +33,7 @@ import PopupHeader from '@/components/phone/common/PopupHeader.vue'
 import { useVsipInject } from '@/composables/phone/useVsipProvideInject'
 import TransferButton from '@/components/phone/activeCallsView/TransferButton.vue'
 import useCallActions from '@/composables/phone/useCallActions.ts'
-
+import { getTranslation } from '@/plugins/translator'
 
 
 const {

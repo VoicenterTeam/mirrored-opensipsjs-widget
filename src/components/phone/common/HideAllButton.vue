@@ -3,11 +3,12 @@
         class="hide-all-button py-2 px-3 font-inter font-semibold cursor-pointer"
         @click="onIncomingCallsHide"
     >
-        hide all
+        {{ getTranslation('audio.hide.all') }}
     </div>
 </template>
 <script lang="ts" setup>
 import { useIncomingCalls } from '@/composables/phone/useIncomingCalls.ts'
+import { getTranslation } from '@/plugins/translator'
 const { hideIncomingCall, visibleCalls } = useIncomingCalls()
 
 
