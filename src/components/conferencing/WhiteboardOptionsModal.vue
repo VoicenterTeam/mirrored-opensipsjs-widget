@@ -1,7 +1,7 @@
 <template>
     <VcModal
         :visible="modalVisibleModel"
-        header="Whiteboard options"
+        :header="getTranslation('video.whiteboard.options')"
         :breakpoints="{
             '1126px': '60vw', '942px': '80vw', '704px': '95vw', '599px': '75vw'
         }"
@@ -18,12 +18,12 @@
                     size="large"
                     @click="drawEmptyWhiteboard"
                 >
-                    Empty whiteboard
+                    {{ getTranslation('video.empty.whiteboard') }}
                 </VcButton>
             </div>
 
             <ImageUploadButton
-                button-text="Image whiteboard"
+                :button-text="getTranslation('video.image.whiteboard')"
                 @upload="onImageUpload"
             />
         </div>
@@ -35,6 +35,7 @@ import { useVModel } from '@vueuse/core'
 import { VcButton, VcModal } from '@voicenter-team/voicenter-ui-plus'
 import ImageUploadButton from '@/components/conferencing/ImageUploadButton.vue'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
+import { getTranslation } from '@/plugins/translator'
 
 const { enablePresentationWhiteboard, enableImageWhiteboard } = useOpenSIPSJS()
 

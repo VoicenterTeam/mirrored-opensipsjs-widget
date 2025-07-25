@@ -4,10 +4,18 @@
             <div className="inline-block w-4 h-4 text-primary">
                 <MicrophoneIcon />
             </div>
-            Input device
+            {{ getTranslation('audio.input.device') }}
         </label>
-        <select id="microphoneEl" v-model="activeInputDevice" @change="onMicrophoneChange">
-            <option v-for="(item, key) in inputDevicesList" :key="key" :value="item.deviceId">
+        <select
+            id="microphoneEl"
+            v-model="activeInputDevice"
+            @change="onMicrophoneChange"
+        >
+            <option
+                v-for="(item, key) in inputDevicesList"
+                :key="key"
+                :value="item.deviceId"
+            >
                 {{ item.label }}
             </option>
         </select>
@@ -15,10 +23,18 @@
             <div className="inline-block w-4 h-4 text-primary mt-2">
                 <HeadphonesIcon />
             </div>
-            Output device
+            {{ getTranslation('audio.output.device') }}
         </label>
-        <select id="speakerEl" v-model="activeOutputDevice" @change="onSpeakerChange">
-            <option v-for="(item, key) in outputDevicesList" :key="key" :value="item.deviceId">
+        <select
+            id="speakerEl"
+            v-model="activeOutputDevice"
+            @change="onSpeakerChange"
+        >
+            <option
+                v-for="(item, key) in outputDevicesList"
+                :key="key"
+                :value="item.deviceId"
+            >
                 {{ item.label }}
             </option>
         </select>
@@ -50,5 +66,6 @@ import {
 import MicrophoneIcon from '@/assets/icons/mute.svg?component'
 import HeadphonesIcon from '@/assets/icons/headphones.svg?component'
 import SoundOnIcon from '@/assets/icons/soundOn.svg?component'
+import { getTranslation } from '@/plugins/translator'
 
 </script>

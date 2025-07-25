@@ -18,12 +18,12 @@
                     size="large"
                     @click="applyBokehEffect"
                 >
-                    Background blur effect
+                    {{ getTranslation('video.background.blur.effect') }}
                 </VcButton>
             </div>
 
             <ImageUploadButton
-                button-text="Background image effect"
+                :button-text="getTranslation('video.background.image.effect')"
                 @upload="applyBackgroundImgEffect"
             />
         </div>
@@ -40,6 +40,7 @@ import {
     usedWidgetShadowRootEl,
     useOpenSIPSJS
 } from '@/composables/opensipsjs'
+import { getTranslation } from '@/plugins/translator'
 
 const { applyBokehMaskEffect, applyBackgroundImgMaskEffect } = useOpenSIPSJS()
 

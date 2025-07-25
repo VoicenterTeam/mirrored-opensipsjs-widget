@@ -6,12 +6,14 @@
     >
         <div class="flex justify-between gap-x-1 items-center  px-2 py-1 ">
             <i class="vc-lc-arrow-right-left text-base" />
-            <span class="context uppercase whitespace-nowrap">manage calls</span>
+            <span class="context uppercase whitespace-nowrap">{{ getTranslation('audio.manage.calls') }}</span>
         </div>
     </button>
 </template>
 <script lang="ts" setup>
 import { usePhoneState } from '@/composables/phone/usePhoneState'
+import { getTranslation } from '@/plugins/translator'
+
 /* Data */
 const { onActiveCallsPopupToggle, isActiveCallsPopupActive } = usePhoneState()
 </script>

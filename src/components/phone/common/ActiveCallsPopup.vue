@@ -9,7 +9,7 @@
             class="current-call-block pt-3 pb-4 px-4"
         >
             <div class="title font-semibold pb-2">
-                current call
+                {{ getTranslation('audio.current.call') }}
             </div>
             <ActiveCallPopupRow
                 class="data"
@@ -30,7 +30,7 @@
                 @click="handleCallsMerge"
             >
                 <i class="vc-lc-merge text-base" />
-                <div>merge all</div>
+                <div>{{ getTranslation('audio.merge.all') }}</div>
             </button>
             <button
                 v-if="isConferenceButtonVisible"
@@ -38,7 +38,7 @@
                 @click="handleCallsConference"
             >
                 <i class="vc-lc-share-2 text-base" />
-                <div>conference all</div>
+                <div>{{ getTranslation('audio.conference.all') }}</div>
             </button>
         </div>
         <div
@@ -64,7 +64,7 @@ import ActiveCallPopupRow from '@/components/phone/common/ActiveCallPopupRow.vue
 import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
 import { currentActiveRoom, allRooms, activeCalls, useOpenSIPSJS } from '@/composables/opensipsjs'
-
+import { getTranslation } from '@/plugins/translator'
 
 /* Data */
 const { callsInActiveRoom, roomsWithoutActive, getActiveCallsInRoom } = useVsipInject()

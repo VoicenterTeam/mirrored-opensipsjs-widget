@@ -2,7 +2,7 @@
     <div className="flex justify-around items-center bg-primary-bg">
         <div className="flex items-center justify-center px-2 text-xxs">
             <span className="text-center font-bold text-secondary-text uppercase">
-                Move
+                {{ getTranslation('audio.move') }}
             </span>
             <div className="flex items-center flex-col justify-evenly px-2">
                 <span
@@ -19,7 +19,7 @@
                 </span>
             </div>
             <span className="text-center font-bold text-secondary-text uppercase">
-                to
+                {{ getTranslation('audio.to') }}
             </span>
         </div>
 
@@ -75,6 +75,7 @@ import {
     displayCallerInfoName
 } from '@/composables/useWidgetConfig'
 import useCallInfo from '@/composables/useCallInfo'
+import { getTranslation } from '@/plugins/translator'
 
 const target = ref<string | undefined>(undefined)
 

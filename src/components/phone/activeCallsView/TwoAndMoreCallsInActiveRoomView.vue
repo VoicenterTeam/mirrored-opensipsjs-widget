@@ -30,9 +30,11 @@ import CallsCompactView from '@/components/phone/common/CallsCompactView.vue'
 import { KeyPadTriggerObjectType } from '@/constants/phone.ts'
 import { usePhoneState } from '@/composables/phone/usePhoneState'
 import { isMuted, useOpenSIPSJS, currentActiveRoom } from '@/composables/opensipsjs'
+import { allowMergeCalls } from '@/composables/useWidgetConfig'
 import CallActionButton from '@/components/phone/activeCallsView/CallActionButton.vue'
 import MultipleCallsActiveRoom from '@/components/phone/activeCallsView/MultipleCallsActiveRoom.vue'
 import useCallActions from '@/composables/phone/useCallActions.ts'
+import { getTranslation } from '@/plugins/translator'
 /* Data */
 const { onKeyPadToggle } = usePhoneState()
 const { muteAgent, holdCall, unholdCall, mergeCallsInRoom } = useOpenSIPSJS()
@@ -47,48 +49,48 @@ const getControlButtonsConfig = () => {
         {
             type: 'blueButton',
             src: 'vc-lc-user-plus',
-            name: 'add caller',
+            name: getTranslation('audio.add.caller'),
             action: () => onKeyPadToggle(KeyPadTriggerObjectType.add_caller)
         },
         {
             type: 'whiteButton',
             src: 'vc-lc-share-2',
-            name: 'conference',
+            name: getTranslation('audio.conference'),
             disabled: isAllCallsUnHold.value,
             action: () => unHoldAllCalls()
         },
         {
             type: isMuted.value ? 'redButton-with-bg': 'whiteButton',
             src: isMuted.value ? 'vc-lc-mic-off' : 'vc-lc-mic',
-            name: isMuted.value ? 'muted' : 'mute',
+            name: isMuted.value ? getTranslation('audio.muted') : getTranslation('audio.mute'),
             action: () => muteAgent(!isMuted.value)
         },
         {
             type: isAllCallsOnHold.value ? 'redButton-with-bg': 'whiteButton',
             src: 'vc-lc-circle-pause',
-            name: 'hold all',
+            name: getTranslation('audio.hold.all'),
             action: () => isAllCallsOnHold.value ? unHoldAllCalls() : holdAllCalls()
         },
         {
             type: 'blueButton',
             src: 'vc-lc-grip',
-            name: 'keypad',
+            name: getTranslation('audio.keypad'),
             action: () => onKeyPadToggle(KeyPadTriggerObjectType.keypad)
         },
     ]
 
-    if (isTwoCallsInActiveRoom.value) {
+    if (isTwoCallsInActiveRoom.value && allowMergeCalls.value) {
         return [
             baseConfig[0],
             {
                 type: 'whiteButton',
                 src: 'vc-lc-merge',
-                name: 'merge',
+                name: getTranslation('audio.merge'),
                 action: () => onCallMergeHandle()
             },
             ...baseConfig.slice(1)
         ]
-    }else if(!displayAllControls.value) {
+    } else if(!displayAllControls.value) {
         return [
             ...baseConfig.slice(2)
         ]

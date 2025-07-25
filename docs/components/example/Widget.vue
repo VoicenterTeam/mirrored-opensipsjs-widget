@@ -38,8 +38,6 @@ function init () {
         return
     }
 
-    console.log('in init')
-
     if (!customElements.get('opensips-widget')) {
         const script = document.createElement('script')
         script.src = `https://cdn.opensipsjs.org/opensipsjs-widget/v${version}/opensipsjs-widget.umd.js`

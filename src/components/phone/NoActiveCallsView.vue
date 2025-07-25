@@ -4,7 +4,7 @@
         <div class="h-10 mb-3">
             <VcInput
                 :model-value="phoneNumber"
-                placeholder="Type number"
+                :placeholder="getTranslation('audio.type.number.uppercase')"
                 clearable
                 class="h-full"
                 @update:modelValue="onNumberInput"
@@ -23,6 +23,7 @@ import Keypad from '@/components/phone/common/KeyPad.vue'
 import SoundManager from '@/components/phone/SoundManager.vue'
 import FooterBlock from '@/components/phone/FooterBlock.vue'
 import useCallActions from '@/composables/phone/useCallActions.ts'
+import { getTranslation } from '@/plugins/translator'
 
 /* Data */
 const { phoneNumber, onNumberInput } = usePhoneState()

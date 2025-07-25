@@ -22,7 +22,7 @@
                 class="p-10"
             >
                 <VcFormItem
-                    label="Speaker"
+                    :label="getTranslation('audio.speaker')"
                 >
                     <VcSelect
                         v-model="outputMediaDeviceValue"
@@ -33,7 +33,7 @@
                     />
                 </VcFormItem>
                 <VcFormItem
-                    label="Microphone"
+                    :label="getTranslation('audio.microphone')"
                 >
                     <VcSelect
                         v-model="inputMediaDeviceValue"
@@ -62,6 +62,7 @@ import InputDeviceOption from '@/components/phone/common/InputDeviceOption.vue'
 import { getMediaDevicesList, outputMediaDeviceValue, inputMediaDeviceValue } from '@/composables/phone/useMediaDevices.ts'
 import DNDButton from '@/components/phone/DNDButton.vue'
 import { allowDNDSetup } from '@/composables/useWidgetConfig'
+import { getTranslation } from '@/plugins/translator'
 
 /* Data */
 const  mediaConfigOptions = {

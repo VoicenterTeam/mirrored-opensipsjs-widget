@@ -18,6 +18,7 @@ export const defaultTheme/*: IWidgetTheme*/ = {
         'additional-success-bg': '#75B8A0',
     },
     widgetType: undefined,
+    lang: 'en',
     audioConfig: {
         layoutConfig: {
             type: 'rounded',

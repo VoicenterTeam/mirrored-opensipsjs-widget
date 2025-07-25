@@ -1,7 +1,11 @@
 <template>
     <div className="">
         <ul>
-            <li v-if="!props.isSingleRoom" className="h-8 cursor-pointer hover:bg-secondary-bg p-2" @click="onMoveClick">
+            <li
+                v-if="!props.isSingleRoom"
+                className="h-8 cursor-pointer hover:bg-secondary-bg p-2"
+                @click="onMoveClick"
+            >
                 <!--                <div className="inline-block">
                     <div className="w-4 h-4 text-primary">
                         <MoveToCallIcon />
@@ -13,11 +17,14 @@
                 </div>
 
                 <span className="text-xs mx-2">
-                    Move Call
+                    {{ getTranslation('audio.move.call') }}
                 </span>
-
             </li>
-            <li v-if="allowTransfer" className="h-8 cursor-pointer hover:bg-secondary-bg p-2" @click="onTransferClick" >
+            <li
+                v-if="allowTransfer"
+                className="h-8 cursor-pointer hover:bg-secondary-bg p-2"
+                @click="onTransferClick"
+            >
                 <div className="inline-block w-3 h-3 text-primary">
                     <TransferIcon />
                 </div>
@@ -35,6 +42,7 @@ import MoveToCallIcon from '@/assets/icons/moveToCall.svg?component'
 import TransferIcon from '@/assets/icons/transfer.svg?component'
 
 import { allowTransfer } from '@/composables/useWidgetConfig'
+import { getTranslation } from '@/plugins/translator'
 
 const props = withDefaults(
     defineProps<{

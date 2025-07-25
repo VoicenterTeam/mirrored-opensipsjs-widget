@@ -11,13 +11,13 @@
                     size="large"
                     @click="openPopover"
                 >
-                    Drawing options
+                    {{ getTranslation('video.drawing.options') }}
                 </VcButton>
             </template>
 
             <div class="p-5">
                 <div class="mb-2">
-                    <label>Brush width</label>
+                    <label>{{ getTranslation('video.brush.width') }}</label>
                     <div class="w-full">
                         <VcSlider
                             v-model="strokeWidthModel"
@@ -29,7 +29,7 @@
                 </div>
 
                 <div class="flex mb-2">
-                    <label class="mr-2">Brush color</label>
+                    <label class="mr-2">{{ getTranslation('video.brush.color') }}</label>
                     <input
                         v-model="strokeColorModel"
                         type="color"
@@ -40,7 +40,7 @@
                     v-if="props.isExtendedOptions"
                     class="flex mb-2"
                 >
-                    <label class="mr-2">Background color</label>
+                    <label class="mr-2">{{ getTranslation('video.background.color') }}</label>
                     <input
                         v-model="backgroundColorModel"
                         type="color"
@@ -48,7 +48,7 @@
                 </div>
 
                 <VcButton @click="applySettings">
-                    Apply
+                    {{ getTranslation('common.apply') }}
                 </VcButton>
             </div>
         </VcPopover>
@@ -59,6 +59,7 @@
 import { ref } from 'vue'
 import { VcPopover, VcSlider, VcButton } from '@voicenter-team/voicenter-ui-plus'
 import { useOpenSIPSJS } from '@/composables/opensipsjs.ts'
+import { getTranslation } from '@/plugins/translator'
 
 const {
     setupDrawerOptions,

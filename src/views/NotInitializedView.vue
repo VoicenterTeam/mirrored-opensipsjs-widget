@@ -1,11 +1,14 @@
 <template>
     <div className="flex h-full flex-row">
-        <div v-if="!allowShrinkOnIdle" className="w-[60px] text-primary p-3 bg-primary-bg">
-            <ConnectToServerIcon/>
+        <div
+            v-if="!allowShrinkOnIdle"
+            className="w-[60px] text-primary p-3 bg-primary-bg"
+        >
+            <ConnectToServerIcon />
         </div>
         <div :className="`flex items-center justify-center bg-danger uppercase text-button-pressed-text ${messageFontClasses}`">
             <span className="text-center">
-                Not connected to server
+                {{ getTranslation('audio.not.connected.to.server') }}
             </span>
         </div>
     </div>
@@ -14,7 +17,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import ConnectToServerIcon from '@/assets/icons/connectToServer.svg?component'
-
+import { getTranslation } from '@/plugins/translator'
 import { allowShrinkOnIdle } from '@/composables/useWidgetConfig'
 
 const messageFontClasses = computed(() => {

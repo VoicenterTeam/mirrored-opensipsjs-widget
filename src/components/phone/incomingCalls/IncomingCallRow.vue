@@ -2,10 +2,10 @@
     <div class="incoming-call justify-between flex items-center px-3 py-2 h-14 w-full mb-2">
         <div class="mr-2.5 w-1/2">
             <div class="caller font-bold text-sm mr-2.5 truncate">
-                {{ caller || 'unknown' }}
+                {{ caller || getTranslation('audio.unknown') }}
             </div>
             <div class="title font-semibold font-inter">
-                Incoming Call
+                {{ getTranslation('audio.incoming.call') }}
             </div>
         </div>
         <div class="flex items-center gap-x-1.5">
@@ -34,6 +34,7 @@ import HangupButton from '@/components/phone/common/HangupButton.vue'
 //import ActionsButton from '@/ui/phoneDialer/components/common/ActionsButton.vue'
 import { useVsipInject } from '@/composables/phone/useVsipProvideInject'
 import { useOpenSIPSJS } from '@/composables/opensipsjs.ts'
+import { getTranslation } from '@/plugins/translator'
 //import { useIncomingCalls } from '@/ui/phoneDialer/composables/useIncomingCalls'
 
 

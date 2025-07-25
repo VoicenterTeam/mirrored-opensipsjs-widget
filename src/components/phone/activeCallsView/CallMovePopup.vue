@@ -8,7 +8,7 @@
                     {{ caller }}
                 </div>
                 <div class="move-subheader font-semibold">
-                    choose active call to move
+                    {{ getTranslation('audio.choose.active.call.to.move') }}
                 </div>
             </div>
         </PopupHeader>
@@ -34,6 +34,7 @@ import { useVsipInject } from '@/composables/phone/useVsipProvideInject'
 import { useRoomData } from '@/composables/phone/useRoomData.ts'
 import useCallActions from '@/composables/phone/useCallActions.ts'
 import CallMovePopupRow from '@/components/phone/activeCallsView/CallMovePopupRow.vue'
+import { getTranslation } from '@/plugins/translator'
 // import CallMovePopupRow from '@/ui/phoneDialer/components/webRtcPhone/dialPad/Actions/Move/CallMovePopupRow.vue'
 
 /* Data */

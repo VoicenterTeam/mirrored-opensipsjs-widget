@@ -8,13 +8,13 @@
         </div>
         <div className="flex min-h-[40px] justify-around items-center bg-primary-bg">
             <div v-if="outgoingUnansweredCall">
-                <span class="text-base text-main-text font-medium">Dialing...</span>
+                <span class="text-base text-main-text font-medium">{{ getTranslation('audio.dialing.with.dots') }}</span>
             </div>
             <div
                 v-else
                 class="flex items-center justify-around w-full"
             >
-                <span class="text-base text-main-text font-medium">Customer Support</span>
+                <span class="text-base text-main-text font-medium">{{ getTranslation('audio.customer.support') }}</span>
                 <div className="flex items-center mx-2 w-[46px]">
                     <span className="text-base text-main-text font-medium">
                         {{ callTime }}
@@ -85,6 +85,7 @@ import UnMuteIcon from '@/assets/icons/unmute.svg?component'
 import KeypadIcon from '@/assets/icons/keypad.svg?component'
 import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
 import { keypadMode, keypadPosition, showKeypad } from '@/composables/useWidgetConfig'
+import { getTranslation } from '@/plugins/translator'
 
 const {
     terminateCall,
