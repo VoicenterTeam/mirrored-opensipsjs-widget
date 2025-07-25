@@ -62,9 +62,7 @@ export interface IWidgetVideoConfig {
 /**
  * The language of the widget:
  */
-export type LangType =
-    'en'
-    | 'he'
+export type LangType = 'en' | 'he'
 
 /**
  * Represents the configuration options for the widget theme.

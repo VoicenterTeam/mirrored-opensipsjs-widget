@@ -56,6 +56,19 @@
                         </VcFormItem>
 
                         <VcFormItem
+                            label="Language"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.themeSettings.lang" />
+                            </template>
+                            <VcSelect
+                                v-model="form.themeSettings.lang"
+                                :options="languageOptions"
+                                :config="selectConfig"
+                            />
+                        </VcFormItem>
+
+                        <VcFormItem
                             label="Audio Layout Type"
                         >
                             <template #info-text>
@@ -209,6 +222,15 @@
                                 <p v-html="CONFIG_DESCRIPTION.callSettings.allowTransfer" />
                             </template>
                             <VcSwitch v-model="form.callSettings.allowTransfer" />
+                        </VcFormItem>
+
+                        <VcFormItem
+                            label="Merge Calls"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.callSettings.mergeCalls" />
+                            </template>
+                            <VcSwitch v-model="form.callSettings.mergeCalls" />
                         </VcFormItem>
 
                         <VcFormItem
@@ -445,6 +467,16 @@ const widgetTypeOptions: Array<OptionType> = [
     {
         label: 'video',
         value: 'video'
+    }
+]
+const languageOptions: Array<OptionType> = [
+    {
+        label: 'English',
+        value: 'en'
+    },
+    {
+        label: 'Hebrew',
+        value: 'he'
     }
 ]
 const layoutConfigModeOptions: Array<OptionType> = [

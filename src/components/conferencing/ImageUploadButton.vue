@@ -10,7 +10,7 @@
             button-icon="vc-icon-image"
             :max-length="1"
             :button-text="buttonText"
-            no-data-text="No image"
+            :no-data-text="getTranslation('common.no.image')"
             accept="image/*"
             @input="onFileChange"
         />
@@ -20,6 +20,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { VcFileUploader } from '@voicenter-team/voicenter-ui-plus'
+import { getTranslation } from '@/plugins/translator'
 //import { FileUploaded } from '@voicenter-team/voicenter-ui-plus/library/types/components/VcFileUploader/VcFileUploader.types'
 
 export interface Props {
@@ -40,7 +41,7 @@ const emit = defineEmits<{
 
 /* Computed */
 const buttonText = computed(() => {
-    return props.buttonText ? props.buttonText : 'Upload image'
+    return props.buttonText ? props.buttonText : getTranslation('common.upload.image')
 })
 
 const fileSizeLimit = ref<number>(5242880) // Bytes (in binary) - 5MB

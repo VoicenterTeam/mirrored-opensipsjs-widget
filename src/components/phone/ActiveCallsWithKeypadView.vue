@@ -15,7 +15,7 @@
             <div class="h-10 mb-3">
                 <VcInput
                     :model-value="phoneNumber"
-                    placeholder="Type number"
+                    :placeholder="getTranslation('common.type.number')"
                     clearable
                     class="h-full"
                     @update:modelValue="onNumberInput"
@@ -41,6 +41,7 @@ import useCallActions from '@/composables/phone/useCallActions.ts'
 import KeyPad from '@/components/phone/common/KeyPad.vue'
 import { useVsipInject } from '@/composables/phone/useVsipProvideInject'
 import { currentActiveRoom } from '@/composables/opensipsjs'
+import { getTranslation } from '@/plugins/translator'
 
 /* Data */
 const { phoneNumber, keyPadTrigger, onNumberInput, isActiveCallsPopupActive, onActiveCallsPopupToggle } = usePhoneState()
@@ -50,7 +51,7 @@ const { roomsWithoutActive, activeRoomsWithoutIncoming, lengthOfCallsWithoutInco
 /* Computed */
 const triggerTitle = computed(() => {
     const trigger = keyPadTrigger.value
-    return trigger ? keyPadTriggerTitlesConfig[trigger] : ''
+    return trigger ? getTranslation(keyPadTriggerTitlesConfig[trigger]) : ''
 })
 
 

@@ -2,15 +2,16 @@
     <BasePopper class="--base-popper">
         <template #content>
             <div>
-                Some tooltip content Some tooltip content
+                {{ getTranslation('pages.settings.tooltip') }}
             </div>
         </template>
-        <button>S</button>
+        <button>{{ getTranslation('common.settings') }}</button>
     </BasePopper>
 </template>
 
 <script lang="ts" setup>
 import BasePopper from '@/components/base/BasePopper.vue'
+import { getTranslation } from '@/plugins/translator'
 
 </script>
 

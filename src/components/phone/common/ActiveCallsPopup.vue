@@ -1,7 +1,7 @@
 <template>
     <div class="active-calls-popup-wrapper absolute w-full phone-dialer-custom-scroll">
         <PopupHeader
-            header="Active calls"
+            :header="getTranslation('common.active.calls')"
             :action="closeCallsPopup"
         />
         <div

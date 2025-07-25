@@ -103,6 +103,7 @@ export const CONFIG_DESCRIPTION = {
             'additional-danger-bg': 'Background color for danger buttons when pressed.',
             'additional-success-bg': 'Background color for success buttons when pressed.'
         },
+        lang: 'Sets the language for the widget interface. Supports \'en\' (English) and \'he\' (Hebrew). This affects all text displayed in the widget UI.',
         widgetType: 'audio',
         audioConfig: {
             images: {
@@ -161,6 +162,9 @@ export const CONFIG_DESCRIPTION = {
                     '</ul>',
                 keypadPosition: 'Affects the positioning of the keypad when enabled. Applicable only in static keypad mode.'
             }
+        },
+        images: {
+            backgroundLogo: 'Logo displayed in the background of the widget when outgoing calls are disabled.'
         }
     },
     callSettings: {
@@ -176,6 +180,7 @@ export const CONFIG_DESCRIPTION = {
             allowChange: 'If DND is enabled, this determines whether the user can change it.',
             defaultBehavior: 'When enabled, user will not be able to make calls.'
         },
+        mergeCalls: 'When enabled, allows the user to merge multiple active calls into a conference. When disabled, prevents call merging functionality.',
         outgoingCalls: 'Allows the user to make outgoing calls.',
         callerInfo: {
             displayName: 'Determines whether to display the caller\'s name during a call, if available.',

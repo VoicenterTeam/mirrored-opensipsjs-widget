@@ -6,9 +6,9 @@ export const KeyPadTriggerObjectType = {
 } as const
 
 export const keyPadTriggerTitlesConfig = {
-    [KeyPadTriggerObjectType.keypad]: 'Keypad',
-    [KeyPadTriggerObjectType.add_caller]: 'Add caller',
-    [KeyPadTriggerObjectType.new_call]: 'New call'
+    [KeyPadTriggerObjectType.keypad]: 'audio.keypad',
+    [KeyPadTriggerObjectType.add_caller]: 'audio.add.caller',
+    [KeyPadTriggerObjectType.new_call]: 'audio.new.call'
 }
 
 export const ActionsTriggerObjectType = {

@@ -2,7 +2,12 @@
   "common": {
     "apply": "Apply",
     "close": "Close",
-    "submit": "Submit"
+    "submit": "Submit",
+    "settings": "Settings",
+    "active.calls": "Active calls",
+    "upload.image": "Upload image",
+    "no.image": "No image",
+    "type.number": "Type number"
   },
   "audio": {
     "move.call": "Move Call",
@@ -42,7 +47,9 @@
     "mute": "mute",
     "hold.all": "hold all",
     "keypad": "keypad",
-    "merge": "merge"
+    "merge": "merge",
+    "new.call": "New call",
+    "we.are.online": "We're online! <br> Click to call us via browser"
   },
   "video": {
    "drawing.options": "Drawing options",
@@ -60,5 +67,12 @@
    "whiteboard.options": "Whiteboard options",
    "empty.whiteboard": "Empty whiteboard",
    "image.whiteboard": "Image whiteboard"
+  },
+  "pages": {
+    "settings.title": "This is Settings page",
+    "settings.tooltip": "Some tooltip content Some tooltip content"
+  },
+  "modals": {
+    "mask.effect.options": "Mask effect options"
   }
 }

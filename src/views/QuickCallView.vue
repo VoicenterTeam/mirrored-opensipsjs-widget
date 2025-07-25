@@ -35,8 +35,9 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watchEffect } from 'vue'
+import { onMounted, ref, watchEffect, computed } from 'vue'
 import Popper from 'vue3-popper'
+import { getTranslation } from '@/plugins/translator'
 import Draggable from '@/components/Draggable.vue'
 import {
     isOpenSIPSReady,
@@ -62,7 +63,7 @@ const { startCall } = useOpenSIPSJS()
 /* Data */
 const draggableHandle = ref<typeof Draggable>()
 const showHintPopper = ref<boolean>(true)
-const text = ref('<p style="width: 250px; text-align: center;">We’re online! <br> Click to call us via browser</p>')
+const text = computed(() => `<p style="width: 250px; text-align: center;">${getTranslation('audio.we.are.online')}</p>`)
 
 /* Methods */
 function onCall () {

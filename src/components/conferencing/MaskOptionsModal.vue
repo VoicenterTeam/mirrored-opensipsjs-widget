@@ -1,7 +1,7 @@
 <template>
     <VcModal
         :visible="modalVisibleModel"
-        header="Mask effect options"
+        :header="getTranslation('modals.mask.effect.options')"
         :breakpoints="{
             '1316px': '60vw','1126px': '70vw', '942px': '80vw', '824px': '95vw'
         }"

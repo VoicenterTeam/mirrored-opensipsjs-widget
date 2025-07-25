@@ -1,7 +1,10 @@
-//import type { ICallSettings } from '@/types/public-api'
 import { defaultRingingSound } from '@/utils/ringingSound'
 
-export const defaultCallSettings/*: ICallSettings*/ = {
+import type {
+    ICallSettings,
+} from '@/types/public-api'
+
+export const defaultCallSettings: ICallSettings = {
     quickCallNumber: '665',
     showKeypad: true,
     allowTransfer: true,

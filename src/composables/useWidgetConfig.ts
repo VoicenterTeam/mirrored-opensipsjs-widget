@@ -1,6 +1,6 @@
 import { computed, reactive } from 'vue'
 import merge from 'lodash/merge'
-import type {
+import {
     TWidgetConfigOptions,
     ICallSettings,
     IWidgetConfig,
@@ -9,9 +9,10 @@ import type {
     TPosition,
     TKeypadMode,
     TKeypadPosition,
-    TPositionConfig
+    TPositionConfig,
+    LangType
 } from '@/types/public-api'
-import { defaultTheme } from '@/enum/defaultTheme.enum'
+import { defaultAudioConfig, defaultTheme } from '@/enum/defaultTheme.enum'
 import { getDefaultWidgetConfig } from '@/enum/defaultWidgetConfig.enum'
 import { useWidgetDraggable } from '@/composables/useWidgetDraggable'
 import { toCssValue } from '@/helpers/cssHelper'
@@ -147,14 +148,14 @@ export const ringingSoundBase64 = computed({
 
 export const language = computed({
     get: () => widgetThemeSettings.value.lang,
-    set: (value: TKeypadMode) => {
+    set: (value: LangType) => {
         widgetThemeSettings.value.lang = value
         setLanguage(value)
     }
 })
 
 export const bgLogoBase64 = computed({
-    get: () => widgetThemeSettings.value.audioConfig.images.backgroundLogo || defaultLogo,
+    get: () => widgetThemeSettings.value.audioConfig?.images.backgroundLogo || defaultLogo,
     set: (value: string | undefined) => {
         widgetThemeSettings.value.audioConfig.images.backgroundLogo = value
     }
@@ -189,9 +190,9 @@ export const outgoingInputRegexValidator = computed({
 
 export const widgetType = computed(() => widgetThemeSettings.value.widgetType)
 
-export const layoutType = computed(() => widgetThemeSettings.value.audioConfig.layoutConfig.type)
+export const layoutType = computed(() => widgetThemeSettings.value.audioConfig?.layoutConfig.type || defaultAudioConfig.layoutConfig.type)
 
-export const layoutMode = computed(() => widgetThemeSettings.value.audioConfig.layoutConfig.mode)
+export const layoutMode = computed(() => widgetThemeSettings.value.audioConfig?.layoutConfig.mode || defaultAudioConfig.layoutConfig.mode)
 
 export const showDraggableHandle = computed(() => layoutMode.value === 'floating')
 
