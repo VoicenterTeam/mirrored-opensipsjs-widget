@@ -40,7 +40,13 @@ function init () {
 
     if (!customElements.get('opensips-widget')) {
         const script = document.createElement('script')
-        script.src = `https://cdn.opensipsjs.org/opensipsjs-widget/v${version}/opensipsjs-widget.umd.js`
+
+        if (import.meta.env.PROD) {
+            script.src = `https://cdn.opensipsjs.org/opensipsjs-widget/v${version}/opensipsjs-widget.umd.js`
+        } else {
+            script.src = new URL('../../../widget/opensipsjs-widget.umd.js', import.meta.url).href
+        }
+
         script.type = 'module'
 
         document.body.appendChild(script)
@@ -75,7 +81,6 @@ watch(
     widgetConfig,
     (config) => {
         if (widgetAPI) {
-            console.log('Setting config', config)
             widgetAPI.setConfig(config)
         }
     },
