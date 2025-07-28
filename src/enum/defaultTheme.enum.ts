@@ -1,4 +1,4 @@
-import { defaultLogo } from '@/utils/defaultLogo'
+import { defaultLogo } from '../utils/defaultLogo'
 
 import {
     IWidgetAudioConfig,
