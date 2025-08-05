@@ -10,6 +10,9 @@
     "type.number": "Type number"
   },
   "audio": {
+    "record": "record",
+    "calls": "calls",
+    "callers": "callers",
     "move.call": "Move Call",
     "input.device": "Input device",
     "output.device": "Output device",
@@ -46,6 +49,7 @@
     "muted": "muted",
     "mute": "mute",
     "hold.all": "hold all",
+    "hold": "hold",
     "keypad": "keypad",
     "merge": "merge",
     "new.call": "New call",

@@ -10,6 +10,9 @@
     "type.number": "הקלד מספר"
   },
   "audio": {
+    "record": "הקלט",
+    "calls": "שיחות",
+    "callers": "מתקשרים",
     "move.call": "העבר שיחה",
     "input.device": "התקן קלט",
     "output.device": "התקן פלט",
@@ -46,6 +49,7 @@
     "muted": "מושתק",
     "mute": "השתק",
     "hold.all": "החזק הכול",
+    "hold": "החזק",
     "keypad": "לוח מקשים",
     "merge": "מזג",
     "new.call": "שיחה חדשה",

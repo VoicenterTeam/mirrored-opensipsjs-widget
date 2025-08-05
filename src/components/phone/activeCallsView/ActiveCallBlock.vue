@@ -54,7 +54,7 @@ const nameValue = computed(() => {
 
 const phoneValue = computed(() => {
     const user = callersData.value[props.id]
-    return user && user.userName? user.userPhone : 'unknown'
+    return user && user.userName? user.userPhone : getTranslation('audio.unknown')
 })
 </script>
 <style scoped lang="scss">

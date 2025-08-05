@@ -5,8 +5,8 @@
         >
             <i class="vc-lc-phone-call" />
             <div class="counter uppercase">
-                {{ `${roomsLength} calls` }}
-                {{ `${callsLength} callers` }}
+                {{ `${roomsLength} ${getTranslation('audio.calls')}` }}
+                {{ `${callsLength} ${getTranslation('audio.callers')}` }}
             </div>
         </div>
         <div class="flex items-center justify-between gap-x-1">
@@ -16,6 +16,7 @@
 </template>
 <script lang="ts" setup>
 import SwitchCallButton from '@/components/phone/common/SwitchCallButton.vue'
+import { getTranslation } from '@/plugins/translator'
 
 /* Props */
 type Props = {
