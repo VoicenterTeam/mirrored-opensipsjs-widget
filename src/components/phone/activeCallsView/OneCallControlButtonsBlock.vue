@@ -21,6 +21,7 @@ import useCallActions from '@/composables/phone/useCallActions.ts'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
 import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
 import { getTranslation } from '@/plugins/translator'
+import { allowTransfer } from '@/composables/useWidgetConfig'
 
 /* Data */
 const { holdCall, unholdCall, muteAgent } = useOpenSIPSJS()
@@ -70,6 +71,10 @@ const oneActiveCallButtons = computed(() => {
             action: () => onKeyPadToggle(KeyPadTriggerObjectType.keypad)
         },
     ]
+
+    if (!allowTransfer.value) {
+        return buttons.filter((button) => button.name !== getTranslation('audio.transfer'))
+    }
 
     return buttons
 })
