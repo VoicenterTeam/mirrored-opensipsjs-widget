@@ -5,13 +5,15 @@ import OpenSIPSJS, {
 //StreamMaskPlugin,
 //ScreenShareWhiteBoardPlugin
 } from 'opensips-js'
+import { ITimeData } from 'opensips-js/src/types/timer'
 // import { ScreenSharePlugin } from 'opensips-js-screen-share'
 // import { WhiteBoardPlugin } from 'opensips-js-whiteboard'
 // import { ScreenShareWhiteBoardPlugin } from 'opensips-js-screen-share-whiteboard'
+import type { ICall, IOpenSIPSJSOptions, IRoom, RoomChangeEmitType, ICallStatus, IOpenSIPSConfiguration } from 'opensips-js/src/types/rtc'
 import type { ISIPSCredentials } from '@/types/public-api'
-import type { AllActiveCallsType, CallTimeType } from '@/types/opensips'
+import type { AllActiveCallsStatusType, AllActiveCallsType, CallTimeType } from '@/types/opensips'
 import type { UnRegisterOptions } from 'jssip/lib/UA'
-import { ICall, vsipAPI } from 'opensips-js-vue'
+
 import { DNDDefaultBehaviour, autoAnswerDefaultBehaviour, callWaitingDefaultBehaviour } from '@/composables/useWidgetConfig'
 
 /* Main */
@@ -20,49 +22,50 @@ const state: { opensipsjs: OpenSIPSJS | undefined } = {
 }
 
 /* State */
-export const isOpenSIPSReady = vsipAPI.state.isOpenSIPSReady
-export const isOpenSIPSReconnecting = vsipAPI.state.isOpenSIPSReconnecting
+export const isOpenSIPSReady = ref<boolean>(false)
+export const isOpenSIPSReconnecting = ref<boolean>(false)
 export const isOpenSIPSInitialized = ref<boolean>(false)
 export const usedWidgetShadowRootEl = ref<HTMLElement>()
 
 /* Device management */
-export const activeInputDevice = vsipAPI.state.selectedInputDevice
-export const inputDevicesList = vsipAPI.state.inputMediaDeviceList
-
-export const activeOutputDevice = vsipAPI.state.selectedOutputDevice
-export const outputDevicesList = vsipAPI.state.outputMediaDeviceList
-export const ringingDevicesList = vsipAPI.state.outputMediaDeviceList
+export const activeInputDevice = ref<string>('')
+export const inputDevicesList = ref<Array<MediaDeviceInfo>>([])
+export const activeOutputDevice = ref<string>('')
+export const outputDevicesList = ref<Array<MediaDeviceInfo>>([])
+export const ringingDevicesList = ref<Array<MediaDeviceInfo>>([])
 export const activeRingingDevice = ref<string>('default')
-export const microphoneInputLevel = vsipAPI.state.microphoneInputLevel
+export const microphoneInputLevel = ref<number>(2)
 
 /* Calls management */
-export const activeCalls = vsipAPI.state.activeCalls
-export const allRooms = computed(() => {
-    return Object.values(vsipAPI.state.activeRooms.value)
-})
-export const currentActiveRoom = vsipAPI.state.currentActiveRoomId
-export const allCallStatuses = computed(() => {
-    return Object.values(vsipAPI.state.callStatus.value)
+export const allActiveCalls = ref<Array<ICall>>([])
+export const allRooms = ref<Array<IRoom>>([])
+export const currentActiveRoom = ref<number | undefined>(undefined)
+export const allCallStatuses = ref<Array<ICallStatus>>([])
+
+export const activeCalls = computed(() => {
+    const calls: {[key: string]: ICall} = {}
+
+    allActiveCalls.value.forEach((call) => {
+        calls[call._id] = call
+    })
+
+    return calls
 })
 
 /* Call settings */
-export const isMuted = vsipAPI.state.isMuted
-export const isDND =  vsipAPI.state.isDND
-export const isMuteWhenJoin = vsipAPI.state.muteWhenJoin
-export const originalStream = vsipAPI.state.originalStream
-export const callAddingInProgress = vsipAPI.state.callAddingInProgress
-export const isCallWaitingEnabled = vsipAPI.state.isCallWaitingEnabled
+export const isMuted = ref<boolean>(false)
+export const isDND = ref<boolean>(false)
+export const isMuteWhenJoin = ref<boolean>(false)
+export const originalStream = ref<MediaStream | null>(null)
+export const callAddingInProgress = ref<string | undefined>()
+export const isCallWaitingEnabled = ref<boolean>(true)
 
-export const speakerVolume = vsipAPI.state.speakerVolume
-export const callTime = vsipAPI.state.callTime
-export const callMetrics = vsipAPI.state.callMetrics
+export const speakerVolume = ref<number>(1)
+export const callTime = ref<{ [key: string]: ITimeData }>({})
+export const callMetrics = ref<{ [key: string]: unknown }>({})
 
 export const muted = computed(() => {
-    return Object.values(activeCalls.value).length ? isMuted.value : isMuteWhenJoin.value
-})
-
-export const allActiveCalls = computed(() => {
-    return Object.values(activeCalls.value)
+    return allActiveCalls.value.length ? isMuted.value : isMuteWhenJoin.value
 })
 
 /* Video conferencing */
@@ -95,10 +98,6 @@ export const isWhiteboardEnabled = computed(() => {
     return isScreenShareWhiteboardEnabled.value ||
         isPresentationWhiteboardEnabled.value ||
         isImageWhiteboardEnabled.value
-})
-
-watch(activeCalls, (calls) => {
-    processCallsTime(calls)
 })
 
 watch(streamSources,
@@ -171,6 +170,33 @@ function isOpensips (opensipsJS: OpenSIPSJS | undefined): opensipsJS is OpenSIPS
     return opensipsJS !== undefined
 }
 
+function makeOpenSIPSJSOptions (credentials: ISIPSCredentials): IOpenSIPSJSOptions {
+    const configuration: IOpenSIPSConfiguration = {
+        session_timers: false,
+        uri: `sip:${credentials.username}@${credentials.domain}`
+    }
+
+    if (credentials.password) {
+        configuration.password = credentials.password
+    }
+
+    if (credentials.authorization_jwt) {
+        configuration.authorization_jwt = credentials.authorization_jwt
+    }
+
+    return {
+        configuration,
+        socketInterfaces: [ `wss://${credentials.domain}` ],
+        sipDomain: `${credentials.domain}`,
+        sipOptions: {
+            session_timers: false,
+            extraHeaders: [ 'X-Bar: bar' ],
+            pcConfig: {},
+        },
+        modules: [ 'audio', 'video' ]
+    }
+}
+
 interface CallTimeIntervalsType {
     [key: string]: any
 }
@@ -212,7 +238,7 @@ function validateCredentials (credentials: ISIPSCredentials) {
 }
 
 function processCallsTime (calls: AllActiveCallsType) {
-    const removedCalls = Object.values(activeCalls.value).filter(oldCall => {
+    const removedCalls = allActiveCalls.value.filter(oldCall => {
         return !Object.values(calls).some(newCall => {
             return newCall._id === oldCall._id
         })
@@ -221,7 +247,7 @@ function processCallsTime (calls: AllActiveCallsType) {
     removeOldCallTimes(removedCalls)
 
     const newCalls = Object.values(calls).filter(call => {
-        return !Object.values(activeCalls.value).some(existingCall => {
+        return !allActiveCalls.value.some(existingCall => {
             return existingCall._id === call._id
         })
     })
@@ -243,6 +269,86 @@ function processCallsTime (calls: AllActiveCallsType) {
  */
 function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
     return opensipsJS
+        .on('connection', (value: boolean) => {
+            isOpenSIPSReady.value = value
+        })
+        .on('reconnecting', (value: boolean) => {
+            isOpenSIPSReconnecting.value = value
+        })
+        .on('changeActiveInputMediaDevice', (value: string) => {
+            activeInputDevice.value = value
+        })
+        .on('changeActiveOutputMediaDevice', (value: string) => {
+            activeOutputDevice.value = value
+        })
+        .on('changeIsMuted', (value: boolean) => {
+            isMuted.value = value
+        })
+        .on('changeIsDND', (value) => {
+            isDND.value = value
+        })
+        .on('changeMuteWhenJoin', (value: boolean) => {
+            isMuteWhenJoin.value = value
+        })
+        .on('changeIsCallWaiting', (value) => {
+            isCallWaitingEnabled.value = value
+        })
+        .on('changeActiveStream', (value) => {
+            originalStream.value = value
+        })
+        .on('callAddingInProgressChanged', (value) => {
+            callAddingInProgress.value = value
+        })
+        .on('changeAvailableDeviceList', (devices: Array<MediaDeviceInfo>) => {
+            const inputDevices = devices.filter(d => d.kind === 'audioinput')
+            const outputDevices = devices.filter(d => d.kind === 'audiooutput')
+
+            inputDevicesList.value = [ ...inputDevices ] /*inputDevices.map((d) => ({
+                label: d.label,
+                deviceId: d.deviceId,
+                kind: d.deviceId,
+                groupId: d.deviceId,
+            }))*/
+
+            outputDevicesList.value = [ ...outputDevices ] /*outputDevices.map((d) => ({
+                label: d.label,
+                deviceId: d.deviceId,
+                kind: d.deviceId,
+                groupId: d.deviceId,
+            }))*/
+
+            ringingDevicesList.value = [ ...outputDevices ]
+        })
+        .on('changeActiveCalls', (calls: AllActiveCallsType) => {
+            processCallsTime(calls)
+            const parsedCalls = Object.values(calls)
+            allActiveCalls.value = [ ...parsedCalls ]
+        })
+        .on('addRoom', (data: RoomChangeEmitType) => {
+            const rooms = Object.values(data.roomList)
+            allRooms.value = [ ...rooms ]
+        })
+        .on('updateRoom', (data: RoomChangeEmitType) => {
+            const rooms = Object.values(data.roomList)
+            allRooms.value = [ ...rooms ]
+        })
+        .on('removeRoom', (data: RoomChangeEmitType) => {
+            const rooms = Object.values(data.roomList)
+            allRooms.value = [ ...rooms ]
+        })
+        .on('currentActiveRoomChanged', (roomId: number | undefined) => {
+            currentActiveRoom.value = roomId
+        })
+        .on('changeCallStatus', (data: AllActiveCallsStatusType) => {
+            const statuses = Object.values(data)
+            allCallStatuses.value = [ ...statuses ]
+        })
+        .on('changeCallTime', (data) => {
+            callTime.value = { ...data }
+        })
+        .on('changeCallMetrics', (data) => {
+            callMetrics.value = { ...data }
+        })
         .on('conferenceStart', () => {
             conferenceStarted.value = true
         })
@@ -306,43 +412,111 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
         try {
             validateCredentials(credentials)
 
-            const connectOptions = {
-                domain: credentials.domain,
-                username: credentials.username,
-                modules: [ 'audio', 'video' ]
+            const opensipsOptions = makeOpenSIPSJSOptions(credentials)
+
+            const opensipsjs = new OpenSIPSJS(opensipsOptions)
+
+            // const screenSharePlugin = new ScreenSharePlugin()
+
+            // const rootDocument = document.querySelector('opensips-widget')
+            // const shadowRootDocument = rootDocument.shadowRoot
+
+            // const screenShareWhiteBoardPlugin = new ScreenShareWhiteBoardPlugin(screenSharePlugin, {
+            //     selectors: {
+            //         document: shadowRootDocument
+            //     }
+            // })
+
+            //console.log('this', this)
+
+            /*Object.defineProperty(window, 'document', {
+                value: shadowRootDocument,
+                writable: true,
+                configurable: true,
+            })*/
+
+            /*const originalGetElementById = Document.prototype.getElementById
+            Document.prototype.getElementById = function (id) {
+                // Attempt to get from Shadow Root first
+                const fromShadow = shadowRootDocument.getElementById(id)
+                if (fromShadow) return fromShadow
+
+                // Fallback to the real document
+                return originalGetElementById.call(this, id)
             }
 
-            if (credentials.authorization_jwt) {
-                connectOptions.authorization_jwt = credentials.authorization_jwt
+            const originalGetElementsByClassName = Document.prototype.getElementsByClassName
+            Document.prototype.getElementsByClassName = function (className) {
+                // Try the shadow root first
+                const shadowResults = shadowRootDocument.getElementsByClassName(className)
+                if (shadowResults.length > 0) {
+                    return shadowResults
+                }
+                // Fallback to real document
+                return originalGetElementsByClassName.call(this, className)
+            }*/
+
+            /*const originalCreateElement = Document.prototype.createElement
+            Document.prototype.createElement = function (tagName, options) {
+                // If you want newly created elements to belong to the same ownerDocument
+                // as the shadow root, do something like this:
+                const doc = shadowRootDocument.ownerDocument
+                return doc.createElement(tagName, options)
             }
 
-            if (credentials.password) {
-                connectOptions.password = credentials.password
-            }
+            const originalAddEventListener = Document.prototype.addEventListener
+            Document.prototype.addEventListener = function (type, listener, options) {
+                // Divert all event listeners to the shadow root’s event target
+                return shadowRootDocument.addEventListener(type, listener, options)
+            }*/
 
-            vsipAPI.actions.init(connectOptions, {}).then((opensipsjs) => {
-                state.opensipsjs = opensipsjs
+            //const konvaDrawerContainer = shadowRootDocument.getElementById('presentationCanvasWrapper')
+            //console.log('konvaDrawerContainer', konvaDrawerContainer)
 
-                registerOpenSIPSListeners(state.opensipsjs)
-                    .on('connection', () => {
-                        if (autoAnswerDefaultBehaviour.value) {
-                            state.opensipsjs?.audio.setAutoAnswer(true)
-                        }
+            // const whiteBoardPlugin = new WhiteBoardPlugin({
+            //     mode: 'whiteboard',
+            //     selectors: {
+            //         container: 'presentation-video-container',
+            //         drawerContainer: 'presentationCanvasWrapper',
+            //         //konvaContainer: konvaDrawerContainer,
+            //         document: shadowRootDocument
+            //     }
+            // })
 
-                        if(callWaitingDefaultBehaviour.value !== isCallWaitingEnabled.value) {
-                            state.opensipsjs?.audio.setCallWaiting(callWaitingDefaultBehaviour.value)
-                        }
+            /*const streamMaskPlugin = new StreamMaskPlugin({
+                //effect: 'backgroundImageEffect',
+                effect: 'bokehEffect',
+                //base64Image: base64Image
+            }, {
+                immediate: false
+            })*/
 
-                        if(DNDDefaultBehaviour.value !== isDND.value ) {
-                            state.opensipsjs?.audio.setDND(DNDDefaultBehaviour.value)
-                        }
+            // opensipsjs.use(screenSharePlugin)
+            //opensipsjs.use(streamMaskPlugin)
+            // opensipsjs.use(whiteBoardPlugin)
+            // opensipsjs.use(screenShareWhiteBoardPlugin)
 
-                        resolve(opensipsjs)
-                    })
-                    .begin()
+            state.opensipsjs = opensipsjs
 
-                isOpenSIPSInitialized.value = true
-            })
+            registerOpenSIPSListeners(state.opensipsjs)
+                .on('connection', () => {
+                    if (autoAnswerDefaultBehaviour.value) {
+                        state.opensipsjs?.audio.setAutoAnswer(true)
+                    }
+
+                    if(callWaitingDefaultBehaviour.value !== isCallWaitingEnabled.value) {
+                        state.opensipsjs?.audio.setCallWaiting(callWaitingDefaultBehaviour.value)
+                    }
+
+                    if(DNDDefaultBehaviour.value !== isDND.value ) {
+                        state.opensipsjs?.audio.setDND(DNDDefaultBehaviour.value)
+                    }
+
+                    resolve(opensipsjs)
+                })
+                .begin()
+
+            isOpenSIPSInitialized.value = true
         } catch (e) {
             reject(e)
         }
@@ -401,7 +575,7 @@ export function useOpenSIPSJS () {
     }
 
     function mute (toMute: boolean) {
-        if (Object.values(activeCalls.value).length) {
+        if (allActiveCalls.value.length) {
             muteAgent(toMute)
         } else {
             setMuteWhenJoin(toMute)
