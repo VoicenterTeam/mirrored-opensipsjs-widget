@@ -1,17 +1,18 @@
 <template>
-    <div className="flex justify-center w-full h-[32px] p-0.5 bg-primary-bg">
+    <div className="flex w-full h-[32px] p-0.5 bg-primary-bg">
         <InputOutgoingCall
             v-model="inputValue"
-            bg-color="secondary-bg"
-            @call="onCallClick"
+            bg-color=""
+            @call="startCall"
             @close="clearOutgoingInput"
         />
-        <IncomingCallActionButton
+        <!--        <IncomingCallActionButton
             color="success"
             hover-color="additional-success-bg"
             :icon="CallIcon"
             size="lg"
-            @click="onCallClick" />
+            @click="startCall"
+        />-->
     </div>
 </template>
 
@@ -31,7 +32,7 @@ const clearOutgoingInput = () => {
     inputValue.value = ''
 }
 
-const onCallClick = () => {
+const startCall = () => {
     if (!inputValue.value) {
         return
     }
@@ -42,7 +43,10 @@ const typeDigit = (digit: string) => {
     inputValue.value = inputValue.value + digit.toString()
 }
 
-defineExpose({ typeDigit })
+defineExpose({
+    typeDigit,
+    startCall
+})
 </script>
 
 <style scoped>

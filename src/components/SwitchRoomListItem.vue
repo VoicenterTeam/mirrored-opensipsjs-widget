@@ -1,28 +1,23 @@
 <template>
-    <div :className="wrapperClasses">
-        <div
-            v-if="!isMultiCallMode"
-            className="flex flex-col items-center justify-evenly w-[92px] mx-3"
-        >
-            <span
-                v-if="displayCallerInfoName"
-                className="text-xs text-main-text font-medium"
+    <div class="flex justify-between items-center h-10 p-1">
+        <div class="flex">
+            <OptionActionButton
+                v-if="isActive"
+                icon="vc-lc-circle-pause"
+                size="2xl"
+                @click="onExitRoom"
+            />
+            <OptionActionButton
+                v-else
+                icon="vc-lc-log-in"
+                size="2xl"
+                @click="onSwitchRoom"
+            />
+            <div
+                class="pl-2 truncate"
+                style="max-width: 200px;"
             >
-                {{ callerName }}
-            </span>
-            <span
-                v-if="displayCallerInfoId"
-                className="text-xs text-main-text font-medium"
-            >
-                {{ callerNumber }}
-            </span>
-        </div>
-        <div
-            v-else
-            className="p-0.5"
-        >
-            <div className="overflow-hidden mx-3 text-main-text w-[92px] max-w-[92px] font-medium text-xs text-ellipsis whitespace-nowrap">
-                {{ callerName }} {{ callerNumber }}
+                {{ identifier }}
             </div>
         </div>
 
@@ -43,30 +38,31 @@
             />
         </div>-->
 
-        <div className="flex items-center mx-2 w-[46px]">
-            <span className="text-xs text-main-text">
-                {{ callTime }}
-            </span>
-        </div>
+        <div class="flex">
+            <div className="flex items-center mx-2 w-[46px]">
+                <span className="text-xs text-main-text">
+                    {{ callTime }}
+                </span>
+            </div>
 
-        <div className="flex items-center mx-1">
-            <IncomingCallActionButton
-                v-if="!isOnLocalHold"
-                color="primary"
-                :icon="HoldIcon"
-                :size="holdIconSize"
-                @click="putOnHold"
-            />
-            <IncomingCallActionButton
-                v-else
-                color="primary"
-                :icon="OnHoldIcon"
-                :size="holdIconSize"
-                @click="unHoldCall"
-            />
-        </div>
+            <div className="flex items-center mx-1">
+                <IncomingCallActionButton
+                    v-if="!isOnLocalHold"
+                    color="primary"
+                    :icon="HoldIcon"
+                    :size="holdIconSize"
+                    @click="putOnHold"
+                />
+                <IncomingCallActionButton
+                    v-else
+                    color="primary"
+                    :icon="OnHoldIcon"
+                    :size="holdIconSize"
+                    @click="unHoldCall"
+                />
+            </div>
 
-        <!--        <div className="mx-2">
+            <!--        <div className="mx-2">
             <IncomingCallActionButton
                 color="danger"
                 hover-color="additional-danger-bg"
@@ -78,9 +74,9 @@
             />
         </div>-->
 
-        <OptionActionButton icon="vc-lc-ellipsis-vertical" />
+            <OptionActionButton icon="vc-lc-ellipsis-vertical" />
 
-        <!--        <div v-if="!props.isSingleRoom || props.isSingleRoom && allowTransfer">
+            <!--        <div v-if="!props.isSingleRoom || props.isSingleRoom && allowTransfer">
             <CallOptionsIconButton
                 :is-single-room="props.isSingleRoom"
                 :is-multi-call-mode="isMultiCallMode"
@@ -89,20 +85,6 @@
                 @move-click="onMoveClick"
             />
         </div>-->
-
-        <div class="ml-1">
-            <AddCallerButton />
-        </div>
-
-        <div
-            v-if="allRooms.length > 1"
-            class="ml-1"
-        >
-            <RoomActionButton
-                icon="vc-lc-arrow-right-left"
-                label="SWITCH"
-                @click="onSwitchRoomButtonClick"
-            />
         </div>
     </div>
 </template>
@@ -128,10 +110,10 @@ import OptionActionButton from '@/components/base/OptionActionButton.vue'
 
 const props = withDefaults(
     defineProps<{
-        call: UnwrapRef<ICall>
-        isFirstCaller: boolean
-        isSingleCall: boolean
-        isSingleRoom: boolean
+        roomId: number
+        isActive: boolean
+        identifier: string
+        oldestCallId: string
     }>(),
     {}
 )
@@ -144,6 +126,8 @@ const emit = defineEmits<{
     (e: 'transfer-click', callId: string): void
     (e: 'move-click', callId: string): void
     (e: 'open-room-list'): void
+    (e: 'switch-room'): void
+    (e: 'exit-room'): void
 }>()
 
 const isOnLocalHold = ref<boolean>(false)
@@ -156,61 +140,17 @@ const holdIconSize = computed(() => {
     return isMultiCallMode.value ? 'base' : 'xl'
 })
 
-const soundOnIconSize = computed(() => {
-    return isMultiCallMode.value ? 'base-sm' : 'xl-base'
-})
-
-const soundOffIconSize = computed(() => {
-    return isMultiCallMode.value ? 'base' : 'xl-lg'
-})
-
-const declineIconSize = computed(() => {
-    return isMultiCallMode.value ? 'base' : 'xxxl'
-})
-
-const callOptionsButtonClasses = computed(() => {
-    return isMultiCallMode.value ? 'p-0.5' : ''
-})
-
-const declineButtonClasses = computed(() => {
-    return isMultiCallMode.value ? 'p-0.5' : ''
-})
-
-const wrapperClasses = computed(() => {
-    let baseClasses = 'flex w-full items-center p-1 '
-
-    if (isMultiCallMode.value) {
-        baseClasses += 'h-[20px] justify-between '
-    } else {
-        baseClasses += 'h-[40px] '
-    }
-
-    if (allRooms.value.length > 1) {
-        baseClasses += ' room-button-gradient justify-between'
-    }
-
-    if (props.isSingleRoom) {
-        if (props.isSingleCall) {
-            return baseClasses
-        } else {
-            return props.isFirstCaller ? baseClasses : baseClasses + ' border-t border-t-border-lines'
-        }
-    } else {
-        if (props.isSingleCall) {
-            return baseClasses + ' border-t border-t-border-lines'
-        } else {
-            return props.isFirstCaller ? baseClasses : baseClasses + ' border-t border-t-border-lines'
-        }
-    }
-})
-
 const callTime = computed(() => {
-    const time = callTimes.value[props.call._id]
+    const time = callTimes.value[props.oldestCallId]
     return getFormattedTimeFromSeconds(time)
 })
 
-function onSwitchRoomButtonClick () {
-    emit('open-room-list')
+function onExitRoom () {
+    emit('exit-room')
+}
+
+function onSwitchRoom () {
+    emit('switch-room')
 }
 
 const putOnHold = () => {

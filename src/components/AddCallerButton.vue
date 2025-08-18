@@ -8,18 +8,17 @@
             placement="top"
         >
             <template #reference>
-                <ActionIconButton
-                    icon="vc-lc-grip"
-                    color="primary-actions"
-                    @click="openSettingsPopover"
+                <RoomActionButton
+                    icon="vc-lc-circle-plus"
+                    label="ADD CALLER"
                 />
             </template>
 
             <div class="p-2">
                 <Keypad
-                    :show-input="false"
-                    :show-title="false"
+                    title="Add Caller"
                     @press="onPress"
+                    @call="onStartCall"
                 />
             </div>
 
@@ -42,7 +41,11 @@ import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
 import BasePopper from '@/components/base/BasePopper.vue'
 import { VcPopover } from '@voicenter-team/voicenter-ui-plus'
 import Keypad from '@/components/Keypad.vue'
+import { useOpenSIPSJS, currentActiveRoom } from '@/composables/opensipsjs'
 import ActionIconButton from '@/components/base/ActionIconButton.vue'
+import RoomActionButton from '@/components/base/RoomActionButton.vue'
+import { outgoingCallInputPlaceholder } from '@/composables/useWidgetConfig.ts'
+const { startCall } = useOpenSIPSJS()
 
 const props = withDefaults(
     defineProps<{
@@ -59,6 +62,14 @@ const isPopoverOpened = ref(false)
 
 const onPress = (value: string) => {
     emit('press', value)
+}
+
+function onStartCall (target: string) {
+    if (!currentActiveRoom.value) {
+        return
+    }
+
+    startCall(target, true)
 }
 
 const openSettingsPopover = () => {

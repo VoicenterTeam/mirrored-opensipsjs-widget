@@ -1,15 +1,17 @@
 <template>
     <div
         ref="root"
-        class="flex w-6 z-50 cursor-grab draggable-area"
+        class="flex w-8 z-50 cursor-grab draggable-area"
     >
-        <DragDrop color="var(--border-lines)" />
+        <i
+            class="vc-lc-grip-vertical text-2xl"
+            style="color: #8292A5"
+        />
     </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import DragDrop from '@/assets/icons/dragdrop.svg?component'
 
 /* Data */
 const root = ref<HTMLElement>()

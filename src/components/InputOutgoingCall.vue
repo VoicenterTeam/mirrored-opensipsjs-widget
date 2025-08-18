@@ -1,5 +1,5 @@
 <template>
-    <div className="flex h-full justify-center p-0.5">
+    <div className="flex w-full h-full justify-center p-0.5">
         <div :className="wrapperClasses">
             <input
                 v-model="inputValue"
@@ -8,8 +8,14 @@
                 @input="applyPatterns"
                 @keyup.enter.prevent="onKeyPressed"
             >
-            <div v-if="inputValue" className="w-4 h-4 text-secondary-text">
-                <div :className="buttonClasses" @click="onClose">
+            <div
+                v-if="inputValue"
+                className="w-4 h-4 text-secondary-text"
+            >
+                <div
+                    :className="buttonClasses"
+                    @click="onClose"
+                >
                     <div className="w-2 h-2">
                         <CloseIcon />
                     </div>
@@ -45,11 +51,11 @@ const emit = defineEmits<{
 const inputValue = useVModel(props, 'modelValue', emit) as WritableComputedRef<string>
 
 const wrapperClasses = computed(() => {
-    return `flex w-[156px] bg-${props.bgColor} border border-border-lines rounded p-0.5`
+    return `flex w-full bg-${props.bgColor} border border-border-lines rounded p-0.5`
 })
 
 const inputClasses = computed(() => {
-    return `outline-0 bg-${props.bgColor} text-main-text text-xxs pl-2 remove-arrow`
+    return `outline-0 bg-${props.bgColor} w-full text-main-text text-sm pl-2 remove-arrow`
 })
 
 const buttonClasses = computed(() => {

@@ -1,5 +1,87 @@
 <template>
-    <div className="flex items-end bg-primary-bg">
+    <div>
+        <div
+            v-if="showCallInfoBlock"
+            class="flex justify-between p-1 pl-2"
+            style="box-shadow: 0 1px 5px -3px gray"
+        >
+            <div class="font-semibold">
+                {{ callsInActiveRoom.length }} participants
+            </div>
+
+            <div class="flex">
+                <div class="ml-1">
+                    <AddCallerButton />
+                </div>
+
+                <div
+                    v-if="allRooms.length > 1"
+                    class="ml-1"
+                >
+                    <RoomActionButton
+                        icon="vc-lc-arrow-right-left"
+                        label="SWITCH"
+                        @click="onSwitchRoomButtonClick"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <div
+            v-if="showRoomInfoBlock"
+            class="flex justify-between p-1 pl-2"
+            style="box-shadow: 0 1px 5px -2px gray;"
+        >
+            <div class="font-semibold">
+                {{ allRooms.length }} rooms
+            </div>
+
+            <div class="flex">
+                <div class="ml-1">
+                    <RoomActionButton
+                        icon="vc-lc-undo-2"
+                        label="Back"
+                        @click="onSwitchRoomButtonClick"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <div v-if="isRoomListView">
+            <div
+                v-for="(room, index) in activeRooms"
+                :key="room.roomId"
+                :class="{'list-item': activeRooms.length > 1}"
+            >
+                <SwitchRoomListItem
+                    :room-id="room.roomId"
+                    :is-active="room.isActive"
+                    :identifier="room.identifier"
+                    :oldest-call-id="room.oldestCallId"
+                    @switch-room="onSetActiveRoom(room.roomId)"
+                    @exit-room="onSetActiveRoom(undefined)"
+                />
+            </div>
+        </div>
+        <div v-else>
+            <div
+                v-for="(call, index) in callsInActiveRoom"
+                :key="call._id"
+                className="flex w-full"
+                :class="{'list-item': callsInActiveRoom.length > 1}"
+            >
+                <CallView
+                    :call="call"
+                    :is-single-room="allRooms.length === 1"
+                    :is-single-call="callsInActiveRoom.length === 1"
+                    :is-first-caller="index === 0"
+                    @transfer-click="onTransferClick"
+                    @move-click="onMoveClick"
+                    @terminate-call="onCallTerminate"
+                />
+            </div>
+        </div>
+        <!--    <div className="flex items-end bg-primary-bg">
         <div
             v-if="allRooms.length > 1 || !currentActiveRoom"
             className="flex flex-col-reverse"
@@ -37,16 +119,23 @@
                 />
             </div>
         </div>
+    </div>-->
     </div>
 </template>
 
 <script lang="ts" setup>
-import type { UnwrapRef } from 'vue'
-import { computed } from 'vue'
+import { UnwrapRef, watch } from 'vue'
+import { ref, computed } from 'vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
-import ActiveCallView from '@/components/views/active/ActiveCallView.vue'
-import { allRooms, currentActiveRoom } from '@/composables/opensipsjs'
+import CallView from '@/components/CallView.vue'
+import { useOpenSIPSJS, allRooms, allActiveCalls, currentActiveRoom } from '@/composables/opensipsjs'
 import RoomButton from '@/components/views/active/RoomButton.vue'
+import useCallInfo from '@/composables/useCallInfo'
+import AddCallerButton from '@/components/AddCallerButton.vue'
+import RoomActionButton from '@/components/base/RoomActionButton.vue'
+import SwitchRoomListItem from '@/components/SwitchRoomListItem.vue'
+
+const { terminateCall, setActiveRoom } = useOpenSIPSJS()
 
 const props = withDefaults(
     defineProps<{
@@ -55,17 +144,70 @@ const props = withDefaults(
     {}
 )
 
+const isRoomListView = ref(false)
+
 const callsInActiveRoom = computed(() => {
-    const cls = props.calls.filter(call => {
+    return allActiveCalls.value.filter((call) => {
         return call.roomId === currentActiveRoom.value
     })
-    return cls
 })
+
+const showCallInfoBlock = computed(() => {
+    return allRooms.value.length > 1 && !isRoomListView.value //|| callsInActiveRoom.value.length > 1
+})
+
+const showRoomInfoBlock = computed(() => {
+    return allRooms.value.length > 0 && isRoomListView.value  //|| callsInActiveRoom.value.length > 1
+})
+
+const activeRooms = computed(() => {
+    return allRooms.value.map((room) => {
+        const callsInRoom = allActiveCalls.value.filter((call) => {
+            return call.roomId === room.roomId
+        })
+
+        let singleParticipantName = ''
+
+        if (callsInRoom.length === 1) {
+            const { callerNumber } = useCallInfo(allActiveCalls.value[0])
+            singleParticipantName = callerNumber.value
+        }
+
+        const oldestCall = callsInRoom.sort((call_1, call_2) => {
+            const call1StartTime = new Date(call_1.start_time)
+            const call2StartTime = new Date(call_2.start_time)
+
+            console.log('call1StartTime', call1StartTime.getTime())
+            console.log('call2StartTime', call2StartTime.getTime())
+            return call1StartTime.getTime() - call2StartTime.getTime()
+        })
+        console.log('oldestCall', oldestCall)
+        console.log('callsInRoom', callsInRoom)
+
+        return {
+            roomId: room.roomId,
+            isActive: room.roomId === currentActiveRoom.value,
+            identifier: callsInRoom.length > 1 ? `${callsInRoom.length} participants` : singleParticipantName,
+            oldestCallId: oldestCall[0]._id
+        }
+    })
+})
+
 
 const emit = defineEmits<{
     (e: 'transfer-click', callId: string): void
     (e: 'move-click', callId: string): void
 }>()
+
+function onSetActiveRoom (roomId) {
+    setActiveRoom(roomId)
+    console.log('onSetActiveRoom', roomId)
+    isRoomListView.value = false
+}
+
+function onSwitchRoomButtonClick () {
+    isRoomListView.value = !isRoomListView.value
+}
 
 const onTransferClick = (callId: string) => {
     emit('transfer-click', callId)
@@ -74,8 +216,20 @@ const onTransferClick = (callId: string) => {
 const onMoveClick = (callId: string) => {
     emit('move-click', callId)
 }
+
+function onCallTerminate () {
+    console.log('onTerminate')
+    isRoomListView.value = true
+}
+
+/*watch(allActiveCalls, () => {
+    isRoomListView.value = false
+}, { deep: true })*/
 </script>
 
 <style scoped>
-
+.list-item:nth-child(odd) {
+  @apply bg-primary-actions-bg--focus;
+  /*background-color: #dadada;*/
+}
 </style>

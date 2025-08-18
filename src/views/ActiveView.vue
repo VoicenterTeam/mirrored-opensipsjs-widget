@@ -18,7 +18,12 @@
             />
         </div>
         <ActiveCallsView
-            v-show="!transferringCall && !movingCall && !incomingUnansweredCall && !outgoingUnansweredCall"
+            v-show="!transferringCall &&
+                !movingCall &&
+                !incomingUnansweredCall &&
+                !outgoingUnansweredCall &&
+                isAnyActiveCall
+            "
             :calls="activeCalls"
             @transfer-click="onTransferClick"
             @move-click="onMoveClick"
@@ -59,6 +64,7 @@
             @merge-click="onCallsMerge"
             @toggle-keypad="toggleManualKeypad"
             @key-press="onKeypadKeyPress"
+            @start-call="onStartCall"
         />
         <div
             v-if="showBottomKeypad"
@@ -171,6 +177,12 @@ watchDebounced(
         maxWait: 1000
     },
 )
+
+const onStartCall = () => {
+    if (outgoingCallView.value) {
+        outgoingCallView.value.startCall()
+    }
+}
 
 const toggleManualKeypad = () => {
     showManualKeypad.value = !showManualKeypad.value

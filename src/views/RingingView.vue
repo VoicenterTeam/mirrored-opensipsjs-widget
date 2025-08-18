@@ -47,7 +47,7 @@
         >
             <!--            Answering...-->
             <div className="flex items-center mx-2 w-[46px]">
-                <span className="text-xs text-main-text font-medium">
+                <span className="text-xs text-main-text">
                     {{ callTime }}
                 </span>
             </div>

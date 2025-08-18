@@ -1,15 +1,23 @@
 <template>
     <div>
-        <BasePopper v-model="isPopoverOpened" class="--base-popper">
+        <BasePopper
+            v-model="isPopoverOpened"
+            class="--base-popper"
+        >
             <template #content>
                 <Settings />
             </template>
 
-            <WidgetIconButton
+            <!--            <WidgetIconButton
                 color="primary"
                 :icon="SettingsIcon"
                 :additional-classes="props.buttonClasses"
-                @click="openSettingsPopover" />
+                @click="openSettingsPopover" />-->
+            <ActionIconButton
+                icon="vc-lc-settings"
+                color="primary-actions"
+                @click="openSettingsPopover"
+            />
         </BasePopper>
     </div>
 </template>
@@ -20,6 +28,7 @@ import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
 import SettingsIcon from '@/assets/icons/settings.svg?component'
 import BasePopper from '@/components/base/BasePopper.vue'
 import Settings from '@/components/Settings.vue'
+import ActionIconButton from '@/components/base/ActionIconButton.vue'
 
 const props = withDefaults(
     defineProps<{

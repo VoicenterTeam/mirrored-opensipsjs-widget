@@ -29,6 +29,10 @@ module.exports = {
             ...schemeColors,
             ...colors
         },
+        backgroundColor: {
+            ...schemeColors,
+            ...colors
+        },
         //fill: schemeColors,
         fontFamily: {
             DEFAULT: [ 'Montserrat', 'sans-serif' ],

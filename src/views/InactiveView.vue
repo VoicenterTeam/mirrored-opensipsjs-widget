@@ -1,20 +1,27 @@
 <template>
-    <div className="flex bg-inactive-bg h-[60px] flex-row">
+    <div className="flex bg-primary-actions-bg--focus h-[60px] flex-row">
         <div :className="activateButtonClasses">
-            <WidgetIconButton
-                color="success"
+            <!--            <WidgetIconButton
+                color="primary-actions"
+                pressed-color="primary-actions-bg&#45;&#45;focus"
                 :icon="StartIcon"
                 :disabled="disableButton"
                 size="xl"
-                additional-classes="rounded-full p-3.5"
+                additional-classes="rounded-full p-3.5 border border-primary-actions"
                 @click="activateTab"
-            />
+            />-->
+            <div
+                class="activate-button"
+                @click="activateTab"
+            >
+                <i class="vc-lc-circle-power text-primary-actions hover:text-primary-actions-bg--focus" />
+            </div>
         </div>
         <div
             v-if="!allowShrinkOnIdle"
             :className="`flex items-center px-4 justify-start uppercase w-[270px]`"
         >
-            <span className="text-center font-bold text-button-pressed-text">
+            <span className="text-center font-bold text-primary-actions">
                 {{ getTranslation('audio.activate') }}
             </span>
         </div>
@@ -33,7 +40,7 @@ import { getTranslation } from '@/plugins/translator'
 const { isActiveTab, tabIdWithActiveCall, activateTab } = useActiveTab()
 
 const activateButtonClasses = computed(() => {
-    let classes = 'text-primary p-1 '
+    let classes = 'text-primary p-1 pr-0 '
     if (allowShrinkOnIdle.value) {
         classes += 'px-8'
     } else {
@@ -50,5 +57,15 @@ const disableButton = computed(() => {
 </script>
 
 <style scoped>
-
+.activate-button {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+.activate-button i {
+  font-size: 40px;
+  margin: auto 0;
+  align-self: center;
+  cursor: pointer;
+}
 </style>

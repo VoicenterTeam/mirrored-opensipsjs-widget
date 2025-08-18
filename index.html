@@ -34,22 +34,23 @@
                     'main-text': '#414C59',
                     'secondary-text': '#8292A5',
                     'button-pressed-text': '#FFF',
-                    'border-lines': '#DDD',
+                    'border-lines': '#F3F3F3',
                     'primary-bg': '#FFF',
                     'secondary-bg': '#F0F2F4',
-                    'inactive-bg': '#B9C2CC',
+                    'inactive-bg': '#F2F6FF',
                     'success': '#7CC24F',
                     'danger': '#EC2A2A',
                     'additional-danger-bg': '#F44C4C',
                     'additional-success-bg': '#75B8A0',
-                    'additional-bg': '#B0BFC2'
+                    'additional-bg': '#B0BFC2',
+                    'draggable-bg': '#FFF'
                 },
                 widgetType: 'audio',
                 lang: 'he',
                 audioConfig: {
                     layoutConfig: {
-                        mode: 'docked',
-                        type: 'phoneView',
+                        mode: 'floating',
+                        type: 'rounded',
                         position: {
                             top: 'auto',
                             left: 'auto',
@@ -88,7 +89,7 @@
                 },
                 shrinkOnIdle: false,
                 ringingSound: '',
-                outgoingCallPlaceHolder: '',
+                outgoingCallPlaceHolder: 'Enter number',
                 outgoingInputRegexValidator: [
                     /^\+?\d*$/
                 ]
