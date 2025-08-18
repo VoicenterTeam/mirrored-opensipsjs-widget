@@ -1,40 +1,50 @@
 <template>
     <button
-        style="height: 30px; width: 30px; padding: 6px 5px 5px 5px; margin: 1px;"
+        style="padding: 6px 5px 5px 5px; margin: 1px;"
+        :style="{height: buttonSize, width: buttonSize }"
         class="action-button"
         :class="`bg-${bgColor} ${rounded ? 'rounded-button': ''}`"
         :disabled="props.disabled"
         @click="onClick"
     >
-        <i
-            class="icon-base-size"
-            :class="`${icon} text-${color}`"
-        />
+        <i :class="`${icon} text-${color} icon-${size}-size`" />
     </button>
 </template>
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import type { Credentials } from '~/docs/composable/useAuthorisation.ts'
 
 const props = withDefaults(
     defineProps<{
         color: string
         bgColor: string
         icon: string
+        size?: 'base' | 'sm'
         rounded?: boolean
         disabled?: boolean
     }>(),
     {
         bgColor: 'primary-actions-bg--focus',
         disabled: false,
-        rounded: false
+        rounded: false,
+        size: 'base'
     }
 )
 
 const emit = defineEmits<{
     (e: 'click', payload: Event): void
 }>()
+
+const buttonSize = computed(() => {
+    if (props.size === 'base') {
+        return '30px'
+    }
+    else if (props.size === 'sm') {
+        return '26px'
+    }
+
+    return '30px'
+})
 
 function onClick (event) {
     emit('click', event)
@@ -59,6 +69,10 @@ function onClick (event) {
 
 .icon-base-size {
   font-size: 20px;
+}
+
+.icon-sm-size {
+  font-size: 16px;
 }
 </style>
 

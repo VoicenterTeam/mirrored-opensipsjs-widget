@@ -1,65 +1,100 @@
 <template>
-    <div className="flex min-h-[60px] justify-around items-center bg-primary-bg">
-        <div className="flex flex-col items-center justify-evenly w-[92px] mx-3">
-            <span
-                v-if="displayCallerInfoName"
-                className="text-xs text-main-text font-medium"
-            >
-                {{ callerName }}
-            </span>
-            <span
-                v-if="displayCallerInfoId"
-                className="text-xs text-main-text font-medium"
-            >
-                {{ callerNumber }}
-            </span>
-        </div>
-        <div v-if="!call.autoAnswer">
-            <IncomingCallActionButton
-                color="success"
-                hover-color="additional-success-bg"
-                :icon="CallIcon"
-                :disabled="answerClicked"
-                size="xxxl"
-                @click="answerIncomingCall"
-            />
-            <IncomingCallActionButton
-                color="danger"
-                hover-color="additional-danger-bg"
-                :icon="DeclineIcon"
-                size="xxxl"
-                additional-classes=""
-                @click="declineIncomingCall"
-            />
-            <IncomingCallActionButton
-                v-if="allowTransfer"
-                color="secondary"
-                hover-color="secondary-text"
-                :icon="TransferIcon"
-                size="xxxl"
-                additional-classes=""
-                @click="transferIncomingCall"
-            />
-        </div>
+    <div
+        class="p-1.5"
+    >
         <div
-            v-else
-            class="flex"
+            class="flex p-1"
+            style="box-shadow: 0 0 6px rgba(0,0,0,0.1); border-radius: 5px;"
         >
-            <!--            Answering...-->
-            <div className="flex items-center mx-2 w-[46px]">
-                <span className="text-xs text-main-text">
-                    {{ callTime }}
-                </span>
+            <div class="w-full">
+                <div
+                    class="flex text-sm text-main-text font-medium"
+                    style="width: 220px; max-width: 220px;"
+                >
+                    <span
+                        v-if="displayCallerInfoName && callerName"
+                        class="w-1/2 max-w-1/2 truncate"
+                    >
+                        {{ callerName }}
+                    </span>
+                    <span
+                        v-if="displayCallerInfoId && callerNumber"
+                        class="w-1/2 max-w-1/2 truncate"
+                    >
+                        {{ callerNumber }}
+                    </span>
+                </div>
+                <div class="text-xs text-inactive-text font-semibold">
+                    {{ getTranslation('audio.incoming.call').toUpperCase() }}
+                </div>
             </div>
+            <div
+                v-if="!call.autoAnswer"
+                class="flex items-center"
+            >
+                <div>
+                    <ActionIconButton
+                        icon="vc-icon-phone"
+                        color="white"
+                        bg-color="success-actions"
+                        rounded
+                        :disabled="answerClicked"
+                        @click="answerIncomingCall"
+                    />
+                </div>
+                <div class="ml-1">
+                    <ActionIconButton
+                        icon="vc-icon-phone-down"
+                        color="white"
+                        bg-color="destructive-actions"
+                        rounded
+                        @click="declineIncomingCall"
+                    />
+                </div>
+                <div
+                    v-if="allowTransfer"
+                    class="mx-1"
+                >
+                    <ActionIconButton
+                        icon="vc-lc-redo-2"
+                        color="primary-actions"
+                        bg-color="inactive-elements-bg--focus"
+                        size="sm"
+                        rounded
+                        @click="transferIncomingCall"
+                    />
+                </div>
 
-            <IncomingCallActionButton
-                color="danger"
-                hover-color="additional-danger-bg"
-                :icon="DeclineIcon"
-                size="xxxl"
-                additional-classes=""
-                @click="declineIncomingCall"
-            />
+                <!--                <IncomingCallActionButton
+                    v-if="allowTransfer"
+                    color="secondary"
+                    hover-color="secondary-text"
+                    :icon="TransferIcon"
+                    size="xxxl"
+                    additional-classes=""
+                    @click="transferIncomingCall"
+                />-->
+            </div>
+            <div
+                v-else
+                class="flex"
+            >
+                <!--            Answering...-->
+                <div className="flex items-center mx-2 w-[46px]">
+                    <span className="text-xs text-main-text">
+                        {{ callTime }}
+                    </span>
+                </div>
+
+                <IncomingCallActionButton
+                    color="danger"
+                    hover-color="additional-danger-bg"
+                    :icon="DeclineIcon"
+                    size="xxxl"
+                    additional-classes=""
+                    @click="declineIncomingCall"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -83,6 +118,8 @@ import {
 } from '@/composables/useWidgetConfig'
 import { defaultRingingSound } from '@/utils/ringingSound'
 import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
+import { getTranslation } from '@/plugins/translator'
+import ActionIconButton from '@/components/base/ActionIconButton.vue'
 
 const props = withDefaults(
     defineProps<{

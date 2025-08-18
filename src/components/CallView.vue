@@ -10,6 +10,8 @@
             />
         </div>
 
+        {{ callTimes }}
+
         <div
             class="flex text-xs text-main-text font-medium"
             style="width: 190px; max-width: 190px;"
@@ -109,7 +111,10 @@
             />
         </div>
 
-        <div class="pl-1">
+        <div
+            v-if="showHangupButton"
+            class="pl-1"
+        >
             <ActionIconButton
                 icon="vc-icon-phone-down"
                 color="white"
@@ -171,6 +176,10 @@ const isMultiCallMode = computed(() => {
 
 const showAddCallerButton = computed(() => {
     return allActiveCalls.value.length === 1
+})
+
+const showHangupButton = computed(() => {
+    return allActiveCalls.value.length !== 1
 })
 
 const showSwitchRoomButton = computed(() => {

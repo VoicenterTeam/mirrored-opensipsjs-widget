@@ -1,24 +1,30 @@
 <template>
     <div>
-        <BasePopper
+        <VcPopover
             v-model="isPopoverOpened"
-            class="--base-popper"
+            :teleported="false"
+            :popover-width="280"
+            :triggers="['click', 'touch']"
+            placement="top"
         >
-            <template #content>
-                <Settings />
+            <template #reference>
+                <ActionIconButton
+                    icon="vc-lc-settings"
+                    color="primary-actions"
+                    @click="openSettingsPopover"
+                />
             </template>
+
+            <div class="p-2">
+                <Settings />
+            </div>
 
             <!--            <WidgetIconButton
                 color="primary"
                 :icon="SettingsIcon"
                 :additional-classes="props.buttonClasses"
                 @click="openSettingsPopover" />-->
-            <ActionIconButton
-                icon="vc-lc-settings"
-                color="primary-actions"
-                @click="openSettingsPopover"
-            />
-        </BasePopper>
+        </VcPopover>
     </div>
 </template>
 
@@ -29,6 +35,7 @@ import SettingsIcon from '@/assets/icons/settings.svg?component'
 import BasePopper from '@/components/base/BasePopper.vue'
 import Settings from '@/components/Settings.vue'
 import ActionIconButton from '@/components/base/ActionIconButton.vue'
+import { VcPopover } from '@voicenter-team/voicenter-ui-plus'
 
 const props = withDefaults(
     defineProps<{
