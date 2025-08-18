@@ -1,12 +1,14 @@
 import { computed, ref } from 'vue'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
-import { KeyPadTriggerObjectType } from '@/constants/phone.ts'
+import { KeyPadTriggerObjectType, CALL_ACTIONS_NAMES } from '@/constants/phone.ts'
 import { ActionsPopupInitiator } from '@/types/phone'
 import { ActionsTriggerObjectType } from '@/constants/phone.ts'
-import { ActionsObjectType } from '@/types/phone'
+import { ActionsObjectType, CallActionName } from '@/types/phone'
 import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
 import { validTarget } from '@/helpers/general.ts'
+import { getTranslation } from '@/plugins/translator'
+
 const actionsPopupType = ref<null | ActionsPopupInitiator>(null)
 const callToMove = ref<string | undefined>(undefined)
 const callToTransfer = ref<string | undefined>(undefined)
@@ -50,7 +52,7 @@ export default function useCallActions () {
     }
 
     const capitalizeFirstLetter =  (input: string) => {
-        return  input.trim().replace(/^\w/, char => char.toUpperCase()) || ''
+        return input.trim().replace(/^\w/, char => char.toUpperCase()) || ''
     }
     const initCall = () => {
         if (!phoneNumber.value || !validTarget(phoneNumber.value)) {
@@ -66,7 +68,7 @@ export default function useCallActions () {
         onPhoneNumberChange('')
     }
     const shouldIncludeAction = (action: ActionsObjectType) => {
-        const isMoveAction = action.title === capitalizeFirstLetter('move')
+        const isMoveAction = action.name === CALL_ACTIONS_NAMES.MOVE
 
         if (roomsWithoutActive.value.length === 0 && isMoveAction) {
             return false
@@ -75,19 +77,34 @@ export default function useCallActions () {
         return true
     }
 
-    const createAction = (icon: string, color: string, textKey: string, action: () => void) => ({
+    const createAction = (icon: string, color: string, textKey: string, action: () => void, name: CallActionName): ActionsObjectType => ({
         icon,
         color,
         title: capitalizeFirstLetter(textKey),
-        action
+        action,
+        name
     })
     const separateCallActionsBaseConfig = computed(() => {
-        return [ [
-            // createAction('vc-lc-circle-pause', 'var(--red-icon-phone)', 'dialPad.actions.mute.recording', handleCallRecord),
-            createAction('vc-lc-forward', 'var(--blue-actions-button)', 'transfer', handleCallTransfer),
-            createAction('vc-lc-git-pull-request-arrow', 'var(--blue-actions-button)', 'move', handleCallMove),
-            // createAction('vc-lc-clipboard-pen', 'var(--time-grey)', 'dialPad.actions.fill.form', handleCallFormFill),
-        ] ]
+        return [
+            [
+                // createAction('vc-lc-circle-pause', 'var(--red-icon-phone)', 'dialPad.actions.mute.recording', handleCallRecord),
+                createAction(
+                    'vc-lc-forward',
+                    'var(--blue-actions-button)',
+                    getTranslation('audio.transfer'),
+                    handleCallTransfer,
+                    CALL_ACTIONS_NAMES.TRANSFER
+                ),
+                createAction(
+                    'vc-lc-git-pull-request-arrow',
+                    'var(--blue-actions-button)',
+                    getTranslation('audio.move'),
+                    handleCallMove,
+                    CALL_ACTIONS_NAMES.MOVE
+                ),
+                // createAction('vc-lc-clipboard-pen', 'var(--time-grey)', 'dialPad.actions.fill.form', handleCallFormFill),
+            ]
+        ]
     })
     const displayAllControls = computed(() => {
         const callCount = callsInActiveRoom.value.length
@@ -95,13 +112,37 @@ export default function useCallActions () {
     })
     const controlsConfig = computed(() => [
         // createAction(allCallsMuted.value ? 'vc-lc-mic-off' : 'vc-lc-mic', 'var(--red-icon-phone)', allCallsMuted.value ? 'dialPad.unmute.all' : 'dialPad.mute.all', toggleMuteAll),
-        createAction('vc-lc-phone', 'var(--blue-bg)', 'dialPad.new.call.button', () => onKeyPadToggle(KeyPadTriggerObjectType.new_call)),
-        createAction('vc-lc-user-plus', 'var(--blue-bg)', 'dialPad.add.caller.button', () => onKeyPadToggle(KeyPadTriggerObjectType.add_caller)),
+        createAction(
+            'vc-lc-phone',
+            'var(--blue-bg)',
+            getTranslation('audio.new.call'),
+            () => onKeyPadToggle(KeyPadTriggerObjectType.new_call),
+            CALL_ACTIONS_NAMES.NEW_CALL
+        ),
+        createAction(
+            'vc-lc-user-plus',
+            'var(--blue-bg)',
+            getTranslation('audio.add.caller'),
+            () => onKeyPadToggle(KeyPadTriggerObjectType.add_caller),
+            CALL_ACTIONS_NAMES.ADD_CALLER
+        ),
         // createAction('vc-lc-grip', 'var(--blue-bg)', 'dialPad.conference.button', () => unHoldAllCalls()),
     ])
     const singleCallActionsBaseConfig = [ [
-        createAction('vc-lc-phone', 'var(--blue-bg)', 'new call', () => onKeyPadToggle(KeyPadTriggerObjectType.new_call)),
-        createAction('vc-lc-git-pull-request-arrow', 'var(--blue-actions-button)', 'move', handleCallMove),
+        createAction(
+            'vc-lc-phone',
+            'var(--blue-bg)',
+            getTranslation('audio.new.call'),
+            () => onKeyPadToggle(KeyPadTriggerObjectType.new_call),
+            CALL_ACTIONS_NAMES.NEW_CALL
+        ),
+        createAction(
+            'vc-lc-git-pull-request-arrow',
+            'var(--blue-actions-button)',
+            getTranslation('audio.move'),
+            handleCallMove,
+            CALL_ACTIONS_NAMES.MOVE
+        ),
     ] ]
     const multipleActions = computed(() => {
         if (!displayAllControls.value) {
@@ -111,7 +152,13 @@ export default function useCallActions () {
         }
         return [
             [
-                createAction('vc-lc-phone', 'var(--blue-bg)', 'new call', () => onKeyPadToggle(KeyPadTriggerObjectType.new_call)),
+                createAction(
+                    'vc-lc-phone',
+                    'var(--blue-bg)',
+                    getTranslation('audio.new.call'),
+                    () => onKeyPadToggle(KeyPadTriggerObjectType.new_call),
+                    CALL_ACTIONS_NAMES.NEW_CALL
+                ),
             ]
         ]
     })

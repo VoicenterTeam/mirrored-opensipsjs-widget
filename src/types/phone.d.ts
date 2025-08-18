@@ -1,4 +1,6 @@
-import { ActionsTriggerObjectType } from '@/constants/phone.ts'
+import { ActionsTriggerObjectType, CALL_ACTIONS_NAMES } from '@/constants/phone.ts'
+
+export type CallActionName = typeof CALL_ACTIONS_NAMES[keyof typeof CALL_ACTIONS_NAMES]
 
 export interface GenericObjectType<T> {
     [key: string]: T
@@ -24,4 +26,5 @@ export interface ActionsObjectType {
     color: string,
     title: string,
     action: () => void
+    name: CallActionName
 }

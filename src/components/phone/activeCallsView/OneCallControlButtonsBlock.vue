@@ -20,6 +20,8 @@ import { KeyPadTriggerObjectType } from '@/constants/phone.ts'
 import useCallActions from '@/composables/phone/useCallActions.ts'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
 import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
+import { getTranslation } from '@/plugins/translator'
+import { allowTransfer } from '@/composables/useWidgetConfig'
 
 /* Data */
 const { holdCall, unholdCall, muteAgent } = useOpenSIPSJS()
@@ -41,34 +43,38 @@ const oneActiveCallButtons = computed(() => {
         {
             type: 'blueButton',
             src: 'vc-lc-user-plus',
-            name: 'add caller',
+            name: getTranslation('audio.add.caller'),
             action: () => onKeyPadToggle(KeyPadTriggerObjectType.add_caller)
         },
         {
             type: 'blueButton',
             src: 'vc-lc-forward',
-            name: 'transfer',
+            name: getTranslation('audio.transfer'),
             action: () => handleCallTransfer()
         },
         {
             type: isMuted.value ? 'redButton-with-bg': 'whiteButton',
             src: 'vc-lc-mic',
-            name: isMuted.value ? 'muted' : 'mute',
+            name: isMuted.value ? getTranslation('audio.muted') : getTranslation('audio.mute'),
             action: () => muteAgent(!isMuted.value)
         },
         {
             type: currentCall.value._localHold ? 'redButton-with-bg': 'whiteButton',
             src: 'vc-lc-play',
-            name: 'hold',
+            name: getTranslation('audio.hold'),
             action: () => currentCall.value._localHold ? unholdCall(currentCall.value._id) : holdCall(currentCall.value._id)
         },
         {
             type: 'blueButton',
             src: 'vc-lc-grip',
-            name: 'keypad',
+            name: getTranslation('audio.keypad'),
             action: () => onKeyPadToggle(KeyPadTriggerObjectType.keypad)
         },
     ]
+
+    if (!allowTransfer.value) {
+        return buttons.filter((button) => button.name !== getTranslation('audio.transfer'))
+    }
 
     return buttons
 })

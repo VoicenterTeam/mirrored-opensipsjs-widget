@@ -14,14 +14,14 @@
             src="vc-icon-record"
             upper-case
             :disabled="true"
-            name="record"
+            :name="getTranslation('audio.record')"
         />
         <HangupButton @click="endCall" />
         <CallActionButton
             type="whiteButton"
             upper-case
             src="vc-lc-ellipsis-vertical"
-            name="actions"
+            :name="getTranslation('audio.actions')"
             @click="onActionsClick"
         />
     </div>
@@ -33,6 +33,7 @@ import { useOpenSIPSJS } from '@/composables/opensipsjs.ts'
 import { ActionsTriggerObjectType } from '@/constants/phone.ts'
 import CallActionButton from '@/components/phone/activeCallsView/CallActionButton.vue'
 import useCallActions from '@/composables/phone/useCallActions.ts'
+import { getTranslation } from '@/plugins/translator.ts'
 
 /* Data */
 const { callsInActiveRoom } = useVsipInject()
