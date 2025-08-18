@@ -4595,7 +4595,7 @@ opensips-js@^0.1.2:
     sdp-transform "2.14.1"
     uuid "^10.0.0"
 
-opensips-js@^0.1.9:
+opensips-js@^0.1.7:
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/opensips-js/-/opensips-js-0.1.9.tgz#935db52f5ae609e7033b95dad97ec215d801b02e"
   integrity sha512-m4fgpyQb0cFJyPE0GJKdpDX0hAgz9t9uXwYSlQv17T9Z2fbsVETyjMCEvMVf468ippuDzRUhNpe8NGqc+0zI9Q==
