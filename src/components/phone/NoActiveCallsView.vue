@@ -14,7 +14,14 @@
         <div class="mb-4 flex-1 flex justify-center">
             <Keypad />
         </div>
-        <FooterBlock />
+        <FooterBlock>
+            <template #pv-bottom-left>
+                <slot name="pv-bottom-left" />
+            </template>
+            <template #pv-bottom-right>
+                <slot name="pv-bottom-right" />
+            </template>
+        </FooterBlock>
     </div>
 </template>
 <script lang="ts" setup>

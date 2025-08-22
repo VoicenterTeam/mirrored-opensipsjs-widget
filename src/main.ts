@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import '@voicenter-team/voicenter-ui-plus/library/style.css'
 //import './styles/style.css'
 import App from './App.vue'
-import { ActiveTabPlugin } from '@/plugins/activeTabPlugin'
 
 /* UI */
 import UI from '@voicenter-team/voicenter-ui-plus'
@@ -20,7 +19,6 @@ app
         },
         injectIconFont: true
     })
-    .use(ActiveTabPlugin)
     .component('Popper', Popper)
     .directive('loading', VLoading)
 

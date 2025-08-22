@@ -11,7 +11,14 @@
         />
         <div class="phone-view-wrapper">
             <slot name="top" />
-            <component :is="phoneUI" />
+            <component :is="phoneUI">
+                <template #pv-bottom-left>
+                    <slot name="pv-bottom-left" />
+                </template>
+                <template #pv-bottom-right>
+                    <slot name="pv-bottom-right" />
+                </template>
+            </component>
             <OfflineWrapper />
             <IncomingCalls v-if="visibleCalls.length" />
         </div>
@@ -92,7 +99,8 @@ watch(currentActiveRoom, () => {
     }
 })
 
-const getPercentage = (lightValue: number) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const getPercentage = (lightValue: number, _percentage: number) => {
     // return isDark.value ? darkValue : lightValue
     return lightValue
 }

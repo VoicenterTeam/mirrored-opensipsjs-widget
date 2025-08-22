@@ -8,9 +8,9 @@
             :key="call._id"
             :call="call"
         />
-<!--        <HideAllButton-->
-<!--            v-if="visibleCalls.length"-->
-<!--        />-->
+        <!--        <HideAllButton-->
+        <!--            v-if="visibleCalls.length"-->
+        <!--        />-->
     </div>
 </template>
 

@@ -5433,6 +5433,11 @@ svgo@^3.0.2:
     csso "^5.0.5"
     picocolors "^1.0.0"
 
+tab-election@^4.2.8:
+  version "4.2.8"
+  resolved "https://registry.yarnpkg.com/tab-election/-/tab-election-4.2.8.tgz#11709217b5028d187df7eb36f21207afd7913423"
+  integrity sha512-qHmh4jCMh1KKppqhIz3VWQPXGicCWaq2xtx9a37ZQroqbcXmCVUmmaf2rvFb0WThoJr9iaimK0PyHTxPkXcrDQ==
+
 tailwindcss@^3.4.16:
   version "3.4.17"
   resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-3.4.17.tgz#ae8406c0f96696a631c790768ff319d46d5e5a63"

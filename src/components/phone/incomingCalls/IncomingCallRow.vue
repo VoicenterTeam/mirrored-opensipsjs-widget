@@ -1,5 +1,7 @@
 <template>
-    <div class="incoming-call justify-between flex items-center px-3 py-2 h-14 w-full mb-2">
+    <div
+        class="incoming-call justify-between flex items-center px-3 py-2 h-14 w-full mb-2"
+    >
         <div class="mr-2.5 w-1/2">
             <div class="caller font-bold text-sm mr-2.5 truncate">
                 {{ caller || getTranslation('audio.unknown') }}
@@ -35,6 +37,7 @@ import HangupButton from '@/components/phone/common/HangupButton.vue'
 import { useVsipInject } from '@/composables/phone/useVsipProvideInject'
 import { useOpenSIPSJS } from '@/composables/opensipsjs.ts'
 import { getTranslation } from '@/plugins/translator'
+import { useCallerInfoDisplay } from '@/composables/useCallerInfoDisplay'
 //import { useIncomingCalls } from '@/ui/phoneDialer/composables/useIncomingCalls'
 
 
@@ -50,9 +53,19 @@ type Props = {
 const props = defineProps<Props>()
 
 /* Computed */
+const { displayName } = useCallerInfoDisplay(props.call)
+
+// Fallback to legacy caller data if needed
+const callerData = computed(() => {
+    return callersData.value[props.call?._id]
+})
+
 const caller = computed(() => {
-    const user = callersData.value[props.call?._id]
-    return user?.userName || user?.userPhone || ''
+    // Use new caller info resolver first, then fallback to legacy data
+    if (displayName.value && displayName.value !== 'Unknown Caller') {
+        return displayName.value
+    }
+    return callerData.value?.userName || callerData.value?.userPhone || ''
 })
 
 /* Methods */
