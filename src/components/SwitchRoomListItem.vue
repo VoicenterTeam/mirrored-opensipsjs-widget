@@ -45,7 +45,7 @@
                 </span>
             </div>
 
-            <div className="flex items-center mx-1">
+            <!--            <div className="flex items-center mx-1">
                 <IncomingCallActionButton
                     v-if="!isOnLocalHold"
                     color="primary"
@@ -60,7 +60,7 @@
                     :size="holdIconSize"
                     @click="unHoldCall"
                 />
-            </div>
+            </div>-->
 
             <!--        <div className="mx-2">
             <IncomingCallActionButton
@@ -74,7 +74,7 @@
             />
         </div>-->
 
-            <OptionActionButton icon="vc-lc-ellipsis-vertical" />
+            <!--            <OptionActionButton icon="vc-lc-ellipsis-vertical" />-->
 
             <!--        <div v-if="!props.isSingleRoom || props.isSingleRoom && allowTransfer">
             <CallOptionsIconButton

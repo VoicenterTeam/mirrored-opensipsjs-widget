@@ -19,6 +19,8 @@ const state: { opensipsjs: OpenSIPSJS | undefined } = {
     opensipsjs: undefined
 }
 
+console.log('LLL IN USE OPENSIPS')
+
 /* State */
 export const isOpenSIPSReady = vsipAPI.state.isOpenSIPSReady
 export const isOpenSIPSReconnecting = vsipAPI.state.isOpenSIPSReconnecting
@@ -97,9 +99,9 @@ export const isWhiteboardEnabled = computed(() => {
         isImageWhiteboardEnabled.value
 })
 
-watch(activeCalls, (calls) => {
-    processCallsTime(calls)
-})
+watch(activeCalls, (calls, oldCalls) => {
+    processCallsTime(calls, oldCalls || {})
+}, { deep: true })
 
 watch(streamSources,
     (newSources, oldSources) => {
@@ -211,8 +213,8 @@ function validateCredentials (credentials: ISIPSCredentials) {
     }
 }
 
-function processCallsTime (calls: AllActiveCallsType) {
-    const removedCalls = Object.values(activeCalls.value).filter(oldCall => {
+function processCallsTime (calls: AllActiveCallsType, oldCalls: AllActiveCallsType) {
+    const removedCalls = Object.values(oldCalls).filter(oldCall => {
         return !Object.values(calls).some(newCall => {
             return newCall._id === oldCall._id
         })
@@ -221,7 +223,7 @@ function processCallsTime (calls: AllActiveCallsType) {
     removeOldCallTimes(removedCalls)
 
     const newCalls = Object.values(calls).filter(call => {
-        return !Object.values(activeCalls.value).some(existingCall => {
+        return !Object.values(oldCalls).some((existingCall) => {
             return existingCall._id === call._id
         })
     })
@@ -302,6 +304,7 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
  * @param credentials
  */
 export function startOpenSIPS (credentials: ISIPSCredentials) {
+    console.log('LLL startOpenSIPS')
     return new Promise<OpenSIPSJS>((resolve, reject) => {
         try {
             validateCredentials(credentials)
@@ -320,7 +323,9 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
                 connectOptions.password = credentials.password
             }
 
+            console.log('LLL vsipAPI.actions.init')
             vsipAPI.actions.init(connectOptions, {}).then((opensipsjs) => {
+                console.log('LLL vsipAPI.actions.init then')
                 state.opensipsjs = opensipsjs
 
                 registerOpenSIPSListeners(state.opensipsjs)
@@ -339,7 +344,7 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
 
                         resolve(opensipsjs)
                     })
-                    .begin()
+                    //.begin()
 
                 isOpenSIPSInitialized.value = true
             })
@@ -445,6 +450,7 @@ export function useOpenSIPSJS () {
     }
 
     async function setActiveRoom (roomId: number | undefined) {
+        console.log('setActiveRoom', roomId)
         await state.opensipsjs?.audio.setActiveRoom(roomId)
     }
 

@@ -4,19 +4,21 @@
             v-model="isPopoverOpened"
             :teleported="false"
             :popover-width="220"
-            :triggers="['click', 'touch']"
+            :trigger="[]"
             placement="top"
         >
             <template #reference>
                 <RoomActionButton
+                    style="width: 98px;"
                     icon="vc-lc-circle-plus"
                     label="ADD CALLER"
+                    @click="onClick"
                 />
             </template>
 
             <div class="p-2">
                 <Keypad
-                    title="Add Caller"
+                    is-add-caller-type
                     @press="onPress"
                     @call="onStartCall"
                 />
@@ -44,7 +46,7 @@ import Keypad from '@/components/Keypad.vue'
 import { useOpenSIPSJS, currentActiveRoom } from '@/composables/opensipsjs'
 import ActionIconButton from '@/components/base/ActionIconButton.vue'
 import RoomActionButton from '@/components/base/RoomActionButton.vue'
-import { outgoingCallInputPlaceholder } from '@/composables/useWidgetConfig.ts'
+import { keypadMode } from '@/composables/useWidgetConfig'
 const { startCall } = useOpenSIPSJS()
 
 const props = withDefaults(
@@ -55,7 +57,8 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-    (e: 'press', value: string): void
+    (e: 'press', value: string): void,
+    (e: 'toggle-keypad'): void
 }>()
 
 const isPopoverOpened = ref(false)
@@ -64,11 +67,21 @@ const onPress = (value: string) => {
     emit('press', value)
 }
 
+function onClick () {
+    if (keypadMode.value === 'popover') {
+        isPopoverOpened.value = !isPopoverOpened.value
+        return
+    }
+
+    emit('toggle-keypad')
+}
+
 function onStartCall (target: string) {
     if (!currentActiveRoom.value) {
         return
     }
 
+    console.log('startCall', target, true)
     startCall(target, true)
 }
 

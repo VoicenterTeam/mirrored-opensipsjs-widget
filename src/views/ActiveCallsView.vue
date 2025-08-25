@@ -11,7 +11,7 @@
 
             <div class="flex">
                 <div class="ml-1">
-                    <AddCallerButton />
+                    <AddCallerButton @toggle-keypad="onToggleAddCallerKeypad" />
                 </div>
 
                 <div
@@ -41,6 +41,7 @@
                     <RoomActionButton
                         icon="vc-lc-undo-2"
                         label="Back"
+                        :disabled="!currentActiveRoom"
                         @click="onSwitchRoomButtonClick"
                     />
                 </div>
@@ -59,7 +60,7 @@
                     :identifier="room.identifier"
                     :oldest-call-id="room.oldestCallId"
                     @switch-room="onSetActiveRoom(room.roomId)"
-                    @exit-room="onSetActiveRoom(undefined)"
+                    @exit-room="onExitRoom"
                 />
             </div>
         </div>
@@ -78,6 +79,7 @@
                     @transfer-click="onTransferClick"
                     @move-click="onMoveClick"
                     @terminate-call="onCallTerminate"
+                    @toggle-keypad="onToggleAddCallerKeypad"
                 />
             </div>
         </div>
@@ -169,7 +171,7 @@ const activeRooms = computed(() => {
         let singleParticipantName = ''
 
         if (callsInRoom.length === 1) {
-            const { callerNumber } = useCallInfo(allActiveCalls.value[0])
+            const { callerNumber } = useCallInfo(callsInRoom[0])
             singleParticipantName = callerNumber.value
         }
 
@@ -197,12 +199,21 @@ const activeRooms = computed(() => {
 const emit = defineEmits<{
     (e: 'transfer-click', callId: string): void
     (e: 'move-click', callId: string): void
+    (e: 'toggle-keypad', callId: string): void
 }>()
+
+function onToggleAddCallerKeypad () {
+    emit('toggle-keypad')
+}
 
 function onSetActiveRoom (roomId) {
     setActiveRoom(roomId)
     console.log('onSetActiveRoom', roomId)
     isRoomListView.value = false
+}
+
+function onExitRoom () {
+    setActiveRoom(undefined)
 }
 
 function onSwitchRoomButtonClick () {
@@ -222,8 +233,23 @@ function onCallTerminate () {
     isRoomListView.value = true
 }
 
-/*watch(allActiveCalls, () => {
-    isRoomListView.value = false
+function switchRoomListView (value) {
+    isRoomListView.value = value
+}
+
+defineExpose({
+    switchRoomListView
+})
+/*watch(currentActiveRoom, (value) => {
+    if (!value && allActiveCalls.value.length) {
+        isRoomListView.value = true
+    }
+}, { deep: true })
+
+watch(allActiveCalls, (newCalls, oldCalls) => {
+    if (oldCalls.length && !newCalls.length) {
+        isRoomListView.value = true
+    }
 }, { deep: true })*/
 </script>
 

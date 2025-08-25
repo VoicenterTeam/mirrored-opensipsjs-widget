@@ -1,13 +1,14 @@
 <template>
     <button
         class="room-action-button"
+        :disabled="disabled"
         @click="onClick"
     >
         <i
             class="text-lg"
             :class="icon"
         />
-        <span>
+        <span v-if="label">
             {{ label }}
         </span>
     </button>
@@ -23,9 +24,12 @@ import type { Credentials } from '~/docs/composable/useAuthorisation.ts'
 const props = withDefaults(
     defineProps<{
         icon: string
-        label: string
+        label?: string
+        disabled?: boolean
     }>(),
-    {}
+    {
+        disabled: false
+    }
 )
 
 const emit = defineEmits<{
@@ -51,6 +55,11 @@ function onClick (event) {
 .room-action-button i {
   margin-right: 4px;
   color: #354260;
+}
+
+.room-action-button:disabled,
+.room-action-button[disabled]{
+  @apply cursor-text bg-primary-actions-bg--pressed;
 }
 </style>
 

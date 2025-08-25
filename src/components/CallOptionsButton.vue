@@ -18,13 +18,13 @@
                 <div
                     v-for="(option, index) in options"
                     :key="index"
-                    class="flex items-center px-2 py-1"
+                    class="flex items-center px-2 py-1 cursor-pointer"
                     :class="{'border-b border-border-lines': index !== options.length - 1}"
+                    @click="option.callback"
                 >
                     <i
                         :class="option.iconClass"
                         class="text-lg mr-2"
-                        @click="option.callback"
                     />
 
                     <div>
@@ -47,6 +47,7 @@ import ActionIconButton from '@/components/base/ActionIconButton.vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
 import OptionActionButton from '@/components/base/OptionActionButton.vue'
 import SwitchRoomListItem from '@/components/SwitchRoomListItem.vue'
+import { allRooms } from '@/composables/opensipsjs'
 
 const props = withDefaults(
     defineProps<{
@@ -70,27 +71,30 @@ const isPopoverOpened = ref(false)
 const options = computed(() => {
     const baseOptions = [
         {
-            label: 'Move',
-            iconClass: 'vc-lc-arrow-down-up text-primary-actions hover:text-primary-actions-bg--focus',
-            callback: onMove
-        },
-        {
             label: 'Transfer',
-            iconClass: 'vc-lc-redo-2 text-primary-actions hover:text-primary-actions-bg--focus',
+            iconClass: 'vc-lc-redo-2 text-primary-actions',
             callback: onTransfer
         }
     ]
 
+    if (allRooms.value.length > 1) {
+        baseOptions.unshift({
+            label: 'Move',
+            iconClass: 'vc-lc-arrow-down-up text-primary-actions',
+            callback: onMove
+        })
+    }
+
     if (props.isOnLocalHold) {
         baseOptions.push({
             label: 'Unhold',
-            iconClass: 'vc-lc-step-forward text-primary-actions hover:text-primary-actions-bg--focus',
+            iconClass: 'vc-lc-step-forward text-primary-actions',
             callback: onUnhold
         })
     } else {
         baseOptions.push({
             label: 'Hold',
-            iconClass: 'vc-lc-circle-pause text-primary-actions hover:text-primary-actions-bg--focus',
+            iconClass: 'vc-lc-circle-pause text-primary-actions',
             callback: onHold
         })
     }

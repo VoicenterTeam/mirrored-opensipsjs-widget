@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="flex flex-col w-full items-center justify-center">
         <div
             v-if="showTitle"
             class="font-semibold mb-2"
@@ -9,9 +9,9 @@
 
         <div
             v-if="showInput"
-            class="flex"
+            class="flex w-full"
         >
-            <div class="border border-border-lines rounded p-1 mr-1">
+            <div class="w-full border border-border-lines rounded p-1 mr-1">
                 <input
                     v-model="inputValue"
                     class="outline-0 w-full text-main-text text-sm pl-2 remove-arrow"
@@ -58,6 +58,7 @@ import {
     allowAutoAnswerSetup,
     outgoingInputRegexValidator
 } from '@/composables/useWidgetConfig'
+import { getTranslation } from '@/plugins/translator'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import ActionIconButton from '@/components/base/ActionIconButton.vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
@@ -66,14 +67,12 @@ const { setAutoAnswer } = useOpenSIPSJS()
 
 const props = withDefaults(
     defineProps<{
-        showInput: boolean
-        showTitle: boolean
-        title: string
+        isNewCallType?: boolean
+        isAddCallerType?: boolean
     }>(),
     {
-        showInput: true,
-        showTitle: true,
-        title: 'New Call'
+        isNewCallType: true,
+        isAddCallerType: true
     }
 )
 
@@ -85,6 +84,26 @@ const emit = defineEmits<{
 const buttons = [ '1', '2', '3', '4', '5', '6', '7', '8' ,'9', '*', '0', '#' ]
 
 const inputValue = ref('')
+
+const title = computed(() => {
+    if (props.isNewCallType) {
+        return getTranslation('audio.new.call')
+    }
+
+    if (props.isAddCallerType) {
+        return getTranslation('audio.title.add.caller')
+    }
+
+    return ''
+})
+
+const showTitle = computed(() => {
+    return props.isNewCallType || props.isAddCallerType
+})
+
+const showInput = computed(() => {
+    return props.isNewCallType || props.isAddCallerType
+})
 
 const applyPatterns = (event: Event) => {
     const evt = event.target as HTMLInputElement
@@ -103,7 +122,7 @@ const applyPatterns = (event: Event) => {
 }
 
 const onPress = (value: string) => {
-    if (props.showInput) {
+    if (showInput.value) {
         inputValue.value = inputValue.value + value
         return
     }
@@ -112,7 +131,9 @@ const onPress = (value: string) => {
 
 function onStartCall () {
     emit('call', inputValue.value)
+    inputValue.value = ''
 }
+
 /*watch(autoAnswerDefaultBehaviour, (newV) => {
     setAutoAnswer(newV)
 })

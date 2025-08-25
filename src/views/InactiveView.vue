@@ -1,5 +1,5 @@
 <template>
-    <div className="flex bg-primary-actions-bg--focus h-[60px] flex-row">
+    <div className="flex bg-primary-actions-bg--focus h-[60px] flex-row p-1">
         <div :className="activateButtonClasses">
             <!--            <WidgetIconButton
                 color="primary-actions"
@@ -19,10 +19,10 @@
         </div>
         <div
             v-if="!allowShrinkOnIdle"
-            :className="`flex items-center px-4 justify-start uppercase w-[270px]`"
+            class="flex items-center pr-2 justify-start"
         >
-            <span className="text-center font-bold text-primary-actions">
-                {{ getTranslation('audio.activate') }}
+            <span class="text-center font-semibold text-primary-actions">
+                {{ getTranslation('audio.activate.widget.here') }}
             </span>
         </div>
     </div>
@@ -40,11 +40,11 @@ import { getTranslation } from '@/plugins/translator'
 const { isActiveTab, tabIdWithActiveCall, activateTab } = useActiveTab()
 
 const activateButtonClasses = computed(() => {
-    let classes = 'text-primary p-1 pr-0 '
+    let classes = 'text-primary p-1 '
     if (allowShrinkOnIdle.value) {
         classes += 'px-8'
     } else {
-        classes += 'px-4'
+        classes += 'px-2'
     }
 
     return classes

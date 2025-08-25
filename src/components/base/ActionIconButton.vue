@@ -17,8 +17,8 @@ import { computed } from 'vue'
 const props = withDefaults(
     defineProps<{
         color: string
-        bgColor: string
         icon: string
+        bgColor?: string
         size?: 'base' | 'sm'
         rounded?: boolean
         disabled?: boolean

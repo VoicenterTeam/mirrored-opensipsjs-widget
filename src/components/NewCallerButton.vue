@@ -4,20 +4,21 @@
             v-model="isPopoverOpened"
             :teleported="false"
             :popover-width="220"
-            :triggers="['click', 'touch']"
+            :trigger="triggersArray"
             placement="top"
         >
             <template #reference>
                 <ActionIconButton
-                    icon="vc-lc-grip"
+                    icon="vc-lc-circle-plus"
                     color="primary-actions"
-                    @click="openSettingsPopover"
+                    @click="openNewCallPopover"
                 />
             </template>
 
             <div class="p-2">
                 <Keypad
-                    @press="onPress"
+                    is-new-call-type
+                    @call="onStartCall"
                 />
             </div>
 
@@ -34,13 +35,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import KeypadIcon from '@/assets/icons/keypad.svg?component'
 import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
 import BasePopper from '@/components/base/BasePopper.vue'
 import { VcPopover } from '@voicenter-team/voicenter-ui-plus'
 import Keypad from '@/components/Keypad.vue'
+import { useOpenSIPSJS, currentActiveRoom } from '@/composables/opensipsjs'
 import ActionIconButton from '@/components/base/ActionIconButton.vue'
+import RoomActionButton from '@/components/base/RoomActionButton.vue'
+import { allowOutgoingCalls, showKeypad, keypadMode } from '@/composables/useWidgetConfig'
+const { startCall } = useOpenSIPSJS()
 
 const props = withDefaults(
     defineProps<{
@@ -50,17 +55,27 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-    (e: 'press', value: string): void
+    (e: 'toggle-keypad'): void
 }>()
 
 const isPopoverOpened = ref(false)
 
-const onPress = (value: string) => {
-    emit('press', value)
+const triggersArray = computed(() => {
+    return keypadMode.value === 'popover' ? [ 'click' ] : []
+})
+function onStartCall (target: string) {
+    console.log('startCall', target)
+    startCall(target, false, false)
 }
 
-const openSettingsPopover = () => {
-    isPopoverOpened.value = !isPopoverOpened.value
+const openNewCallPopover = () => {
+    if (keypadMode.value === 'popover') {
+        isPopoverOpened.value = !isPopoverOpened.value
+        console.log('isPopoverOpened', isPopoverOpened.value)
+        return
+    }
+
+    emit('toggle-keypad')
 }
 </script>
 

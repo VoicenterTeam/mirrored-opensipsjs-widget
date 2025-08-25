@@ -2,31 +2,37 @@
     <div :className="wrapperClasses">
         <div
             v-if="showTopKeypad"
-            class="flex items-center justify-center p-2 border-b-1 border-border-lines"
+            class="p-2 border-b-1 border-border-lines"
         >
-            <Keypad @press="onKeypadKeyPress" />
+            <Keypad
+                :is-add-caller-type="isAddCallerKeypadType"
+                :is-new-call-type="isNewCallKeypadType"
+                @press="onKeypadKeyPress"
+                @call="onStartCall"
+            />
         </div>
         <RingingView
             v-if="incomingUnansweredCall && !transferringCall"
             :call="incomingUnansweredCall"
             @transfer-click="onTransferClick"
         />
-        <div v-if="outgoingUnansweredCall && !incomingUnansweredCall">
+        <!--        <div v-if="outgoingUnansweredCall && !incomingUnansweredCall">
             <OutgoingCallInProgressView
                 :number="outgoingUnansweredCall?._remote_identity?._uri?._user"
                 @hangup="onOutgoingCallHangup"
             />
-        </div>
+        </div>-->
         <ActiveCallsView
             v-show="!transferringCall &&
                 !movingCall &&
                 !incomingUnansweredCall &&
-                !outgoingUnansweredCall &&
                 isAnyActiveCall
             "
+            ref="activeCallsView"
             :calls="activeCalls"
             @transfer-click="onTransferClick"
             @move-click="onMoveClick"
+            @toggle-keypad="onToggleAddCallerKeypad"
         />
         <TransferView
             v-if="transferringCall"
@@ -58,19 +64,25 @@
             </div>
         </div>
         <ActionButtons
-            v-if="!incomingUnansweredCall"
+            v-if="!incomingUnansweredCall && !transferringCall && !movingCall"
             :show-outgoing-button="isAnyActiveCall"
             :calls="activeCalls"
             @merge-click="onCallsMerge"
             @toggle-keypad="toggleManualKeypad"
+            @toggle-new-call-keypad="onToggleNewCallKeypad"
             @key-press="onKeypadKeyPress"
-            @start-call="onStartCall"
+            @start-call="onStartOutgoingCall"
         />
         <div
             v-if="showBottomKeypad"
-            class="flex items-center justify-center p-2"
+            class="p-2"
         >
-            <Keypad @press="onKeypadKeyPress" />
+            <Keypad
+                :is-add-caller-type="isAddCallerKeypadType"
+                :is-new-call-type="isNewCallKeypadType"
+                @press="onKeypadKeyPress"
+                @call="onStartCall"
+            />
         </div>
     </div>
 </template>
@@ -98,13 +110,17 @@ const {
     startCall,
     terminateCall,
     sendDTMF,
+    setActiveRoom,
     state
 } = useOpenSIPSJS()
 
 const transferringCall = ref<string>('')
 const movingCall = ref<string>('')
 const outgoingCallView = ref<typeof OutgoingCallView>()
+const activeCallsView = ref<typeof ActiveCallsView>()
 const showManualKeypad = ref<boolean>(false)
+const isAddCallerKeypadType = ref<boolean>(false)
+const isNewCallKeypadType = ref<boolean>(false)
 
 const showTopKeypad = computed(() => {
     return showKeypad.value &&
@@ -178,14 +194,51 @@ watchDebounced(
     },
 )
 
-const onStartCall = () => {
+function onStartOutgoingCall () {
     if (outgoingCallView.value) {
         outgoingCallView.value.startCall()
     }
 }
 
 const toggleManualKeypad = () => {
+    isAddCallerKeypadType.value = false
+    isNewCallKeypadType.value = false
+
     showManualKeypad.value = !showManualKeypad.value
+
+    //isAddCallerKeypadType.value = false
+    //isNewCallKeypadType.value = false
+}
+
+function onToggleAddCallerKeypad () {
+    if (!isAddCallerKeypadType.value && showManualKeypad.value) {
+        isAddCallerKeypadType.value = true
+        isNewCallKeypadType.value = false
+        showManualKeypad.value = true
+        return
+    }
+    showManualKeypad.value = !showManualKeypad.value
+
+    isAddCallerKeypadType.value = showManualKeypad.value
+
+    /*if (showManualKeypad.value) {
+        isAddCallerKeypadType.value = true
+    } else {
+        isAddCallerKeypadType.value = false
+    }*/
+}
+
+function onToggleNewCallKeypad () {
+    if (!isNewCallKeypadType.value && showManualKeypad.value) {
+        isNewCallKeypadType.value = true
+        isAddCallerKeypadType.value = false
+        showManualKeypad.value = true
+        return
+    }
+
+    showManualKeypad.value = !showManualKeypad.value
+
+    isNewCallKeypadType.value = showManualKeypad.value
 }
 
 const onKeypadKeyPress = (key: string) => {
@@ -197,6 +250,18 @@ const onKeypadKeyPress = (key: string) => {
 
     if (outgoingCallView.value) {
         outgoingCallView.value.typeDigit(key)
+    }
+}
+
+function onStartCall (target: string) {
+    if (isAddCallerKeypadType.value) {
+        startCall(target, true)
+        return
+    }
+
+    if (isNewCallKeypadType.value) {
+        startCall(target)
+        return
     }
 }
 
@@ -224,6 +289,11 @@ const onCallTransfer = (callId: string, target: string) => {
 const onCallMove = (callId: string, targetRoom: number) => {
     moveCall(callId, targetRoom)
     movingCall.value = ''
+
+    //const callsInRoom = activeCalls.value.filter((call) => call.roomId === currentActiveRoom.value)
+
+    setActiveRoom(undefined)
+    activeCallsView.value?.switchRoomListView(true)
 }
 
 const onCallsMerge = (roomId: number) => {

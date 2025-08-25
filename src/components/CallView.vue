@@ -10,11 +10,9 @@
             />
         </div>
 
-        {{ callTimes }}
-
         <div
             class="flex text-xs text-main-text font-medium"
-            style="width: 190px; max-width: 190px;"
+            style="width: 190px; max-width: 190px; min-width: 190px;"
         >
             <div
                 v-if="displayCallerInfoName && callerName"
@@ -48,8 +46,17 @@
             />
         </div>-->
 
-        <div className="mx-2 w-[46px] text-xs text-main-text">
+        <div
+            v-if="!isOutgoingUnanswered"
+            className="mx-2 w-[46px] text-xs text-main-text"
+        >
             {{ callTime }}
+        </div>
+        <div
+            v-else
+            class="w-full text-sm px-2"
+        >
+            Calling...
         </div>
 
         <!--        <div className="flex mx-1">
@@ -82,7 +89,15 @@
         </div>-->
 
         <!--        <OptionActionButton icon="vc-lc-ellipsis-vertical" />-->
-        <CallOptionsButton />
+        <CallOptionsButton
+            v-if="!isOutgoingUnanswered"
+            :call="call"
+            :is-on-local-hold="isOnLocalHold"
+            @hold="putOnHold"
+            @unhold="unHoldCall"
+            @move="onMoveClick"
+            @transfer="onTransferClick"
+        />
         <!--        <div v-if="!props.isSingleRoom || props.isSingleRoom && allowTransfer">
             <CallOptionsIconButton
                 :is-single-room="props.isSingleRoom"
@@ -97,7 +112,7 @@
             v-if="showAddCallerButton"
             class="ml-1"
         >
-            <AddCallerButton />
+            <AddCallerButton @toggle-keypad="onToggleAddCallerKeypad" />
         </div>
 
         <div
@@ -166,9 +181,14 @@ const emit = defineEmits<{
     (e: 'move-click', callId: string): void
     (e: 'terminate-call'): void
     (e: 'open-room-list'): void
+    (e: 'toggle-keypad', callId: string): void
 }>()
 
 const isOnLocalHold = ref<boolean>(false)
+
+const isOutgoingUnanswered = computed(() => {
+    return props.call.direction === 'outgoing' && !props.call._is_confirmed && !props.call._is_canceled
+})
 
 const isMultiCallMode = computed(() => {
     return !props.isSingleCall || !props.isSingleRoom
@@ -242,6 +262,10 @@ const callTime = computed(() => {
     const time = callTimes.value[props.call._id]
     return getFormattedTimeFromSeconds(time)
 })
+
+function onToggleAddCallerKeypad () {
+    emit('toggle-keypad', props.call._id)
+}
 
 function onSwitchRoomButtonClick () {
     emit('open-room-list')

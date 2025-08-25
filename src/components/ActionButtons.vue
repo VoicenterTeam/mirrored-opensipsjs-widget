@@ -80,6 +80,8 @@
                     @click="onMergeClick"
                 />
             </div>
+
+            <NewCallerButton @toggle-keypad="toggleNewCallerKeypad" />
             <!--            <div v-if="showKeypad && keypadMode === 'manual'">
                 <WidgetIconButton
                     color="primary"
@@ -163,6 +165,7 @@ import type { ICall } from 'opensips-js/src/types/rtc'
 import InputOutgoingCall from '@/components/InputOutgoingCall.vue'
 import { VcSlider } from '@voicenter-team/voicenter-ui-plus'
 import { debounce } from 'lodash'
+import NewCallerButton from '@/components/NewCallerButton.vue'
 
 const { muteAgent, setDND, terminateCall, startCall, setMicrophoneSensitivity, state } = useOpenSIPSJS()
 
@@ -178,29 +181,15 @@ const props = withDefaults(
 
 const emit = defineEmits<{
     (e: 'merge-click', roomId: number): void
-    (e: 'start-call', target: number): void
+    (e: 'start-call'): void
     (e: 'key-press', value: string): void
     (e: 'toggle-keypad'): void
+    (e: 'toggle-new-call-keypad'): void
 }>()
 
 const isExpandRoomsState = ref<boolean>(false)
 const isOutgoingCallInputOpen = ref<boolean>(false)
 const outgoingInputValue = ref<string>('')
-const showManualKeypad = ref<boolean>(false)
-
-
-const expandWrapperClasses = computed(() => {
-    const base = 'flex z-50'
-    return isExpandRoomsState.value ? base + ' w-full' : base
-})
-
-const outgoingCallButtonClasses = computed(() => {
-    let classes = ' border-border-lines'
-    if (!isExpandRoomsState.value && !isOutgoingCallInputOpen.value) {
-        classes += ' border-r'
-    }
-    return classes
-})
 
 const isAgentMuted = computed(() => {
     if (!allActiveCalls.value.length) {
@@ -215,13 +204,18 @@ const showMergeButton = computed(() => {
     return callsInRoom.length === 2
 })
 
+const showAddNewCallerButton = computed(() => {
+    const callsInRoom = allActiveCalls.value.filter(call => call.roomId === currentActiveRoom.value)
+    return callsInRoom.length > 0
+})
+
 const showCallButton = computed(() => {
     return allActiveCalls.value.length === 0
 })
 
 const showHangupButton = computed(() => {
     const callsInRoom = allActiveCalls.value.filter(call => call.roomId === currentActiveRoom.value)
-    return callsInRoom.length === 1
+    return callsInRoom.length === 1 && allActiveCalls.value.length === 1
 })
 
 const onChangeMicrophoneSensitivity = debounce((value: number) => {
@@ -238,9 +232,10 @@ const onHangupSingleCall = () => {
     terminateCall(callsInRoom[0]._id)
 }
 
+function toggleNewCallerKeypad () {
+    emit('toggle-new-call-keypad')
+}
 const toggleManualKeypad = () => {
-    console.log('toggleManualKeypad', showManualKeypad.value)
-    showManualKeypad.value = !showManualKeypad.value
     emit('toggle-keypad')
 }
 
@@ -265,26 +260,17 @@ const onMergeClick = () => {
     emit('merge-click', currentActiveRoom.value)
 }
 
-const expandRoom = () => {
-    isOutgoingCallInputOpen.value = false
-    isExpandRoomsState.value = !isExpandRoomsState.value
-}
-
 const onOutgoingCallClick = () => {
-    /*if (!isOutgoingCallInputOpen.value) {
-        isExpandRoomsState.value = false
-        isOutgoingCallInputOpen.value = true
-    } else {
-        if (!outgoingInputValue.value) {
-            return
-        }
-        const target = outgoingInputValue.value
-        outgoingInputValue.value = ''
-
-        startCall(target)
-    }*/
+    /*console.log('onOutgoingCallClick')
+    if (!outgoingInputValue.value) {
+        console.log('onOutgoingCallClick return')
+        return
+    }
+    const target = outgoingInputValue.value
+    outgoingInputValue.value = ''*/
 
     emit('start-call')
+    //startCall(target)
 }
 
 const onOutgoingInputClose = () => {
