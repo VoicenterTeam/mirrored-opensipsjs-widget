@@ -1,5 +1,5 @@
 <template>
-    <div 
+    <div
         v-if="isVisible"
         ref="debugPanel"
         :style="{
@@ -21,7 +21,7 @@
         }"
         @mousedown="startDrag"
     >
-        <div 
+        <div
             style="font-weight: bold; color: #4ade80; margin-bottom: 10px; font-size: 13px; display: flex; justify-content: space-between; align-items: center;"
         >
             <span>🔧 Multi-Tab Debug Panel</span>
@@ -97,7 +97,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { allActiveCalls } from '@/composables/opensipsjs'
-import { useActiveTab } from '@/plugins/activeTabPlugin'
+import { useActiveTab } from '@/composables/useActiveTab'
 
 const {
     isActiveTab,
@@ -108,8 +108,14 @@ const {
 // Visibility and dragging state
 const isVisible = ref(false)
 const isDragging = ref(false)
-const position = ref({ x: 20, y: 20 })
-const dragOffset = ref({ x: 0, y: 0 })
+const position = ref({
+    x: 20,
+    y: 20
+})
+const dragOffset = ref({
+    x: 0,
+    y: 0
+})
 const debugPanel = ref<HTMLElement>()
 
 // Computed properties
@@ -126,7 +132,7 @@ const isBlocked = computed(() => {
 })
 
 // Keyboard toggle functionality
-function handleKeydown(event: KeyboardEvent) {
+function handleKeydown (event: KeyboardEvent) {
     if (event.ctrlKey && event.shiftKey && event.key === 'D') {
         event.preventDefault()
         isVisible.value = !isVisible.value
@@ -134,38 +140,38 @@ function handleKeydown(event: KeyboardEvent) {
 }
 
 // Dragging functionality
-function startDrag(event: MouseEvent) {
+function startDrag (event: MouseEvent) {
     if (!debugPanel.value) return
-    
+
     isDragging.value = true
     const rect = debugPanel.value.getBoundingClientRect()
     dragOffset.value = {
         x: event.clientX - rect.left,
         y: event.clientY - rect.top
     }
-    
+
     document.addEventListener('mousemove', handleDrag)
     document.addEventListener('mouseup', stopDrag)
     event.preventDefault()
 }
 
-function handleDrag(event: MouseEvent) {
+function handleDrag (event: MouseEvent) {
     if (!isDragging.value) return
-    
+
     const newX = event.clientX - dragOffset.value.x
     const newY = event.clientY - dragOffset.value.y
-    
+
     // Keep panel within viewport bounds
     const maxX = window.innerWidth - (debugPanel.value?.offsetWidth || 450)
     const maxY = window.innerHeight - (debugPanel.value?.offsetHeight || 400)
-    
+
     position.value = {
         x: Math.max(0, Math.min(newX, maxX)),
         y: Math.max(0, Math.min(newY, maxY))
     }
 }
 
-function stopDrag() {
+function stopDrag () {
     isDragging.value = false
     document.removeEventListener('mousemove', handleDrag)
     document.removeEventListener('mouseup', stopDrag)
@@ -174,7 +180,7 @@ function stopDrag() {
 // Lifecycle
 onMounted(() => {
     document.addEventListener('keydown', handleKeydown)
-    
+
     // Set initial position to top-right corner
     position.value = {
         x: window.innerWidth - 470,

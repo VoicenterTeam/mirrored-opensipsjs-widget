@@ -55,6 +55,14 @@
     "new.call": "New call",
     "we.are.online": "We're online! <br> Click to call us via browser"
   },
+  "tab": {
+    "not.active": "Tab Not Active",
+    "inactive.description": "This tab is currently inactive. Only one tab can handle calls at a time.",
+    "activate": "Activate This Tab",
+    "cannot.activate": "Tab with calls is active",
+    "notify.other.tab": "Switch to Active Tab",
+    "enable.notifications": "Enable Notifications"
+  },
   "video": {
    "drawing.options": "Drawing options",
    "brush.width": "Brush width",

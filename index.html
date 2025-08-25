@@ -129,20 +129,6 @@
             <div class="controls-panel">
                 <h2>🎮 API Controls</h2>
 
-                <!-- Display Resolvers API -->
-                <div class="api-section">
-                    <h3>🎨 Display Resolvers (Generic System)</h3>
-                    <div class="controls">
-                        <button class="btn-primary" onclick="setCallerInfoResolver()">Set Caller Info Resolver</button>
-                        <button class="btn-primary" onclick="setCallLabelResolver()">Set Call Label Resolver</button>
-                    </div>
-                    <div class="controls">
-                        <button class="btn-warning" onclick="clearAllResolvers()">Clear All Resolvers</button>
-                        <button class="btn-success" onclick="testResolvers()">Test Resolvers</button>
-                    </div>
-                    <small>Generic system for customizing any widget display element</small>
-                </div>
-
                 <!-- Call Control -->
                 <div class="api-section">
                     <h3>📞 Call Control</h3>
@@ -368,11 +354,38 @@
                 logEvent(`❌ Call failed: ${session.id}`, 'error')
             })
 
+            widgetAPI.display.setResolver('callerInfo', (call, callUser) => {
+                console.log('call object received:', call, callUser)
+
+                // Extract phone number from call
+                const defaultData = callUser?.userName || callUser?.userPhone || 'Unknown'
+
+                const contacts = {
+                    '46': {
+                        name: 'Alice (Support)',
+                        number: '+46123456789',
+                    },
+                    '665': {
+                        name: 'Prikoldes',
+                        number: '1121'
+                    }
+                }
+
+                if (callUser.userPhone && contacts[callUser.userPhone]) {
+                    return contacts[callUser.userPhone]
+                }
+
+                return {
+                    name: defaultData,
+                    number: defaultData
+                }
+            })
+
             // Login with credentials
             const credentials = {
-                username: '',
-                password: '',
-                domain: ''
+                username: 'Vcv6x5Rg',
+                password: 'PHC02a5FcPQAmPW7',
+                domain: 'sip09.voicenter.co'
             }
 
             try {
@@ -386,63 +399,6 @@
         function onCallsUpdated ({ detail: callUpdatedData }) {
             const { currentCalls, newCalls, removedCalls } = callUpdatedData
             logEvent(`📊 Calls updated: ${currentCalls.length} active, ${newCalls.length} new, ${removedCalls.length} removed`)
-        }
-
-        // ===========================================
-        // DISPLAY RESOLVERS API (Generic System)
-        // ===========================================
-
-        function setCallerInfoResolver() {
-            if (!widgetAPI) return alert('Widget not ready')
-
-            widgetAPI.display.setResolver('callerInfo', (call) => {
-                console.log('call object received:', call)
-
-                // Extract phone number from call
-                const phoneNumber = call.remote_identity?.uri?.replace(/^sip:/, '').split('@')[0] || 'Unknown'
-                console.log('extracted phoneNumber:', phoneNumber)
-
-                const contacts = {
-                    '+1234567890': '👤 John Doe (Sales Director)',
-                    '+1987654321': '👩‍💼 Jane Smith (Customer Success)',
-                    '+1555123456': '🏢 ACME Corporation',
-                    '+1555999888': '🚨 Emergency Hotline'
-                }
-                return contacts[phoneNumber] || `📱 ${phoneNumber}`
-            })
-
-            logEvent('🎨 Caller info resolver set with demo contacts')
-            alert('Caller info resolver set! Try calling +1234567890 to see "👤 John Doe (Sales Director)"')
-        }
-
-        function setCallLabelResolver() {
-            if (!widgetAPI) return alert('Widget not ready')
-
-            widgetAPI.display.setResolver('callLabel', ({ callId, phoneNumber, direction }) => {
-                const prefix = direction === 'incoming' ? '📞 Incoming:' : '📱 Outgoing:'
-                return `${prefix} ${phoneNumber} (${callId.slice(-6)})`
-            })
-
-            logEvent('🎨 Call label resolver set')
-            alert('Call label resolver set! Calls will show enhanced labels.')
-        }
-
-
-        function clearAllResolvers() {
-            if (!widgetAPI) return alert('Widget not ready')
-            widgetAPI.display.clearAll()
-            logEvent('🧹 All display resolvers cleared')
-            alert('All resolvers cleared!')
-        }
-
-        function testResolvers() {
-            if (!widgetAPI) return alert('Widget not ready')
-
-            const hasCallerInfo = widgetAPI.display.hasResolver('callerInfo')
-            const hasCallLabel = widgetAPI.display.hasResolver('callLabel')
-
-            logEvent(`🧪 Resolver status - CallerInfo: ${hasCallerInfo}, CallLabel: ${hasCallLabel}`)
-            alert(`Resolvers status:\n• Caller Info: ${hasCallerInfo ? '✅ Active' : '❌ Not set'}\n• Call Label: ${hasCallLabel ? '✅ Active' : '❌ Not set'}`)
         }
 
         // ===========================================

@@ -19,7 +19,7 @@
         </div>
         <div class="flex-1 grow call-data-wrapper truncate mr-1">
             <div class="caller font-semibold truncate">
-                {{ caller }}
+                {{ displayName }}
             </div>
             <div class="flex items-center gap-x-1">
                 <HoldTimer
@@ -77,27 +77,27 @@ import type { ICall } from 'opensips-js/src/types/rtc'
 import useCallActions from '@/composables/phone/useCallActions.ts'
 import HoldTimer from '@/components/phone/common/HoldTimer.vue'
 import { useOpenSIPSJS } from '@/composables/opensipsjs.ts'
+import useCallInfo from '@/composables/useCallInfo.ts'
 
-
-/* Data */
-
-const { onActionsToggle, actionsPopupType } = useCallActions()
-const { holdCall, unholdCall, terminateCall } = useOpenSIPSJS()
-
+/* Props */
 type Props = {
-    caller: string,
     duration: string,
     callId: string,
     call: ICall
+    // TODO fix any
     audioTag: any
 }
 const props = defineProps<Props>()
+
+/* Composable */
+const { displayName } = useCallInfo(props.call)
+const { onActionsToggle, actionsPopupType } = useCallActions()
+const { holdCall, unholdCall, terminateCall } = useOpenSIPSJS()
 
 /* Computed */
 const active = computed(() => {
     return props.callId === actionsPopupType.value?.callId
 })
-
 const isCallOnHold = computed(() => {
     return props.call._localHold
 })

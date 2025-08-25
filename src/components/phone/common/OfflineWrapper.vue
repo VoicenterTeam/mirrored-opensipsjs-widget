@@ -19,8 +19,8 @@
 
 <script lang="ts" setup>
 import { isOpenSIPSReady } from '@/composables/opensipsjs'
-import { getTranslation } from '@/plugins/translator'
 
+import { getTranslation } from '@/plugins/translator'
 </script>
 
 <style lang="scss" scoped>

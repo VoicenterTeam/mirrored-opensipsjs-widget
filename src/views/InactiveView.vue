@@ -4,7 +4,7 @@
             <WidgetIconButton
                 color="success"
                 :icon="StartIcon"
-                :disabled="disableButton"
+                :disabled="!canActivate"
                 size="xl"
                 additional-classes="rounded-full p-3.5"
                 @click="activateTab"
@@ -26,11 +26,11 @@ import { computed } from 'vue'
 import StartIcon from '@/assets/icons/start.svg?component'
 import { allowShrinkOnIdle } from '@/composables/useWidgetConfig'
 
-import { useActiveTab } from '@/plugins/activeTabPlugin'
+import { useActiveTab } from '@/composables/useActiveTab'
 import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
 import { getTranslation } from '@/plugins/translator'
 
-const { isActiveTab, tabIdWithActiveCall, activateTab } = useActiveTab()
+const { canActivate, activateTab } = useActiveTab()
 
 const activateButtonClasses = computed(() => {
     let classes = 'text-primary p-1 '
@@ -42,11 +42,6 @@ const activateButtonClasses = computed(() => {
 
     return classes
 })
-
-const disableButton = computed(() => {
-    return !isActiveTab.value && !!tabIdWithActiveCall.value
-})
-
 </script>
 
 <style scoped>

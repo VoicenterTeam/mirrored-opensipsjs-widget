@@ -97,7 +97,7 @@ const movingCall = computed(() => {
     })
 })
 
-const { callerNumber: movingCallerNumber, callerName: movingCallerName } = useCallInfo(movingCall)
+const { displayNumber: movingCallerNumber, displayName: movingCallerName } = useCallInfo(movingCall)
 
 /*const movingCallerPhone = computed(() => {
     const cNumber = movingCall.value?._remote_identity._uri._user as string

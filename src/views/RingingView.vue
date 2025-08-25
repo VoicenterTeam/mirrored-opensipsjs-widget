@@ -5,13 +5,13 @@
                 v-if="displayCallerInfoName"
                 className="text-xs text-main-text font-medium"
             >
-                {{ callerName }}
+                {{ displayName }}
             </span>
             <span
                 v-if="displayCallerInfoId"
                 className="text-xs text-main-text font-medium"
             >
-                {{ callerNumber }}
+                {{ displayNumber }}
             </span>
         </div>
         <div v-if="!call.autoAnswer">
@@ -74,15 +74,14 @@ import type { ICall } from 'opensips-js/src/types/rtc'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import { callTimes } from '@/composables/opensipsjs'
 import useCallInfo from '@/composables/useCallInfo'
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import {
     displayCallerInfoName,
     displayCallerInfoId,
-    ringingSoundBase64,
     allowTransfer
 } from '@/composables/useWidgetConfig'
-import { defaultRingingSound } from '@/utils/ringingSound'
 import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
+import useRingingSound from '@/composables/useRingingSound.ts'
 
 const props = withDefaults(
     defineProps<{
@@ -98,7 +97,8 @@ const emit = defineEmits<{
 
 /* Composables */
 const { answerCall, terminateCall } = useOpenSIPSJS()
-const { callerNumber, callerName } = useCallInfo(props.call)
+const { displayNumber, displayName } = useCallInfo(props.call)
+const { play, stop } = useRingingSound()
 
 /* Computed */
 const callTime = computed(() => {
@@ -107,59 +107,25 @@ const callTime = computed(() => {
 })
 
 /* Data */
-const df = ref<DocumentFragment | undefined>()
-const soundEl = ref<HTMLAudioElement | undefined>()
 const answerClicked = ref(false)
 
 /* Methods */
 const answerIncomingCall = () => {
     answerCall(props.call._id)
-    stopRingingSound()
+    stop()
     answerClicked.value = true
 }
-
 const declineIncomingCall = () => {
     terminateCall(props.call._id)
 }
-
 const transferIncomingCall = () => {
     const callId = props.call?._id
     emit('transfer-click', callId)
 }
-const playRingingSound = (src: string) => {
-    df.value = document.createDocumentFragment()
-    soundEl.value = new Audio(src)
-    df.value.appendChild(soundEl.value) // keep in fragment until finished playing
-    soundEl.value.addEventListener('ended', function () {
-        // df.removeChild(snd)
-        soundEl.value?.play()
-    })
-    soundEl.value.play()
-    return soundEl.value
-}
-const stopRingingSound = () => {
-    if (soundEl.value) {
-        soundEl.value?.pause()
-
-        df.value?.removeChild(soundEl.value)
-
-        soundEl.value = undefined
-    }
-}
 
 onMounted(() => {
-    if (ringingSoundBase64.value) {
-        playRingingSound(ringingSoundBase64.value)
-    } else {
-        playRingingSound(defaultRingingSound)
-    }
-
+    play()
 })
-
-onUnmounted(() => {
-    stopRingingSound()
-})
-
 </script>
 
 <style scoped>

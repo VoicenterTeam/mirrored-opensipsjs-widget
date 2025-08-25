@@ -18,43 +18,35 @@
             </div>
         </div>
         <div class="caller-name truncate font-bold mb-1 text-lg">
-            {{ nameValue }}
+            {{ displayName }}
         </div>
         <div class="caller-phone text-secondary truncate text-base  font-medium">
-            {{ phoneValue }}
+            {{ displayNumber }}
         </div>
     </div>
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
 //import AudioQualityIndicator from '@/ui/phoneDialer/components/webRtcPhone/dialPad/mainBlock/AudioQualityIndicator.vue'
 import { callTime, callAddingInProgress } from '@/composables/opensipsjs'
 import { getTranslation } from '@/plugins/translator'
-
-/* Data */
-const { callersData } = useVsipInject()
+import { ICall } from 'opensips-js-vue'
+import useCallInfo from '@/composables/useCallInfo.ts'
 
 //* Props *//
 interface Props {
-    id: string
+    call: ICall
 }
 const props = defineProps<Props>()
 
+/* Composable */
+const { displayName, displayNumber } = useCallInfo(props.call)
+
 /* Computed */
 const callDuration = computed(() => {
-    const user = callTime.value[props.id]
+    const user = callTime.value[props.call._id]
+
     return user ? user.formatted  : ''
-})
-
-const nameValue = computed(() => {
-    const user = callersData.value[props.id]
-    return user ? user.userName || user.userPhone : ''
-})
-
-const phoneValue = computed(() => {
-    const user = callersData.value[props.id]
-    return user && user.userName? user.userPhone : getTranslation('audio.unknown')
 })
 </script>
 <style scoped lang="scss">

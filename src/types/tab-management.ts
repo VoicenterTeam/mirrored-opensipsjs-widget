@@ -8,7 +8,9 @@
 export enum TabMessageType {
     CALL_STATE = 'call-state',
     ACTIVATION_REQUEST = 'activation-request',
-    HEARTBEAT = 'heartbeat'
+    HEARTBEAT = 'heartbeat',
+    FOCUS_REQUEST = 'focus-request',
+    LEADERSHIP_GRANT = 'leadership-grant'
 }
 
 /**
@@ -38,9 +40,17 @@ export interface IHeartbeatMessage {
 }
 
 /**
+ * Focus request message
+ */
+export interface IFocusRequestMessage {
+    type: TabMessageType.FOCUS_REQUEST
+    tabId: string
+}
+
+/**
  * Union type for all tab messages
  */
-export type TabMessage = ICallStateMessage | IActivationRequestMessage | IHeartbeatMessage
+export type TabMessage = ICallStateMessage | IActivationRequestMessage | IHeartbeatMessage | IFocusRequestMessage
 
 /**
  * Tab configuration (currently unused but kept for future extensibility)

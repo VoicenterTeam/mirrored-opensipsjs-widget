@@ -9,7 +9,7 @@ import type {
 } from '@/types/public-api'
 import { getConfig, setConfig } from '@/composables/useWidgetConfig'
 import { useOpenSIPSJS, startOpenSIPS, disconnectOpenSIPS } from '@/composables/opensipsjs'
-import { useDisplayResolvers } from '@/composables/useCallerInfo'
+import { useDisplayResolvers } from '@/composables/useDisplayResolvers'
 import type { ListenerCallbackFnType, ListenersKeyType } from 'opensips-js/src/types/listeners'
 
 const OpenSIPSExternalWidgetAPI: IWidgetExternalAPIConstructor = class OpenSIPSExternalWidgetAPI implements IWidgetExternalAPI {
@@ -30,7 +30,7 @@ const OpenSIPSExternalWidgetAPI: IWidgetExternalAPIConstructor = class OpenSIPSE
         this.display = this.createDisplayAPI()
     }
 
-    private createVSIPActionsAPI(): IVSIPActionsAPI {
+    private createVSIPActionsAPI (): IVSIPActionsAPI {
         return {
             startCall: (target: string, addToCurrentRoom = false, holdOtherCalls = false) => {
                 const { startCall } = useOpenSIPSJS()
@@ -124,7 +124,7 @@ const OpenSIPSExternalWidgetAPI: IWidgetExternalAPIConstructor = class OpenSIPSE
         }
     }
 
-    private createDisplayAPI(): IDisplayAPI {
+    private createDisplayAPI (): IDisplayAPI {
         const displayResolvers = useDisplayResolvers()
 
         return {

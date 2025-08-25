@@ -9,8 +9,10 @@
             ref="draggableHandle"
             class="draggable"
         />
+
         <div class="phone-view-wrapper">
             <slot name="top" />
+
             <component :is="phoneUI">
                 <template #pv-bottom-left>
                     <slot name="pv-bottom-left" />
@@ -19,7 +21,11 @@
                     <slot name="pv-bottom-right" />
                 </template>
             </component>
+
             <OfflineWrapper />
+
+            <InactiveTabWrapper />
+
             <IncomingCalls v-if="visibleCalls.length" />
         </div>
     </div>
@@ -29,6 +35,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import type { IRoom, ICall } from 'opensips-js/src/types/rtc'
 import { allRooms, useOpenSIPSJS } from '@/composables/opensipsjs'
 import OfflineWrapper from '@/components/phone/common/OfflineWrapper.vue'
+import InactiveTabWrapper from '@/components/phone/common/InactiveTabWrapper.vue'
 import NoActiveCallsView from '@/components/phone/NoActiveCallsView.vue'
 import ActiveCallsWithKeypadView from '@/components/phone/ActiveCallsWithKeypadView.vue'
 import ActiveCallsWithActionButtonsView from '@/components/phone/ActiveCallsWithActionButtonsView.vue'
@@ -180,11 +187,12 @@ onMounted(() => {
     emit('ready', draggableRoot)
 })
 </script>
+
 <style lang="scss" scoped>
 .main-wrapper {
-  height: 100%;
-  min-height: 400px;
-  min-width: 300px;
+    height: 100%;
+    min-height: 400px;
+    min-width: 300px;
     @apply bg-primary-bg;
 
     &.has-draggable {

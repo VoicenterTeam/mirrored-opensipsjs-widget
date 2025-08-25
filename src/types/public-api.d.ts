@@ -1,4 +1,6 @@
 import type { ListenerCallbackFnType, ListenersKeyType } from 'opensips-js/src/types/listeners'
+import { ICall } from 'opensips-js-vue'
+import { CallUserDataType } from '@/types/phone'
 
 export namespace Widget {
     /**
@@ -85,10 +87,10 @@ export interface IWidgetConfig {
  */
 export type TWidgetConfigOptions = Partial<IWidgetConfig>
 
-/**
- * Generic display resolver function type
- */
-export type DisplayResolver<T = any, R = string> = (data: T) => R | Promise<R>
+export interface CallerInfoResolved {
+    name: string
+    number: string
+}
 
 /**
  * Display resolver registry - supports caller information display customization
@@ -97,7 +99,7 @@ export interface IDisplayResolvers {
     /**
      * Resolve caller information from call object
      */
-    callerInfo?: DisplayResolver<any, string>
+    callerInfo?: (data: ICall, callUser?: CallUserDataType) => Promise<CallerInfoResolved>
 }
 
 /**
@@ -203,7 +205,7 @@ export interface IDisplayAPI {
      * Set a display resolver for a specific type
      */
     setResolver: <K extends keyof IDisplayResolvers>(
-        type: K, 
+        type: K,
         resolver: IDisplayResolvers[K] | null
     ) => void
 

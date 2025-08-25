@@ -4,7 +4,7 @@
     >
         <div class="mr-2.5 w-1/2">
             <div class="caller font-bold text-sm mr-2.5 truncate">
-                {{ caller || getTranslation('audio.unknown') }}
+                {{ displayName }}
             </div>
             <div class="title font-semibold font-inter">
                 {{ getTranslation('audio.incoming.call') }}
@@ -15,35 +15,31 @@
                 class="button"
                 icon="vc-icon-phone"
                 size="small"
-                @click="answerCall(call._id)"
+                @click="onAnswerCall"
             />
             <HangupButton
                 class="button"
                 icon="vc-icon-phone-down"
                 color="destructive-actions"
                 size="small"
-                @click="terminateCall(call._id)"
+                @click="onTerminateCall"
             />
             <!--            <ActionsButton @click="onActionsToggle" />-->
         </div>
     </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
 import CallButton from '@/components/phone/common/CallButton.vue'
 import HangupButton from '@/components/phone/common/HangupButton.vue'
 //import ActionsButton from '@/ui/phoneDialer/components/common/ActionsButton.vue'
-import { useVsipInject } from '@/composables/phone/useVsipProvideInject'
 import { useOpenSIPSJS } from '@/composables/opensipsjs.ts'
 import { getTranslation } from '@/plugins/translator'
-import { useCallerInfoDisplay } from '@/composables/useCallerInfoDisplay'
+import useCallInfo from '@/composables/useCallInfo.ts'
 //import { useIncomingCalls } from '@/ui/phoneDialer/composables/useIncomingCalls'
-
 
 /* Data */
 const { answerCall, terminateCall } = useOpenSIPSJS()
-const { callersData } = useVsipInject()
 //const { onActionsCallChange, incomingCallActions } = useIncomingCalls()
 
 /* Props */
@@ -52,21 +48,24 @@ type Props = {
 }
 const props = defineProps<Props>()
 
+/* Emit */
+const emit = defineEmits<{
+    (e: 'answer-call'): void
+    (e: 'terminate-call'): void
+}>()
+
 /* Computed */
-const { displayName } = useCallerInfoDisplay(props.call)
+const { displayName } = useCallInfo(props.call)
 
-// Fallback to legacy caller data if needed
-const callerData = computed(() => {
-    return callersData.value[props.call?._id]
-})
-
-const caller = computed(() => {
-    // Use new caller info resolver first, then fallback to legacy data
-    if (displayName.value && displayName.value !== 'Unknown Caller') {
-        return displayName.value
-    }
-    return callerData.value?.userName || callerData.value?.userPhone || ''
-})
+/* Methods */
+function onAnswerCall () {
+    emit('answer-call')
+    answerCall(props.call._id)
+}
+function onTerminateCall () {
+    emit('terminate-call')
+    terminateCall(props.call._id)
+}
 
 /* Methods */
 // const onActionsToggle = () => {
@@ -78,6 +77,7 @@ const caller = computed(() => {
 // }
 
 </script>
+
 <style lang="scss" scoped>
 .incoming-call {
   transition: opacity 0.3s ease, visibility 0.3s ease;
