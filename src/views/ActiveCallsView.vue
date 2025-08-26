@@ -131,8 +131,8 @@ const activeRooms = computed(() => {
         let singleParticipantName = ''
 
         if (callsInRoom.length === 1) {
-            const { callerNumber } = useCallInfo(callsInRoom[0])
-            singleParticipantName = callerNumber.value
+            const { displayNumber } = useCallInfo(callsInRoom[0])
+            singleParticipantName = displayNumber.value
         }
 
         const oldestCall = callsInRoom.sort((call_1, call_2) => {

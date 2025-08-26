@@ -5,7 +5,7 @@
         :calls-length="lengthOfCallsWithoutIncoming"
     />
     <ActiveCallBlock
-        :id="oneActiveCallId"
+        :call="oneActiveCall"
         class="py-2 px-3"
     />
     <OneCallControlButtonsBlock
@@ -19,12 +19,11 @@ import ActiveCallBlock from '@/components/phone/activeCallsView/ActiveCallBlock.
 import OneCallControlButtonsBlock from '@/components/phone/activeCallsView/OneCallControlButtonsBlock.vue'
 import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
 
-
 /* Data */
-const { callsInActiveRoom, roomsWithoutActive , activeRoomsWithoutIncoming, lengthOfCallsWithoutIncoming} = useVsipInject()
+const { callsInActiveRoom, roomsWithoutActive , activeRoomsWithoutIncoming, lengthOfCallsWithoutIncoming } = useVsipInject()
 
 /* Computed */
-const oneActiveCallId = computed(() => {
-    return callsInActiveRoom.value[0]._id
+const oneActiveCall = computed(() => {
+    return callsInActiveRoom.value[0]
 })
 </script>

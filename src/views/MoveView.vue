@@ -95,7 +95,7 @@ const movingCall = computed(() => {
     })
 })
 
-const { callerNumber: movingCallerNumber, callerName: movingCallerName } = useCallInfo(movingCall)
+const { displayNumber: movingCallerNumber, displayName: movingCallerName } = useCallInfo(movingCall)
 
 const roomsList = computed(() => {
     if (!movingCall.value) return
@@ -106,14 +106,14 @@ const roomsList = computed(() => {
             const callsInRoom = allActiveCalls.value.filter((call) => call.roomId === room.roomId)
 
             const participantsReduced = callsInRoom.reduce((reducer, call) => {
-                const { callerName, callerNumber } = useCallInfo(call)
+                const { displayName, displayNumber } = useCallInfo(call)
 
                 if (!reducer) {
                     console.log('return i 0')
-                    return callerName.value || callerNumber.value
+                    return displayName.value || displayNumber.value
                 }
 
-                return reducer + ', ' + (callerName.value || callerNumber.value)
+                return reducer + ', ' + (displayName.value || displayNumber.value)
             }, '')
 
             return {

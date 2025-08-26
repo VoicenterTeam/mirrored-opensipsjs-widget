@@ -24,11 +24,13 @@ import { computed } from 'vue'
 import StartIcon from '@/assets/icons/start.svg?component'
 import { allowShrinkOnIdle } from '@/composables/useWidgetConfig'
 
-import { useActiveTab } from '@/plugins/activeTabPlugin'
+import { useActiveTab } from '@/composables/useActiveTab'
 import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
 import { getTranslation } from '@/plugins/translator'
 
-const { isActiveTab, tabIdWithActiveCall, activateTab } = useActiveTab()
+const { canActivate, activateTab } = useActiveTab()
+
+// TODO: add condition to button for disable="!canActivate"
 
 const activateButtonClasses = computed(() => {
     let classes = 'text-primary p-1 '

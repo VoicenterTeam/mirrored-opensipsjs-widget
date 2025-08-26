@@ -8,13 +8,13 @@
                 v-if="displayCallerInfoName"
                 className="text-xs text-main-text font-medium"
             >
-                {{ callerName }}
+                {{ displayName }}
             </span>
             <span
                 v-if="displayCallerInfoId"
                 className="text-xs text-main-text font-medium"
             >
-                {{ callerNumber }}
+                {{ displayName }}
             </span>
         </div>
         <div
@@ -22,7 +22,7 @@
             className="p-0.5"
         >
             <div className="overflow-hidden mx-3 text-main-text w-[92px] max-w-[92px] font-medium text-xs text-ellipsis whitespace-nowrap">
-                {{ callerName }} {{ callerNumber }}
+                {{ displayName }} {{ displayNumber }}
             </div>
         </div>
 
@@ -138,7 +138,7 @@ const props = withDefaults(
 
 /* Composables */
 const { terminateCall, holdCall, unholdCall, muteCaller } = useOpenSIPSJS()
-const { callerNumber, callerName } = useCallInfo(props.call)
+const { displayName, displayNumber } = useCallInfo(props.call)
 
 const emit = defineEmits<{
     (e: 'transfer-click', callId: string): void

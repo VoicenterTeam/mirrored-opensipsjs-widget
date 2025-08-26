@@ -1,4 +1,6 @@
 import type { ListenerCallbackFnType, ListenersKeyType } from 'opensips-js/src/types/listeners'
+import { ICall } from 'opensips-js-vue'
+import { CallUserDataType } from '@/types/phone'
 
 export namespace Widget {
     /**
@@ -85,6 +87,154 @@ export interface IWidgetConfig {
  */
 export type TWidgetConfigOptions = Partial<IWidgetConfig>
 
+export interface CallerInfoResolved {
+    name: string
+    number: string
+}
+
+/**
+ * Display resolver registry - supports caller information display customization
+ */
+export interface IDisplayResolvers {
+    /**
+     * Resolve caller information from call object
+     */
+    callerInfo?: (data: ICall, callUser?: CallUserDataType) => Promise<CallerInfoResolved>
+}
+
+/**
+ * VSIP actions API interface - provides access to all SIP call actions
+ */
+export interface IVSIPActionsAPI {
+    /**
+     * Start a new call
+     */
+    startCall: (target: string, addToCurrentRoom?: boolean, holdOtherCalls?: boolean) => void
+
+    /**
+     * Answer an incoming call
+     */
+    answerCall: (callId: string) => void
+
+    /**
+     * Terminate a call
+     */
+    terminateCall: (callId: string) => void
+
+    /**
+     * Hold a call
+     */
+    holdCall: (callId: string) => void
+
+    /**
+     * Unhold a call
+     */
+    unholdCall: (callId: string) => void
+
+    /**
+     * Transfer a call to another number
+     */
+    transferCall: (callId: string, target: string) => void
+
+    /**
+     * Move call to a different room
+     */
+    moveCall: (callId: string, roomId: number) => Promise<void>
+
+    /**
+     * Merge calls in a room
+     */
+    mergeCallsInRoom: (roomId: number) => void
+
+    /**
+     * Merge two specific calls
+     */
+    mergeCallByIds: (firstCallId: string, secondCallId: string) => void
+
+    /**
+     * Send DTMF tones
+     */
+    sendDTMF: (callId: string, value: string) => void
+
+    /**
+     * Mute/unmute agent
+     */
+    mute: (toMute: boolean) => void
+
+    /**
+     * Mute/unmute a specific caller
+     */
+    muteCaller: (callId: string, toMute: boolean) => void
+
+    /**
+     * Set Do Not Disturb
+     */
+    setDND: (value: boolean) => void
+
+    /**
+     * Set auto answer
+     */
+    setAutoAnswer: (value: boolean) => void
+
+    /**
+     * Set call waiting
+     */
+    setCallWaiting: (state: boolean) => Promise<void>
+
+    /**
+     * Set active room
+     */
+    setActiveRoom: (roomId: number | undefined) => Promise<void>
+
+    /**
+     * Set speaker volume
+     */
+    setSpeakerVolume: (value: number) => void
+
+    /**
+     * Set microphone sensitivity
+     */
+    setMicrophoneSensitivity: (value: number) => void
+}
+
+/**
+ * Display customization API interface - provides generic display resolvers
+ */
+export interface IDisplayAPI {
+    /**
+     * Set a display resolver for a specific type
+     */
+    setResolver: <K extends keyof IDisplayResolvers>(
+        type: K,
+        resolver: IDisplayResolvers[K] | null
+    ) => void
+
+    /**
+     * Set multiple resolvers at once
+     */
+    setResolvers: (resolvers: Partial<IDisplayResolvers>) => void
+
+    /**
+     * Get a specific resolver
+     */
+    getResolver: <K extends keyof IDisplayResolvers>(type: K) => IDisplayResolvers[K] | null
+
+    /**
+     * Check if a specific resolver is set
+     */
+    hasResolver: (type: keyof IDisplayResolvers) => boolean
+
+    /**
+     * Clear a specific resolver
+     */
+    clearResolver: (type: keyof IDisplayResolvers) => void
+
+    /**
+     * Clear all resolvers
+     */
+    clearAll: () => void
+}
+
 /**
  * Represents the external API provided by the widget.
  */
@@ -120,6 +270,16 @@ export interface IWidgetExternalAPI {
      * Disconnects the SIP.
      */
     disconnect: () => IWidgetExternalAPI
+
+    /**
+     * VSIP actions API - provides access to all SIP call functions
+     */
+    vsip: IVSIPActionsAPI
+
+    /**
+     * Display customization API - provides generic display resolvers
+     */
+    display: IDisplayAPI
 }
 
 export interface IWidgetExternalAPIConstructor {

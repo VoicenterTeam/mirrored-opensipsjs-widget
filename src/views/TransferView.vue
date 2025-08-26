@@ -20,16 +20,16 @@
                     style="width: 300px; max-width: 300px;"
                 >
                     <span
-                        v-if="displayCallerInfoName && callerName"
+                        v-if="displayCallerInfoName && displayName"
                         class="w-1/2 max-w-1/2 truncate"
                     >
-                        {{ callerName }}
+                        {{ displayName }}
                     </span>
                     <span
-                        v-if="displayCallerInfoId && callerNumber"
+                        v-if="displayCallerInfoId && displayNumber"
                         class="w-1/2 max-w-1/2 truncate"
                     >
-                        {{ callerNumber }}
+                        {{ displayNumber }}
                     </span>
                 </div>
             </div>
@@ -83,7 +83,7 @@ const transferringCall = computed(() => {
     })
 })
 
-const { callerNumber, callerName } = useCallInfo(transferringCall.value)
+const { displayNumber, displayName } = useCallInfo(transferringCall.value)
 
 const target = ref<string>('')
 

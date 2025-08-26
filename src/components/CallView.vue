@@ -15,16 +15,16 @@
             style="width: 190px; max-width: 190px; min-width: 190px;"
         >
             <div
-                v-if="displayCallerInfoName && callerName"
+                v-if="displayCallerInfoName && displayName"
                 class="w-1/2 max-w-1/2 truncate"
             >
-                {{ callerName }}
+                {{ displayName }}
             </div>
             <div
-                v-if="displayCallerInfoId && callerNumber"
+                v-if="displayCallerInfoId && displayNumber"
                 class="w-1/2 truncate"
             >
-                {{ callerNumber }}
+                {{ displayNumber }}
             </div>
         </div>
 
@@ -109,7 +109,7 @@ const props = withDefaults(
 
 /* Composables */
 const { terminateCall, holdCall, unholdCall, muteCaller } = useOpenSIPSJS()
-const { callerNumber, callerName } = useCallInfo(props.call)
+const { displayNumber, displayName } = useCallInfo(props.call)
 
 const emit = defineEmits<{
     (e: 'transfer-click', callId: string): void

@@ -38,6 +38,7 @@
     "opensips-js-vue": "^0.1.7",
     "opensips-js-whiteboard": "^0.0.1",
     "regenerator-runtime": "^0.13.11",
+    "tab-election": "^4.2.8",
     "v-loading-directive": "^1.0.4",
     "vue": "^3.5.12",
     "vue-slider-component": "^3.2.24",

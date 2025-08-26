@@ -1,7 +1,7 @@
 <template>
     <span :id="`volume-level-${deviceId}`">
         <canvas
-            :id="`canvas-${deviceId}`" 
+            :id="`canvas-${deviceId}`"
             ref="canvas"
             class="volume-canvas"
         />

@@ -55,6 +55,14 @@
     "new.call": "שיחה חדשה",
     "we.are.online": "אנחנו פעילים! <br> לחץ כדי להתקשר אלינו דרך הדפדפן"
   },
+  "tab": {
+    "not.active": "הטאב לא פעיל",
+    "inactive.description": "הטאב הזה כרגע לא פעיל. רק טאב אחד יכול להתמודד עם שיחות בכל פעם.",
+    "activate": "הפעל טאב זה",
+    "cannot.activate": "טאב עם שיחות פעיל",
+    "notify.other.tab": "עבור לטאב פעיל",
+    "enable.notifications": "אפשר התראות"
+  },
   "video": {
     "drawing.options": "אפשרויות ציור",
     "brush.width": "רוחב מברשת",
