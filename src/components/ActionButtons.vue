@@ -1,41 +1,8 @@
 <template>
     <div>
-        <!--        <div :className="expandWrapperClasses">
-            <div>
-                <WidgetIconButton
-                    color="primary"
-                    :icon="ExpandRoomsIcon"
-                    :pressed="isExpandRoomsState"
-                    additional-classes="border-r border-border-lines"
-                    @click="expandRoom" />
-            </div>
-            <div v-if="isExpandRoomsState" className="w-full bg-primary">
-                <div/>
-            </div>
-        </div>-->
         <div class="flex w-full p-1">
             <slot name="prefix-buttons" />
             <SettingsIconButton />
-            <!--            <div>
-                <ActionIconButton
-                    icon="vc-lc-settings"
-                    color="primary-actions"
-                />
-            </div>-->
-            <div>
-                <!--                <WidgetIconButton
-                    color="primary"
-                    :icon="MuteIcon"
-                    :pressed="isAgentMuted"
-                    :pressed-icon="UnMuteIcon"
-                    additional-classes="border-r border-border-lines"
-                    @click="doMuteAgent"
-                />-->
-                <!--                <ActionIconButton
-                    icon="vc-lc-history"
-                    color="primary-actions"
-                />-->
-            </div>
             <div>
                 <ActionIconButton
                     icon="vc-lc-phone-off"
@@ -48,12 +15,12 @@
                 <i class="vc-lc-volume-2 text-primary-actions" />
                 <div>
                     <VcSlider
-                        :model-value="microphoneInputLevel"
+                        :model-value="speakerVolume"
                         :min="0"
                         :max="1"
                         :step="0.01"
                         :show-tooltip="false"
-                        @update:modelValue="onChangeMicrophoneSensitivity"
+                        @update:modelValue="onChangeSpeakerVolume"
                     />
                 </div>
             </div>
@@ -82,16 +49,6 @@
             </div>
 
             <NewCallerButton @toggle-keypad="toggleNewCallerKeypad" />
-            <!--            <div v-if="showKeypad && keypadMode === 'manual'">
-                <WidgetIconButton
-                    color="primary"
-                    :icon="KeypadIcon"
-                    :pressed="showManualKeypad"
-                    :pressed-icon="KeypadIcon"
-                    additional-classes="border-r border-border-lines"
-                    @click="toggleManualKeypad"
-                />
-            </div>-->
 
             <KeypadIconButton
                 v-if="showKeypad && keypadMode === 'popover'"
@@ -100,24 +57,7 @@
             <div
                 v-if="allowOutgoingCalls"
             >
-                <!--                <div
-                    v-if="isOutgoingCallInputOpen"
-                    class="w-full"
-                >
-                    <InputOutgoingCall
-                        v-model="outgoingInputValue"
-                        @call="onOutgoingCallClick"
-                        @close="onOutgoingInputClose"
-                    />
-                </div>-->
                 <div>
-                    <!--                    <WidgetIconButton
-                        color="success"
-                        :icon="CallIcon"
-                        :use-focus-effect="false"
-                        :additional-classes="outgoingCallButtonClasses"
-                        @click="onOutgoingCallClick"
-                    />-->
                     <ActionIconButton
                         v-if="showCallButton"
                         icon="vc-icon-phone"
@@ -144,13 +84,7 @@ import type { UnwrapRef } from 'vue'
 import { computed, ref } from 'vue'
 import SettingsIconButton from '@/components/SettingsIconButton.vue'
 import KeypadIconButton from '@/components/KeypadIconButton.vue'
-import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
 import ActionIconButton from '@/components/base/ActionIconButton.vue'
-import MuteIcon from '@/assets/icons/mute.svg?component'
-import UnMuteIcon from '@/assets/icons/unmute.svg?component'
-import KeypadIcon from '@/assets/icons/keypad.svg?component'
-import MergeIcon from '@/assets/icons/merge.svg?component'
-import CallIcon from '@/assets/icons/call2.svg?component'
 import {
     useOpenSIPSJS,
     isMuted,
@@ -158,18 +92,17 @@ import {
     allActiveCalls,
     currentActiveRoom,
     isDND,
-    microphoneInputLevel
+    speakerVolume
 } from '@/composables/opensipsjs'
 import { allowOutgoingCalls, showKeypad, keypadMode } from '@/composables/useWidgetConfig'
 import type { ICall } from 'opensips-js/src/types/rtc'
-import InputOutgoingCall from '@/components/InputOutgoingCall.vue'
 import { VcSlider } from '@voicenter-team/voicenter-ui-plus'
 import { debounce } from 'lodash'
 import NewCallerButton from '@/components/NewCallerButton.vue'
 
-const { muteAgent, setDND, terminateCall, startCall, setMicrophoneSensitivity, state } = useOpenSIPSJS()
+const { muteAgent, setDND, terminateCall, startCall, setSpeakerVolume, state } = useOpenSIPSJS()
 
-const props = withDefaults(
+withDefaults(
     defineProps<{
         calls: UnwrapRef<Array<ICall>>
         showOutgoingButton: boolean
@@ -187,7 +120,6 @@ const emit = defineEmits<{
     (e: 'toggle-new-call-keypad'): void
 }>()
 
-const isExpandRoomsState = ref<boolean>(false)
 const isOutgoingCallInputOpen = ref<boolean>(false)
 const outgoingInputValue = ref<string>('')
 
@@ -204,11 +136,6 @@ const showMergeButton = computed(() => {
     return callsInRoom.length === 2
 })
 
-const showAddNewCallerButton = computed(() => {
-    const callsInRoom = allActiveCalls.value.filter(call => call.roomId === currentActiveRoom.value)
-    return callsInRoom.length > 0
-})
-
 const showCallButton = computed(() => {
     return allActiveCalls.value.length === 0
 })
@@ -218,8 +145,8 @@ const showHangupButton = computed(() => {
     return callsInRoom.length === 1 && allActiveCalls.value.length === 1
 })
 
-const onChangeMicrophoneSensitivity = debounce((value: number) => {
-    setMicrophoneSensitivity(value)
+const onChangeSpeakerVolume = debounce((value: number) => {
+    setSpeakerVolume(value)
 }, 100)
 
 const onHangupSingleCall = () => {
@@ -261,22 +188,9 @@ const onMergeClick = () => {
 }
 
 const onOutgoingCallClick = () => {
-    /*console.log('onOutgoingCallClick')
-    if (!outgoingInputValue.value) {
-        console.log('onOutgoingCallClick return')
-        return
-    }
-    const target = outgoingInputValue.value
-    outgoingInputValue.value = ''*/
-
     emit('start-call')
-    //startCall(target)
 }
 
-const onOutgoingInputClose = () => {
-    isOutgoingCallInputOpen.value = false
-    outgoingInputValue.value = ''
-}
 </script>
 
 <style scoped>

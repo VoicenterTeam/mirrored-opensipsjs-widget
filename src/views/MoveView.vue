@@ -40,12 +40,6 @@
                 style="width: 140px;"
                 class="room-select_wrapper"
             >
-                <!--        <InputOutgoingCall
-            v-model="target"
-            bg-color=""
-            @call="doTransfer"
-            @close="clearTargetInput"
-        />-->
                 <VcSelect
                     v-model="target"
                     :teleported="false"
@@ -55,20 +49,6 @@
                     :config="{ labelKey: 'label', valueKey: 'value' }"
                     placeholder="Select Room"
                 />
-
-                <!--                <select
-                    id="callerToMoveToEl"
-                    v-model="target"
-                    placeholder="Select"
-                >
-                    <option
-                        v-for="(item, key) in roomsList"
-                        :key="key"
-                        :value="item.value"
-                    >
-                        {{ item.label }}
-                    </option>
-                </select>-->
             </div>
             <div class="ml-1">
                 <ActionIconButton
@@ -80,88 +60,20 @@
             </div>
         </div>
     </div>
-<!--    <div className="flex justify-around items-center bg-primary-bg">
-        <div className="flex items-center justify-center px-2 text-xxs">
-            <span className="text-center font-bold text-secondary-text uppercase">
-                {{ getTranslation('audio.move') }}
-            </span>
-            <div className="flex items-center flex-col justify-evenly px-2">
-                <span
-                    v-if="displayCallerInfoName"
-                    className="text-main-text font-medium"
-                >
-                    {{ movingCallerName }}
-                </span>
-                <span
-                    v-if="displayCallerInfoId"
-                    className="text-main-text font-medium"
-                >
-                    {{ movingCallerNumber }}
-                </span>
-            </div>
-            <span className="text-center font-bold text-secondary-text uppercase">
-                {{ getTranslation('audio.to') }}
-            </span>
-        </div>
-
-        <div className="px-2">
-            &lt;!&ndash;            <BaseInput v-model="target" />&ndash;&gt;
-            <select
-                id="callerToMoveToEl"
-                v-model="target"
-            >
-                <option
-                    v-for="(item, key) in roomsList"
-                    :key="key"
-                    :value="item.roomId"
-                >
-                    {{ item.roomId }}
-                </option>
-            </select>
-        </div>
-
-        <div className="flex p-1">
-            <div className="rounded-l overflow-hidden mr-[2px]">
-                <WidgetIconButton
-                    color="success"
-                    hover-color="additional-success-bg"
-                    :icon="CheckmarkIcon"
-                    size="lg"
-                    @click="doMove"
-                />
-            </div>
-            <div className="rounded-r overflow-hidden">
-                <WidgetIconButton
-                    color="danger"
-                    hover-color="additional-danger-bg"
-                    :icon="CloseIcon"
-                    size="lg"
-                    additional-classes=""
-                    @click="cancelMoving"
-                />
-            </div>
-        </div>
-    </div>-->
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, unref } from 'vue'
-import CheckmarkIcon from '@/assets/icons/checkmark.svg?component'
-import CloseIcon from '@/assets/icons/close2.svg?component'
-import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
+import { ref, computed } from 'vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
-import { allActiveCalls, allRooms, currentActiveRoom } from '@/composables/opensipsjs'
+import { allActiveCalls, allRooms } from '@/composables/opensipsjs'
 import {
-    displayCallerInfoId, displayCallerInfoIdMask,
+    displayCallerInfoId,
     displayCallerInfoName
 } from '@/composables/useWidgetConfig'
 import useCallInfo from '@/composables/useCallInfo'
 import { getTranslation } from '@/plugins/translator'
-import InputOutgoingCall from '@/components/InputOutgoingCall.vue'
 import ActionIconButton from '@/components/base/ActionIconButton.vue'
 import { VcSelect } from '@voicenter-team/voicenter-ui-plus'
-import NewCallerButton from '@/components/NewCallerButton.vue'
-import { getCallerNumber } from '@/helpers/callerHelper.ts'
 
 const target = ref<number | undefined>()
 
@@ -185,12 +97,6 @@ const movingCall = computed(() => {
 
 const { callerNumber: movingCallerNumber, callerName: movingCallerName } = useCallInfo(movingCall)
 
-/*const movingCallerPhone = computed(() => {
-    const cNumber = movingCall.value?._remote_identity._uri._user as string
-    const cName = movingCall.value?._remote_identity._display_name as string
-    return getCallerInfo(cNumber, cName, displayCallerInfoName.value, displayCallerInfoIdMask.value)
-})*/
-
 const roomsList = computed(() => {
     if (!movingCall.value) return
 
@@ -202,28 +108,13 @@ const roomsList = computed(() => {
             const participantsReduced = callsInRoom.reduce((reducer, call) => {
                 const { callerName, callerNumber } = useCallInfo(call)
 
-                /*console.log('1')
-                const cNumber = call._remote_identity?._uri._user || ''
-                const callerNumber = cNumber //getCallerNumber(cNumber, displayCallerInfoIdMask.value)
-
-                const callerName = call._remote_identity?._display_name || ''
-
-                console.log('2')
-                console.log('callerName', callerName)
-                console.log('callerNumber', callerNumber)*/
-
                 if (!reducer) {
                     console.log('return i 0')
                     return callerName.value || callerNumber.value
                 }
 
-                console.log('3', reducer)
-                const sumString = reducer + ', ' + (callerName.value || callerNumber.value)
-                console.log('sumString', sumString)
-                return sumString
+                return reducer + ', ' + (callerName.value || callerNumber.value)
             }, '')
-
-            console.log('participantsReduced', participantsReduced)
 
             return {
                 value: room.roomId,

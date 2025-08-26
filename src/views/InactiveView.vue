@@ -1,15 +1,6 @@
 <template>
     <div className="flex bg-primary-actions-bg--focus h-[60px] flex-row p-1">
         <div :className="activateButtonClasses">
-            <!--            <WidgetIconButton
-                color="primary-actions"
-                pressed-color="primary-actions-bg&#45;&#45;focus"
-                :icon="StartIcon"
-                :disabled="disableButton"
-                size="xl"
-                additional-classes="rounded-full p-3.5 border border-primary-actions"
-                @click="activateTab"
-            />-->
             <div
                 class="activate-button"
                 @click="activateTab"
@@ -48,10 +39,6 @@ const activateButtonClasses = computed(() => {
     }
 
     return classes
-})
-
-const disableButton = computed(() => {
-    return !isActiveTab.value && !!tabIdWithActiveCall.value
 })
 
 </script>

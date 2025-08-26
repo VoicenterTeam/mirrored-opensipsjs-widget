@@ -83,55 +83,15 @@
                 />
             </div>
         </div>
-        <!--    <div className="flex items-end bg-primary-bg">
-        <div
-            v-if="allRooms.length > 1 || !currentActiveRoom"
-            className="flex flex-col-reverse"
-        >
-            <div
-                v-for="(room, index) in allRooms"
-                :key="room.roomId"
-            >
-                <div>
-                    <RoomButton
-                        :room-id="room.roomId"
-                        :is-active="room.roomId === currentActiveRoom"
-                        :calls-in-active-room-length="callsInActiveRoom.length"
-                        :rooms-length="allRooms.length"
-                        :index="index"
-                        :is-multi-call-mode="allRooms.length > 1 || callsInActiveRoom.length > 1"
-                    />
-                </div>
-            </div>
-        </div>
-
-        <div className="flex w-full flex-col">
-            <div
-                v-for="(call, index) in callsInActiveRoom"
-                :key="call._id"
-                className="flex w-full"
-            >
-                <ActiveCallView
-                    :call="call"
-                    :is-single-room="allRooms.length === 1"
-                    :is-single-call="callsInActiveRoom.length === 1"
-                    :is-first-caller="index === 0"
-                    @transfer-click="onTransferClick"
-                    @move-click="onMoveClick"
-                />
-            </div>
-        </div>
-    </div>-->
     </div>
 </template>
 
 <script lang="ts" setup>
-import { UnwrapRef, watch } from 'vue'
+import { UnwrapRef } from 'vue'
 import { ref, computed } from 'vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
 import CallView from '@/components/CallView.vue'
 import { useOpenSIPSJS, allRooms, allActiveCalls, currentActiveRoom } from '@/composables/opensipsjs'
-import RoomButton from '@/components/views/active/RoomButton.vue'
 import useCallInfo from '@/composables/useCallInfo'
 import AddCallerButton from '@/components/AddCallerButton.vue'
 import RoomActionButton from '@/components/base/RoomActionButton.vue'
@@ -139,7 +99,7 @@ import SwitchRoomListItem from '@/components/SwitchRoomListItem.vue'
 
 const { terminateCall, setActiveRoom } = useOpenSIPSJS()
 
-const props = withDefaults(
+withDefaults(
     defineProps<{
         calls: UnwrapRef<Array<ICall>>
     }>(),
@@ -155,11 +115,11 @@ const callsInActiveRoom = computed(() => {
 })
 
 const showCallInfoBlock = computed(() => {
-    return allRooms.value.length > 1 && !isRoomListView.value //|| callsInActiveRoom.value.length > 1
+    return allRooms.value.length > 1 && !isRoomListView.value
 })
 
 const showRoomInfoBlock = computed(() => {
-    return allRooms.value.length > 0 && isRoomListView.value  //|| callsInActiveRoom.value.length > 1
+    return allRooms.value.length > 0 && isRoomListView.value
 })
 
 const activeRooms = computed(() => {
@@ -179,12 +139,8 @@ const activeRooms = computed(() => {
             const call1StartTime = new Date(call_1.start_time)
             const call2StartTime = new Date(call_2.start_time)
 
-            console.log('call1StartTime', call1StartTime.getTime())
-            console.log('call2StartTime', call2StartTime.getTime())
             return call1StartTime.getTime() - call2StartTime.getTime()
         })
-        console.log('oldestCall', oldestCall)
-        console.log('callsInRoom', callsInRoom)
 
         return {
             roomId: room.roomId,
@@ -199,16 +155,15 @@ const activeRooms = computed(() => {
 const emit = defineEmits<{
     (e: 'transfer-click', callId: string): void
     (e: 'move-click', callId: string): void
-    (e: 'toggle-keypad', callId: string): void
+    (e: 'toggle-keypad'): void
 }>()
 
 function onToggleAddCallerKeypad () {
     emit('toggle-keypad')
 }
 
-function onSetActiveRoom (roomId) {
+function onSetActiveRoom (roomId: number) {
     setActiveRoom(roomId)
-    console.log('onSetActiveRoom', roomId)
     isRoomListView.value = false
 }
 
@@ -233,29 +188,18 @@ function onCallTerminate () {
     isRoomListView.value = true
 }
 
-function switchRoomListView (value) {
+function switchRoomListView (value: boolean) {
     isRoomListView.value = value
 }
 
 defineExpose({
     switchRoomListView
 })
-/*watch(currentActiveRoom, (value) => {
-    if (!value && allActiveCalls.value.length) {
-        isRoomListView.value = true
-    }
-}, { deep: true })
 
-watch(allActiveCalls, (newCalls, oldCalls) => {
-    if (oldCalls.length && !newCalls.length) {
-        isRoomListView.value = true
-    }
-}, { deep: true })*/
 </script>
 
 <style scoped>
 .list-item:nth-child(odd) {
   @apply bg-primary-actions-bg--focus;
-  /*background-color: #dadada;*/
 }
 </style>

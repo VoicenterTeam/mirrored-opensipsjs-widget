@@ -4,7 +4,7 @@
             v-model="isPopoverOpened"
             :teleported="false"
             :popover-width="220"
-            :trigger="[]"
+            :trigger="triggersArray"
             placement="top"
         >
             <template #reference>
@@ -23,38 +23,18 @@
                     @call="onStartCall"
                 />
             </div>
-
-
-            <!--            <WidgetIconButton
-                color="primary"
-                pressed-color="primary-bg"
-                :icon="KeypadIcon"
-                :use-focus-effect="true"
-                :additional-classes="props.buttonClasses"
-                @click="openSettingsPopover" />-->
         </VcPopover>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import KeypadIcon from '@/assets/icons/keypad.svg?component'
-import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
-import BasePopper from '@/components/base/BasePopper.vue'
+import { computed, ref } from 'vue'
 import { VcPopover } from '@voicenter-team/voicenter-ui-plus'
 import Keypad from '@/components/Keypad.vue'
 import { useOpenSIPSJS, currentActiveRoom } from '@/composables/opensipsjs'
-import ActionIconButton from '@/components/base/ActionIconButton.vue'
 import RoomActionButton from '@/components/base/RoomActionButton.vue'
 import { keypadMode } from '@/composables/useWidgetConfig'
 const { startCall } = useOpenSIPSJS()
-
-const props = withDefaults(
-    defineProps<{
-        buttonClasses?: string
-    }>(),
-    {}
-)
 
 const emit = defineEmits<{
     (e: 'press', value: string): void,
@@ -62,6 +42,10 @@ const emit = defineEmits<{
 }>()
 
 const isPopoverOpened = ref(false)
+
+const triggersArray = computed(() => {
+    return keypadMode.value === 'popover' ? [ 'click' ] : []
+})
 
 const onPress = (value: string) => {
     emit('press', value)
@@ -81,12 +65,7 @@ function onStartCall (target: string) {
         return
     }
 
-    console.log('startCall', target, true)
     startCall(target, true)
-}
-
-const openSettingsPopover = () => {
-    isPopoverOpened.value = !isPopoverOpened.value
 }
 </script>
 

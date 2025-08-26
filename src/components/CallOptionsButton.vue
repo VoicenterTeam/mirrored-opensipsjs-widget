@@ -38,15 +38,9 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import KeypadIcon from '@/assets/icons/keypad.svg?component'
-import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
-import BasePopper from '@/components/base/BasePopper.vue'
 import { VcPopover } from '@voicenter-team/voicenter-ui-plus'
-import Keypad from '@/components/Keypad.vue'
-import ActionIconButton from '@/components/base/ActionIconButton.vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
 import OptionActionButton from '@/components/base/OptionActionButton.vue'
-import SwitchRoomListItem from '@/components/SwitchRoomListItem.vue'
 import { allRooms } from '@/composables/opensipsjs'
 
 const props = withDefaults(

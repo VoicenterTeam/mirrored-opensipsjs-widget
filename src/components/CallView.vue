@@ -28,24 +28,6 @@
             </div>
         </div>
 
-
-        <!--        <div className="flex items-center mx-1">
-            <IncomingCallActionButton
-                v-if="!props.call.localMuted"
-                color="primary"
-                :icon="SoundOnIcon"
-                :size="soundOnIconSize"
-                @click="doMuteCaller"
-            />
-            <IncomingCallActionButton
-                v-else
-                color="primary"
-                :icon="SoundOffIcon"
-                :size="soundOffIconSize"
-                @click="unmuteCaller"
-            />
-        </div>-->
-
         <div
             v-if="!isOutgoingUnanswered"
             className="mx-2 w-[46px] text-xs text-main-text"
@@ -59,36 +41,6 @@
             Calling...
         </div>
 
-        <!--        <div className="flex mx-1">
-            <IncomingCallActionButton
-                v-if="!isOnLocalHold"
-                color="primary"
-                :icon="HoldIcon"
-                :size="holdIconSize"
-                @click="putOnHold"
-            />
-            <IncomingCallActionButton
-                v-else
-                color="primary"
-                :icon="OnHoldIcon"
-                :size="holdIconSize"
-                @click="unHoldCall"
-            />
-        </div>-->
-
-        <!--        <div className="mx-2">
-            <IncomingCallActionButton
-                color="danger"
-                hover-color="additional-danger-bg"
-                :icon="DeclineIcon"
-                :use-padding="!isMultiCallMode"
-                :additional-classes="declineButtonClasses"
-                :size="declineIconSize"
-                @click="declineIncomingCall"
-            />
-        </div>-->
-
-        <!--        <OptionActionButton icon="vc-lc-ellipsis-vertical" />-->
         <CallOptionsButton
             v-if="!isOutgoingUnanswered"
             :call="call"
@@ -98,15 +50,6 @@
             @move="onMoveClick"
             @transfer="onTransferClick"
         />
-        <!--        <div v-if="!props.isSingleRoom || props.isSingleRoom && allowTransfer">
-            <CallOptionsIconButton
-                :is-single-room="props.isSingleRoom"
-                :is-multi-call-mode="isMultiCallMode"
-                :button-classes="callOptionsButtonClasses"
-                @transfer-click="onTransferClick"
-                @move-click="onMoveClick"
-            />
-        </div>-->
 
         <div
             v-if="showAddCallerButton"
@@ -144,21 +87,13 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
 import type { UnwrapRef } from 'vue'
-import DeclineIcon from '@/assets/icons/decline.svg?component'
-import HoldIcon from '@/assets/icons/hold.svg?component'
-import OnHoldIcon from '@/assets/icons/onHold.svg?component'
-import SoundOnIcon from '@/assets/icons/soundOn.svg?component'
-import SoundOffIcon from '@/assets/icons/soundOff.svg?component'
-import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
-import CallOptionsIconButton from '@/components/CallOptionsIconButton.vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
 import { useOpenSIPSJS, callTimes, allRooms, allActiveCalls } from '@/composables/opensipsjs'
 import useCallInfo from '@/composables/useCallInfo'
 import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
-import { allowTransfer, displayCallerInfoId, displayCallerInfoName } from '@/composables/useWidgetConfig'
+import { displayCallerInfoId, displayCallerInfoName } from '@/composables/useWidgetConfig'
 import RoomActionButton from '@/components/base/RoomActionButton.vue'
 import AddCallerButton from '@/components/AddCallerButton.vue'
-import OptionActionButton from '@/components/base/OptionActionButton.vue'
 import ActionIconButton from '@/components/base/ActionIconButton.vue'
 import CallOptionsButton from '@/components/CallOptionsButton.vue'
 
@@ -206,58 +141,6 @@ const showSwitchRoomButton = computed(() => {
     return allActiveCalls.value.length === 1 && allRooms.value.length > 1
 })
 
-const holdIconSize = computed(() => {
-    return isMultiCallMode.value ? 'base' : 'xl'
-})
-
-const soundOnIconSize = computed(() => {
-    return isMultiCallMode.value ? 'base-sm' : 'xl-base'
-})
-
-const soundOffIconSize = computed(() => {
-    return isMultiCallMode.value ? 'base' : 'xl-lg'
-})
-
-const declineIconSize = computed(() => {
-    return isMultiCallMode.value ? 'base' : 'xxxl'
-})
-
-const callOptionsButtonClasses = computed(() => {
-    return isMultiCallMode.value ? 'p-0.5' : ''
-})
-
-const declineButtonClasses = computed(() => {
-    return isMultiCallMode.value ? 'p-0.5' : ''
-})
-
-const wrapperClasses = computed(() => {
-    let baseClasses = 'flex w-full items-center p-1 '
-
-    if (isMultiCallMode.value) {
-        baseClasses += 'h-[20px] justify-between '
-    } else {
-        baseClasses += 'h-[40px] '
-    }
-
-    if (allRooms.value.length > 1) {
-        baseClasses += ' room-button-gradient justify-between'
-    }
-
-    if (props.isSingleRoom) {
-        if (props.isSingleCall) {
-            return baseClasses
-        } else {
-            return props.isFirstCaller ? baseClasses : baseClasses + ' border-t border-t-border-lines'
-        }
-    } else {
-        if (props.isSingleCall) {
-            return baseClasses + ' border-t border-t-border-lines'
-        } else {
-            return props.isFirstCaller ? baseClasses : baseClasses + ' border-t border-t-border-lines'
-        }
-    }
-})
-
 const callTime = computed(() => {
     const time = callTimes.value[props.call._id]
     return getFormattedTimeFromSeconds(time)
@@ -288,14 +171,6 @@ const unHoldCall = () => {
 
 const doMuteCaller = () => {
     muteCaller(props.call._id, !props.call.localMuted)
-}
-
-/*const unmuteCaller = () => {
-    muteCaller(props.call._id, false)
-}*/
-
-const declineIncomingCall = () => {
-    terminateCall(props.call._id)
 }
 
 const onTransferClick = () => {

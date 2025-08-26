@@ -6,21 +6,12 @@
             @call="startCall"
             @close="clearOutgoingInput"
         />
-        <!--        <IncomingCallActionButton
-            color="success"
-            hover-color="additional-success-bg"
-            :icon="CallIcon"
-            size="lg"
-            @click="startCall"
-        />-->
     </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import CallIcon from '@/assets/icons/call.svg?component'
 import InputOutgoingCall from '@/components/InputOutgoingCall.vue'
-import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
 
 const emit = defineEmits<{
     (e: 'call', value: string): void

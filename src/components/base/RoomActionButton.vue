@@ -18,10 +18,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
-import type { Credentials } from '~/docs/composable/useAuthorisation.ts'
-
-const props = withDefaults(
+withDefaults(
     defineProps<{
         icon: string
         label?: string
@@ -36,7 +33,7 @@ const emit = defineEmits<{
     (e: 'click', payload: Event): void
 }>()
 
-function onClick (event) {
+function onClick (event: Event) {
     emit('click', event)
 }
 </script>

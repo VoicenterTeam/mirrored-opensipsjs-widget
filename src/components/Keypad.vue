@@ -48,20 +48,11 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, watch, ref, type UnwrapRef } from 'vue'
-import MediaDevicesSettings from '@/components/MediaDevicesSettings.vue'
-import BaseSwitch from '@/components/base/BaseSwitch.vue'
-import AutoAnswerIcon from '@/assets/icons/autoAnswer.svg?component'
-// import MicrophoneIcon from '@/assets/icons/mute.svg?component'
-import {
-    autoAnswerDefaultBehaviour,
-    allowAutoAnswerSetup,
-    outgoingInputRegexValidator
-} from '@/composables/useWidgetConfig'
+import { computed, ref } from 'vue'
+import { outgoingInputRegexValidator } from '@/composables/useWidgetConfig'
 import { getTranslation } from '@/plugins/translator'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import ActionIconButton from '@/components/base/ActionIconButton.vue'
-import type { ICall } from 'opensips-js/src/types/rtc'
 
 const { setAutoAnswer } = useOpenSIPSJS()
 
@@ -71,8 +62,8 @@ const props = withDefaults(
         isAddCallerType?: boolean
     }>(),
     {
-        isNewCallType: true,
-        isAddCallerType: true
+        isNewCallType: false,
+        isAddCallerType: false
     }
 )
 
@@ -133,15 +124,6 @@ function onStartCall () {
     emit('call', inputValue.value)
     inputValue.value = ''
 }
-
-/*watch(autoAnswerDefaultBehaviour, (newV) => {
-    setAutoAnswer(newV)
-})
-
-const showAutoAnswerSetup = computed(() => {
-    return autoAnswerDefaultBehaviour.value || allowAutoAnswerSetup.value
-})*/
-
 
 </script>
 

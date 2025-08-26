@@ -8,19 +8,13 @@
             :class="`${icon} text-${size}`"
         />
     </button>
-<!--  <div class="add-caller-button">
-
-  </div>-->
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
-import type { Credentials } from '~/docs/composable/useAuthorisation.ts'
-
-const props = withDefaults(
+withDefaults(
     defineProps<{
         icon: string
-        size: string
+        size?: string
     }>(),
     {
         size: 'lg'
@@ -31,7 +25,7 @@ const emit = defineEmits<{
     (e: 'click', payload: Event): void
 }>()
 
-function onClick (event) {
+function onClick (event: Event) {
     emit('click', event)
 }
 </script>

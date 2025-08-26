@@ -99,7 +99,6 @@ import { allActiveCalls, currentActiveRoom, useOpenSIPSJS } from '@/composables/
 import ActiveCallsView from '@/views/ActiveCallsView.vue'
 import MoveView from '@/views/MoveView.vue'
 import OutgoingCallView from '@/views/OutgoingCallView.vue'
-import OutgoingCallInProgressView from '@/views/OutgoingCallInProgressView.vue'
 import Keypad from '@/components/Keypad.vue'
 
 const {
