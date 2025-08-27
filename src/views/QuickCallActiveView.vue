@@ -1,12 +1,12 @@
 <template>
-    <div className="min-h-[40px] min-w-[354px] bg-primary-bg">
+    <div class="min-h-[40px] min-w-[354px] bg-primary-bg">
         <div
             v-if="showTopKeypad"
             class="flex items-center justify-center p-2 border-b-1 border-border-lines"
         >
             <Keypad @press="onKeypadKeyPress" />
         </div>
-        <div className="flex min-h-[40px] justify-around items-center bg-primary-bg">
+        <div class="flex min-h-[40px] justify-around items-center bg-primary-bg">
             <div v-if="outgoingUnansweredCall">
                 <span class="text-base text-main-text font-medium">{{ getTranslation('audio.dialing.with.dots') }}</span>
             </div>
@@ -15,8 +15,8 @@
                 class="flex items-center justify-around w-full"
             >
                 <span class="text-base text-main-text font-medium">{{ getTranslation('audio.customer.support') }}</span>
-                <div className="flex items-center mx-2 w-[46px]">
-                    <span className="text-base text-main-text font-medium">
+                <div class="flex items-center mx-2 w-[46px]">
+                    <span class="text-base text-main-text font-medium">
                         {{ callTime }}
                     </span>
                 </div>

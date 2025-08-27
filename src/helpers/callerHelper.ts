@@ -1,21 +1,17 @@
-export function getCallerInfo (number: string, name = '', displayName = true, useMask = false) {
-    const onlyNumber = number[0] === '+' ? number.slice(1) : number
+import { ICall } from 'opensips-js-vue'
+import { useDisplayResolvers } from '@/composables/useDisplayResolvers.ts'
+import { displayCallerInfoIdMask } from '@/composables/useWidgetConfig.ts'
+import { getTranslation } from '@/plugins/translator.ts'
+import { CallerInfoResolved } from '@/types/public-api'
 
-    if (name && displayName) {
-        return name
-    } else if (useMask && onlyNumber.length === 12) {
-        const countryCode = onlyNumber.slice(0, 3)
-        const lastDigit = onlyNumber[onlyNumber.length - 1]
-        return `${countryCode}XXXXXXXX${lastDigit}`
-    } else if (useMask && onlyNumber.length === 10) {
-        const lastDigit = onlyNumber[onlyNumber.length - 1]
-        return `XXXXXXXXX${lastDigit}`
-    } else {
-        return number
-    }
-}
-
-export function getCallerNumber (number: string, useMask = false) {
+/**
+ * Returns the caller number extracted from SIP URI
+ *
+ * @param call
+ * @param useMask - whether to mask the number (show only last digit)
+ */
+export function getCallerNumber (call: ICall, useMask = false): string {
+    const number = call._remote_identity._uri._user
     const hasPlus = number[0] === '+'
     const onlyNumber = hasPlus ? number.slice(1) : number
 
@@ -35,5 +31,74 @@ export function getCallerNumber (number: string, useMask = false) {
     } else {
         return number
     }
+}
+
+/**
+ * Returns the caller name
+ * Compares the extracted name and number from remote identity, and if equal - returns the number based on the mask setting
+ *
+ * @param call
+ * @param useMask
+ */
+export function getCallerName (call: ICall, useMask = false): string {
+    const rawCNumber = getCallerNumber(call)
+    const cName = call._remote_identity._display_name
+
+    if (cName === rawCNumber) {
+        return getCallerNumber(call, useMask)
+    }
+
+    return cName
+}
+
+/**
+ * Resolves the call display info (name and number) using the registered callerInfo resolver
+ * Falls back to the masked/unmasked caller name/number or "Unknown" if no resolver is registered or resolution fails
+ *
+ * @param call
+ */
+export async function getCallDisplayInfo (call: ICall): Promise<{ displayName: string, displayNumber: string }> {
+    const { getResolver } = useDisplayResolvers()
+
+    const unmaskedPhoneNumber = getCallerNumber(call)
+    const unmaskedUserName = getCallerName(call)
+
+    const maskedPhoneNumber = getCallerNumber(call, displayCallerInfoIdMask.value)
+    const maskedUserName = getCallerName(call, displayCallerInfoIdMask.value)
+
+    const callerInfoResolver = getResolver('callerInfo')
+    const fallbackDisplayName = maskedUserName || maskedPhoneNumber || getTranslation('audio.unknown')
+
+    const fallbackDisplayInfo = {
+        displayName: fallbackDisplayName,
+        displayNumber: maskedPhoneNumber
+    }
+
+    if (!callerInfoResolver) {
+        return fallbackDisplayInfo
+    }
+
+    let resolved: CallerInfoResolved | null | undefined
+
+    try {
+        resolved = await callerInfoResolver(
+            {
+                userName: unmaskedUserName,
+                userPhone: unmaskedPhoneNumber
+            },
+            call,
+        )
+    } catch (e) {
+        resolved = null
+    }
+
+    if (resolved) {
+        return {
+            displayName: resolved.name,
+            displayNumber: resolved.number
+        }
+    }
+
+    return fallbackDisplayInfo
 }
 

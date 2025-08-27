@@ -5,120 +5,605 @@
 <!--    <link rel="icon" type="image/svg+xml" href="/vite.svg" />-->
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Opensips Widget</title>
+    <title>OpenSIPS Widget - Complete API Demo</title>
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f7fa;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .widget-demo {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+            align-items: start;
+        }
+        .controls-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .widget-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .api-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+        }
+        .api-section h3 {
+            margin: 0 0 15px 0;
+            color: #1a73e8;
+            font-size: 16px;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        .controls input {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+            min-width: 120px;
+        }
+        .controls button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: #1a73e8; color: white; }
+        .btn-primary:hover { background: #1557b0; }
+        .btn-success { background: #34a853; color: white; }
+        .btn-success:hover { background: #2e7d32; }
+        .btn-danger { background: #ea4335; color: white; }
+        .btn-danger:hover { background: #c5221f; }
+        .btn-warning { background: #fbbc04; color: #333; }
+        .btn-warning:hover { background: #f9ab00; }
+        .status-bar {
+            background: #e8f0fe;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .status-bar.connected { background: #e6f4ea; color: #137333; }
+        .status-bar.error { background: #fce8e6; color: #d93025; }
+        code {
+            background: #f8f9fa;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: 11px;
+        }
+        @media (max-width: 768px) {
+            .widget-demo {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
-    <div>
-        <opensips-widget id="openSIPSWidget">
-            <div slot="top">
-                top
+    <div class="container">
+        <div class="header">
+            <h1>🎯 OpenSIPS Widget - Complete API Demo</h1>
+            <p>Interactive demonstration of all VSIP actions and display resolvers</p>
+        </div>
+
+        <div class="widget-demo">
+            <div class="widget-container">
+                <h2>📞 Widget Instance</h2>
+                <opensips-widget id="openSIPSWidget">
+                    <div slot="top">API Demo Mode</div>
+                    <div slot="pv-bottom-right">⚡ Live API</div>
+                </opensips-widget>
+
+                <div id="status" class="status-bar">
+                    <strong>Status:</strong> <span id="statusText">Initializing widget...</span>
+                </div>
             </div>
-        </opensips-widget>
+
+            <div class="controls-panel">
+                <h2>🎮 API Controls</h2>
+
+                <!-- Call Control -->
+                <div class="api-section">
+                    <h3>📞 Call Control</h3>
+                    <div class="controls">
+                        <input type="text" id="callTarget" placeholder="Phone number" value="+1234567890">
+                        <button class="btn-success" onclick="startCall()">Start Call</button>
+                        <button class="btn-success" onclick="startCallWithOptions()">Start Call (Advanced)</button>
+                    </div>
+                    <div class="controls">
+                        <input type="text" id="callId" placeholder="Call ID (auto-filled)" readonly>
+                        <button class="btn-primary" onclick="answerCall()">Answer</button>
+                        <button class="btn-danger" onclick="terminateCall()">Hang Up</button>
+                    </div>
+                </div>
+
+                <!-- Call Management -->
+                <div class="api-section">
+                    <h3>🔄 Call Management</h3>
+                    <div class="controls">
+                        <button class="btn-warning" onclick="holdCall()">Hold Call</button>
+                        <button class="btn-warning" onclick="unholdCall()">Unhold Call</button>
+                    </div>
+                    <div class="controls">
+                        <input type="text" id="transferTarget" placeholder="Transfer to" value="+1987654321">
+                        <button class="btn-primary" onclick="transferCall()">Transfer Call</button>
+                    </div>
+                    <div class="controls">
+                        <input type="text" id="roomId" placeholder="Room ID" value="1">
+                        <button class="btn-primary" onclick="moveCall()">Move to Room</button>
+                        <button class="btn-primary" onclick="setActiveRoom()">Set Active Room</button>
+                    </div>
+                </div>
+
+                <!-- Call Merging -->
+                <div class="api-section">
+                    <h3>🔀 Call Merging</h3>
+                    <div class="controls">
+                        <button class="btn-primary" onclick="mergeCallsInRoom()">Merge Calls in Room</button>
+                    </div>
+                    <div class="controls">
+                        <input type="text" id="call1Id" placeholder="First Call ID">
+                        <input type="text" id="call2Id" placeholder="Second Call ID">
+                        <button class="btn-primary" onclick="mergeCallByIds()">Merge Specific Calls</button>
+                    </div>
+                </div>
+
+                <!-- Audio Control -->
+                <div class="api-section">
+                    <h3>🎤 Audio Control</h3>
+                    <div class="controls">
+                        <button class="btn-warning" onclick="muteAgent()">Mute Agent</button>
+                        <button class="btn-success" onclick="unmuteAgent()">Unmute Agent</button>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-warning" onclick="muteCaller()">Mute Caller</button>
+                        <button class="btn-success" onclick="unmuteCaller()">Unmute Caller</button>
+                    </div>
+                    <div class="controls">
+                        <input type="range" id="speakerVolume" min="0" max="100" value="50">
+                        <label>Speaker Volume</label>
+                        <button class="btn-primary" onclick="setSpeakerVolume()">Apply</button>
+                    </div>
+                    <div class="controls">
+                        <input type="range" id="micSensitivity" min="0" max="100" value="50">
+                        <label>Mic Sensitivity</label>
+                        <button class="btn-primary" onclick="setMicSensitivity()">Apply</button>
+                    </div>
+                </div>
+
+                <!-- DTMF -->
+                <div class="api-section">
+                    <h3>📟 DTMF</h3>
+                    <div class="controls">
+                        <input type="text" id="dtmfTones" placeholder="DTMF tones" value="123" maxlength="10">
+                        <button class="btn-primary" onclick="sendDTMF()">Send DTMF</button>
+                    </div>
+                    <div class="controls">
+                        <button onclick="sendDTMF('1')" class="btn-primary">1</button>
+                        <button onclick="sendDTMF('2')" class="btn-primary">2</button>
+                        <button onclick="sendDTMF('3')" class="btn-primary">3</button>
+                        <button onclick="sendDTMF('*')" class="btn-primary">*</button>
+                        <button onclick="sendDTMF('0')" class="btn-primary">0</button>
+                        <button onclick="sendDTMF('#')" class="btn-primary">#</button>
+                    </div>
+                </div>
+
+                <!-- Call Settings -->
+                <div class="api-section">
+                    <h3>⚙️ Call Settings</h3>
+                    <div class="controls">
+                        <button class="btn-danger" onclick="setDND(true)">Enable DND</button>
+                        <button class="btn-success" onclick="setDND(false)">Disable DND</button>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-success" onclick="setAutoAnswer(true)">Enable Auto Answer</button>
+                        <button class="btn-warning" onclick="setAutoAnswer(false)">Disable Auto Answer</button>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-success" onclick="setCallWaiting(true)">Enable Call Waiting</button>
+                        <button class="btn-warning" onclick="setCallWaiting(false)">Disable Call Waiting</button>
+                    </div>
+                </div>
+
+
+                <!-- Event Monitoring -->
+                <div class="api-section">
+                    <h3>📊 Event Monitor</h3>
+                    <div id="eventLog" style="background: #f8f9fa; padding: 10px; border-radius: 4px; max-height: 150px; overflow-y: auto; font-family: monospace; font-size: 11px;">
+                        <div>Ready to monitor events...</div>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-warning" onclick="clearEventLog()">Clear Log</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <!--    <button id="joinRoomButton" style="visibility: hidden" @click="initVideoCall">Join Room</button>-->
 
     <script type="module" src="src/widget.ce.ts"></script>
-<!--    <script type="module" src="/widget/opensipsjs-widget.mjs"></script>-->
 
     <script>
         const widget = document.getElementById('openSIPSWidget')
-
         let widgetAPI = null
+        let currentCallId = null
+        let activeCalls = new Map()
 
+        // Utility functions
+        function logEvent(message, type = 'info') {
+            const log = document.getElementById('eventLog')
+            const timestamp = new Date().toLocaleTimeString()
+            const div = document.createElement('div')
+            div.innerHTML = `<span style="color: #666;">[${timestamp}]</span> ${message}`
+            log.appendChild(div)
+            log.scrollTop = log.scrollHeight
+            console.log(`[${timestamp}] ${message}`)
+        }
+
+        function updateStatus(message, type = 'info') {
+            const statusEl = document.getElementById('statusText')
+            const statusBar = document.getElementById('status')
+            statusEl.textContent = message
+            statusBar.className = `status-bar ${type}`
+            logEvent(message)
+        }
+
+        function getCallId() {
+            const callIdInput = document.getElementById('callId')
+            return callIdInput.value || currentCallId
+        }
+
+        // Widget initialization
         async function onWidgetInitialized({detail: OpenSIPSExternalWidgetAPI}) {
-            const themeSettings = {
-                colors: {
-                    primary: '#5E95E8',
-                    secondary: '#0d8099',
-                    'main-text': '#414C59',
-                    'secondary-text': '#8292A5',
-                    'button-pressed-text': '#FFF',
-                    'border-lines': '#DDD',
-                    'primary-bg': '#FFF',
-                    'secondary-bg': '#F0F2F4',
-                    'inactive-bg': '#B9C2CC',
-                    'success': '#7CC24F',
-                    'danger': '#EC2A2A',
-                    'additional-danger-bg': '#F44C4C',
-                    'additional-success-bg': '#75B8A0',
-                    'additional-bg': '#B0BFC2'
-                },
-                widgetType: 'audio',
-                lang: 'en',
-                audioConfig: {
-                    layoutConfig: {
-                        mode: 'docked',
-                        type: 'phoneView',
-                        position: {
-                            top: 'auto',
-                            left: 'auto',
-                            bottom: 'auto',
-                            right: 'auto',
-                            anchor: null,
-                        },
-                        keypadMode: 'popover',
-                        keypadPosition: 'bottom'
-                    },
-                    images: {
-                        backgroundLogo: undefined
-                    }
-                }
-            }
-            const callSettings = {
-                allowTransfer: true,
-                quickCallNumber: '665',
-                autoAnswer: {
-                    allowChange: true,
-                    defaultBehavior: false
-                },
-                DND: {
-                    allowChange: false,
-                    defaultBehavior: false
-                },
-                callWaiting: true,
-                outgoingCalls: true,
-                mergeCalls: true,
-                callerInfo: {
-                    displayName: true,
-                    callerId: {
-                        display: true,
-                        mask: true
-                    }
-                },
-                shrinkOnIdle: false,
-                ringingSound: '',
-                outgoingCallPlaceHolder: '',
-                outgoingInputRegexValidator: [
-                    /^\+?\d*$/
-                ]
-            }
             const config = {
-                themeSettings,
-                callSettings
+                themeSettings: {
+                    colors: {
+                        primary: '#1a73e8',
+                        secondary: '#34a853',
+                        'main-text': '#202124',
+                        'secondary-text': '#5f6368',
+                        'button-pressed-text': '#FFF',
+                        'border-lines': '#dadce0',
+                        'primary-bg': '#FFF',
+                        'secondary-bg': '#f8f9fa',
+                        'inactive-bg': '#e8eaed',
+                        'success': '#34a853',
+                        'danger': '#ea4335',
+                        'additional-danger-bg': '#fce8e6',
+                        'additional-success-bg': '#e6f4ea'
+                    },
+                    widgetType: 'audio',
+                    lang: 'en',
+                    audioConfig: {
+                        layoutConfig: {
+                            mode: 'floating',
+                            type: 'rounded',
+                            position: { anchor: null },
+                            keypadMode: 'popover',
+                            keypadPosition: 'bottom'
+                        },
+                        images: { backgroundLogo: undefined }
+                    }
+                },
+                callSettings: {
+                    allowTransfer: true,
+                    quickCallNumber: '665',
+                    autoAnswer: { allowChange: true, defaultBehavior: false },
+                    DND: { allowChange: true, defaultBehavior: false },
+                    callWaiting: true,
+                    outgoingCalls: true,
+                    mergeCalls: true,
+                    callerInfo: { displayName: true, callerId: { display: true, mask: false } },
+                    shrinkOnIdle: false,
+                    outgoingInputRegexValidator: [/^\+?\d*$/],
+                    outgoingCallPlaceHolder: 'Enter number'
+                }
             }
 
             widgetAPI = new OpenSIPSExternalWidgetAPI(config)
 
+            // Set up event listeners for call tracking
+            widgetAPI.on('newRTCSession', (session) => {
+                currentCallId = session.id
+                activeCalls.set(session.id, session)
+                document.getElementById('callId').value = session.id
+                logEvent(`📞 New ${session.direction} call: ${session.id}`, 'success')
+                updateStatus(`${session.direction} call active: ${session.id}`, 'connected')
+            })
+
+            widgetAPI.on('ended', (session) => {
+                activeCalls.delete(session.id)
+                if (session.id === currentCallId) {
+                    currentCallId = null
+                    document.getElementById('callId').value = ''
+                }
+                logEvent(`📴 Call ended: ${session.id}`, 'info')
+                updateStatus(activeCalls.size > 0 ? `${activeCalls.size} calls active` : 'No active calls', 'info')
+            })
+
+            widgetAPI.on('confirmed', (session) => {
+                logEvent(`✅ Call confirmed: ${session.id}`, 'success')
+            })
+
+            widgetAPI.on('failed', (session) => {
+                logEvent(`❌ Call failed: ${session.id}`, 'error')
+            })
+
+            widgetAPI.display.setResolver('callerInfo', async (callUser) => {
+                await new Promise(res => setTimeout(res, 5000))
+
+                const contacts = {
+                    '46': {
+                        name: 'Alice (Support)',
+                        number: '+46123456789',
+                    },
+                    '665': {
+                        name: 'Prikoldes',
+                        number: '1121'
+                    }
+                }
+
+                if (callUser.userPhone && contacts[callUser.userPhone]) {
+                    return contacts[callUser.userPhone]
+                }
+            })
+
+            // Login with credentials
             const credentials = {
                 username: '',
                 password: '',
                 domain: ''
             }
 
-            widgetAPI.login(credentials)
-
-            function initVideoCall() {
-                widgetAPI.initVideoCall('abcd', 'user1')
+            try {
+                await widgetAPI.login(credentials)
+                updateStatus('✅ Widget ready and logged in!', 'connected')
+            } catch (error) {
+                updateStatus('❌ Login failed: ' + error.message, 'error')
             }
-
-            // const joinRoomButtonEl = document.getElementById('joinRoomButton')
-            // joinRoomButtonEl.style.visibility = 'visible'
-            // joinRoomButtonEl.addEventListener('click', initVideoCall)
         }
 
-        widget.addEventListener('widget:ready', onWidgetInitialized)
+        function onCallsUpdated ({ detail: callUpdatedData }) {
+            const { currentCalls, newCalls, removedCalls } = callUpdatedData
+            logEvent(`📊 Calls updated: ${currentCalls.length} active, ${newCalls.length} new, ${removedCalls.length} removed`)
+        }
 
+        // ===========================================
+        // VSIP ACTIONS API
+        // ===========================================
+
+        // Call Control
+        function startCall() {
+            if (!widgetAPI) return alert('Widget not ready')
+            const target = document.getElementById('callTarget').value
+            if (!target) return alert('Please enter a phone number')
+
+            widgetAPI.vsip.startCall(target)
+            logEvent(`📞 Starting call to ${target}`)
+        }
+
+        function startCallWithOptions() {
+            if (!widgetAPI) return alert('Widget not ready')
+            const target = document.getElementById('callTarget').value
+            if (!target) return alert('Please enter a phone number')
+
+            // Advanced options
+            widgetAPI.vsip.startCall(target, true, false) // addToCurrentRoom=true, holdOtherCalls=false
+            logEvent(`📞 Starting call to ${target} (with advanced options)`)
+        }
+
+        function answerCall() {
+            if (!widgetAPI) return alert('Widget not ready')
+            const callId = getCallId()
+            if (!callId) return alert('No call ID available')
+
+            widgetAPI.vsip.answerCall(callId)
+            logEvent(`✅ Answering call ${callId}`)
+        }
+
+        function terminateCall() {
+            if (!widgetAPI) return alert('Widget not ready')
+            const callId = getCallId()
+            if (!callId) return alert('No call ID available')
+
+            widgetAPI.vsip.terminateCall(callId)
+            logEvent(`❌ Terminating call ${callId}`)
+        }
+
+        // Call Management
+        function holdCall() {
+            if (!widgetAPI) return alert('Widget not ready')
+            const callId = getCallId()
+            if (!callId) return alert('No call ID available')
+
+            widgetAPI.vsip.holdCall(callId)
+            logEvent(`⏸️ Holding call ${callId}`)
+        }
+
+        function unholdCall() {
+            if (!widgetAPI) return alert('Widget not ready')
+            const callId = getCallId()
+            if (!callId) return alert('No call ID available')
+
+            widgetAPI.vsip.unholdCall(callId)
+            logEvent(`▶️ Unholding call ${callId}`)
+        }
+
+        function transferCall() {
+            if (!widgetAPI) return alert('Widget not ready')
+            const callId = getCallId()
+            const target = document.getElementById('transferTarget').value
+            if (!callId || !target) return alert('Need both call ID and transfer target')
+
+            widgetAPI.vsip.transferCall(callId, target)
+            logEvent(`🔄 Transferring call ${callId} to ${target}`)
+        }
+
+        async function moveCall() {
+            if (!widgetAPI) return alert('Widget not ready')
+            const callId = getCallId()
+            const roomId = parseInt(document.getElementById('roomId').value)
+            if (!callId || !roomId) return alert('Need both call ID and room ID')
+
+            try {
+                await widgetAPI.vsip.moveCall(callId, roomId)
+                logEvent(`📦 Moved call ${callId} to room ${roomId}`)
+            } catch (error) {
+                logEvent(`❌ Failed to move call: ${error.message}`, 'error')
+            }
+        }
+
+        async function setActiveRoom() {
+            if (!widgetAPI) return alert('Widget not ready')
+            const roomId = parseInt(document.getElementById('roomId').value)
+
+            try {
+                await widgetAPI.vsip.setActiveRoom(roomId || undefined)
+                logEvent(`🎯 Set active room to ${roomId || 'none'}`)
+            } catch (error) {
+                logEvent(`❌ Failed to set active room: ${error.message}`, 'error')
+            }
+        }
+
+        // Call Merging
+        function mergeCallsInRoom() {
+            if (!widgetAPI) return alert('Widget not ready')
+            const roomId = parseInt(document.getElementById('roomId').value)
+            if (!roomId) return alert('Please enter room ID')
+
+            widgetAPI.vsip.mergeCallsInRoom(roomId)
+            logEvent(`🔀 Merging calls in room ${roomId}`)
+        }
+
+        function mergeCallByIds() {
+            if (!widgetAPI) return alert('Widget not ready')
+            const call1Id = document.getElementById('call1Id').value
+            const call2Id = document.getElementById('call2Id').value
+            if (!call1Id || !call2Id) return alert('Please enter both call IDs')
+
+            widgetAPI.vsip.mergeCallByIds(call1Id, call2Id)
+            logEvent(`🔀 Merging calls ${call1Id} and ${call2Id}`)
+        }
+
+        // Audio Control
+        function muteAgent() {
+            if (!widgetAPI) return alert('Widget not ready')
+            widgetAPI.vsip.mute(true)
+            logEvent('🔇 Agent muted')
+        }
+
+        function unmuteAgent() {
+            if (!widgetAPI) return alert('Widget not ready')
+            widgetAPI.vsip.mute(false)
+            logEvent('🔊 Agent unmuted')
+        }
+
+        function muteCaller() {
+            if (!widgetAPI) return alert('Widget not ready')
+            const callId = getCallId()
+            if (!callId) return alert('No call ID available')
+
+            widgetAPI.vsip.muteCaller(callId, true)
+            logEvent(`🔇 Caller muted in call ${callId}`)
+        }
+
+        function unmuteCaller() {
+            if (!widgetAPI) return alert('Widget not ready')
+            const callId = getCallId()
+            if (!callId) return alert('No call ID available')
+
+            widgetAPI.vsip.muteCaller(callId, false)
+            logEvent(`🔊 Caller unmuted in call ${callId}`)
+        }
+
+        function setSpeakerVolume() {
+            if (!widgetAPI) return alert('Widget not ready')
+            const volume = parseInt(document.getElementById('speakerVolume').value)
+            widgetAPI.vsip.setSpeakerVolume(volume)
+            logEvent(`🔊 Speaker volume set to ${volume}%`)
+        }
+
+        function setMicSensitivity() {
+            if (!widgetAPI) return alert('Widget not ready')
+            const sensitivity = parseInt(document.getElementById('micSensitivity').value)
+            widgetAPI.vsip.setMicrophoneSensitivity(sensitivity)
+            logEvent(`🎤 Microphone sensitivity set to ${sensitivity}%`)
+        }
+
+        // DTMF
+        function sendDTMF(tone) {
+            if (!widgetAPI) return alert('Widget not ready')
+            const callId = getCallId()
+            if (!callId) return alert('No active call')
+
+            const dtmfValue = tone || document.getElementById('dtmfTones').value
+            if (!dtmfValue) return alert('Please enter DTMF tones')
+
+            widgetAPI.vsip.sendDTMF(callId, dtmfValue)
+            logEvent(`📟 Sent DTMF "${dtmfValue}" to call ${callId}`)
+        }
+
+        // Call Settings
+        function setDND(enabled) {
+            if (!widgetAPI) return alert('Widget not ready')
+            widgetAPI.vsip.setDND(enabled)
+            logEvent(`${enabled ? '🔕' : '🔔'} DND ${enabled ? 'enabled' : 'disabled'}`)
+        }
+
+        function setAutoAnswer(enabled) {
+            if (!widgetAPI) return alert('Widget not ready')
+            widgetAPI.vsip.setAutoAnswer(enabled)
+            logEvent(`${enabled ? '✅' : '❌'} Auto answer ${enabled ? 'enabled' : 'disabled'}`)
+        }
+
+        async function setCallWaiting(enabled) {
+            if (!widgetAPI) return alert('Widget not ready')
+            try {
+                await widgetAPI.vsip.setCallWaiting(enabled)
+                logEvent(`${enabled ? '⏳' : '⏹️'} Call waiting ${enabled ? 'enabled' : 'disabled'}`)
+            } catch (error) {
+                logEvent(`❌ Failed to set call waiting: ${error.message}`, 'error')
+            }
+        }
+
+
+        // Event Monitor
+        function clearEventLog() {
+            document.getElementById('eventLog').innerHTML = '<div>Event log cleared...</div>'
+        }
+
+        // Set up widget event listeners
+        widget.addEventListener('widget:ready', onWidgetInitialized)
+        widget.addEventListener('calls:updated', onCallsUpdated)
+
+        // Initialize status
+        updateStatus('Initializing widget...', 'info')
     </script>
   </body>
 </html>

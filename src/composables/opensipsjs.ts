@@ -13,11 +13,14 @@ import type { AllActiveCallsType, CallTimeType } from '@/types/opensips'
 import type { UnRegisterOptions } from 'jssip/lib/UA'
 import { ICall, vsipAPI } from 'opensips-js-vue'
 import { DNDDefaultBehaviour, autoAnswerDefaultBehaviour, callWaitingDefaultBehaviour } from '@/composables/useWidgetConfig'
+import type { IRoom } from 'opensips-js/src/types/rtc'
 
 /* Main */
 const state: { opensipsjs: OpenSIPSJS | undefined } = {
     opensipsjs: undefined
 }
+
+console.log('LLL IN USE OPENSIPS')
 
 /* State */
 export const isOpenSIPSReady = vsipAPI.state.isOpenSIPSReady
@@ -44,6 +47,31 @@ export const currentActiveRoom = vsipAPI.state.currentActiveRoomId
 export const allCallStatuses = computed(() => {
     return Object.values(vsipAPI.state.callStatus.value)
 })
+export const callsInActiveRoom = computed(() => {
+    return allActiveCalls.value.filter((call) => {
+        return call.roomId === currentActiveRoom.value
+    })
+})
+export const activeRoomsWithoutIncoming = computed(() => {
+    const activeRooms: Array<IRoom> = Object.values(allRooms.value)
+
+    return activeRooms.filter((room) => {
+        return !room.incomingInProgress
+    })
+})
+export const roomsWithoutActive = computed(() => {
+    return activeRoomsWithoutIncoming.value.filter((room) => {
+        return room.roomId !== currentActiveRoom.value
+    })
+})
+export const callsExceptIncoming = computed(() => {
+    const activeRoomIds = activeRoomsWithoutIncoming.value.map(room => room.roomId)
+    const allActiveCalls = Object.values(activeCalls.value)
+    return allActiveCalls.filter(call => call.roomId && activeRoomIds.includes(call.roomId))
+})
+export const lengthOfCallsWithoutIncoming = computed(() => {
+    return callsExceptIncoming.value.length
+})
 
 /* Call settings */
 export const isMuted = vsipAPI.state.isMuted
@@ -66,7 +94,6 @@ export const allActiveCalls = computed(() => {
 })
 
 /* Video conferencing */
-
 export const conferenceStarted = ref<boolean>(false)
 export const streamSources = ref<Array<unknown>>([])
 export const mainSource = ref<unknown>(null)
@@ -97,9 +124,9 @@ export const isWhiteboardEnabled = computed(() => {
         isImageWhiteboardEnabled.value
 })
 
-watch(activeCalls, (calls) => {
-    processCallsTime(calls)
-})
+watch(activeCalls, (calls, oldCalls) => {
+    processCallsTime(calls, oldCalls || {})
+}, { deep: true })
 
 watch(streamSources,
     (newSources, oldSources) => {
@@ -211,8 +238,8 @@ function validateCredentials (credentials: ISIPSCredentials) {
     }
 }
 
-function processCallsTime (calls: AllActiveCallsType) {
-    const removedCalls = Object.values(activeCalls.value).filter(oldCall => {
+function processCallsTime (calls: AllActiveCallsType, oldCalls: AllActiveCallsType) {
+    const removedCalls = Object.values(oldCalls).filter(oldCall => {
         return !Object.values(calls).some(newCall => {
             return newCall._id === oldCall._id
         })
@@ -221,7 +248,7 @@ function processCallsTime (calls: AllActiveCallsType) {
     removeOldCallTimes(removedCalls)
 
     const newCalls = Object.values(calls).filter(call => {
-        return !Object.values(activeCalls.value).some(existingCall => {
+        return !Object.values(oldCalls).some((existingCall) => {
             return existingCall._id === call._id
         })
     })
@@ -302,6 +329,7 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
  * @param credentials
  */
 export function startOpenSIPS (credentials: ISIPSCredentials) {
+    console.log('LLL startOpenSIPS')
     return new Promise<OpenSIPSJS>((resolve, reject) => {
         try {
             validateCredentials(credentials)
@@ -320,7 +348,9 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
                 connectOptions.password = credentials.password
             }
 
+            console.log('LLL vsipAPI.actions.init')
             vsipAPI.actions.init(connectOptions, {}).then((opensipsjs) => {
+                console.log('LLL vsipAPI.actions.init then')
                 state.opensipsjs = opensipsjs
 
                 registerOpenSIPSListeners(state.opensipsjs)
@@ -339,7 +369,7 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
 
                         resolve(opensipsjs)
                     })
-                    .begin()
+                    //.begin()
 
                 isOpenSIPSInitialized.value = true
             })
@@ -445,6 +475,7 @@ export function useOpenSIPSJS () {
     }
 
     async function setActiveRoom (roomId: number | undefined) {
+        console.log('setActiveRoom', roomId)
         await state.opensipsjs?.audio.setActiveRoom(roomId)
     }
 
@@ -700,6 +731,11 @@ export function useOpenSIPSJS () {
 
     }
 
+    function getActiveCallsInRoom (roomId: number): Array<ICall> {
+        const activeCallsArr = Object.values(activeCalls.value)
+        return activeCallsArr.filter((call: ICall) => call.roomId === roomId)
+    }
+
     return {
         state,
         startCall,
@@ -726,6 +762,7 @@ export function useOpenSIPSJS () {
         hangupVideoCall,
         enableAudio,
         disableAudio,
+        getActiveCallsInRoom,
         enableVideo,
         disableVideo,
         changeMediaConstraints,

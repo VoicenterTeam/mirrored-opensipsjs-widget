@@ -1,5 +1,5 @@
 <template>
-    <div className="max-w-[250px]">
+    <div class="max-w-[250px]">
         <MediaDevicesSettings />
 
         <div
@@ -7,13 +7,13 @@
             class="flex items-center mt-2"
         >
             <label>
-                <div className="inline-block w-4 h-4 text-primary">
+                <div class="inline-block w-4 h-4 text-primary">
                     <AutoAnswerIcon />
                 </div>
                 {{ getTranslation('audio.auto.answer') }}
             </label>
             <div class="inline-block ml-2">
-                <div className="pt-[4px]">
+                <div class="pt-[4px]">
                     <BaseSwitch
                         v-model="autoAnswerDefaultBehaviour"
                         :disabled="!allowAutoAnswerSetup"

@@ -6,7 +6,10 @@
             :rooms-length="activeRoomsWithoutIncoming.length"
             :calls-length="lengthOfCallsWithoutIncoming"
         />
-        <BackToCurrentCall v-if="currentActiveRoom" />
+        <BackToCurrentCall
+            v-if="currentActiveRoom"
+            :room-id="currentActiveRoom"
+        />
         <div
             class="trigger-block flex flex-col flex-1 justify-center p-1"
             :class="{'keypad_trigger-wrapper mb-2': triggerTitle}"
@@ -39,14 +42,12 @@ import FooterBlock from '@/components/phone/FooterBlock.vue'
 import ActiveCallsPopup from '@/components/phone/common/ActiveCallsPopup.vue'
 import useCallActions from '@/composables/phone/useCallActions.ts'
 import KeyPad from '@/components/phone/common/KeyPad.vue'
-import { useVsipInject } from '@/composables/phone/useVsipProvideInject'
-import { currentActiveRoom } from '@/composables/opensipsjs'
+import { currentActiveRoom, activeRoomsWithoutIncoming, roomsWithoutActive, lengthOfCallsWithoutIncoming } from '@/composables/opensipsjs'
 import { getTranslation } from '@/plugins/translator'
 
 /* Data */
 const { phoneNumber, keyPadTrigger, onNumberInput, isActiveCallsPopupActive, onActiveCallsPopupToggle } = usePhoneState()
 const { initCall } = useCallActions()
-const { roomsWithoutActive, activeRoomsWithoutIncoming, lengthOfCallsWithoutIncoming  } = useVsipInject()
 
 /* Computed */
 const triggerTitle = computed(() => {

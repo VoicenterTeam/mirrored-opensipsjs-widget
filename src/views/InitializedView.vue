@@ -8,10 +8,9 @@
 <script lang="ts" setup>
 import InactiveView from '@/views/InactiveView.vue'
 import ActiveView from '@/views/ActiveView.vue'
-import { useActiveTab } from '@/plugins/activeTabPlugin'
+import { useActiveTab } from '@/composables/useActiveTab'
 
 const { isActiveTab } = useActiveTab()
-
 </script>
 
 <style scoped>

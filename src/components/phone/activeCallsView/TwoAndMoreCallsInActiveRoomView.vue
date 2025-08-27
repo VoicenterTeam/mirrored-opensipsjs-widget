@@ -25,23 +25,30 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useVsipInject } from '@/composables/phone/useVsipProvideInject'
 import CallsCompactView from '@/components/phone/common/CallsCompactView.vue'
 import { KeyPadTriggerObjectType } from '@/constants/phone.ts'
 import { usePhoneState } from '@/composables/phone/usePhoneState'
-import { isMuted, useOpenSIPSJS, currentActiveRoom } from '@/composables/opensipsjs'
+import {
+    isMuted,
+    useOpenSIPSJS,
+    currentActiveRoom,
+    callsInActiveRoom,
+    activeRoomsWithoutIncoming,
+    roomsWithoutActive,
+    lengthOfCallsWithoutIncoming
+} from '@/composables/opensipsjs'
 import { allowMergeCalls } from '@/composables/useWidgetConfig'
 import CallActionButton from '@/components/phone/activeCallsView/CallActionButton.vue'
 import MultipleCallsActiveRoom from '@/components/phone/activeCallsView/MultipleCallsActiveRoom.vue'
 import useCallActions from '@/composables/phone/useCallActions.ts'
 import { getTranslation } from '@/plugins/translator'
+
 /* Data */
 const { onKeyPadToggle } = usePhoneState()
 const { muteAgent, holdCall, unholdCall, mergeCallsInRoom } = useOpenSIPSJS()
 
 // const { isCallsMergeWarningEnabled } = useUserData()
 const { displayAllControls } = useCallActions()
-const { roomsWithoutActive, callsInActiveRoom, lengthOfCallsWithoutIncoming, activeRoomsWithoutIncoming } = useVsipInject()
 
 /* Methods */
 const getControlButtonsConfig = () => {

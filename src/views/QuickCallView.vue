@@ -21,7 +21,7 @@
         </div>
         <div
             v-show="allActiveCalls.length"
-            className="shadow-xl rounded-md min-h-[40px] flex flex-row border overflow-hidden"
+            class="shadow-xl rounded-md min-h-[40px] flex flex-row border overflow-hidden"
         >
             <Draggable
                 v-show="false"

@@ -1,79 +1,80 @@
 <template>
-    <div :class="actionButtonWrapperClasses">
-        <!--        <div :className="expandWrapperClasses">
-            <div>
-                <WidgetIconButton
-                    color="primary"
-                    :icon="ExpandRoomsIcon"
-                    :pressed="isExpandRoomsState"
-                    additional-classes="border-r border-border-lines"
-                    @click="expandRoom" />
-            </div>
-            <div v-if="isExpandRoomsState" className="w-full bg-primary">
-                <div/>
-            </div>
-        </div>-->
-        <div class="flex w-full">
+    <div>
+        <div class="flex w-full p-1">
             <slot name="prefix-buttons" />
-            <SettingsIconButton class="border-r border-border-lines" />
+            <SettingsIconButton />
             <div>
-                <WidgetIconButton
-                    color="primary"
-                    :icon="MuteIcon"
-                    :pressed="isAgentMuted"
-                    :pressed-icon="UnMuteIcon"
-                    additional-classes="border-r border-border-lines"
+                <ActionIconButton
+                    icon="vc-lc-phone-off"
+                    :color="isDND ? 'btn-filled-text': 'primary-actions'"
+                    :bg-color="isDND ? 'destructive-actions': 'primary-actions-bg--focus'"
+                    @click="switchDND"
+                />
+            </div>
+            <div class="volume-bar_wrapper bg-primary-actions-bg--focus">
+                <i class="vc-lc-volume-2 text-primary-actions" />
+                <div>
+                    <VcSlider
+                        :model-value="speakerVolume"
+                        :min="0"
+                        :max="1"
+                        :step="0.01"
+                        :show-tooltip="false"
+                        @update:modelValue="onChangeSpeakerVolume"
+                    />
+                </div>
+            </div>
+            <div>
+                <ActionIconButton
+                    :icon="isAgentMuted ? 'vc-lc-mic-off': 'vc-lc-mic'"
+                    :color="isAgentMuted ? 'btn-filled-text': 'primary-actions'"
+                    :bg-color="isAgentMuted ? 'destructive-actions': 'primary-actions-bg--focus'"
                     @click="doMuteAgent"
                 />
             </div>
             <div v-if="showKeypad && keypadMode === 'manual'">
-                <WidgetIconButton
-                    color="primary"
-                    :icon="KeypadIcon"
-                    :pressed="showManualKeypad"
-                    :pressed-icon="KeypadIcon"
-                    additional-classes="border-r border-border-lines"
+                <ActionIconButton
+                    icon="vc-lc-grip"
+                    color="primary-actions"
                     @click="toggleManualKeypad"
                 />
             </div>
+
+            <div v-if="showMergeButton">
+                <ActionIconButton
+                    icon="vc-lc-merge"
+                    color="primary-actions"
+                    @click="onMergeClick"
+                />
+            </div>
+
+            <NewCallerButton @toggle-keypad="toggleNewCallerKeypad" />
+
             <KeypadIconButton
                 v-if="showKeypad && keypadMode === 'popover'"
-                class="border-r border-border-lines"
                 @press="onKeypadPress"
             />
             <div
-                v-if="allowOutgoingCalls && props.showOutgoingButton"
-                class="flex w-full"
+                v-if="allowOutgoingCalls"
             >
-                <div
-                    v-if="isOutgoingCallInputOpen"
-                    class="w-full"
-                >
-                    <InputOutgoingCall
-                        v-model="outgoingInputValue"
-                        @call="onOutgoingCallClick"
-                        @close="onOutgoingInputClose"
-                    />
-                </div>
                 <div>
-                    <WidgetIconButton
-                        color="success"
-                        :icon="CallIcon"
-                        :use-focus-effect="false"
-                        :additional-classes="outgoingCallButtonClasses"
+                    <ActionIconButton
+                        v-if="showCallButton"
+                        icon="vc-icon-phone"
+                        bg-color="success-actions"
+                        color="white"
                         @click="onOutgoingCallClick"
+                    />
+                    <ActionIconButton
+                        v-if="showHangupButton"
+                        icon="vc-icon-phone-down"
+                        bg-color="destructive-actions"
+                        color="white"
+                        @click="onHangupSingleCall"
                     />
                 </div>
             </div>
             <slot name="suffix-buttons" />
-        </div>
-        <div v-if="showMergeButton">
-            <WidgetIconButton
-                color="primary"
-                :icon="MergeIcon"
-                additional-classes="border-l border-border-lines"
-                @click="onMergeClick"
-            />
         </div>
     </div>
 </template>
@@ -83,20 +84,25 @@ import type { UnwrapRef } from 'vue'
 import { computed, ref } from 'vue'
 import SettingsIconButton from '@/components/SettingsIconButton.vue'
 import KeypadIconButton from '@/components/KeypadIconButton.vue'
-import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
-import MuteIcon from '@/assets/icons/mute.svg?component'
-import UnMuteIcon from '@/assets/icons/unmute.svg?component'
-import KeypadIcon from '@/assets/icons/keypad.svg?component'
-import MergeIcon from '@/assets/icons/merge.svg?component'
-import CallIcon from '@/assets/icons/call2.svg?component'
-import { useOpenSIPSJS, isMuted, isMuteWhenJoin, allActiveCalls, currentActiveRoom } from '@/composables/opensipsjs'
+import ActionIconButton from '@/components/base/ActionIconButton.vue'
+import {
+    useOpenSIPSJS,
+    isMuted,
+    isMuteWhenJoin,
+    allActiveCalls,
+    currentActiveRoom,
+    isDND,
+    speakerVolume
+} from '@/composables/opensipsjs'
 import { allowOutgoingCalls, showKeypad, keypadMode } from '@/composables/useWidgetConfig'
 import type { ICall } from 'opensips-js/src/types/rtc'
-import InputOutgoingCall from '@/components/InputOutgoingCall.vue'
+import { VcSlider } from '@voicenter-team/voicenter-ui-plus'
+import { debounce } from 'lodash'
+import NewCallerButton from '@/components/NewCallerButton.vue'
 
-const { muteAgent, startCall, state } = useOpenSIPSJS()
+const { muteAgent, setDND, terminateCall, startCall, setSpeakerVolume, state } = useOpenSIPSJS()
 
-const props = withDefaults(
+withDefaults(
     defineProps<{
         calls: UnwrapRef<Array<ICall>>
         showOutgoingButton: boolean
@@ -108,32 +114,14 @@ const props = withDefaults(
 
 const emit = defineEmits<{
     (e: 'merge-click', roomId: number): void
+    (e: 'start-call'): void
     (e: 'key-press', value: string): void
     (e: 'toggle-keypad'): void
+    (e: 'toggle-new-call-keypad'): void
 }>()
 
-const isExpandRoomsState = ref<boolean>(false)
 const isOutgoingCallInputOpen = ref<boolean>(false)
 const outgoingInputValue = ref<string>('')
-const showManualKeypad = ref<boolean>(false)
-
-const actionButtonWrapperClasses = computed(() => {
-    const justifyStyle = isExpandRoomsState.value ? 'justify-between' : 'justify-start'
-    return `flex ${justifyStyle} bg-secondary-bg`
-})
-
-const expandWrapperClasses = computed(() => {
-    const base = 'flex z-50'
-    return isExpandRoomsState.value ? base + ' w-full' : base
-})
-
-const outgoingCallButtonClasses = computed(() => {
-    let classes = ' border-border-lines'
-    if (!isExpandRoomsState.value && !isOutgoingCallInputOpen.value) {
-        classes += ' border-r'
-    }
-    return classes
-})
 
 const isAgentMuted = computed(() => {
     if (!allActiveCalls.value.length) {
@@ -148,8 +136,33 @@ const showMergeButton = computed(() => {
     return callsInRoom.length === 2
 })
 
+const showCallButton = computed(() => {
+    return allActiveCalls.value.length === 0
+})
+
+const showHangupButton = computed(() => {
+    const callsInRoom = allActiveCalls.value.filter(call => call.roomId === currentActiveRoom.value)
+    return callsInRoom.length === 1 && allActiveCalls.value.length === 1
+})
+
+const onChangeSpeakerVolume = debounce((value: number) => {
+    setSpeakerVolume(value)
+}, 100)
+
+const onHangupSingleCall = () => {
+    const callsInRoom = allActiveCalls.value.filter(call => call.roomId === currentActiveRoom.value)
+
+    if (callsInRoom.length !== 1) {
+        return
+    }
+
+    terminateCall(callsInRoom[0]._id)
+}
+
+function toggleNewCallerKeypad () {
+    emit('toggle-new-call-keypad')
+}
 const toggleManualKeypad = () => {
-    showManualKeypad.value = !showManualKeypad.value
     emit('toggle-keypad')
 }
 
@@ -165,38 +178,38 @@ const doMuteAgent = () => {
     }
 }
 
+const switchDND = () => {
+    setDND(!isDND.value)
+}
+
 const onMergeClick = () => {
     if (!currentActiveRoom.value) return
     emit('merge-click', currentActiveRoom.value)
 }
 
-const expandRoom = () => {
-    isOutgoingCallInputOpen.value = false
-    isExpandRoomsState.value = !isExpandRoomsState.value
-}
-
 const onOutgoingCallClick = () => {
-    if (!isOutgoingCallInputOpen.value) {
-        isExpandRoomsState.value = false
-        isOutgoingCallInputOpen.value = true
-    } else {
-        if (!outgoingInputValue.value) {
-            return
-        }
-        const target = outgoingInputValue.value
-        outgoingInputValue.value = ''
-
-        startCall(target)
-    }
-
+    emit('start-call')
 }
 
-const onOutgoingInputClose = () => {
-    isOutgoingCallInputOpen.value = false
-    outgoingInputValue.value = ''
-}
 </script>
 
 <style scoped>
+.volume-bar_wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 30px;
+  margin: 1px;
+  border-radius: 5px;
+  padding-left: 10px;
+}
 
+.volume-bar_wrapper div {
+  width: 100%;
+  padding: 0px 8px 0px 8px;
+}
+
+.volume-bar_wrapper i {
+  font-size: 20px;
+}
 </style>

@@ -1,9 +1,19 @@
 <template>
-    <CallButton
-        v-if="!isDtmf"
-        class="m-auto"
-        @click="initCall"
-    />
+    <div class="grid grid-cols-3">
+        <div>
+            <slot name="pv-bottom-left" />
+        </div>
+
+        <CallButton
+            v-if="!isDtmf"
+            class="mx-auto"
+            @click="initCall"
+        />
+
+        <div>
+            <slot name="pv-bottom-right" />
+        </div>
+    </div>
 </template>
 <script lang="ts" setup>
 import { computed } from 'vue'

@@ -1,31 +1,55 @@
 <template>
-    <div :className="wrapperClasses">
+    <div :class="wrapperClasses">
         <div
             v-if="!isMultiCallMode"
-            className="flex flex-col items-center justify-evenly w-[92px] mx-3"
+            class="flex flex-col items-center justify-evenly w-[92px] mx-3"
         >
             <span
                 v-if="displayCallerInfoName"
-                className="text-xs text-main-text font-medium"
+                class="text-xs text-main-text font-medium"
             >
-                {{ callerName }}
+                {{ displayName }}
             </span>
             <span
                 v-if="displayCallerInfoId"
-                className="text-xs text-main-text font-medium"
+                class="text-xs text-main-text font-medium"
             >
-                {{ callerNumber }}
+                {{ displayName }}
             </span>
         </div>
         <div
             v-else
-            className="p-0.5"
+            class="p-0.5"
         >
-            <div className="overflow-hidden mx-3 text-main-text w-[92px] max-w-[92px] font-medium text-xs text-ellipsis whitespace-nowrap">
-                {{ callerName }} {{ callerNumber }}
+            <div class="overflow-hidden mx-3 text-main-text w-[92px] max-w-[92px] font-medium text-xs text-ellipsis whitespace-nowrap">
+                {{ displayName }} {{ displayNumber }}
             </div>
         </div>
-        <div className="flex items-center mx-1">
+
+        <!--        <div class="flex items-center mx-1">
+            <IncomingCallActionButton
+                v-if="!props.call.localMuted"
+                color="primary"
+                :icon="SoundOnIcon"
+                :size="soundOnIconSize"
+                @click="doMuteCaller"
+            />
+            <IncomingCallActionButton
+                v-else
+                color="primary"
+                :icon="SoundOffIcon"
+                :size="soundOffIconSize"
+                @click="unmuteCaller"
+            />
+        </div>-->
+
+        <div class="flex items-center mx-2 w-[46px]">
+            <span class="text-xs text-main-text">
+                {{ callTime }}
+            </span>
+        </div>
+
+        <div class="flex items-center mx-1">
             <IncomingCallActionButton
                 v-if="!isOnLocalHold"
                 color="primary"
@@ -41,30 +65,8 @@
                 @click="unHoldCall"
             />
         </div>
-        <div className="flex items-center mx-1">
-            <IncomingCallActionButton
-                v-if="!props.call.localMuted"
-                color="primary"
-                :icon="SoundOnIcon"
-                :size="soundOnIconSize"
-                @click="doMuteCaller"
-            />
-            <IncomingCallActionButton
-                v-else
-                color="primary"
-                :icon="SoundOffIcon"
-                :size="soundOffIconSize"
-                @click="unmuteCaller"
-            />
-        </div>
 
-        <div className="flex items-center mx-2 w-[46px]">
-            <span className="text-xs text-main-text font-medium">
-                {{ callTime }}
-            </span>
-        </div>
-
-        <div className="mx-2">
+        <!--        <div class="mx-2">
             <IncomingCallActionButton
                 color="danger"
                 hover-color="additional-danger-bg"
@@ -74,15 +76,32 @@
                 :size="declineIconSize"
                 @click="declineIncomingCall"
             />
-        </div>
+        </div>-->
 
-        <div v-if="!props.isSingleRoom || props.isSingleRoom && allowTransfer">
+        <OptionActionButton icon="vc-lc-ellipsis-vertical" />
+
+        <!--        <div v-if="!props.isSingleRoom || props.isSingleRoom && allowTransfer">
             <CallOptionsIconButton
                 :is-single-room="props.isSingleRoom"
                 :is-multi-call-mode="isMultiCallMode"
                 :button-classes="callOptionsButtonClasses"
                 @transfer-click="onTransferClick"
                 @move-click="onMoveClick"
+            />
+        </div>-->
+
+        <div class="ml-1">
+            <AddCallerButton />
+        </div>
+
+        <div
+            v-if="allRooms.length > 1"
+            class="ml-1"
+        >
+            <RoomActionButton
+                icon="vc-lc-arrow-right-left"
+                label="SWITCH"
+                @click="onSwitchRoomButtonClick"
             />
         </div>
     </div>
@@ -103,6 +122,9 @@ import { useOpenSIPSJS, callTimes, allRooms } from '@/composables/opensipsjs'
 import useCallInfo from '@/composables/useCallInfo'
 import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
 import { allowTransfer, displayCallerInfoId, displayCallerInfoName } from '@/composables/useWidgetConfig'
+import RoomActionButton from '@/components/base/RoomActionButton.vue'
+import AddCallerButton from '@/components/AddCallerButton.vue'
+import OptionActionButton from '@/components/base/OptionActionButton.vue'
 
 const props = withDefaults(
     defineProps<{
@@ -116,11 +138,12 @@ const props = withDefaults(
 
 /* Composables */
 const { terminateCall, holdCall, unholdCall, muteCaller } = useOpenSIPSJS()
-const { callerNumber, callerName } = useCallInfo(props.call)
+const { displayName, displayNumber } = useCallInfo(props.call)
 
 const emit = defineEmits<{
     (e: 'transfer-click', callId: string): void
     (e: 'move-click', callId: string): void
+    (e: 'open-room-list'): void
 }>()
 
 const isOnLocalHold = ref<boolean>(false)
@@ -154,7 +177,7 @@ const declineButtonClasses = computed(() => {
 })
 
 const wrapperClasses = computed(() => {
-    let baseClasses = 'flex w-full '
+    let baseClasses = 'flex w-full items-center p-1 '
 
     if (isMultiCallMode.value) {
         baseClasses += 'h-[20px] justify-between '
@@ -185,6 +208,10 @@ const callTime = computed(() => {
     const time = callTimes.value[props.call._id]
     return getFormattedTimeFromSeconds(time)
 })
+
+function onSwitchRoomButtonClick () {
+    emit('open-room-list')
+}
 
 const putOnHold = () => {
     holdCall(props.call._id)

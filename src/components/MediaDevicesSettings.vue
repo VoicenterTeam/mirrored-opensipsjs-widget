@@ -1,7 +1,7 @@
 <template>
     <div style="display: flex; flex-direction: column">
         <label>
-            <div className="inline-block w-4 h-4 text-primary">
+            <div class="inline-block w-4 h-4 text-primary">
                 <MicrophoneIcon />
             </div>
             {{ getTranslation('audio.input.device') }}
@@ -20,7 +20,7 @@
             </option>
         </select>
         <label>
-            <div className="inline-block w-4 h-4 text-primary mt-2">
+            <div class="inline-block w-4 h-4 text-primary mt-2">
                 <HeadphonesIcon />
             </div>
             {{ getTranslation('audio.output.device') }}
@@ -39,7 +39,7 @@
             </option>
         </select>
         <!--        <label>
-            <div className="inline-block w-4 h-4 text-primary mt-2">
+            <div class="inline-block w-4 h-4 text-primary mt-2">
                 <SoundOnIcon />
             </div>
             Ringing device

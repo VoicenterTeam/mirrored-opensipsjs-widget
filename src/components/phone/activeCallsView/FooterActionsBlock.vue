@@ -28,15 +28,14 @@
 </template>
 <script setup lang="ts">
 import HangupButton from '@/components/phone/common/HangupButton.vue'
-import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
 import { useOpenSIPSJS } from '@/composables/opensipsjs.ts'
 import { ActionsTriggerObjectType } from '@/constants/phone.ts'
 import CallActionButton from '@/components/phone/activeCallsView/CallActionButton.vue'
 import useCallActions from '@/composables/phone/useCallActions.ts'
+import { callsInActiveRoom } from '@/composables/opensipsjs.ts'
 import { getTranslation } from '@/plugins/translator.ts'
 
 /* Data */
-const { callsInActiveRoom } = useVsipInject()
 const { terminateCall } = useOpenSIPSJS()
 const { onActionsToggle } = useCallActions()
 

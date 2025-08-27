@@ -1,37 +1,48 @@
 <template>
-    <div :className="wrapperClasses">
+    <div :class="wrapperClasses">
         <div
             v-if="showTopKeypad"
-            class="flex items-center justify-center p-2 border-b-1 border-border-lines"
+            class="p-2 border-b-1 border-border-lines"
         >
-            <Keypad @press="onKeypadKeyPress" />
+            <Keypad
+                :is-add-caller-type="isAddCallerKeypadType"
+                :is-new-call-type="isNewCallKeypadType"
+                @press="onKeypadKeyPress"
+                @call="onStartCall"
+            />
         </div>
         <RingingView
             v-if="incomingUnansweredCall && !transferringCall"
             :call="incomingUnansweredCall"
-            @transfer-click="onTransferClick"
+            @transfer-click="onTransferClick(incomingUnansweredCall)"
         />
-        <div v-if="outgoingUnansweredCall && !incomingUnansweredCall">
+        <!--        <div v-if="outgoingUnansweredCall && !incomingUnansweredCall">
             <OutgoingCallInProgressView
                 :number="outgoingUnansweredCall?._remote_identity?._uri?._user"
                 @hangup="onOutgoingCallHangup"
             />
-        </div>
+        </div>-->
         <ActiveCallsView
-            v-show="!transferringCall && !movingCall && !incomingUnansweredCall && !outgoingUnansweredCall"
+            v-show="!transferringCall &&
+                !movingCall &&
+                !incomingUnansweredCall &&
+                isAnyActiveCall
+            "
+            ref="activeCallsView"
             :calls="activeCalls"
             @transfer-click="onTransferClick"
             @move-click="onMoveClick"
+            @toggle-keypad="onToggleAddCallerKeypad"
         />
         <TransferView
             v-if="transferringCall"
-            :call-id="transferringCall"
+            :call="transferringCall"
             @transfer="onCallTransfer"
             @cancel="cancelTransferring"
         />
         <MoveView
             v-if="movingCall"
-            :call-id="movingCall"
+            :call="movingCall"
             @move="onCallMove"
             @cancel="cancelMoving"
         />
@@ -43,28 +54,35 @@
             />
             <div
                 v-else
-                className="flex min-h-[32px] bg-primary-bg justify-center items-center"
+                class="flex min-h-[32px] bg-primary-bg justify-center items-center"
             >
                 <img
                     v-if="bgLogoBase64"
                     :src="bgLogoBase64"
-                    className="logo-image"
+                    class="logo-image"
                 >
             </div>
         </div>
         <ActionButtons
-            v-if="!incomingUnansweredCall"
+            v-if="!incomingUnansweredCall && !transferringCall && !movingCall"
             :show-outgoing-button="isAnyActiveCall"
             :calls="activeCalls"
             @merge-click="onCallsMerge"
             @toggle-keypad="toggleManualKeypad"
+            @toggle-new-call-keypad="onToggleNewCallKeypad"
             @key-press="onKeypadKeyPress"
+            @start-call="onStartOutgoingCall"
         />
         <div
             v-if="showBottomKeypad"
-            class="flex items-center justify-center p-2"
+            class="p-2"
         >
-            <Keypad @press="onKeypadKeyPress" />
+            <Keypad
+                :is-add-caller-type="isAddCallerKeypadType"
+                :is-new-call-type="isNewCallKeypadType"
+                @press="onKeypadKeyPress"
+                @call="onStartCall"
+            />
         </div>
     </div>
 </template>
@@ -81,7 +99,6 @@ import { allActiveCalls, currentActiveRoom, useOpenSIPSJS } from '@/composables/
 import ActiveCallsView from '@/views/ActiveCallsView.vue'
 import MoveView from '@/views/MoveView.vue'
 import OutgoingCallView from '@/views/OutgoingCallView.vue'
-import OutgoingCallInProgressView from '@/views/OutgoingCallInProgressView.vue'
 import Keypad from '@/components/Keypad.vue'
 
 const {
@@ -92,13 +109,17 @@ const {
     startCall,
     terminateCall,
     sendDTMF,
+    setActiveRoom,
     state
 } = useOpenSIPSJS()
 
-const transferringCall = ref<string>('')
-const movingCall = ref<string>('')
+const transferringCall = ref<ICall | null>(null)
+const movingCall = ref<ICall | null>(null)
 const outgoingCallView = ref<typeof OutgoingCallView>()
+const activeCallsView = ref<typeof ActiveCallsView>()
 const showManualKeypad = ref<boolean>(false)
+const isAddCallerKeypadType = ref<boolean>(false)
+const isNewCallKeypadType = ref<boolean>(false)
 
 const showTopKeypad = computed(() => {
     return showKeypad.value &&
@@ -172,8 +193,51 @@ watchDebounced(
     },
 )
 
+function onStartOutgoingCall () {
+    if (outgoingCallView.value) {
+        outgoingCallView.value.startCall()
+    }
+}
+
 const toggleManualKeypad = () => {
+    isAddCallerKeypadType.value = false
+    isNewCallKeypadType.value = false
+
     showManualKeypad.value = !showManualKeypad.value
+
+    //isAddCallerKeypadType.value = false
+    //isNewCallKeypadType.value = false
+}
+
+function onToggleAddCallerKeypad () {
+    if (!isAddCallerKeypadType.value && showManualKeypad.value) {
+        isAddCallerKeypadType.value = true
+        isNewCallKeypadType.value = false
+        showManualKeypad.value = true
+        return
+    }
+    showManualKeypad.value = !showManualKeypad.value
+
+    isAddCallerKeypadType.value = showManualKeypad.value
+
+    /*if (showManualKeypad.value) {
+        isAddCallerKeypadType.value = true
+    } else {
+        isAddCallerKeypadType.value = false
+    }*/
+}
+
+function onToggleNewCallKeypad () {
+    if (!isNewCallKeypadType.value && showManualKeypad.value) {
+        isNewCallKeypadType.value = true
+        isAddCallerKeypadType.value = false
+        showManualKeypad.value = true
+        return
+    }
+
+    showManualKeypad.value = !showManualKeypad.value
+
+    isNewCallKeypadType.value = showManualKeypad.value
 }
 
 const onKeypadKeyPress = (key: string) => {
@@ -188,30 +252,55 @@ const onKeypadKeyPress = (key: string) => {
     }
 }
 
-const onTransferClick = (callId: string) => {
-    transferringCall.value = callId
+function onStartCall (target: string) {
+    if (isAddCallerKeypadType.value) {
+        startCall(target, true)
+        return
+    }
+
+    if (isNewCallKeypadType.value) {
+        startCall(target)
+        return
+    }
+}
+
+const onTransferClick = (call: ICall) => {
+    transferringCall.value = call
 }
 
 const cancelTransferring = () => {
-    transferringCall.value = ''
+    transferringCall.value = null
 }
 
-const onMoveClick = (callId: string) => {
-    movingCall.value = callId
+const onMoveClick = (call: ICall) => {
+    movingCall.value = call
 }
 
 const cancelMoving = () => {
-    movingCall.value = ''
+    movingCall.value = null
 }
 
-const onCallTransfer = (callId: string, target: string) => {
-    transferCall(callId, target)
-    transferringCall.value = ''
+const onCallTransfer = (target: string) => {
+    if (!transferringCall.value) {
+        return
+    }
+
+    transferCall(transferringCall.value._id, target)
+    transferringCall.value = null
 }
 
-const onCallMove = (callId: string, targetRoom: number) => {
-    moveCall(callId, targetRoom)
-    movingCall.value = ''
+const onCallMove = (targetRoom: number) => {
+    if (!movingCall.value) {
+        return
+    }
+
+    moveCall(movingCall.value._id, targetRoom)
+    movingCall.value = null
+
+    //const callsInRoom = activeCalls.value.filter((call) => call.roomId === currentActiveRoom.value)
+
+    setActiveRoom(undefined)
+    activeCallsView.value?.switchRoomListView(true)
 }
 
 const onCallsMerge = (roomId: number) => {
