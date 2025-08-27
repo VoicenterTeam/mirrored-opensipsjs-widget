@@ -1,5 +1,5 @@
 <template>
-    <div className="flex justify-evenly min-h-[32px] items-center px-2 text-main-text bg-primary-bg">
+    <div class="flex justify-evenly min-h-[32px] items-center px-2 text-main-text bg-primary-bg">
         <span>{{ getTranslation('audio.dialing') }} {{ maskedNumber }}...</span>
         <IncomingCallActionButton
             color="danger"

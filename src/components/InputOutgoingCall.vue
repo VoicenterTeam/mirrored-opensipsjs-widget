@@ -1,22 +1,22 @@
 <template>
-    <div className="flex w-full h-full justify-center p-0.5">
-        <div :className="wrapperClasses">
+    <div class="flex w-full h-full justify-center p-0.5">
+        <div :class="wrapperClasses">
             <input
                 v-model="inputValue"
-                :className="inputClasses"
+                :class="inputClasses"
                 :placeholder="outgoingCallInputPlaceholder"
                 @input="applyPatterns"
                 @keyup.enter.prevent="onKeyPressed"
             >
             <div
                 v-if="inputValue"
-                className="w-4 h-4 text-secondary-text"
+                class="w-4 h-4 text-secondary-text"
             >
                 <div
-                    :className="buttonClasses"
+                    :class="buttonClasses"
                     @click="onClose"
                 >
-                    <div className="w-2 h-2">
+                    <div class="w-2 h-2">
                         <CloseIcon />
                     </div>
                 </div>

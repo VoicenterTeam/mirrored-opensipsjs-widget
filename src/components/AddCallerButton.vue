@@ -11,7 +11,7 @@
                 <RoomActionButton
                     style="width: 98px;"
                     icon="vc-lc-circle-plus"
-                    label="ADD CALLER"
+                    :label="getTranslation('audio.room.add.caller')"
                     @click="onClick"
                 />
             </template>
@@ -34,6 +34,7 @@ import Keypad from '@/components/Keypad.vue'
 import { useOpenSIPSJS, currentActiveRoom } from '@/composables/opensipsjs'
 import RoomActionButton from '@/components/base/RoomActionButton.vue'
 import { keypadMode } from '@/composables/useWidgetConfig'
+import { getTranslation } from '@/plugins/translator.ts'
 const { startCall } = useOpenSIPSJS()
 
 const emit = defineEmits<{

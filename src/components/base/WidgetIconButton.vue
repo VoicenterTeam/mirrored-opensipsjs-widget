@@ -1,7 +1,10 @@
 <template>
-    <button :className="buttonClasses" :disabled="props.disabled">
-        <div :className="iconSize">
-            <component :is="icon"/>
+    <button
+        :class="buttonClasses"
+        :disabled="props.disabled"
+    >
+        <div :class="iconSize">
+            <component :is="icon" />
         </div>
     </button>
 </template>
@@ -66,7 +69,7 @@ const iconSize = computed(() => {
     }
 })
 const buttonClasses = computed(() => {
-    let base = `
+    const base = `
         ${props.usePadding ? 'p-1.5' : ''}
         ${props.additionalClasses}
     `

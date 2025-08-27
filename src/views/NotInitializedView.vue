@@ -1,5 +1,5 @@
 <template>
-    <div className="flex h-full p-1.5">
+    <div class="flex h-full p-1.5">
         <div class="flex items-center bg-destructive-actions-bg--focus rounded-md p-1">
             <i
                 v-if="!allowShrinkOnIdle"

@@ -1,5 +1,5 @@
 <template>
-    <div className="flex w-full h-[32px] p-0.5 bg-primary-bg">
+    <div class="flex w-full h-[32px] p-0.5 bg-primary-bg">
         <InputOutgoingCall
             v-model="inputValue"
             bg-color=""

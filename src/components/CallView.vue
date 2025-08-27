@@ -30,7 +30,7 @@
 
         <div
             v-if="!isOutgoingUnanswered"
-            className="mx-2 w-[46px] text-xs text-main-text"
+            class="mx-2 w-[46px] text-xs text-main-text"
         >
             {{ callTime }}
         </div>
@@ -38,7 +38,7 @@
             v-else
             class="w-full text-sm px-2"
         >
-            Calling...
+            {{ getTranslation('audio.calling.in.progress') }}
         </div>
 
         <CallOptionsButton
@@ -64,7 +64,7 @@
         >
             <RoomActionButton
                 icon="vc-lc-arrow-right-left"
-                label="SWITCH"
+                :label="getTranslation('audio.room.switch').toUpperCase()"
                 @click="onSwitchRoomButtonClick"
             />
         </div>
@@ -96,6 +96,7 @@ import RoomActionButton from '@/components/base/RoomActionButton.vue'
 import AddCallerButton from '@/components/AddCallerButton.vue'
 import ActionIconButton from '@/components/base/ActionIconButton.vue'
 import CallOptionsButton from '@/components/CallOptionsButton.vue'
+import { getTranslation } from '@/plugins/translator.ts'
 
 const props = withDefaults(
     defineProps<{

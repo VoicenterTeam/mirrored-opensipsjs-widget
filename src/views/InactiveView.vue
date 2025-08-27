@@ -1,6 +1,6 @@
 <template>
-    <div className="flex bg-primary-actions-bg--focus h-[60px] flex-row p-1">
-        <div :className="activateButtonClasses">
+    <div class="flex bg-primary-actions-bg--focus h-[60px] flex-row p-1">
+        <div :class="activateButtonClasses">
             <div
                 class="activate-button"
                 @click="activateTab"

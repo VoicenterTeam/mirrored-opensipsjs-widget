@@ -15,7 +15,7 @@
                 <input
                     v-model="inputValue"
                     class="outline-0 w-full text-main-text text-sm pl-2 remove-arrow"
-                    placeholder="Enter Number"
+                    :placeholder="outgoingCallInputPlaceholder"
                     @input="applyPatterns"
                     @keyup.enter.prevent="onStartCall"
                 >
@@ -36,7 +36,7 @@
                 :key="button"
             >
                 <div
-                    className="flex items-center justify-center w-16 h-8 rounded border border-border-lines font-semibold
+                    class="flex items-center justify-center w-16 h-8 rounded border border-border-lines font-semibold
           hover:bg-primary hover:text-button-pressed-text hover:border-none cursor-pointer"
                     @click="onPress(button)"
                 >
@@ -49,7 +49,7 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { outgoingInputRegexValidator } from '@/composables/useWidgetConfig'
+import { outgoingInputRegexValidator, outgoingCallInputPlaceholder } from '@/composables/useWidgetConfig'
 import { getTranslation } from '@/plugins/translator'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import ActionIconButton from '@/components/base/ActionIconButton.vue'

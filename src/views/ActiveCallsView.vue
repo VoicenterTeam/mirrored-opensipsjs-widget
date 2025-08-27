@@ -6,7 +6,7 @@
             style="box-shadow: 0 1px 5px -3px gray"
         >
             <div class="font-semibold">
-                {{ callsInActiveRoom.length }} participants
+                {{ callsInActiveRoom.length }} {{ getTranslation('audio.room.view.participants') }}
             </div>
 
             <div class="flex">
@@ -20,7 +20,7 @@
                 >
                     <RoomActionButton
                         icon="vc-lc-arrow-right-left"
-                        label="SWITCH"
+                        :label="getTranslation('audio.room.switch').toUpperCase()"
                         @click="onSwitchRoomButtonClick"
                     />
                 </div>
@@ -33,14 +33,14 @@
             style="box-shadow: 0 1px 5px -2px gray;"
         >
             <div class="font-semibold">
-                {{ allRooms.length }} rooms
+                {{ allRooms.length }} {{ getTranslation('audio.room.view.rooms') }}
             </div>
 
             <div class="flex">
                 <div class="ml-1">
                     <RoomActionButton
                         icon="vc-lc-undo-2"
-                        label="Back"
+                        :label="getTranslation('audio.back')"
                         :disabled="!currentActiveRoom"
                         @click="onSwitchRoomButtonClick"
                     />
@@ -68,7 +68,7 @@
             <div
                 v-for="(call, index) in callsInActiveRoom"
                 :key="call._id"
-                className="flex w-full"
+                class="flex w-full"
                 :class="{'list-item': callsInActiveRoom.length > 1}"
             >
                 <CallView
@@ -87,7 +87,7 @@
 </template>
 
 <script lang="ts" setup>
-import { UnwrapRef } from 'vue'
+import { UnwrapRef, watch } from 'vue'
 import { ref, computed } from 'vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
 import CallView from '@/components/CallView.vue'
@@ -96,6 +96,7 @@ import useCallInfo from '@/composables/useCallInfo'
 import AddCallerButton from '@/components/AddCallerButton.vue'
 import RoomActionButton from '@/components/base/RoomActionButton.vue'
 import SwitchRoomListItem from '@/components/SwitchRoomListItem.vue'
+import { getTranslation } from '@/plugins/translator'
 
 const { terminateCall, setActiveRoom } = useOpenSIPSJS()
 
@@ -145,7 +146,9 @@ const activeRooms = computed(() => {
         return {
             roomId: room.roomId,
             isActive: room.roomId === currentActiveRoom.value,
-            identifier: callsInRoom.length > 1 ? `${callsInRoom.length} participants` : singleParticipantName,
+            identifier: callsInRoom.length > 1 ?
+                `${callsInRoom.length} ${getTranslation('audio.room.view.participants')}` :
+                singleParticipantName,
             oldestCallId: oldestCall[0]._id
         }
     })
@@ -184,13 +187,20 @@ const onMoveClick = (callId: string) => {
 }
 
 function onCallTerminate () {
-    console.log('onTerminate')
-    isRoomListView.value = true
+    if (callsInActiveRoom.value.length === 0) {
+        isRoomListView.value = true
+    }
 }
 
 function switchRoomListView (value: boolean) {
     isRoomListView.value = value
 }
+
+watch(allActiveCalls, (data) => {
+    if (data.length === 0) {
+        isRoomListView.value = false
+    }
+})
 
 defineExpose({
     switchRoomListView

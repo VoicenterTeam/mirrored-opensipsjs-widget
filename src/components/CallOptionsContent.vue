@@ -1,34 +1,34 @@
 <template>
-    <div className="">
+    <div class="">
         <ul>
             <li
                 v-if="!props.isSingleRoom"
-                className="h-8 cursor-pointer hover:bg-secondary-bg p-2"
+                class="h-8 cursor-pointer hover:bg-secondary-bg p-2"
                 @click="onMoveClick"
             >
-                <!--                <div className="inline-block">
-                    <div className="w-4 h-4 text-primary">
+                <!--                <div class="inline-block">
+                    <div class="w-4 h-4 text-primary">
                         <MoveToCallIcon />
                     </div>
 
                 </div>-->
-                <div className="inline-block w-3 h-3 text-primary">
+                <div class="inline-block w-3 h-3 text-primary">
                     <MoveToCallIcon />
                 </div>
 
-                <span className="text-xs mx-2">
+                <span class="text-xs mx-2">
                     {{ getTranslation('audio.move.call') }}
                 </span>
             </li>
             <li
                 v-if="allowTransfer"
-                className="h-8 cursor-pointer hover:bg-secondary-bg p-2"
+                class="h-8 cursor-pointer hover:bg-secondary-bg p-2"
                 @click="onTransferClick"
             >
-                <div className="inline-block w-3 h-3 text-primary">
+                <div class="inline-block w-3 h-3 text-primary">
                     <TransferIcon />
                 </div>
-                <span className="text-xs mx-2">
+                <span class="text-xs mx-2">
                     Transfer Call
                 </span>
             </li>

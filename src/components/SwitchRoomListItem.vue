@@ -22,8 +22,8 @@
         </div>
 
         <div class="flex">
-            <div className="flex items-center mx-2 w-[46px]">
-                <span className="text-xs text-main-text">
+            <div class="flex items-center mx-2 w-[46px]">
+                <span class="text-xs text-main-text">
                     {{ callTime }}
                 </span>
             </div>

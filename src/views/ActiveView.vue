@@ -1,5 +1,5 @@
 <template>
-    <div :className="wrapperClasses">
+    <div :class="wrapperClasses">
         <div
             v-if="showTopKeypad"
             class="p-2 border-b-1 border-border-lines"
@@ -54,12 +54,12 @@
             />
             <div
                 v-else
-                className="flex min-h-[32px] bg-primary-bg justify-center items-center"
+                class="flex min-h-[32px] bg-primary-bg justify-center items-center"
             >
                 <img
                     v-if="bgLogoBase64"
                     :src="bgLogoBase64"
-                    className="logo-image"
+                    class="logo-image"
                 >
             </div>
         </div>

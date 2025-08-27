@@ -1,32 +1,32 @@
 <template>
-    <div :className="wrapperClasses">
+    <div :class="wrapperClasses">
         <div
             v-if="!isMultiCallMode"
-            className="flex flex-col items-center justify-evenly w-[92px] mx-3"
+            class="flex flex-col items-center justify-evenly w-[92px] mx-3"
         >
             <span
                 v-if="displayCallerInfoName"
-                className="text-xs text-main-text font-medium"
+                class="text-xs text-main-text font-medium"
             >
                 {{ displayName }}
             </span>
             <span
                 v-if="displayCallerInfoId"
-                className="text-xs text-main-text font-medium"
+                class="text-xs text-main-text font-medium"
             >
                 {{ displayName }}
             </span>
         </div>
         <div
             v-else
-            className="p-0.5"
+            class="p-0.5"
         >
-            <div className="overflow-hidden mx-3 text-main-text w-[92px] max-w-[92px] font-medium text-xs text-ellipsis whitespace-nowrap">
+            <div class="overflow-hidden mx-3 text-main-text w-[92px] max-w-[92px] font-medium text-xs text-ellipsis whitespace-nowrap">
                 {{ displayName }} {{ displayNumber }}
             </div>
         </div>
 
-        <!--        <div className="flex items-center mx-1">
+        <!--        <div class="flex items-center mx-1">
             <IncomingCallActionButton
                 v-if="!props.call.localMuted"
                 color="primary"
@@ -43,13 +43,13 @@
             />
         </div>-->
 
-        <div className="flex items-center mx-2 w-[46px]">
-            <span className="text-xs text-main-text">
+        <div class="flex items-center mx-2 w-[46px]">
+            <span class="text-xs text-main-text">
                 {{ callTime }}
             </span>
         </div>
 
-        <div className="flex items-center mx-1">
+        <div class="flex items-center mx-1">
             <IncomingCallActionButton
                 v-if="!isOnLocalHold"
                 color="primary"
@@ -66,7 +66,7 @@
             />
         </div>
 
-        <!--        <div className="mx-2">
+        <!--        <div class="mx-2">
             <IncomingCallActionButton
                 color="danger"
                 hover-color="additional-danger-bg"
