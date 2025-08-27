@@ -13,6 +13,7 @@ import type { AllActiveCallsType, CallTimeType } from '@/types/opensips'
 import type { UnRegisterOptions } from 'jssip/lib/UA'
 import { ICall, vsipAPI } from 'opensips-js-vue'
 import { DNDDefaultBehaviour, autoAnswerDefaultBehaviour, callWaitingDefaultBehaviour } from '@/composables/useWidgetConfig'
+import type { IRoom } from 'opensips-js/src/types/rtc'
 
 /* Main */
 const state: { opensipsjs: OpenSIPSJS | undefined } = {
@@ -46,6 +47,31 @@ export const currentActiveRoom = vsipAPI.state.currentActiveRoomId
 export const allCallStatuses = computed(() => {
     return Object.values(vsipAPI.state.callStatus.value)
 })
+export const callsInActiveRoom = computed(() => {
+    return allActiveCalls.value.filter((call) => {
+        return call.roomId === currentActiveRoom.value
+    })
+})
+export const activeRoomsWithoutIncoming = computed(() => {
+    const activeRooms: Array<IRoom> = Object.values(allRooms.value)
+
+    return activeRooms.filter((room) => {
+        return !room.incomingInProgress
+    })
+})
+export const roomsWithoutActive = computed(() => {
+    return activeRoomsWithoutIncoming.value.filter((room) => {
+        return room.roomId !== currentActiveRoom.value
+    })
+})
+export const callsExceptIncoming = computed(() => {
+    const activeRoomIds = activeRoomsWithoutIncoming.value.map(room => room.roomId)
+    const allActiveCalls = Object.values(activeCalls.value)
+    return allActiveCalls.filter(call => call.roomId && activeRoomIds.includes(call.roomId))
+})
+export const lengthOfCallsWithoutIncoming = computed(() => {
+    return callsExceptIncoming.value.length
+})
 
 /* Call settings */
 export const isMuted = vsipAPI.state.isMuted
@@ -68,7 +94,6 @@ export const allActiveCalls = computed(() => {
 })
 
 /* Video conferencing */
-
 export const conferenceStarted = ref<boolean>(false)
 export const streamSources = ref<Array<unknown>>([])
 export const mainSource = ref<unknown>(null)
@@ -706,6 +731,11 @@ export function useOpenSIPSJS () {
 
     }
 
+    function getActiveCallsInRoom (roomId: number): Array<ICall> {
+        const activeCallsArr = Object.values(activeCalls.value)
+        return activeCallsArr.filter((call: ICall) => call.roomId === roomId)
+    }
+
     return {
         state,
         startCall,
@@ -732,6 +762,7 @@ export function useOpenSIPSJS () {
         hangupVideoCall,
         enableAudio,
         disableAudio,
+        getActiveCallsInRoom,
         enableVideo,
         disableVideo,
         changeMediaConstraints,

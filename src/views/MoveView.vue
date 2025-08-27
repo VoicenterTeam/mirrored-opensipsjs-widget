@@ -45,7 +45,7 @@
                     :teleported="false"
                     placement="top"
                     class="static"
-                    :options="roomsList"
+                    :options="roomSelectOptions"
                     :config="{ labelKey: 'label', valueKey: 'value' }"
                     placeholder="Select Room"
                 />
@@ -63,7 +63,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { ref, watch } from 'vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
 import { allActiveCalls, allRooms } from '@/composables/opensipsjs'
 import {
@@ -74,65 +74,66 @@ import useCallInfo from '@/composables/useCallInfo'
 import { getTranslation } from '@/plugins/translator'
 import ActionIconButton from '@/components/base/ActionIconButton.vue'
 import { VcSelect } from '@voicenter-team/voicenter-ui-plus'
+import { getCallsInRoom, getRoomTitleCombined } from '@/helpers/roomHelper.ts'
 
-const target = ref<number | undefined>()
+/* Types */
+type RoomOption = {
+    value: number
+    label: string
+}
 
-const props = withDefaults(
-    defineProps<{
-        callId: string
-    }>(),
-    {}
-)
+/* Props */
+const props = defineProps<{
+    call: ICall
+}>()
 
+/* Emit */
 const emit = defineEmits<{
-    (e: 'move', callId: string, roomId: number): void
+    (e: 'move', roomId: number): void
     (e: 'cancel'): void
 }>()
 
-const movingCall = computed(() => {
-    return allActiveCalls.value.find((call: ICall) => {
-        return call._id === props.callId
-    })
-})
+/* Composable */
+const { displayNumber: movingCallerNumber, displayName: movingCallerName } = useCallInfo(props.call)
 
-const { displayNumber: movingCallerNumber, displayName: movingCallerName } = useCallInfo(movingCall)
+/* Data */
+const target = ref<number | undefined>()
+const roomSelectOptions = ref<Array<RoomOption>>([])
 
-const roomsList = computed(() => {
-    if (!movingCall.value) return
-
-    return allRooms.value
-        .filter((room) => room.roomId !== movingCall.value?.roomId)
-        .map((room) => {
-            const callsInRoom = allActiveCalls.value.filter((call) => call.roomId === room.roomId)
-
-            const participantsReduced = callsInRoom.reduce((reducer, call) => {
-                const { displayName, displayNumber } = useCallInfo(call)
-
-                if (!reducer) {
-                    console.log('return i 0')
-                    return displayName.value || displayNumber.value
-                }
-
-                return reducer + ', ' + (displayName.value || displayNumber.value)
-            }, '')
-
-            return {
-                value: room.roomId,
-                label: participantsReduced
-            }})
-})
-
-const doMove = () => {
+/* Methods */
+function doMove () {
     if (!target.value) {
         return
     }
-    emit('move', props.callId, Number(target.value))
-}
 
+    emit('move', Number(target.value))
+}
 const cancelMoving = () => {
     emit('cancel')
 }
 
+/* Watchers */
+watch(
+    [ allRooms, allActiveCalls ],
+    async ([ rooms, calls ]) => {
+        // Filter out current room and create promises for each room
+        const roomPromises = rooms
+            .filter(room => room.roomId !== props.call.roomId)
+            .map(async (room) => {
+                const roomTitle = await getRoomTitleCombined(getCallsInRoom(room.roomId, calls))
+                return {
+                    value: room.roomId,
+                    label: roomTitle
+                }
+            })
+
+        // Wait for all promises to resolve
+        roomSelectOptions.value = await Promise.all(roomPromises)
+    },
+    {
+        immediate: true
+    }
+)
 </script>
 
 <style scoped>

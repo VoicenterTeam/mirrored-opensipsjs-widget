@@ -17,10 +17,7 @@ import { computed } from 'vue'
 import CallsCompactView from '@/components/phone/common/CallsCompactView.vue'
 import ActiveCallBlock from '@/components/phone/activeCallsView/ActiveCallBlock.vue'
 import OneCallControlButtonsBlock from '@/components/phone/activeCallsView/OneCallControlButtonsBlock.vue'
-import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
-
-/* Data */
-const { callsInActiveRoom, roomsWithoutActive , activeRoomsWithoutIncoming, lengthOfCallsWithoutIncoming } = useVsipInject()
+import { callsInActiveRoom, activeRoomsWithoutIncoming, roomsWithoutActive, lengthOfCallsWithoutIncoming } from '@/composables/opensipsjs'
 
 /* Computed */
 const oneActiveCall = computed(() => {

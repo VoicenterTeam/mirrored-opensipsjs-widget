@@ -14,10 +14,7 @@
             <ActiveCallPopupRow
                 class="data"
                 current-room
-                :caller="activeRoomTitle"
                 :room-id="currentActiveRoom"
-                :call-id="firstCallInActiveRoomId"
-                :duration="activeRoomDuration"
             />
         </div>
         <div
@@ -49,40 +46,21 @@
                 v-for="room in roomsWithoutActive"
                 :key="room.roomId"
                 :room-id="room.roomId"
-                :call-id="getFirstCallIdInRoom(room.roomId)"
-                :caller="getCaller(room.roomId)"
-                :duration="getRoomDuration(room.roomId)"
             />
         </div>
     </div>
 </template>
 <script setup lang="ts">
 import { computed, onBeforeUnmount } from 'vue'
-import { useRoomData } from '@/composables/phone/useRoomData.ts'
 import PopupHeader from '@/components/phone/common/PopupHeader.vue'
 import ActiveCallPopupRow from '@/components/phone/common/ActiveCallPopupRow.vue'
-import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
-import { currentActiveRoom, allRooms, activeCalls, useOpenSIPSJS } from '@/composables/opensipsjs'
+import { currentActiveRoom, allRooms, activeCalls, roomsWithoutActive, useOpenSIPSJS } from '@/composables/opensipsjs'
 import { getTranslation } from '@/plugins/translator'
 
 /* Data */
-const { callsInActiveRoom, roomsWithoutActive, getActiveCallsInRoom } = useVsipInject()
 const { onActiveCallsPopupToggle } = usePhoneState()
-const { moveCall, mergeCallByIds } = useOpenSIPSJS()
-const { getRoomTitle, getDuration, getFirstCallIdInRoom, getCaller, getRoomDuration } = useRoomData()
-
-/* Computed */
-const firstCallInActiveRoomId = computed(() => {
-    return callsInActiveRoom.value[0]?._id
-})
-
-const activeRoomTitle = computed(() => {
-    return getRoomTitle(callsInActiveRoom.value)
-})
-const activeRoomDuration = computed(() => {
-    return getDuration(callsInActiveRoom.value)
-})
+const { moveCall, mergeCallByIds, getActiveCallsInRoom } = useOpenSIPSJS()
 
 const closeCallsPopup = ()  => {
     onActiveCallsPopupToggle(false)
@@ -123,6 +101,7 @@ onBeforeUnmount(() => {
     onActiveCallsPopupToggle(false)
 })
 </script>
+
 <style lang="scss">
 .active-calls-popup-wrapper {
   bottom: 0;

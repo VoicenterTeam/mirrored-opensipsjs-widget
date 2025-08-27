@@ -86,7 +86,6 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
-import type { UnwrapRef } from 'vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
 import { useOpenSIPSJS, callTimes, allRooms, allActiveCalls } from '@/composables/opensipsjs'
 import useCallInfo from '@/composables/useCallInfo'
@@ -99,7 +98,7 @@ import CallOptionsButton from '@/components/CallOptionsButton.vue'
 
 const props = withDefaults(
     defineProps<{
-        call: UnwrapRef<ICall>
+        call: ICall
         isFirstCaller: boolean
         isSingleCall: boolean
         isSingleRoom: boolean
@@ -112,11 +111,11 @@ const { terminateCall, holdCall, unholdCall, muteCaller } = useOpenSIPSJS()
 const { displayNumber, displayName } = useCallInfo(props.call)
 
 const emit = defineEmits<{
-    (e: 'transfer-click', callId: string): void
-    (e: 'move-click', callId: string): void
+    (e: 'transfer-click'): void
+    (e: 'move-click'): void
     (e: 'terminate-call'): void
     (e: 'open-room-list'): void
-    (e: 'toggle-keypad', callId: string): void
+    (e: 'toggle-keypad'): void
 }>()
 
 const isOnLocalHold = ref<boolean>(false)
@@ -147,7 +146,7 @@ const callTime = computed(() => {
 })
 
 function onToggleAddCallerKeypad () {
-    emit('toggle-keypad', props.call._id)
+    emit('toggle-keypad')
 }
 
 function onSwitchRoomButtonClick () {
@@ -174,11 +173,11 @@ const doMuteCaller = () => {
 }
 
 const onTransferClick = () => {
-    emit('transfer-click', props.call._id)
+    emit('transfer-click')
 }
 
 const onMoveClick = () => {
-    emit('move-click', props.call._id)
+    emit('move-click')
 }
 
 onMounted(() => {

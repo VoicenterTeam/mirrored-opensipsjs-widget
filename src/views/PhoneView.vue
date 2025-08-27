@@ -32,15 +32,14 @@
 </template>
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import type { IRoom, ICall } from 'opensips-js/src/types/rtc'
-import { allRooms, useOpenSIPSJS } from '@/composables/opensipsjs'
+import type { ICall } from 'opensips-js/src/types/rtc'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import OfflineWrapper from '@/components/phone/common/OfflineWrapper.vue'
 import InactiveTabWrapper from '@/components/phone/common/InactiveTabWrapper.vue'
 import NoActiveCallsView from '@/components/phone/NoActiveCallsView.vue'
 import ActiveCallsWithKeypadView from '@/components/phone/ActiveCallsWithKeypadView.vue'
 import ActiveCallsWithActionButtonsView from '@/components/phone/ActiveCallsWithActionButtonsView.vue'
-import { currentActiveRoom, activeCalls, allActiveCalls } from '@/composables/opensipsjs'
-import { useVsipProvide } from '@/composables/phone/useVsipProvideInject.ts'
+import { currentActiveRoom, activeCalls, activeRoomsWithoutIncoming } from '@/composables/opensipsjs'
 import { GenericObjectType, CallUserDataType } from '@/types/phone'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
 import { KeyPadTriggerObjectType } from '@/constants/phone.ts'
@@ -111,10 +110,6 @@ const getPercentage = (lightValue: number, _percentage: number) => {
     // return isDark.value ? darkValue : lightValue
     return lightValue
 }
-function getActiveCallsInRoom (roomId: number): Array<ICall> {
-    const activeCallsArr = Object.values(activeCalls.value)
-    return activeCallsArr.filter((call: ICall) => call.roomId === roomId)
-}
 
 const dynamicStyle = computed(() => {
     return {
@@ -126,38 +121,13 @@ const dynamicStyle = computed(() => {
 })
 /* Computed */
 const phoneUI = computed(() => {
-    if(!activeRoomsWithoutIncoming.value.length) {
+    if (!activeRoomsWithoutIncoming.value.length) {
         return phoneUIConfig.mainUI
-    } else if(activeRoomsWithoutIncoming.value && keyPadTrigger.value || activeRoomsWithoutIncoming.value && !currentActiveRoom.value) {
+    } else if (activeRoomsWithoutIncoming.value && keyPadTrigger.value || activeRoomsWithoutIncoming.value && !currentActiveRoom.value) {
         return phoneUIConfig.callsWithKeyPad
     }
+
     return phoneUIConfig.callsWithActionButtons
-})
-
-const activeRoomsWithoutIncoming = computed(() => {
-    const activeRooms: Array<IRoom> = Object.values(allRooms.value)
-    return activeRooms.filter((room) => {
-        return !room.incomingInProgress
-    })
-})
-const roomsWithoutActive = computed(() => {
-    return activeRoomsWithoutIncoming.value.filter((room) => {
-        return room.roomId !== currentActiveRoom.value
-    })
-})
-const callsInActiveRoom = computed(() => {
-    return allActiveCalls.value.filter((call) => {
-        return call.roomId === currentActiveRoom.value
-    })
-})
-
-const callsExceptIncoming = computed(() => {
-    const activeRoomIds = activeRoomsWithoutIncoming.value.map(room => room.roomId)
-    const allActiveCalls = Object.values(activeCalls.value)
-    return allActiveCalls.filter(call => call.roomId && activeRoomIds.includes(call.roomId))
-})
-const lengthOfCallsWithoutIncoming = computed(() => {
-    return callsExceptIncoming.value.length
 })
 
 /* Methods */
@@ -170,15 +140,6 @@ const createCallerData = (call: ICall) => {
         userPhone: callerNumber,
     }
 }
-/* Provide */
-useVsipProvide({
-    callsInActiveRoom,
-    activeRoomsWithoutIncoming,
-    lengthOfCallsWithoutIncoming,
-    callersData,
-    roomsWithoutActive,
-    getActiveCallsInRoom
-})
 
 /* Hooks */
 onMounted(() => {

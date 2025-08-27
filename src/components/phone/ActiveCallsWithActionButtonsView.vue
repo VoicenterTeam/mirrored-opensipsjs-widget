@@ -9,7 +9,7 @@
         />
         <ActionsPopup
             v-if="actionsPopupType"
-            :caller="actionsCaller"
+            :caller="displayName"
             :action-group-list="actionsConfig"
         />
         <ActiveCallsPopup v-if="isActiveCallsPopupActive" />
@@ -24,7 +24,6 @@
 import { computed, watch } from 'vue'
 import ActionsPopup from '@/components/phone/activeCallsView/ActionsPopup.vue'
 import OneCallInActiveRoomView from '@/components/phone/activeCallsView/OneCallInActiveRoomView.vue'
-import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
 import SoundManager from '@/components/phone/SoundManager.vue'
 import CallMovePopup from '@/components/phone/activeCallsView/CallMovePopup.vue'
 import CallTransferPopup from '@/components/phone/activeCallsView/CallTransferPopup.vue'
@@ -34,13 +33,19 @@ import useCallActions from '@/composables/phone/useCallActions.ts'
 import { ActionsTriggerObjectType } from '@/constants/phone.ts'
 import ActiveCallsPopup from '@/components/phone/common/ActiveCallsPopup.vue'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
-import { activeCalls } from '@/composables/opensipsjs.ts'
+import { activeCalls, callsInActiveRoom } from '@/composables/opensipsjs.ts'
 import type { ICall } from 'opensips-js/src/types/rtc'
+import useCallInfo from '@/composables/useCallInfo.ts'
 
 /* Data */
 const { actionsPopupType, actionsConfig, callToMove, callToTransfer,  onActionsToggle, onCallToTransferChange } = useCallActions()
-const { callsInActiveRoom, callersData } = useVsipInject()
 const { isActiveCallsPopupActive } = usePhoneState()
+
+const callId = computed<string | undefined>(() => {
+    return actionsPopupType.value?.callId
+})
+
+const { displayName } = useCallInfo(callId)
 
 // close modal in case in call ended
 watch(
@@ -90,16 +95,6 @@ const isOneActiveCallInActiveRoom = computed(() => {
 const isTwoAndMoreActiveCallsInActiveRoom = computed(() => {
     return callsInActiveRoom.value.length > 1
 })
-
-const actionsCaller = computed(() => {
-    const callId = actionsPopupType.value?.callId
-    if(!callId) {
-        return
-    }
-    const user = callersData.value[callId]
-    return user?.userName || user?.userPhone || ''
-})
-
 </script>
 <style lang="scss" scoped>
 </style>

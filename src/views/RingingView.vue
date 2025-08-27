@@ -101,9 +101,7 @@
 
 <script lang="ts" setup>
 import type { UnwrapRef } from 'vue'
-import CallIcon from '@/assets/icons/call.svg?component'
 import DeclineIcon from '@/assets/icons/decline.svg?component'
-import TransferIcon from '@/assets/icons/transferCall.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
@@ -129,7 +127,7 @@ const props = withDefaults(
 
 /* Emits */
 const emit = defineEmits<{
-    (e: 'transfer-click', callId: string): void
+    (e: 'transfer-click'): void
 }>()
 
 /* Composables */
@@ -156,8 +154,7 @@ const declineIncomingCall = () => {
     terminateCall(props.call._id)
 }
 const transferIncomingCall = () => {
-    const callId = props.call?._id
-    emit('transfer-click', callId)
+    emit('transfer-click')
 }
 
 onMounted(() => {

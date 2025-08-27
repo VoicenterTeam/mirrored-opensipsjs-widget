@@ -17,14 +17,14 @@
                 class="pl-2 truncate"
                 style="max-width: 200px;"
             >
-                {{ identifier }}
+                {{ roomTitle }}
             </div>
         </div>
 
         <div class="flex">
             <div className="flex items-center mx-2 w-[46px]">
                 <span className="text-xs text-main-text">
-                    {{ callTime }}
+                    {{ roomDuration }}
                 </span>
             </div>
         </div>
@@ -32,20 +32,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { callTimes } from '@/composables/opensipsjs'
-import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
 import OptionActionButton from '@/components/base/OptionActionButton.vue'
+import { useRoomData } from '@/composables/phone/useRoomData.ts'
 
-const props = withDefaults(
-    defineProps<{
-        roomId: number
-        isActive: boolean
-        identifier: string
-        oldestCallId: string
-    }>(),
-    {}
-)
+const props = defineProps<{
+    roomId: number
+}>()
 
 const emit = defineEmits<{
     (e: 'transfer-click', callId: string): void
@@ -55,10 +47,7 @@ const emit = defineEmits<{
     (e: 'exit-room'): void
 }>()
 
-const callTime = computed(() => {
-    const time = callTimes.value[props.oldestCallId]
-    return getFormattedTimeFromSeconds(time)
-})
+const { roomDuration, roomTitle, isActive } = useRoomData(props.roomId)
 
 function onExitRoom () {
     emit('exit-room')
@@ -67,7 +56,6 @@ function onExitRoom () {
 function onSwitchRoom () {
     emit('switch-room')
 }
-
 </script>
 
 <style scoped>

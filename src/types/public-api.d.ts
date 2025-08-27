@@ -99,7 +99,7 @@ export interface IDisplayResolvers {
     /**
      * Resolve caller information from call object
      */
-    callerInfo?: (data: ICall, callUser?: CallUserDataType) => Promise<CallerInfoResolved>
+    callerInfo?: (data: ICall, callUser?: CallUserDataType) => Promise<CallerInfoResolved | undefined>
 }
 
 /**

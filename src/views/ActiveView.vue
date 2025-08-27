@@ -14,7 +14,7 @@
         <RingingView
             v-if="incomingUnansweredCall && !transferringCall"
             :call="incomingUnansweredCall"
-            @transfer-click="onTransferClick"
+            @transfer-click="onTransferClick(incomingUnansweredCall)"
         />
         <!--        <div v-if="outgoingUnansweredCall && !incomingUnansweredCall">
             <OutgoingCallInProgressView
@@ -36,13 +36,13 @@
         />
         <TransferView
             v-if="transferringCall"
-            :call-id="transferringCall"
+            :call="transferringCall"
             @transfer="onCallTransfer"
             @cancel="cancelTransferring"
         />
         <MoveView
             v-if="movingCall"
-            :call-id="movingCall"
+            :call="movingCall"
             @move="onCallMove"
             @cancel="cancelMoving"
         />
@@ -113,8 +113,8 @@ const {
     state
 } = useOpenSIPSJS()
 
-const transferringCall = ref<string>('')
-const movingCall = ref<string>('')
+const transferringCall = ref<ICall | null>(null)
+const movingCall = ref<ICall | null>(null)
 const outgoingCallView = ref<typeof OutgoingCallView>()
 const activeCallsView = ref<typeof ActiveCallsView>()
 const showManualKeypad = ref<boolean>(false)
@@ -264,30 +264,38 @@ function onStartCall (target: string) {
     }
 }
 
-const onTransferClick = (callId: string) => {
-    transferringCall.value = callId
+const onTransferClick = (call: ICall) => {
+    transferringCall.value = call
 }
 
 const cancelTransferring = () => {
-    transferringCall.value = ''
+    transferringCall.value = null
 }
 
-const onMoveClick = (callId: string) => {
-    movingCall.value = callId
+const onMoveClick = (call: ICall) => {
+    movingCall.value = call
 }
 
 const cancelMoving = () => {
-    movingCall.value = ''
+    movingCall.value = null
 }
 
-const onCallTransfer = (callId: string, target: string) => {
-    transferCall(callId, target)
-    transferringCall.value = ''
+const onCallTransfer = (target: string) => {
+    if (!transferringCall.value) {
+        return
+    }
+
+    transferCall(transferringCall.value._id, target)
+    transferringCall.value = null
 }
 
-const onCallMove = (callId: string, targetRoom: number) => {
-    moveCall(callId, targetRoom)
-    movingCall.value = ''
+const onCallMove = (targetRoom: number) => {
+    if (!movingCall.value) {
+        return
+    }
+
+    moveCall(movingCall.value._id, targetRoom)
+    movingCall.value = null
 
     //const callsInRoom = activeCalls.value.filter((call) => call.roomId === currentActiveRoom.value)
 

@@ -1,105 +1,42 @@
 import type { MaybeRef } from 'vue'
 import { computed, ref, unref, watch } from 'vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
-import { getCallerNumber } from '@/helpers/callerHelper'
-import { displayCallerInfoIdMask } from '@/composables/useWidgetConfig'
-import { useDisplayResolvers } from '@/composables/useDisplayResolvers.ts'
-import { CallerInfoResolved } from '@/types/public-api'
-import { getTranslation } from '@/plugins/translator.ts'
+import { getCallDisplayInfo } from '@/helpers/callerHelper'
+import { allActiveCalls } from '@/composables/opensipsjs.ts'
 
-export default function useCallInfo (call: MaybeRef<ICall | undefined | null>) {
-    const { getResolver } = useDisplayResolvers()
-
+export default function useCallInfo (callData: MaybeRef<ICall | string | null | undefined>) {
     /* Data */
-    const resolvedDisplayInfo = ref<CallerInfoResolved>({
-        name: '',
-        number: ''
-    })
-    const isResolving = ref(false)
+    const displayName = ref('')
+    const displayNumber = ref('')
 
     /* Computed */
-    /**
-     * Caller number extracted from SIP URI
-     */
-    const callerNumber = computed(() => {
-        const cNumber = unref(call)?._remote_identity?._uri._user || ''
+    const call = computed<ICall | undefined>(() => {
+        const callDataUnref = unref(callData)
 
-        return getCallerNumber(cNumber, displayCallerInfoIdMask.value)
-    })
-    /**
-     * Caller name as provided in the SIP From header
-     */
-    const callerName = computed(() => {
-        const cNumber = unref(call)?._remote_identity?._uri._user
-        const cName = unref(call)?._remote_identity?._display_name || ''
-
-        if (cName === cNumber) {
-            return callerNumber.value
-        }
-
-        return cName
-    })
-    /**
-     * Default display name. Either caller name, or caller number, or "Unknown"
-     */
-    const defaultDisplayName = computed(() => {
-        return callerName.value || callerNumber.value || getTranslation('audio.unknown')
-    })
-    /**
-     * Final display name to show. Either resolved name, or default display name
-     */
-    const displayName = computed(() => {
-        return resolvedDisplayInfo.value?.name || defaultDisplayName.value
-    })
-    /**
-     * Final display number to show. Either resolved number, or caller number
-     */
-    const displayNumber = computed(() => {
-        return resolvedDisplayInfo.value?.number || callerNumber.value
+        return !callDataUnref
+            ? undefined
+            : typeof callDataUnref === 'string'
+                ? allActiveCalls.value.find(c => c._id === callData)
+                : callDataUnref
     })
 
     /**
      * Watch for call changes and resolve caller info
      */
     watch(
-        () => call,
+        call,
         async (newCall) => {
-            const newCallNotRef = unref(newCall)
-
-            if (!newCallNotRef) {
-                resolvedDisplayInfo.value = {
-                    name: '',
-                    number: ''
-                }
+            if (!newCall) {
                 return
             }
 
-            isResolving.value = true
+            const {
+                displayNumber: resolvedDisplayNumber,
+                displayName: resolvedDisplayName
+            } = await getCallDisplayInfo(newCall)
 
-            try {
-                const callerInfoResolver = getResolver('callerInfo')
-
-                if (callerInfoResolver) {
-                    try {
-                        resolvedDisplayInfo.value = await callerInfoResolver(
-                            newCallNotRef,
-                            {
-                                userPhone: callerNumber.value,
-                                userName: callerName.value
-                            }
-                        )
-                    } catch (error) {
-                        console.warn('[CallerInfo] Failed to resolve caller info:', error)
-                    }
-                }
-            } catch (error) {
-                resolvedDisplayInfo.value = {
-                    name: '',
-                    number: ''
-                }
-            } finally {
-                isResolving.value = false
-            }
+            displayName.value = resolvedDisplayName
+            displayNumber.value = resolvedDisplayNumber
         },
         {
             immediate: true
