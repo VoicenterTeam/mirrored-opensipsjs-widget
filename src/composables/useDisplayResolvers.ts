@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import type { IDisplayResolvers } from '@/types/public-api'
+import { IDisplayResolvers } from '@/types/public-api'
 
 // Generic display resolvers storage
 const displayResolvers = ref<Partial<IDisplayResolvers>>({})
@@ -13,13 +13,10 @@ export function useDisplayResolvers () {
         type: K,
         resolver: IDisplayResolvers[K] | null
     ): void {
-        console.log('[DisplayResolvers] Setting resolver for type:', type, 'resolver:', !!resolver)
         if (resolver === null) {
             delete displayResolvers.value[type]
-            console.log('[DisplayResolvers] Removed resolver for type:', type)
         } else {
             displayResolvers.value[type] = resolver
-            console.log('[DisplayResolvers] Set resolver for type:', type, 'current resolvers:', Object.keys(displayResolvers.value))
         }
     }
 
@@ -31,9 +28,7 @@ export function useDisplayResolvers () {
     }
 
     function getResolver<K extends keyof IDisplayResolvers> (type: K): IDisplayResolvers[K] | null {
-        const resolver = displayResolvers.value[type] || null
-        console.log('[DisplayResolvers] Getting resolver for type:', type, 'found:', !!resolver, 'available resolvers:', Object.keys(displayResolvers.value))
-        return resolver
+        return displayResolvers.value[type] || null
     }
 
     function hasResolver (type: keyof IDisplayResolvers): boolean {

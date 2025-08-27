@@ -82,11 +82,11 @@ export async function getCallDisplayInfo (call: ICall): Promise<{ displayName: s
 
     try {
         resolved = await callerInfoResolver(
-            call,
             {
                 userName: unmaskedUserName,
                 userPhone: unmaskedPhoneNumber
-            }
+            },
+            call,
         )
     } catch (e) {
         resolved = null

@@ -355,7 +355,9 @@
                 logEvent(`❌ Call failed: ${session.id}`, 'error')
             })
 
-            widgetAPI.display.setResolver('callerInfo', (call, callUser) => {
+            widgetAPI.display.setResolver('callerInfo', async (callUser) => {
+                await new Promise(res => setTimeout(res, 5000))
+
                 const contacts = {
                     '46': {
                         name: 'Alice (Support)',

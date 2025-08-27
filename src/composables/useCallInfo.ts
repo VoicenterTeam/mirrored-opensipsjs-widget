@@ -1,8 +1,9 @@
 import type { MaybeRef } from 'vue'
 import { computed, ref, unref, watch } from 'vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
-import { getCallDisplayInfo } from '@/helpers/callerHelper'
+import { getCallDisplayInfo, getCallerNumber, getCallerName } from '@/helpers/callerHelper'
 import { allActiveCalls } from '@/composables/opensipsjs.ts'
+import { displayCallerInfoIdMask } from '@/composables/useWidgetConfig.ts'
 
 export default function useCallInfo (callData: MaybeRef<ICall | string | null | undefined>) {
     /* Data */
@@ -29,6 +30,9 @@ export default function useCallInfo (callData: MaybeRef<ICall | string | null | 
             if (!newCall) {
                 return
             }
+
+            displayName.value = getCallerName(newCall, displayCallerInfoIdMask.value)
+            displayNumber.value = getCallerNumber(newCall, displayCallerInfoIdMask.value)
 
             const {
                 displayNumber: resolvedDisplayNumber,
