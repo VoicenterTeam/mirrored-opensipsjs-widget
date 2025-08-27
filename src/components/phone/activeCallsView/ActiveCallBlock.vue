@@ -25,6 +25,7 @@
         </div>
     </div>
 </template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 //import AudioQualityIndicator from '@/ui/phoneDialer/components/webRtcPhone/dialPad/mainBlock/AudioQualityIndicator.vue'
@@ -49,6 +50,7 @@ const callDuration = computed(() => {
     return user ? user.formatted  : ''
 })
 </script>
+
 <style scoped lang="scss">
 .active-call-block-wrapper {
   .calling-status {

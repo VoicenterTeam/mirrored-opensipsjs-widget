@@ -20,11 +20,8 @@
 </template>
 <script lang="ts" setup>
 import ActiveCallRow from './ActiveCallRow.vue'
-import { useVsipInject } from '@/composables/phone/useVsipProvideInject'
-import { callTime } from '@/composables/opensipsjs'
+import { callTime, callsInActiveRoom } from '@/composables/opensipsjs'
 import { getTranslation } from '@/plugins/translator'
-
-const { callsInActiveRoom, callersData } = useVsipInject()
 
 interface Props {
     maxHeight: number,

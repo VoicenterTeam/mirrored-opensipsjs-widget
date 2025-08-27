@@ -51,7 +51,7 @@ const emit = defineEmits<{
 const inputValue = useVModel(props, 'modelValue', emit) as WritableComputedRef<string>
 
 const wrapperClasses = computed(() => {
-    return `flex w-full bg-${props.bgColor} border border-border-lines rounded p-0.5`
+    return 'flex w-full items-center border border-border-lines rounded p-0.5'
 })
 
 const inputClasses = computed(() => {

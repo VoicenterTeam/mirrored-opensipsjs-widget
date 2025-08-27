@@ -41,12 +41,12 @@ onMounted(() => {
     checkNotificationPermission()
 })
 
-function checkNotificationPermission() {
+function checkNotificationPermission () {
     if (!('Notification' in window)) {
         hasNotificationPermission.value = false
         return
     }
-    
+
     hasNotificationPermission.value = Notification.permission === 'granted'
 }
 
@@ -70,41 +70,41 @@ const shouldShowInactiveWrapper = computed(() => {
     return isOpenSIPSReady.value && !isActiveTab.value && shouldShow.value
 })
 
-function getButtonColor() {
+function getButtonColor () {
     if (canActivate.value) return 'primary'
     if (hasNotificationPermission.value) return 'primary'
     return 'secondary'
 }
 
-function getButtonDisabled() {
+function getButtonDisabled () {
     if (canActivate.value) return false
     if (hasNotificationPermission.value) return false
     return true
 }
 
-function getButtonText() {
+function getButtonText () {
     if (canActivate.value) {
         return getTranslation('tab.activate')
     }
-    
+
     if (hasNotificationPermission.value) {
         return getTranslation('tab.notify.other.tab')
     }
-    
+
     return getTranslation('tab.cannot.activate')
 }
 
-function handleButtonClick() {
+function handleButtonClick () {
     if (canActivate.value) {
         activateTab()
         return
     }
-    
+
     if (hasNotificationPermission.value) {
         focusTabWithCalls()
         return
     }
-    
+
     // If no permission, button should be disabled anyway
 }
 </script>

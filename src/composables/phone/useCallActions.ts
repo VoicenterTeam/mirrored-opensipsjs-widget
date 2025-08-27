@@ -1,11 +1,10 @@
 import { computed, ref } from 'vue'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
-import { useOpenSIPSJS } from '@/composables/opensipsjs'
+import { useOpenSIPSJS, callsInActiveRoom, roomsWithoutActive } from '@/composables/opensipsjs'
 import { KeyPadTriggerObjectType, CALL_ACTIONS_NAMES } from '@/constants/phone.ts'
 import { ActionsPopupInitiator } from '@/types/phone'
 import { ActionsTriggerObjectType } from '@/constants/phone.ts'
 import { ActionsObjectType, CallActionName } from '@/types/phone'
-import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
 import { validTarget } from '@/helpers/general.ts'
 import { getTranslation } from '@/plugins/translator'
 
@@ -14,9 +13,7 @@ const callToMove = ref<string | undefined>(undefined)
 const callToTransfer = ref<string | undefined>(undefined)
 
 export default function useCallActions () {
-
     /* Data */
-    const { callsInActiveRoom, roomsWithoutActive } = useVsipInject()
     const { phoneNumber, onPhoneNumberChange, keyPadTrigger, onKeyPadToggle } = usePhoneState()
     const { startCall, transferCall } = useOpenSIPSJS()
 

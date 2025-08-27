@@ -356,11 +356,6 @@
             })
 
             widgetAPI.display.setResolver('callerInfo', (call, callUser) => {
-                console.log('call object received:', call, callUser)
-
-                // Extract phone number from call
-                const defaultData = callUser?.userName || callUser?.userPhone || 'Unknown'
-
                 const contacts = {
                     '46': {
                         name: 'Alice (Support)',
@@ -374,11 +369,6 @@
 
                 if (callUser.userPhone && contacts[callUser.userPhone]) {
                     return contacts[callUser.userPhone]
-                }
-
-                return {
-                    name: defaultData,
-                    number: defaultData
                 }
             })
 

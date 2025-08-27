@@ -50,20 +50,18 @@
 
         <div v-if="isRoomListView">
             <div
-                v-for="(room, index) in activeRooms"
+                v-for="(room) in allRooms"
                 :key="room.roomId"
-                :class="{'list-item': activeRooms.length > 1}"
+                :class="{'list-item': allRooms.length > 1}"
             >
                 <SwitchRoomListItem
                     :room-id="room.roomId"
-                    :is-active="room.isActive"
-                    :identifier="room.identifier"
-                    :oldest-call-id="room.oldestCallId"
                     @switch-room="onSetActiveRoom(room.roomId)"
                     @exit-room="onExitRoom"
                 />
             </div>
         </div>
+
         <div v-else>
             <div
                 v-for="(call, index) in callsInActiveRoom"
@@ -76,8 +74,8 @@
                     :is-single-room="allRooms.length === 1"
                     :is-single-call="callsInActiveRoom.length === 1"
                     :is-first-caller="index === 0"
-                    @transfer-click="onTransferClick"
-                    @move-click="onMoveClick"
+                    @transfer-click="onTransferClick(call)"
+                    @move-click="onMoveClick(call)"
                     @terminate-call="onCallTerminate"
                     @toggle-keypad="onToggleAddCallerKeypad"
                 />
@@ -92,20 +90,22 @@ import { ref, computed } from 'vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
 import CallView from '@/components/CallView.vue'
 import { useOpenSIPSJS, allRooms, allActiveCalls, currentActiveRoom } from '@/composables/opensipsjs'
-import useCallInfo from '@/composables/useCallInfo'
 import AddCallerButton from '@/components/AddCallerButton.vue'
 import RoomActionButton from '@/components/base/RoomActionButton.vue'
 import SwitchRoomListItem from '@/components/SwitchRoomListItem.vue'
 import { getTranslation } from '@/plugins/translator'
 
-const { terminateCall, setActiveRoom } = useOpenSIPSJS()
+const { setActiveRoom } = useOpenSIPSJS()
 
-withDefaults(
-    defineProps<{
-        calls: UnwrapRef<Array<ICall>>
-    }>(),
-    {}
-)
+defineProps<{
+    calls: UnwrapRef<Array<ICall>>
+}>()
+
+const emit = defineEmits<{
+    (e: 'transfer-click', call: ICall): void
+    (e: 'move-click', call: ICall): void
+    (e: 'toggle-keypad'): void
+}>()
 
 const isRoomListView = ref(false)
 
@@ -122,44 +122,6 @@ const showCallInfoBlock = computed(() => {
 const showRoomInfoBlock = computed(() => {
     return allRooms.value.length > 0 && isRoomListView.value
 })
-
-const activeRooms = computed(() => {
-    return allRooms.value.map((room) => {
-        const callsInRoom = allActiveCalls.value.filter((call) => {
-            return call.roomId === room.roomId
-        })
-
-        let singleParticipantName = ''
-
-        if (callsInRoom.length === 1) {
-            const { displayNumber } = useCallInfo(callsInRoom[0])
-            singleParticipantName = displayNumber.value
-        }
-
-        const oldestCall = callsInRoom.sort((call_1, call_2) => {
-            const call1StartTime = new Date(call_1.start_time)
-            const call2StartTime = new Date(call_2.start_time)
-
-            return call1StartTime.getTime() - call2StartTime.getTime()
-        })
-
-        return {
-            roomId: room.roomId,
-            isActive: room.roomId === currentActiveRoom.value,
-            identifier: callsInRoom.length > 1 ?
-                `${callsInRoom.length} ${getTranslation('audio.room.view.participants')}` :
-                singleParticipantName,
-            oldestCallId: oldestCall[0]._id
-        }
-    })
-})
-
-
-const emit = defineEmits<{
-    (e: 'transfer-click', callId: string): void
-    (e: 'move-click', callId: string): void
-    (e: 'toggle-keypad'): void
-}>()
 
 function onToggleAddCallerKeypad () {
     emit('toggle-keypad')
@@ -178,12 +140,12 @@ function onSwitchRoomButtonClick () {
     isRoomListView.value = !isRoomListView.value
 }
 
-const onTransferClick = (callId: string) => {
-    emit('transfer-click', callId)
+const onTransferClick = (call: ICall) => {
+    emit('transfer-click', call)
 }
 
-const onMoveClick = (callId: string) => {
-    emit('move-click', callId)
+const onMoveClick = (call: ICall) => {
+    emit('move-click', call)
 }
 
 function onCallTerminate () {
@@ -205,7 +167,6 @@ watch(allActiveCalls, (data) => {
 defineExpose({
     switchRoomListView
 })
-
 </script>
 
 <style scoped>

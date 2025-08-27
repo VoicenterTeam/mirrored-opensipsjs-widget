@@ -3,7 +3,7 @@
         <PopupHeader :action="closeTransferPopup">
             <div class="truncate">
                 <div class="truncate title font-bold text-xl mb-1.5">
-                    {{ caller }}
+                    {{ displayName }}
                 </div>
                 <div class="subheader font-bold text-xl">
                     {{ getTranslation('audio.transfer.call') }}
@@ -28,20 +28,19 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { computed,  onUnmounted, ref } from 'vue'
+import { onUnmounted, ref } from 'vue'
 import PopupHeader from '@/components/phone/common/PopupHeader.vue'
-import { useVsipInject } from '@/composables/phone/useVsipProvideInject'
 import TransferButton from '@/components/phone/activeCallsView/TransferButton.vue'
 import useCallActions from '@/composables/phone/useCallActions.ts'
 import { getTranslation } from '@/plugins/translator'
-
+import useCallInfo from '@/composables/useCallInfo.ts'
 
 const {
     callToTransfer,
     onCallToTransferChange,
     onCallTransfer,
 } = useCallActions()
-const { callersData  } = useVsipInject()
+const { displayName } = useCallInfo(callToTransfer)
 
 /* Data */
 const searchQuery = ref('')
@@ -49,7 +48,7 @@ const searchQuery = ref('')
 /* Methods */
 
 const handleTransfer = () => {
-    if(!searchQuery.value) {
+    if (!searchQuery.value) {
         return
     }
 
@@ -66,18 +65,13 @@ const onInput = (value: string| number ) => {
     searchQuery.value = value.trim().replace(/[^0-9]/g, '')
 }
 
-const caller = computed(() => {
-    const id = callToTransfer.value
-    const user = id ? callersData.value[id] : null
-    return user?.userName || user?.userPhone || ''
-})
-
 /* onUnmounted */
 onUnmounted(() => {
     searchQuery.value = ''
     onCallToTransferChange(undefined)
 })
 </script>
+
 <style lang="scss" scoped>
 .transfer-popup-wrapper {
   bottom: 0;

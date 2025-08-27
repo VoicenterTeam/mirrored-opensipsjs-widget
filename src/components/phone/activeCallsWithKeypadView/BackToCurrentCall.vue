@@ -1,37 +1,34 @@
 <template>
     <div class="back-current-call-button flex items-center justify-between py-1">
         <BackButton @click="returnToActiveCall" />
+
         <div class="flex items-center truncate">
             <!--            <AudioQualityIndicator-->
             <!--                :call-id="firstCallInActiveRoomId"-->
             <!--            />-->
             <div class="duration mr-1">
-                {{ activeRoomDuration }}
+                {{ roomDuration }}
             </div>
             <div class="caller text-xs truncate">
-                {{ activeRoomTitle }}
+                {{ roomTitle }}
             </div>
         </div>
     </div>
 </template>
+
 <script lang="ts" setup>
-import { computed } from 'vue'
 // import AudioQualityIndicator from '@/ui/phoneDialer/components/webRtcPhone/dialPad/mainBlock/AudioQualityIndicator.vue'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
-import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
 import BackButton from '@/components/phone/activeCallsWithKeypadView/BackButton.vue'
 import { useRoomData } from '@/composables/phone/useRoomData.ts'
 
-const { callsInActiveRoom   } = useVsipInject()
-const { onKeyPadToggle } = usePhoneState()
-const { getRoomTitle, getDuration } = useRoomData()
+/* Props */
+const props = defineProps<{
+    roomId: number
+}>()
 
-const activeRoomTitle = computed(() => {
-    return getRoomTitle(callsInActiveRoom.value)
-})
-const activeRoomDuration = computed(() => {
-    return getDuration(callsInActiveRoom.value)
-})
+const { onKeyPadToggle } = usePhoneState()
+const { roomTitle, roomDuration } = useRoomData(props.roomId)
 
 // const firstCallInActiveRoomId = computed(() => {
 //     return callsInActiveRoom.value[0]?._id
@@ -41,10 +38,8 @@ const activeRoomDuration = computed(() => {
 const returnToActiveCall = () => {
     onKeyPadToggle(undefined)
 }
-
-
-
 </script>
+
 <style lang="scss" scoped>
 .back-current-call-button {
   .duration {

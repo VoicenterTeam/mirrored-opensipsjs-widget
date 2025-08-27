@@ -57,33 +57,24 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { getTranslation } from '@/plugins/translator'
 import ActionIconButton from '@/components/base/ActionIconButton.vue'
 import { displayCallerInfoId, displayCallerInfoName } from '@/composables/useWidgetConfig.ts'
 import useCallInfo from '@/composables/useCallInfo.ts'
 import InputOutgoingCall from '@/components/InputOutgoingCall.vue'
-import { allActiveCalls } from '@/composables/opensipsjs.ts'
+import { ICall } from 'opensips-js-vue'
 
-const props = withDefaults(
-    defineProps<{
-        callId: string
-    }>(),
-    {}
-)
+const props = defineProps<{
+    call: ICall
+}>()
 
 const emit = defineEmits<{
-    (e: 'transfer', callId: string, target: string): void
+    (e: 'transfer', target: string): void
     (e: 'cancel'): void
 }>()
 
-const transferringCall = computed(() => {
-    return allActiveCalls.value.find((call) => {
-        return call._id === props.callId
-    })
-})
-
-const { displayNumber, displayName } = useCallInfo(transferringCall.value)
+const { displayNumber, displayName } = useCallInfo(props.call)
 
 const target = ref<string>('')
 
@@ -91,7 +82,8 @@ const doTransfer = () => {
     if (!target.value) {
         return
     }
-    emit('transfer', props.callId, target.value)
+
+    emit('transfer', target.value)
 }
 
 function clearTargetInput () {

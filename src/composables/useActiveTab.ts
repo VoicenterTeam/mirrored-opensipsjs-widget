@@ -8,13 +8,10 @@ import {
     tryRegisterOpenSIPS,
     useOpenSIPSJS
 } from '@/composables/opensipsjs'
-import { useDisplayResolvers } from '@/composables/useDisplayResolvers'
 import type { AllActiveCallsType } from '@/types/opensips'
 import { ICall } from 'opensips-js-vue'
 import { TabMessageType } from '@/types/tab-management'
-import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
-import { getTranslation } from '@/plugins/translator.ts'
-import { CallerInfoResolved } from '@/types/public-api'
+import { getCallDisplayInfo } from '@/helpers/callerHelper.ts'
 
 /**
  * Advanced Multi-Tab Leadership System for VoIP Widget
@@ -888,43 +885,16 @@ class TabManager {
         }
     }
 
-    private async getCallDisplayName (call: ICall): Promise<string> {
-        const { getResolver } = useDisplayResolvers()
-        const { callersData } = useVsipInject()
-
-        const callData = callersData.value[call._id]
-
-        const phoneNumber = callData.userPhone || ''
-        const callerName = callData.userName || ''
-
-        const callerInfoResolver = getResolver('callerInfo')
-
-        if (!callerInfoResolver) {
-            return callerName || phoneNumber || getTranslation('audio.unknown')
-        }
-
-        let resolved: CallerInfoResolved | null
-
-        try {
-            resolved = await callerInfoResolver(call, callData)
-        } catch (e) {
-            console.warn('[TabManager] Caller info resolver failed:', e)
-            resolved = null
-        }
-
-        return resolved?.name || callerName || phoneNumber || getTranslation('audio.unknown')
-    }
-
     private async showIncomingCallNotification (call: ICall, callId: string): Promise<void> {
         if (!('Notification' in window) || Notification.permission !== 'granted') {
             return
         }
 
         try {
-            const caller = await this.getCallDisplayName(call)
+            const { displayName, displayNumber } = await getCallDisplayInfo(call)
 
             const notification = new Notification('Incoming Call', {
-                body: `Call from ${caller}`,
+                body: `Call from ${displayName} (${displayNumber})`,
                 tag: `incoming-call-${callId}`,
                 requireInteraction: true
             })
