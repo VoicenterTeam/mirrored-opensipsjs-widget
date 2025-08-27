@@ -5,7 +5,7 @@
         >
             <div class="truncate">
                 <div class="header font-bold text-base truncate">
-                    {{ caller }}
+                    {{ displayName }}
                 </div>
                 <div class="move-subheader font-semibold">
                     {{ getTranslation('audio.choose.active.call.to.move') }}
@@ -20,40 +20,28 @@
                 v-for="room in roomsWithoutActive"
                 :key="room.roomId"
                 :room-id="room.roomId"
-                :call-id="getFirstCallIdInRoom(room.roomId)"
-                :caller="getCaller(room.roomId)"
-                :duration="getRoomDuration(room.roomId)"
             />
         </div>
     </div>
 </template>
+
 <script setup lang="ts">
-import { computed } from 'vue'
 import PopupHeader from '@/components/phone/common/PopupHeader.vue'
-import { useVsipInject } from '@/composables/phone/useVsipProvideInject'
-import { useRoomData } from '@/composables/phone/useRoomData.ts'
 import useCallActions from '@/composables/phone/useCallActions.ts'
+import { roomsWithoutActive } from '@/composables/opensipsjs.ts'
 import CallMovePopupRow from '@/components/phone/activeCallsView/CallMovePopupRow.vue'
 import { getTranslation } from '@/plugins/translator'
+import useCallInfo from '@/composables/useCallInfo.ts'
 // import CallMovePopupRow from '@/ui/phoneDialer/components/webRtcPhone/dialPad/Actions/Move/CallMovePopupRow.vue'
 
 /* Data */
 const { onCallToMoveChange, callToMove } = useCallActions()
-const { roomsWithoutActive, callersData } = useVsipInject()
-const { getCaller, getRoomDuration, getFirstCallIdInRoom } = useRoomData()
+const { displayName } = useCallInfo(callToMove)
 
 /* Methods */
 const closeMoveCallPopup = () => {
     onCallToMoveChange(undefined)
 }
-
-/* Computed */
-const caller = computed(() => {
-    const id = callToMove.value
-    const user = id ? callersData.value[id] : null
-    return user?.userName || user?.userPhone || ''
-})
-
 </script>
 <style lang="scss" scoped>
 .call-move-popup-wrapper {

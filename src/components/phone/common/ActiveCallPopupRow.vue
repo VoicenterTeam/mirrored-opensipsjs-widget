@@ -2,7 +2,7 @@
     <div class="active-call-popup-row-wrapper p-2 flex justify-between items-center gap-x-2">
         <div class="call-data truncate">
             <div class="caller text-sm font-semibold truncate">
-                {{ caller }}
+                {{ roomTitle }}
             </div>
             <div class="flex items-center">
                 <!--                <AudioQualityIndicator-->
@@ -10,7 +10,7 @@
                 <!--                    :call-id="callId"-->
                 <!--                />-->
                 <div class="duration text-xs font-medium">
-                    {{ duration }}
+                    {{ roomDuration }}
                 </div>
             </div>
         </div>
@@ -28,33 +28,29 @@
         </div>
     </div>
 </template>
+
 <script lang="ts" setup>
 // import AudioQualityIndicator from '@/ui/phoneDialer/components/webRtcPhone/dialPad/mainBlock/AudioQualityIndicator.vue'
 import HangupButton from '@/components/phone/common/HangupButton.vue'
-import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
 import { useOpenSIPSJS } from '@/composables/opensipsjs.ts'
-/* Data */
-const { onActiveCallsPopupToggle, onKeyPadToggle } = usePhoneState()
-const { terminateCall, setActiveRoom } = useOpenSIPSJS()
+import { useRoomData } from '@/composables/phone/useRoomData.ts'
 
-const { getActiveCallsInRoom } = useVsipInject()
 /* Props */
 type Props = {
-    caller: string,
-    duration: string,
-    callId: string,
-    roomId?: number,
-    currentRoom?: boolean
+    roomId: number,
 }
 const props = defineProps<Props>()
 
+/* Composable */
+const { onActiveCallsPopupToggle, onKeyPadToggle } = usePhoneState()
+const { terminateCall, setActiveRoom, getActiveCallsInRoom } = useOpenSIPSJS()
+const { roomTitle, roomDuration } = useRoomData(props.roomId)
+
 /* Methods */
 const onCallEnd = () => {
-    if(!props.roomId) {
-        return
-    }
     const calls = getActiveCallsInRoom(props.roomId)
+
     calls.forEach(call => terminateCall(call._id))
 }
 

@@ -1,6 +1,9 @@
 <template>
-    <div :className="buttonWrapperClasses" @click="makeRoomActive">
-        <span className="text-xs" >
+    <div
+        :class="buttonWrapperClasses"
+        @click="makeRoomActive"
+    >
+        <span class="text-xs">
             {{ props.roomId }}
         </span>
     </div>

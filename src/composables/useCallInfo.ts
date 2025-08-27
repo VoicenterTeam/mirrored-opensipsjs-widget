@@ -1,29 +1,54 @@
-import { unref, computed } from 'vue'
 import type { MaybeRef } from 'vue'
+import { computed, ref, unref, watch } from 'vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
-import { getCallerNumber } from '@/helpers/callerHelper'
-import { displayCallerInfoIdMask } from '@/composables/useWidgetConfig'
+import { getCallDisplayInfo, getCallerNumber, getCallerName } from '@/helpers/callerHelper'
+import { allActiveCalls } from '@/composables/opensipsjs.ts'
+import { displayCallerInfoIdMask } from '@/composables/useWidgetConfig.ts'
 
-export default function useCallInfo (call: MaybeRef<ICall | undefined>) {
-    const callerNumber = computed(() => {
-        const cNumber = unref(call)?._remote_identity?._uri._user || '' as string
+export default function useCallInfo (callData: MaybeRef<ICall | string | null | undefined>) {
+    /* Data */
+    const displayName = ref('')
+    const displayNumber = ref('')
 
-        return getCallerNumber(cNumber, displayCallerInfoIdMask.value)
+    /* Computed */
+    const call = computed<ICall | undefined>(() => {
+        const callDataUnref = unref(callData)
+
+        return !callDataUnref
+            ? undefined
+            : typeof callDataUnref === 'string'
+                ? allActiveCalls.value.find(c => c._id === callData)
+                : callDataUnref
     })
 
-    const callerName = computed(() => {
-        const cNumber = unref(call)?._remote_identity?._uri._user as string
-        const cName = unref(call)?._remote_identity?._display_name || '' as string
+    /**
+     * Watch for call changes and resolve caller info
+     */
+    watch(
+        call,
+        async (newCall) => {
+            if (!newCall) {
+                return
+            }
 
-        if (cName === cNumber) {
-            return callerNumber.value
+            displayName.value = getCallerName(newCall, displayCallerInfoIdMask.value)
+            displayNumber.value = getCallerNumber(newCall, displayCallerInfoIdMask.value)
+
+            const {
+                displayNumber: resolvedDisplayNumber,
+                displayName: resolvedDisplayName
+            } = await getCallDisplayInfo(newCall)
+
+            displayName.value = resolvedDisplayName
+            displayNumber.value = resolvedDisplayNumber
+        },
+        {
+            immediate: true
         }
-
-        return cName
-    })
+    )
 
     return {
-        callerNumber,
-        callerName,
+        displayName,
+        displayNumber,
     }
 }

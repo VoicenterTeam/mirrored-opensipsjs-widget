@@ -1,39 +1,83 @@
 <template>
-    <div className="flex items-end bg-primary-bg">
+    <div>
         <div
-            v-if="allRooms.length > 1 || !currentActiveRoom"
-            className="flex flex-col-reverse"
+            v-if="showCallInfoBlock"
+            class="flex justify-between p-1 pl-2"
+            style="box-shadow: 0 1px 5px -3px gray"
         >
-            <div
-                v-for="(room, index) in allRooms"
-                :key="room.roomId"
-            >
-                <div>
-                    <RoomButton
-                        :room-id="room.roomId"
-                        :is-active="room.roomId === currentActiveRoom"
-                        :calls-in-active-room-length="callsInActiveRoom.length"
-                        :rooms-length="allRooms.length"
-                        :index="index"
-                        :is-multi-call-mode="allRooms.length > 1 || callsInActiveRoom.length > 1"
+            <div class="font-semibold">
+                {{ callsInActiveRoom.length }} {{ getTranslation('audio.room.view.participants') }}
+            </div>
+
+            <div class="flex">
+                <div class="ml-1">
+                    <AddCallerButton @toggle-keypad="onToggleAddCallerKeypad" />
+                </div>
+
+                <div
+                    v-if="allRooms.length > 1"
+                    class="ml-1"
+                >
+                    <RoomActionButton
+                        icon="vc-lc-arrow-right-left"
+                        :label="getTranslation('audio.room.switch').toUpperCase()"
+                        @click="onSwitchRoomButtonClick"
                     />
                 </div>
             </div>
         </div>
 
-        <div className="flex w-full flex-col">
+        <div
+            v-if="showRoomInfoBlock"
+            class="flex justify-between p-1 pl-2"
+            style="box-shadow: 0 1px 5px -2px gray;"
+        >
+            <div class="font-semibold">
+                {{ allRooms.length }} {{ getTranslation('audio.room.view.rooms') }}
+            </div>
+
+            <div class="flex">
+                <div class="ml-1">
+                    <RoomActionButton
+                        icon="vc-lc-undo-2"
+                        :label="getTranslation('audio.back')"
+                        :disabled="!currentActiveRoom"
+                        @click="onSwitchRoomButtonClick"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <div v-if="isRoomListView">
+            <div
+                v-for="(room) in allRooms"
+                :key="room.roomId"
+                :class="{'list-item': allRooms.length > 1}"
+            >
+                <SwitchRoomListItem
+                    :room-id="room.roomId"
+                    @switch-room="onSetActiveRoom(room.roomId)"
+                    @exit-room="onExitRoom"
+                />
+            </div>
+        </div>
+
+        <div v-else>
             <div
                 v-for="(call, index) in callsInActiveRoom"
                 :key="call._id"
-                className="flex w-full"
+                class="flex w-full"
+                :class="{'list-item': callsInActiveRoom.length > 1}"
             >
-                <ActiveCallView
+                <CallView
                     :call="call"
                     :is-single-room="allRooms.length === 1"
                     :is-single-call="callsInActiveRoom.length === 1"
                     :is-first-caller="index === 0"
-                    @transfer-click="onTransferClick"
-                    @move-click="onMoveClick"
+                    @transfer-click="onTransferClick(call)"
+                    @move-click="onMoveClick(call)"
+                    @terminate-call="onCallTerminate"
+                    @toggle-keypad="onToggleAddCallerKeypad"
                 />
             </div>
         </div>
@@ -41,41 +85,92 @@
 </template>
 
 <script lang="ts" setup>
-import type { UnwrapRef } from 'vue'
-import { computed } from 'vue'
+import { UnwrapRef, watch } from 'vue'
+import { ref, computed } from 'vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
-import ActiveCallView from '@/components/views/active/ActiveCallView.vue'
-import { allRooms, currentActiveRoom } from '@/composables/opensipsjs'
-import RoomButton from '@/components/views/active/RoomButton.vue'
+import CallView from '@/components/CallView.vue'
+import { useOpenSIPSJS, allRooms, allActiveCalls, currentActiveRoom } from '@/composables/opensipsjs'
+import AddCallerButton from '@/components/AddCallerButton.vue'
+import RoomActionButton from '@/components/base/RoomActionButton.vue'
+import SwitchRoomListItem from '@/components/SwitchRoomListItem.vue'
+import { getTranslation } from '@/plugins/translator'
 
-const props = withDefaults(
-    defineProps<{
-        calls: UnwrapRef<Array<ICall>>
-    }>(),
-    {}
-)
+const { setActiveRoom } = useOpenSIPSJS()
 
-const callsInActiveRoom = computed(() => {
-    const cls = props.calls.filter(call => {
-        return call.roomId === currentActiveRoom.value
-    })
-    return cls
-})
-
-const emit = defineEmits<{
-    (e: 'transfer-click', callId: string): void
-    (e: 'move-click', callId: string): void
+defineProps<{
+    calls: UnwrapRef<Array<ICall>>
 }>()
 
-const onTransferClick = (callId: string) => {
-    emit('transfer-click', callId)
+const emit = defineEmits<{
+    (e: 'transfer-click', call: ICall): void
+    (e: 'move-click', call: ICall): void
+    (e: 'toggle-keypad'): void
+}>()
+
+const isRoomListView = ref(false)
+
+const callsInActiveRoom = computed(() => {
+    return allActiveCalls.value.filter((call) => {
+        return call.roomId === currentActiveRoom.value
+    })
+})
+
+const showCallInfoBlock = computed(() => {
+    return allRooms.value.length > 1 && !isRoomListView.value
+})
+
+const showRoomInfoBlock = computed(() => {
+    return allRooms.value.length > 0 && isRoomListView.value
+})
+
+function onToggleAddCallerKeypad () {
+    emit('toggle-keypad')
 }
 
-const onMoveClick = (callId: string) => {
-    emit('move-click', callId)
+function onSetActiveRoom (roomId: number) {
+    setActiveRoom(roomId)
+    isRoomListView.value = false
 }
+
+function onExitRoom () {
+    setActiveRoom(undefined)
+}
+
+function onSwitchRoomButtonClick () {
+    isRoomListView.value = !isRoomListView.value
+}
+
+const onTransferClick = (call: ICall) => {
+    emit('transfer-click', call)
+}
+
+const onMoveClick = (call: ICall) => {
+    emit('move-click', call)
+}
+
+function onCallTerminate () {
+    if (callsInActiveRoom.value.length === 0) {
+        isRoomListView.value = true
+    }
+}
+
+function switchRoomListView (value: boolean) {
+    isRoomListView.value = value
+}
+
+watch(allActiveCalls, (data) => {
+    if (data.length === 0) {
+        isRoomListView.value = false
+    }
+})
+
+defineExpose({
+    switchRoomListView
+})
 </script>
 
 <style scoped>
-
+.list-item:nth-child(odd) {
+  @apply bg-primary-actions-bg--focus;
+}
 </style>

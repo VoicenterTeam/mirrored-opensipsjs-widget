@@ -1,72 +1,52 @@
-import { useVsipInject } from '@/composables/phone/useVsipProvideInject.ts'
-import type { ICall } from 'opensips-js/src/types/rtc'
-import { callTime } from '@/composables/opensipsjs'
+import { computed, ref, watch } from 'vue'
+import { allActiveCalls, callTime, currentActiveRoom } from '@/composables/opensipsjs'
+import {
+    getCallsInRoom,
+    getOldestCall,
+    getRoomDuration,
+    getRoomTitle,
+    getRoomTitleCombined
+} from '@/helpers/roomHelper.ts'
 
-export const useRoomData = () => {
-
+export function useRoomData (roomId: number) {
     /* Data */
-    const { callersData, getActiveCallsInRoom } = useVsipInject()
+    const _roomTitle = ref('')
+    const _roomTitleCombined = ref('')
 
-    /* Methods */
+    /* Computed */
+    const callsInRoom = computed(() => {
+        return getCallsInRoom(roomId, allActiveCalls.value)
+    })
+    const oldestCall = computed(() => {
+        return getOldestCall(callsInRoom.value)
+    })
+    const isActive = computed(() => {
+        return currentActiveRoom.value === roomId
+    })
+    const roomDuration = computed(() => {
+        return getRoomDuration(callTime.value, callsInRoom.value)
+    })
+    const roomTitle = computed(() => _roomTitle.value)
+    const roomTitleCombined = computed(() => _roomTitleCombined.value)
 
-    const getRoomTitle = (calls:  ICall[]) => {
-        if (calls.length === 1) {
-            const caller = callersData.value[calls[0]._id]
-            return caller ? (caller.userName || caller.userPhone || '') : ''
+    /* Watch */
+    watch(
+        callsInRoom,
+        async (newCalls) => {
+            _roomTitle.value = await getRoomTitle(newCalls)
+            _roomTitleCombined.value = await getRoomTitleCombined(newCalls)
+        },
+        {
+            immediate: true
         }
-        return `${calls.length} callers`
-    }
-
-    const getFirstCallIdInRoom = (roomId: number) => {
-        const callsInRoom = getActiveCallsInRoom(roomId)
-        const firstCall = findFirstCallByTime(callsInRoom)
-        return firstCall._id
-
-    }
-
-    const findFirstCallByTime = (callsInRoom: ICall[]) => {
-        const oldestCall = callsInRoom.reduce((oldest, current) => {
-            const startTimeCurrent = new Date(current.start_time)
-            const startTimeOldest = new Date(oldest.start_time)
-
-            // Compare startTime of current call with startTime of oldest call found
-            if (startTimeCurrent < startTimeOldest) {
-                return current
-            } else {
-                return oldest
-            }
-        }, callsInRoom[0])
-        return oldestCall
-    }
-
-    const getCaller = (roomId: number) => {
-        const callsInRoom = getActiveCallsInRoom(roomId)
-        return getRoomTitle(callsInRoom)
-
-    }
-
-    const getRoomDuration = (roomId: number) => {
-        const callsInRoom = getActiveCallsInRoom(roomId)
-        return getDuration(callsInRoom)
-    }
-
-
-    const getDuration = (calls: ICall[]) => {
-        if(!calls.length) { return ''}
-
-        const firstCall = findFirstCallByTime(calls)
-
-        const firstCallId = firstCall._id
-        return firstCallId && callTime.value[firstCallId] ? callTime.value[firstCallId].formatted : 'N/A'
-    }
-
+    )
 
     return {
-        getCaller,
-        getRoomDuration,
-        getDuration,
-        findFirstCallByTime,
-        getFirstCallIdInRoom,
-        getRoomTitle
+        callsInRoom,
+        oldestCall,
+        isActive,
+        roomDuration,
+        roomTitle,
+        roomTitleCombined
     }
 }

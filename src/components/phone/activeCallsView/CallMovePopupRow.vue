@@ -2,7 +2,7 @@
     <div class="wrapper p-2 flex justify-between items-center">
         <div class="data w-4/5">
             <div class="caller text-sm font-bold truncate">
-                {{ caller }}
+                {{ roomTitle }}
             </div>
             <div class="flex items-center">
                 <!--                <AudioQualityIndicator-->
@@ -10,7 +10,7 @@
                 <!--                    :call-id="callId"-->
                 <!--                />-->
                 <div class="duration text-sm font-medium">
-                    {{ duration }}
+                    {{ roomDuration }}
                 </div>
             </div>
         </div>
@@ -22,26 +22,23 @@
         </button>
     </div>
 </template>
-<script lang="ts" setup>
 
+<script lang="ts" setup>
 import { onBeforeUnmount } from 'vue'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import useCallActions from '@/composables/phone/useCallActions.ts'
-
-
-/* Data */
-const { moveCall } = useOpenSIPSJS()
-const {  callToMove, onCallToMoveChange } = useCallActions()
-
+import { useRoomData } from '@/composables/phone/useRoomData.ts'
 
 /* Props */
 type Props = {
-    caller: string,
-    duration: string,
-    callId: string,
-    roomId?: number
+    roomId: number
 }
 const props = defineProps<Props>()
+
+/* Computed */
+const { moveCall } = useOpenSIPSJS()
+const { callToMove, onCallToMoveChange } = useCallActions()
+const { roomTitle, roomDuration } = useRoomData(props.roomId)
 
 /* Methods */
 const onCallMove = () => {

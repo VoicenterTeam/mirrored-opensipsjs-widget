@@ -1,5 +1,9 @@
 <template>
-    <input v-model="model" type="text" className="border">
+    <input
+        v-model="model"
+        type="text"
+        class="border"
+    >
 </template>
 
 <script lang="ts" setup>
