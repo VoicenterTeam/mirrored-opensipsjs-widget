@@ -66,7 +66,7 @@ const {
     setupScreenShareDrawerOptions,
 } = useOpenSIPSJS()
 
-type KonvaDrawerOptions = unknown
+type KonvaDrawerOptions = object
 
 export interface Props {
     isExtendedOptions: boolean

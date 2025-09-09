@@ -56,6 +56,10 @@ const onFileChange = (newFiles: File[]) => {
         const reader = new FileReader()
 
         reader.onload = function (event) {
+            if (!event.target) {
+                return
+            }
+          
             const base64String = event.target.result as string
 
             emit('upload', base64String)

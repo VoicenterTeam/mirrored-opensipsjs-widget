@@ -46,7 +46,7 @@ const buttonSize = computed(() => {
     return '30px'
 })
 
-function onClick (event) {
+function onClick (event: Event) {
     emit('click', event)
 }
 </script>

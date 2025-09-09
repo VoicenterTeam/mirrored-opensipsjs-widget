@@ -119,7 +119,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { VcForm, VcFormItem, VcButton, VcInput } from '@voicenter-team/voicenter-ui-plus'
 import useDeviceType from '@/composables/useDeviceType'
 import SettingsModal from '@/components/conferencing/SettingsModal.vue'
 import WhiteboardOptionsModal from '@/components/conferencing/WhiteboardOptionsModal.vue'
@@ -131,7 +130,6 @@ import { bgLogoBase64 } from '@/composables/useWidgetConfig'
 
 import {
     conferenceStarted,
-    mainSource,
     microphoneOnModel,
     videoOnModel,
     isScreenSharing,
@@ -164,8 +162,6 @@ export interface Emit {
     (e: 'hangup'): void
 }
 
-const emit = defineEmits<Emit>()
-
 /* Data */
 const settingsModalOpen = ref(false)
 const whiteboardModalOpen = ref(false)
@@ -192,13 +188,13 @@ function enableCamera () {
     }
 }
 
-const toggleMaskEffect = () => {
+/*const toggleMaskEffect = () => {
     if (isWithBokehMaskEffect.value || isWithBgImgMaskEffect.value) {
         //disableMaskEffect()
     } else {
         maskOptionsModalOpen.value = true
     }
-}
+}*/
 </script>
 
 <style scoped>

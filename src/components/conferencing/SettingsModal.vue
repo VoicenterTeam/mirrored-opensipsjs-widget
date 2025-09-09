@@ -68,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref } from 'vue'
+import { ref } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { VcForm, VcFormItem, VcButton, VcModal } from '@voicenter-team/voicenter-ui-plus'
 import useValidationRules from '@/composables/useValidationRules.ts'
@@ -109,7 +109,7 @@ const emit = defineEmits<Emit>()
 /* Data */
 const formRef = ref<typeof VcForm>()
 const modalVisibleModel = useVModel(props, 'modalVisible', emit)
-const mediaDeviceSelectorConfig: MediaDeviceInfo = {
+const mediaDeviceSelectorConfig = {
     labelKey: 'label',
     valueKey: 'deviceId'
 }
@@ -133,9 +133,9 @@ async function changeAudioOutput (element: HTMLVideoElement, deviceId: string) {
         try {
             await element.setSinkId(deviceId)
             console.log(`Success, audio output device attached: ${deviceId}`)
-        } catch (error) {
+        } catch (error: unknown) {
             let errorMessage = error
-            if (error.name === 'SecurityError') {
+            if (error?.name === 'SecurityError') {
                 errorMessage = `You need to use HTTPS for selecting audio output device: ${error}`
             }
             console.error(errorMessage)
@@ -171,10 +171,10 @@ async function submitModal () {
 
     setTimeout(() => {
         const rootDocument = document.querySelector('opensips-widget')
-        const shadowRootDocument = rootDocument.shadowRoot
-        const videoElements = shadowRootDocument.querySelectorAll('video')
+        const shadowRootDocument = rootDocument?.shadowRoot
+        const videoElements = shadowRootDocument?.querySelectorAll('video')
 
-        if (settingsModel.value.audioOutput && videoElements.length) {
+        if (settingsModel.value.audioOutput && videoElements?.length) {
             videoElements.forEach((element) => {
                 changeAudioOutput(element, settingsModel.value.audioOutput)
             })

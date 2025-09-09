@@ -157,6 +157,10 @@ export const language = computed({
 export const bgLogoBase64 = computed({
     get: () => widgetThemeSettings.value.audioConfig?.images.backgroundLogo || defaultLogo,
     set: (value: string | undefined) => {
+        if (!widgetThemeSettings.value.audioConfig) {
+            return
+        }
+
         widgetThemeSettings.value.audioConfig.images.backgroundLogo = value
     }
 })

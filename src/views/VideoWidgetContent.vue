@@ -115,10 +115,6 @@ const selectParticipant = (source) => {
     selectMainSource(source)
 }
 
-function onJoinRoom () {
-    initVideoCall('abcd', 'user1')
-}
-
 function onHangup () {
     console.log('onHangup')
 }

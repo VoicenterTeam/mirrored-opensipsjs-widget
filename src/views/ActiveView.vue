@@ -16,12 +16,7 @@
             :call="incomingUnansweredCall"
             @transfer-click="onTransferClick(incomingUnansweredCall)"
         />
-        <!--        <div v-if="outgoingUnansweredCall && !incomingUnansweredCall">
-            <OutgoingCallInProgressView
-                :number="outgoingUnansweredCall?._remote_identity?._uri?._user"
-                @hangup="onOutgoingCallHangup"
-            />
-        </div>-->
+
         <ActiveCallsView
             v-show="!transferringCall &&
                 !movingCall &&
@@ -309,15 +304,6 @@ const onCallsMerge = (roomId: number) => {
 
 const onMakeOutgoingCall = (target: string) => {
     startCall(target)
-}
-
-const onOutgoingCallHangup = () => {
-    const callId = outgoingUnansweredCall.value?._id
-    if (!callId) {
-        return
-    }
-
-    terminateCall(callId)
 }
 
 </script>

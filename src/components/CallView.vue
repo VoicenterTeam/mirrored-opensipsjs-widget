@@ -125,10 +125,6 @@ const isOutgoingUnanswered = computed(() => {
     return props.call.direction === 'outgoing' && !props.call._is_confirmed && !props.call._is_canceled
 })
 
-const isMultiCallMode = computed(() => {
-    return !props.isSingleCall || !props.isSingleRoom
-})
-
 const showAddCallerButton = computed(() => {
     return allActiveCalls.value.length === 1
 })
