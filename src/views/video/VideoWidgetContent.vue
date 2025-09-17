@@ -65,8 +65,19 @@
 </template>
 
 <script setup lang="ts">
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { ref, watch, computed, type UnwrapRef } from 'vue'
 import {
+    useOpenSIPSJS
+} from '@/composables/opensipsjs.ts'
+import MainSource from '@/components/conferencing/MainSource.vue'
+import BottomActions from '@/components/conferencing/BottomActions.vue'
+import type { ICall } from 'opensips-js/src/types/rtc'
+
+const { getVideoState, getVideoApi } = useOpenSIPSJS()
+
+const {
     conferenceStarted,
     sourcesExceptMain,
     mainSource,
@@ -74,13 +85,8 @@ import {
     isPresentationWhiteboardEnabled,
     isScreenShareWhiteboardEnabled,
     isWhiteboardEnabled,
-    useOpenSIPSJS
-} from '@/composables/opensipsjs'
-import MainSource from '@/components/conferencing/MainSource.vue'
-import BottomActions from '@/components/conferencing/BottomActions.vue'
-import type { ICall } from 'opensips-js/src/types/rtc'
-
-const { initVideoCall, selectMainSource, enableScreenShare, enablePresentationWhiteboard } = useOpenSIPSJS()
+} = getVideoState()
+const { initVideoCall, selectMainSource, enableScreenShare, enablePresentationWhiteboard } = getVideoApi()
 
 const props = withDefaults(
     defineProps<{

@@ -31,12 +31,14 @@
 import { computed, ref } from 'vue'
 import { VcPopover } from '@voicenter-team/voicenter-ui-plus'
 import Keypad from '@/components/Keypad.vue'
-import { useOpenSIPSJS, currentActiveRoom } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import RoomActionButton from '@/components/base/RoomActionButton.vue'
 import { PopoverTriggerType } from '@voicenter-team/voicenter-ui-plus/library/types/types/VcPopover.types'
 import { keypadMode } from '@/composables/useWidgetConfig'
 import { getTranslation } from '@/plugins/translator.ts'
-const { startCall } = useOpenSIPSJS()
+const { getAudioState, getAudioApi } = useOpenSIPSJS()
+const { currentActiveRoom } = getAudioState()
+const { startCall } = getAudioApi()
 
 const emit = defineEmits<{
     (e: 'press', value: string): void,
@@ -46,7 +48,9 @@ const emit = defineEmits<{
 const isPopoverOpened = ref(false)
 
 const triggersArray = computed(() => {
-    return keypadMode.value === 'popover' ? [ 'click' ] : undefined as unknown as PopoverTriggerType
+    const popoverTrigger: PopoverTriggerType = 'click'
+
+    return keypadMode.value === 'popover' ? popoverTrigger : undefined
 })
 
 const onPress = (value: string) => {

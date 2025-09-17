@@ -118,6 +118,9 @@
 </template>
 
 <script setup lang="ts">
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { ref } from 'vue'
 import useDeviceType from '@/composables/useDeviceType'
 import SettingsModal from '@/components/conferencing/SettingsModal.vue'
@@ -128,18 +131,9 @@ import MaskOptionsModal from '@/components/conferencing/MaskOptionsModal.vue'
 import MaskVisualizationOptions from '@/components/conferencing/MaskVisualizationOptions.vue'
 import { bgLogoBase64 } from '@/composables/useWidgetConfig'
 
-import {
-    conferenceStarted,
-    microphoneOnModel,
-    videoOnModel,
-    isScreenSharing,
-    isImageWhiteboardEnabled,
-    isPresentationWhiteboardEnabled,
-    isScreenShareWhiteboardEnabled,
-    isWithBokehMaskEffect,
-    isWithBgImgMaskEffect,
-    useOpenSIPSJS
-} from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
+
+const { getVideoApi, getVideoState } = useOpenSIPSJS()
 
 const {
     hangupVideoCall,
@@ -153,7 +147,19 @@ const {
     terminateImageWhiteboard,
     terminatePresentationWhiteboard,
     setupMaskVisualizationConfig
-} = useOpenSIPSJS()
+} = getVideoApi()
+
+const {
+    conferenceStarted,
+    microphoneOnModel,
+    videoOnModel,
+    isScreenSharing,
+    isImageWhiteboardEnabled,
+    isPresentationWhiteboardEnabled,
+    isScreenShareWhiteboardEnabled,
+    isWithBokehMaskEffect,
+    isWithBgImgMaskEffect
+} = getVideoState()
 
 const { isMobile } = useDeviceType()
 

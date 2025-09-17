@@ -96,8 +96,11 @@
 
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted } from 'vue'
-import { allActiveCalls } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import { useActiveTab } from '@/composables/useActiveTab'
+
+const { getAudioState } = useOpenSIPSJS()
+const { allActiveCalls } = getAudioState()
 
 const {
     isActiveTab,

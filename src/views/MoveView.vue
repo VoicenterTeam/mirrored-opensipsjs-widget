@@ -65,7 +65,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
-import { allActiveCalls, allRooms } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import {
     displayCallerInfoId,
     displayCallerInfoName
@@ -75,6 +75,10 @@ import { getTranslation } from '@/plugins/translator'
 import ActionIconButton from '@/components/base/ActionIconButton.vue'
 import { VcSelect } from '@voicenter-team/voicenter-ui-plus'
 import { getCallsInRoom, getRoomTitleCombined } from '@/helpers/roomHelper.ts'
+
+const { getAudioState } = useOpenSIPSJS()
+
+const { allActiveCalls, allRooms } = getAudioState()
 
 /* Types */
 type RoomOption = {

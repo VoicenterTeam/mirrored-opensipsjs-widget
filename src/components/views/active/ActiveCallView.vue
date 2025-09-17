@@ -97,7 +97,7 @@ import HoldIcon from '@/assets/icons/hold.svg?component'
 import OnHoldIcon from '@/assets/icons/onHold.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
-import { useOpenSIPSJS, callTimes, allRooms } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import useCallInfo from '@/composables/useCallInfo'
 import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
 import { displayCallerInfoId, displayCallerInfoName } from '@/composables/useWidgetConfig'
@@ -116,7 +116,9 @@ const props = withDefaults(
 )
 
 /* Composables */
-const { holdCall, unholdCall } = useOpenSIPSJS()
+const { getAudioApi, getAudioState } = useOpenSIPSJS()
+const { callTimes, allRooms } = getAudioState()
+const { holdCall, unholdCall } = getAudioApi()
 const { displayName, displayNumber } = useCallInfo(props.call)
 
 const emit = defineEmits<{

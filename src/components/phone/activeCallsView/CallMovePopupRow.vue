@@ -36,7 +36,8 @@ type Props = {
 const props = defineProps<Props>()
 
 /* Computed */
-const { moveCall } = useOpenSIPSJS()
+const { getAudioApi } = useOpenSIPSJS()
+const { moveCall } = getAudioApi()
 const { callToMove, onCallToMoveChange } = useCallActions()
 const { roomTitle, roomDuration } = useRoomData(props.roomId)
 

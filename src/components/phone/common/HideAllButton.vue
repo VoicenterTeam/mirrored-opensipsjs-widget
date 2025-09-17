@@ -9,11 +9,12 @@
 <script lang="ts" setup>
 import { useIncomingCalls } from '@/composables/phone/useIncomingCalls.ts'
 import { getTranslation } from '@/plugins/translator'
+import type { ICall } from 'opensips-js/src/types/rtc'
 const { hideIncomingCall, visibleCalls } = useIncomingCalls()
 
 
 const onIncomingCallsHide = () => {
-    visibleCalls.value.forEach(call => {
+    visibleCalls.value.forEach((call: ICall) => {
         hideIncomingCall(call._id)
     })
 }

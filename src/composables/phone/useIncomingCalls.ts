@@ -1,6 +1,9 @@
 import { ref, watch, computed } from 'vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
-import { activeCalls } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
+
+const { getAudioState } = useOpenSIPSJS()
+const { activeCalls } = getAudioState()
 
 /* Data */
 const hiddenIncomingCallIds = ref<Array<string>>([])
@@ -16,7 +19,7 @@ export const useIncomingCalls = () => {
     }
 
     const incomingCalls = computed(() => {
-        return Object.values(activeCalls.value).filter(call => {
+        return Object.values(activeCalls.value).filter((call) => {
             return call.direction === 'incoming' && !call._is_confirmed
         })
     })

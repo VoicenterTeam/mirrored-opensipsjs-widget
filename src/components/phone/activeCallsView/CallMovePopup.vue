@@ -28,11 +28,14 @@
 <script setup lang="ts">
 import PopupHeader from '@/components/phone/common/PopupHeader.vue'
 import useCallActions from '@/composables/phone/useCallActions.ts'
-import { roomsWithoutActive } from '@/composables/opensipsjs.ts'
+import { useOpenSIPSJS } from '@/composables/opensipsjs.ts'
 import CallMovePopupRow from '@/components/phone/activeCallsView/CallMovePopupRow.vue'
 import { getTranslation } from '@/plugins/translator'
 import useCallInfo from '@/composables/useCallInfo.ts'
 // import CallMovePopupRow from '@/ui/phoneDialer/components/webRtcPhone/dialPad/Actions/Move/CallMovePopupRow.vue'
+
+const { getAudioState } = useOpenSIPSJS()
+const { roomsWithoutActive } = getAudioState()
 
 /* Data */
 const { onCallToMoveChange, callToMove } = useCallActions()

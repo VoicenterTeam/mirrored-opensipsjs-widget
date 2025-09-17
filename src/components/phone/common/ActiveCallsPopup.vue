@@ -55,12 +55,14 @@ import { computed, onBeforeUnmount } from 'vue'
 import PopupHeader from '@/components/phone/common/PopupHeader.vue'
 import ActiveCallPopupRow from '@/components/phone/common/ActiveCallPopupRow.vue'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
-import { currentActiveRoom, allRooms, activeCalls, roomsWithoutActive, useOpenSIPSJS } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import { getTranslation } from '@/plugins/translator'
 
 /* Data */
 const { onActiveCallsPopupToggle } = usePhoneState()
-const { moveCall, mergeCallByIds, getActiveCallsInRoom } = useOpenSIPSJS()
+const { getAudioState, getAudioApi } = useOpenSIPSJS()
+const { currentActiveRoom, allRooms, activeCalls, roomsWithoutActive } = getAudioState()
+const { moveCall, mergeCallByIds, getActiveCallsInRoom } = getAudioApi()
 
 const closeCallsPopup = ()  => {
     onActiveCallsPopupToggle(false)

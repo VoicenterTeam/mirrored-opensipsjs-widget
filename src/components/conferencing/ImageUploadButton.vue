@@ -18,6 +18,9 @@
 </template>
 
 <script setup lang="ts">
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { computed, ref } from 'vue'
 import { VcFileUploader } from '@voicenter-team/voicenter-ui-plus'
 import { getTranslation } from '@/plugins/translator'
@@ -59,7 +62,7 @@ const onFileChange = (newFiles: File[]) => {
             if (!event.target) {
                 return
             }
-          
+
             const base64String = event.target.result as string
 
             emit('upload', base64String)

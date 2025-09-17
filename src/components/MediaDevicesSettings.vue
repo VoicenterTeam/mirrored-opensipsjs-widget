@@ -42,14 +42,23 @@
 </template>
 <script setup lang="ts">
 import {
-    activeInputDevice,
+    /*activeInputDevice,
     inputDevicesList,
     activeOutputDevice,
-    outputDevicesList,
-    onMicrophoneChange,
-    onSpeakerChange
+    outputDevicesList,*/
+    useOpenSIPSJS
 } from '@/composables/opensipsjs'
 import MicrophoneIcon from '@/assets/icons/mute.svg?component'
 import HeadphonesIcon from '@/assets/icons/headphones.svg?component'
 import { getTranslation } from '@/plugins/translator'
+
+const { getAudioState, getAudioApi } = useOpenSIPSJS()
+const {
+    activeInputDevice,
+    inputDevicesList,
+    activeOutputDevice,
+    outputDevicesList,
+} = getAudioState()
+
+const { onMicrophoneChange, onSpeakerChange } = getAudioApi()
 </script>

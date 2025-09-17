@@ -87,7 +87,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
-import { useOpenSIPSJS, callTimes, allRooms, allActiveCalls } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import useCallInfo from '@/composables/useCallInfo'
 import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
 import { displayCallerInfoId, displayCallerInfoName } from '@/composables/useWidgetConfig'
@@ -108,7 +108,9 @@ const props = withDefaults(
 )
 
 /* Composables */
-const { terminateCall, holdCall, unholdCall, muteCaller } = useOpenSIPSJS()
+const { getAudioState, getAudioApi } = useOpenSIPSJS()
+const { callTimes, allRooms, allActiveCalls } = getAudioState()
+const { terminateCall, holdCall, unholdCall, muteCaller } = getAudioApi()
 const { displayNumber, displayName } = useCallInfo(props.call)
 
 const emit = defineEmits<{

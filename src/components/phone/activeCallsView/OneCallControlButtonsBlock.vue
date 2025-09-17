@@ -15,7 +15,7 @@
 import { computed } from 'vue'
 import CallActionButton from '@/components/phone/activeCallsView/CallActionButton.vue'
 import { ControlButtonObjectType } from '@/types/phone'
-import { isMuted, useOpenSIPSJS, callsInActiveRoom } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import { KeyPadTriggerObjectType } from '@/constants/phone.ts'
 import useCallActions from '@/composables/phone/useCallActions.ts'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
@@ -23,7 +23,10 @@ import { getTranslation } from '@/plugins/translator'
 import { allowTransfer } from '@/composables/useWidgetConfig'
 
 /* Data */
-const { holdCall, unholdCall, muteAgent } = useOpenSIPSJS()
+const { getAudioApi, getAudioState } = useOpenSIPSJS()
+const { isMuted,callsInActiveRoom } = getAudioState()
+const { holdCall, unholdCall, muteAgent } = getAudioApi()
+
 const  { onKeyPadToggle } = usePhoneState()
 const {  onCallToTransferChange } = useCallActions()
 

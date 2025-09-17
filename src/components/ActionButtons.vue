@@ -87,12 +87,12 @@ import KeypadIconButton from '@/components/KeypadIconButton.vue'
 import ActionIconButton from '@/components/base/ActionIconButton.vue'
 import {
     useOpenSIPSJS,
-    isMuted,
+    /*isMuted,
     isMuteWhenJoin,
     allActiveCalls,
     currentActiveRoom,
     isDND,
-    speakerVolume
+    speakerVolume,*/
 } from '@/composables/opensipsjs'
 import { allowOutgoingCalls, showKeypad, keypadMode } from '@/composables/useWidgetConfig'
 import type { ICall } from 'opensips-js/src/types/rtc'
@@ -100,7 +100,18 @@ import { VcSlider } from '@voicenter-team/voicenter-ui-plus'
 import { debounce } from 'lodash'
 import NewCallerButton from '@/components/NewCallerButton.vue'
 
-const { muteAgent, setDND, terminateCall, setSpeakerVolume, state } = useOpenSIPSJS()
+const { state, getAudioState, getAudioApi } = useOpenSIPSJS()
+
+const {
+    isMuted,
+    isMuteWhenJoin,
+    allActiveCalls,
+    currentActiveRoom,
+    isDND,
+    speakerVolume
+} = getAudioState()
+
+const { muteAgent, setDND, terminateCall, setSpeakerVolume } = getAudioApi()
 
 withDefaults(
     defineProps<{

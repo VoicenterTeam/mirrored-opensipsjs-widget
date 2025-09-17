@@ -9,7 +9,6 @@ import {
     TPosition,
     TKeypadMode,
     TKeypadPosition,
-    TPositionConfig,
     LangType
 } from '@/types/public-api'
 import { defaultAudioConfig, defaultTheme } from '@/enum/defaultTheme.enum'
@@ -157,25 +156,27 @@ export const language = computed({
 export const bgLogoBase64 = computed({
     get: () => widgetThemeSettings.value.audioConfig?.images.backgroundLogo || defaultLogo,
     set: (value: string | undefined) => {
-        if (!widgetThemeSettings.value.audioConfig) {
-            return
+        if (widgetThemeSettings.value.audioConfig) {
+            widgetThemeSettings.value.audioConfig.images.backgroundLogo = value
         }
-
-        widgetThemeSettings.value.audioConfig.images.backgroundLogo = value
     }
 })
 
 export const keypadMode = computed({
-    get: () => widgetThemeSettings.value.audioConfig.layoutConfig.keypadMode,
+    get: () => widgetThemeSettings.value.audioConfig?.layoutConfig.keypadMode,
     set: (value: TKeypadMode) => {
-        widgetThemeSettings.value.audioConfig.layoutConfig.keypadMode = value
+        if (widgetThemeSettings.value.audioConfig) {
+            widgetThemeSettings.value.audioConfig.layoutConfig.keypadMode = value
+        }
     }
 })
 
 export const keypadPosition = computed({
-    get: () => widgetThemeSettings.value.audioConfig.layoutConfig.keypadPosition,
+    get: () => widgetThemeSettings.value.audioConfig?.layoutConfig.keypadPosition,
     set: (value: TKeypadPosition) => {
-        widgetThemeSettings.value.audioConfig.layoutConfig.keypadPosition = value
+        if (widgetThemeSettings.value.audioConfig) {
+            widgetThemeSettings.value.audioConfig.layoutConfig.keypadPosition = value
+        }
     }
 })
 
@@ -205,7 +206,7 @@ export function setCallSettingsPermissions (settings: Partial<ICallSettings>) {
     widgetCallSettings.value = merge({}, widgetCallSettings.value, settings)
 }
 
-function buildPositionSettings (settings: IWidgetTheme) {
+/*function buildPositionSettings (settings: IWidgetTheme) {
     const position: Partial<TPositionConfig> = {}
 
     for (const [ key, oppositeKey ] of Object.entries(POSITION_MAP) as [ TPosition, TPosition ][]) {
@@ -251,7 +252,7 @@ function buildPositionSettings (settings: IWidgetTheme) {
     }
 
     return position
-}
+}*/
 
 export function applySettingsToWidgetRootEl (widgetRootEl: HTMLElement, dragHandleElement?: HTMLElement) {
     const settings = widgetThemeSettings.value
@@ -323,7 +324,7 @@ export function setThemeSettings (settings: Partial<IWidgetTheme>) {
 
     widgetThemeSettings.value = {
         ...mergedTheme,
-        position: buildPositionSettings(mergedTheme)
+        //position: buildPositionSettings(mergedTheme)
     }
 
     setLanguage(widgetThemeSettings.value.lang)

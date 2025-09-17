@@ -66,11 +66,10 @@ import { getTranslation } from '@/plugins/translator'
 import { ConfigOptionType } from '@voicenter-team/voicenter-ui-plus/library/types/types'
 
 /* Data */
-const  mediaConfigOptions: ConfigOptionType = {
+const  mediaConfigOptions: ConfigOptionType<MediaDeviceInfo> = {
     labelKey: 'label',
     valueKey: 'deviceId',
-    onclickFuncKey: 'func',
-    searchKey: 'name',
+    searchKey: 'label'
 }
 
 </script>

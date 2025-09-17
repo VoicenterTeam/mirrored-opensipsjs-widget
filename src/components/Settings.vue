@@ -34,7 +34,8 @@ import { autoAnswerDefaultBehaviour, allowAutoAnswerSetup } from '@/composables/
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import { getTranslation } from '@/plugins/translator'
 
-const { setAutoAnswer } = useOpenSIPSJS()
+const { getAudioApi } = useOpenSIPSJS()
+const { setAutoAnswer } = getAudioApi()
 
 watch(autoAnswerDefaultBehaviour, (newV) => {
     setAutoAnswer(newV)

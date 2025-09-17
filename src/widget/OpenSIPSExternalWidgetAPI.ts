@@ -12,6 +12,30 @@ import { useOpenSIPSJS, startOpenSIPS, disconnectOpenSIPS } from '@/composables/
 import { useDisplayResolvers } from '@/composables/useDisplayResolvers'
 import type { ListenerCallbackFnType, ListenersKeyType } from 'opensips-js/src/types/listeners'
 
+const { getAudioApi, getVideoApi } = useOpenSIPSJS()
+const {
+    startCall,
+    answerCall,
+    terminateCall,
+    holdCall,
+    unholdCall,
+    transferCall,
+    moveCall,
+    mergeCallsInRoom,
+    mergeCallByIds,
+    sendDTMF,
+    mute,
+    muteCaller,
+    setDND,
+    setAutoAnswer,
+    setCallWaiting,
+    setActiveRoom,
+    setSpeakerVolume,
+    setMicrophoneSensitivity
+} = getAudioApi()
+
+const { initVideoCall } = getVideoApi()
+
 const OpenSIPSExternalWidgetAPI: IWidgetExternalAPIConstructor = class OpenSIPSExternalWidgetAPI implements IWidgetExternalAPI {
     private state
     public readonly vsip: IVSIPActionsAPI
@@ -33,92 +57,74 @@ const OpenSIPSExternalWidgetAPI: IWidgetExternalAPIConstructor = class OpenSIPSE
     private createVSIPActionsAPI (): IVSIPActionsAPI {
         return {
             startCall: (target: string, addToCurrentRoom = false, holdOtherCalls = false) => {
-                const { startCall } = useOpenSIPSJS()
                 startCall(target, addToCurrentRoom, holdOtherCalls)
             },
 
             answerCall: (callId: string) => {
-                const { answerCall } = useOpenSIPSJS()
                 answerCall(callId)
             },
 
             terminateCall: (callId: string) => {
-                const { terminateCall } = useOpenSIPSJS()
                 terminateCall(callId)
             },
 
             holdCall: (callId: string) => {
-                const { holdCall } = useOpenSIPSJS()
                 holdCall(callId)
             },
 
             unholdCall: (callId: string) => {
-                const { unholdCall } = useOpenSIPSJS()
                 unholdCall(callId)
             },
 
             transferCall: (callId: string, target: string) => {
-                const { transferCall } = useOpenSIPSJS()
                 transferCall(callId, target)
             },
 
             moveCall: async (callId: string, roomId: number) => {
-                const { moveCall } = useOpenSIPSJS()
                 await moveCall(callId, roomId)
             },
 
             mergeCallsInRoom: (roomId: number) => {
-                const { mergeCallsInRoom } = useOpenSIPSJS()
                 mergeCallsInRoom(roomId)
             },
 
             mergeCallByIds: (firstCallId: string, secondCallId: string) => {
-                const { mergeCallByIds } = useOpenSIPSJS()
                 mergeCallByIds(firstCallId, secondCallId)
             },
 
             sendDTMF: (callId: string, value: string) => {
-                const { sendDTMF } = useOpenSIPSJS()
                 sendDTMF(callId, value)
             },
 
             mute: (toMute: boolean) => {
-                const { mute } = useOpenSIPSJS()
                 mute(toMute)
             },
 
             muteCaller: (callId: string, toMute: boolean) => {
-                const { muteCaller } = useOpenSIPSJS()
                 muteCaller(callId, toMute)
             },
 
             setDND: (value: boolean) => {
-                const { setDND } = useOpenSIPSJS()
                 setDND(value)
             },
 
             setAutoAnswer: (value: boolean) => {
-                const { setAutoAnswer } = useOpenSIPSJS()
                 setAutoAnswer(value)
             },
 
             setCallWaiting: async (state: boolean) => {
-                const { setCallWaiting } = useOpenSIPSJS()
                 await setCallWaiting(state)
             },
 
             setActiveRoom: async (roomId: number | undefined) => {
-                const { setActiveRoom } = useOpenSIPSJS()
                 await setActiveRoom(roomId)
             },
 
             setSpeakerVolume: (value: number) => {
-                const { setSpeakerVolume } = useOpenSIPSJS()
                 setSpeakerVolume(value)
             },
 
             setMicrophoneSensitivity: (value: number) => {
-                const { setMicrophoneSensitivity } = useOpenSIPSJS()
                 setMicrophoneSensitivity(value)
             }
         }
@@ -180,7 +186,6 @@ const OpenSIPSExternalWidgetAPI: IWidgetExternalAPIConstructor = class OpenSIPSE
     }
 
     public async initVideoCall (target: string, name: string) {
-        const { initVideoCall } = useOpenSIPSJS()
         initVideoCall(target, name)
     }
 

@@ -2,8 +2,11 @@ import type { MaybeRef } from 'vue'
 import { computed, ref, unref, watch } from 'vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
 import { getCallDisplayInfo, getCallerNumber, getCallerName } from '@/helpers/callerHelper'
-import { allActiveCalls } from '@/composables/opensipsjs.ts'
+import { useOpenSIPSJS } from '@/composables/opensipsjs.ts'
 import { displayCallerInfoIdMask } from '@/composables/useWidgetConfig.ts'
+
+const { getAudioState } = useOpenSIPSJS()
+const { allActiveCalls } = getAudioState()
 
 export default function useCallInfo (callData: MaybeRef<ICall | string | null | undefined>) {
     /* Data */

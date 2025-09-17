@@ -32,11 +32,12 @@ import { useOpenSIPSJS } from '@/composables/opensipsjs.ts'
 import { ActionsTriggerObjectType } from '@/constants/phone.ts'
 import CallActionButton from '@/components/phone/activeCallsView/CallActionButton.vue'
 import useCallActions from '@/composables/phone/useCallActions.ts'
-import { callsInActiveRoom } from '@/composables/opensipsjs.ts'
 import { getTranslation } from '@/plugins/translator.ts'
 
 /* Data */
-const { terminateCall } = useOpenSIPSJS()
+const { getAudioApi, getAudioState } = useOpenSIPSJS()
+const { callsInActiveRoom } = getAudioState()
+const { terminateCall } = getAudioApi()
 const { onActionsToggle } = useCallActions()
 
 /* Methods */

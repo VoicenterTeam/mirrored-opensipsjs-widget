@@ -89,13 +89,16 @@ import { UnwrapRef, watch } from 'vue'
 import { ref, computed } from 'vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
 import CallView from '@/components/CallView.vue'
-import { useOpenSIPSJS, allRooms, allActiveCalls, currentActiveRoom } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import AddCallerButton from '@/components/AddCallerButton.vue'
 import RoomActionButton from '@/components/base/RoomActionButton.vue'
 import SwitchRoomListItem from '@/components/SwitchRoomListItem.vue'
 import { getTranslation } from '@/plugins/translator'
 
-const { setActiveRoom } = useOpenSIPSJS()
+const { getAudioState, getAudioApi } = useOpenSIPSJS()
+const { setActiveRoom } = getAudioApi()
+
+const { allRooms, allActiveCalls, currentActiveRoom } = getAudioState()
 
 defineProps<{
     calls: UnwrapRef<Array<ICall>>

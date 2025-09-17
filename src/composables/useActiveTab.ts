@@ -2,7 +2,7 @@ import { ref, computed, watch, WatchHandle } from 'vue'
 import { debounce } from 'lodash'
 import { Tab } from 'tab-election'
 import {
-    activeCalls,
+    //activeCalls,
     disconnectOpenSIPS,
     unregisterOpenSIPS,
     tryRegisterOpenSIPS,
@@ -13,6 +13,9 @@ import { ICall } from 'opensips-js-vue'
 import { TabMessageType } from '@/types/tab-management'
 import { getCallDisplayInfo } from '@/helpers/callerHelper.ts'
 
+const { getAudioState } = useOpenSIPSJS()
+
+const { activeCalls } = getAudioState()
 /**
  * Advanced Multi-Tab Leadership System for VoIP Widget
  *
@@ -1015,7 +1018,8 @@ class TabManager {
                 console.log(`[TabManager] Tab closing with ${callCount} active calls - force terminating...`)
             }
 
-            const { terminateCall } = useOpenSIPSJS()
+            const { getAudioApi } = useOpenSIPSJS()
+            const { terminateCall } = getAudioApi()
 
             // Terminate all active calls immediately
             Object.values(activeCalls.value).forEach((call: ICall) => {
@@ -1175,7 +1179,8 @@ class TabManager {
         this.isDestroyed = true
 
         if (this.hasActiveCalls()) {
-            const { terminateCall } = useOpenSIPSJS()
+            const { getAudioApi } = useOpenSIPSJS()
+            const { terminateCall } = getAudioApi()
             Object.values(activeCalls.value).forEach((call: ICall) => {
                 try {
                     terminateCall(call._id)

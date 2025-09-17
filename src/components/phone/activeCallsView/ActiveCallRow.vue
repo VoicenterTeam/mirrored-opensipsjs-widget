@@ -92,7 +92,9 @@ const props = defineProps<Props>()
 /* Composable */
 const { displayName } = useCallInfo(props.call)
 const { onActionsToggle, actionsPopupType } = useCallActions()
-const { holdCall, unholdCall, terminateCall } = useOpenSIPSJS()
+const { getAudioApi } = useOpenSIPSJS()
+
+const { holdCall, unholdCall, terminateCall } = getAudioApi()
 
 /* Computed */
 const active = computed(() => {

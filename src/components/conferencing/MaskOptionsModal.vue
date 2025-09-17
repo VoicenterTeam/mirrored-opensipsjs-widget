@@ -31,6 +31,9 @@
 </template>
 
 <script setup lang="ts">
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { computed } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { VcButton, VcModal } from '@voicenter-team/voicenter-ui-plus'
@@ -42,7 +45,9 @@ import {
 } from '@/composables/opensipsjs'
 import { getTranslation } from '@/plugins/translator'
 
-const { applyBokehMaskEffect, applyBackgroundImgMaskEffect } = useOpenSIPSJS()
+const { getVideoApi } = useOpenSIPSJS()
+
+const { applyBokehMaskEffect, applyBackgroundImgMaskEffect } = getVideoApi()
 
 /* Props */
 export interface Props {

@@ -90,11 +90,15 @@ import ActionButtons from '@/components/ActionButtons.vue'
 import TransferView from '@/views/TransferView.vue'
 import RingingView from '@/views/RingingView.vue'
 import { allowShrinkOnIdle, allowOutgoingCalls, bgLogoBase64, showKeypad, keypadMode, keypadPosition } from '@/composables/useWidgetConfig'
-import { allActiveCalls, currentActiveRoom, useOpenSIPSJS } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import ActiveCallsView from '@/views/ActiveCallsView.vue'
 import MoveView from '@/views/MoveView.vue'
 import OutgoingCallView from '@/views/OutgoingCallView.vue'
 import Keypad from '@/components/Keypad.vue'
+
+const { state, getAudioApi, getAudioState } = useOpenSIPSJS()
+
+const { allActiveCalls, currentActiveRoom } = getAudioState()
 
 const {
     transferCall,
@@ -102,11 +106,9 @@ const {
     moveCall,
     mergeCallsInRoom,
     startCall,
-    terminateCall,
     sendDTMF,
-    setActiveRoom,
-    state
-} = useOpenSIPSJS()
+    setActiveRoom
+} = getAudioApi()
 
 const transferringCall = ref<ICall | null>(null)
 const movingCall = ref<ICall | null>(null)
@@ -138,13 +140,13 @@ const incomingUnansweredCall = computed(() => {
     })
 })
 
-const outgoingUnansweredCall = computed(() => {
+/*const outgoingUnansweredCall = computed(() => {
     const outgoingCallObject = allActiveCalls.value.find((call: ICall) => {
         return call.direction === 'outgoing' && !call._is_confirmed && !call._is_canceled
     })
 
     return outgoingCallObject
-})
+})*/
 
 const activeCalls = computed(() => {
     const activeCallObjects: Array<ICall> = allActiveCalls.value

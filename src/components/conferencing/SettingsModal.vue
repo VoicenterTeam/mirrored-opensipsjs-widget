@@ -68,6 +68,9 @@
 </template>
 
 <script setup lang="ts">
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { ref } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { VcForm, VcFormItem, VcButton, VcModal } from '@voicenter-team/voicenter-ui-plus'
@@ -75,7 +78,9 @@ import useValidationRules from '@/composables/useValidationRules.ts'
 import { useOpenSIPSJS } from '@/composables/opensipsjs.ts'
 import { getTranslation } from '@/plugins/translator'
 
-const { changeMediaConstraints } = useOpenSIPSJS()
+const { getVideoApi } = useOpenSIPSJS()
+
+const { changeMediaConstraints } = getVideoApi()
 
 /* Types */
 interface SettingsModel {

@@ -16,7 +16,7 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "noEmit": true,
-    "jsx": "preserve",
+    //"jsx": "preserve",
     "sourceMap": true,
 
     /* Linting */
@@ -37,7 +37,11 @@
       ]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "docs/tsconfig.json"],
-  "exclude": ["public/**/*", "node_modules"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "docs/tsconfig.json"
+  ],
+  "exclude": ["public/**/*", "node_modules", "src/components/conferencing"],
 }

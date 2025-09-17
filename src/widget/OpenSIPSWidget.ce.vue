@@ -25,15 +25,18 @@
 <script lang="ts" setup>
 import { ref, computed, watch, onMounted } from 'vue'
 import { ICall } from 'opensips-js-vue'
-import { activeCalls } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import RoundedCallView from '@/views/RoundedCallView.vue'
 import { applySettingsToWidgetRootEl, layoutType, widgetType } from '@/composables/useWidgetConfig'
 import { setWidgetElement } from '@/composables/useWidgetState'
 import OpenSIPSExternalWidgetAPI from '@/widget/OpenSIPSExternalWidgetAPI'
 import QuickCallView from '@/views/QuickCallView.vue'
-import VideoCallView from '@/views/VideoCallView.vue'
+import VideoCallView from '@/views/video/VideoCallView.vue'
 import PhoneView from '@/views/PhoneView.vue'
 import DebugPanel from '@/components/DebugPanel.vue'
+
+const { getAudioState } = useOpenSIPSJS()
+const { activeCalls } = getAudioState()
 
 import {
     usedWidgetShadowRootEl
