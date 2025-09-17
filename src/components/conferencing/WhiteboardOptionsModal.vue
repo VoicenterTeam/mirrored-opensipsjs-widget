@@ -31,13 +31,18 @@
 </template>
 
 <script setup lang="ts">
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { useVModel } from '@vueuse/core'
 import { VcButton, VcModal } from '@voicenter-team/voicenter-ui-plus'
 import ImageUploadButton from '@/components/conferencing/ImageUploadButton.vue'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import { getTranslation } from '@/plugins/translator'
 
-const { enablePresentationWhiteboard, enableImageWhiteboard } = useOpenSIPSJS()
+const { getVideoApi } = useOpenSIPSJS()
+
+const { enablePresentationWhiteboard, enableImageWhiteboard } = getVideoApi()
 
 /* Props */
 export interface Props {

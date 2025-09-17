@@ -108,7 +108,7 @@ const getVolumeLevelBar = (stream: MediaStream) => {
     }
 }
 
-const runIndicator = () => {
+const runIndicator = (): void => {
     const canvas = volumeCanvasRef.value
     if (!canvas) return
 
@@ -117,7 +117,7 @@ const runIndicator = () => {
     const canvasContext = canvas.getContext('2d') as CanvasRenderingContext2D
 
     if (props.stream && props.stream.getTracks().length) {
-        return getVolumeLevelBar(props.stream)
+        getVolumeLevelBar(props.stream)
     } else {
         resetCanvas(canvasContext)
     }

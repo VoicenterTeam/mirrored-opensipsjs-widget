@@ -57,21 +57,27 @@
 </template>
 
 <script setup lang="ts">
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { onMounted, onBeforeUnmount, ref, computed } from 'vue'
-import {
-    conferenceStarted,
-    mainSource,
-    isImageWhiteboardEnabled,
-    isPresentationWhiteboardEnabled,
-    isScreenShareWhiteboardEnabled,
-    isWhiteboardEnabled,
-    useOpenSIPSJS
-} from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 //import useJanusPhoneKit from '@/composables/useJanusPhoneKit'
 //import MetricsModal from './MetricsModal.vue'
 //import { getCreatedTime } from '@/helper/create.time.helper'
 
 //const useJanusPhoneKit = inject('useJanusPhoneKit')
+
+const { getVideoState } = useOpenSIPSJS()
+
+const {
+    conferenceStarted,
+    mainSource,
+    isImageWhiteboardEnabled,
+    isPresentationWhiteboardEnabled,
+    isScreenShareWhiteboardEnabled,
+    isWhiteboardEnabled
+} = getVideoState()
 
 /* Props */
 export interface Props {

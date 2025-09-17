@@ -29,10 +29,14 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 //import AudioQualityIndicator from '@/ui/phoneDialer/components/webRtcPhone/dialPad/mainBlock/AudioQualityIndicator.vue'
-import { callTime, callAddingInProgress } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import { getTranslation } from '@/plugins/translator'
 import { ICall } from 'opensips-js-vue'
 import useCallInfo from '@/composables/useCallInfo.ts'
+
+const { getAudioState } = useOpenSIPSJS()
+
+const { callTime, callAddingInProgress } = getAudioState()
 
 //* Props *//
 interface Props {

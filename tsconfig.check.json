@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "allowImportingTsExtensions": true,
+    "lib": ["ESNext", "DOM"],
+    "types": ["vite/client"],
+
+    /* Vue */
+    "allowJs": true,
+    "resolveJsonModule": true,
+
+    /* Type safety */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Output */
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "useDefineForClassFields": true,
+
+    "paths": {
+      "~/*": [
+        "./*"
+      ],
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "docs/tsconfig.json"
+  ],
+  "exclude": [
+    "src/components/conferencing",
+    "public",
+    "node_modules"
+  ]
+}

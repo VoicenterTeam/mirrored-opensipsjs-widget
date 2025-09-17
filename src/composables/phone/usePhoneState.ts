@@ -1,6 +1,6 @@
 import { computed, ref } from 'vue'
 import { keyPadTriggerType, KeyPadTriggerObjectType, MAX_NUMBER_INPUT_LENGTH } from '@/constants/phone.ts'
-import { useOpenSIPSJS, allActiveCalls, currentActiveRoom } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import { buttonPressSound } from '@/constants/phone.ts'
 
 
@@ -14,7 +14,9 @@ export function usePhoneState () {
 
 
     /* Data */
-    const { sendDTMF } = useOpenSIPSJS()
+    const { getAudioApi, getAudioState } = useOpenSIPSJS()
+    const { allActiveCalls, currentActiveRoom } = getAudioState()
+    const { sendDTMF } = getAudioApi()
 
     /* Computed */
     const callsInActiveRoom = computed(() => {
@@ -22,7 +24,7 @@ export function usePhoneState () {
             return call.roomId === currentActiveRoom.value
         })
     })
-    
+
     /* Methods */
     const onNumberInput = (value: string| number ) => {
         if (phoneNumber.value.length >= MAX_NUMBER_INPUT_LENGTH) {

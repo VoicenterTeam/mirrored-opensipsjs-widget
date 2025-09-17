@@ -41,7 +41,10 @@ import { computed, ref } from 'vue'
 import { VcPopover } from '@voicenter-team/voicenter-ui-plus'
 import type { ICall } from 'opensips-js/src/types/rtc'
 import OptionActionButton from '@/components/base/OptionActionButton.vue'
-import { allRooms } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
+
+const { getAudioState } = useOpenSIPSJS()
+const { allRooms } = getAudioState()
 
 const props = withDefaults(
     defineProps<{

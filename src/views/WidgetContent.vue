@@ -7,9 +7,12 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { isOpenSIPSReady, allCallStatuses } from '@/composables/opensipsjs'
+import { isOpenSIPSReady, useOpenSIPSJS } from '@/composables/opensipsjs'
 import NotInitializedView from '@/views/NotInitializedView.vue'
 import InitializedView from '@/views/InitializedView.vue'
+
+const { getAudioState } = useOpenSIPSJS()
+const { allCallStatuses } = getAudioState()
 
 const isLoading = ref<boolean>(false)
 

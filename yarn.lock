@@ -6094,13 +6094,13 @@ opensips-js-screen-share@^0.0.1:
   dependencies:
     opensips-js "^0.1.2"
 
-opensips-js-vue@^0.1.7:
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/opensips-js-vue/-/opensips-js-vue-0.1.7.tgz#e6d86b0879e67a367401b17836323cd568e2bf80"
-  integrity sha512-TxrD8WeinPFUYGJCfz0RcowP7HydQ2QX6C32pKE1fk01qrakoe4IW64y73BEeSz63QNoowkyZVxE3CnTg9FQBQ==
+opensips-js-vue@^0.1.8:
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/opensips-js-vue/-/opensips-js-vue-0.1.8.tgz#039eb2efb6577c0bf675219c9a05f68e5bdc92e4"
+  integrity sha512-QuXIAlCx79gswc+Lr3l2xTxMtiQnEnQj7FzFAcSfb2TdSRWkMWUorgdAk+nMlU4j9sjxH3Hpo8r2IJlnlnPJYQ==
   dependencies:
     core-js "3.8.3"
-    opensips-js "^0.1.10"
+    opensips-js "^0.1.8"
     vue "3.3.8"
 
 opensips-js-whiteboard@^0.0.1:
@@ -6110,21 +6110,6 @@ opensips-js-whiteboard@^0.0.1:
   dependencies:
     konva "^9.3.18"
     opensips-js "^0.1.2"
-
-opensips-js@^0.1.10:
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/opensips-js/-/opensips-js-0.1.10.tgz#b5af4cae2fe613257769a0c267ac0779f0d0b935"
-  integrity sha512-yCnwx8DRRErezRGZ0VtqQQkDb63mJdJjQRVkQCeSZgXIbjNJsTipr918xmZ04Oayuu2JUs1dK50PAUlyifR/3g==
-  dependencies:
-    "@types/mime" "^3.0.1"
-    generate-unique-id "^2.0.1"
-    jssip "3.10.0"
-    konva "^9.3.16"
-    loglevel "^1.8.1"
-    mime "^3.0.0"
-    p-iteration "^1.1.8"
-    sdp-transform "2.14.1"
-    uuid "^10.0.0"
 
 opensips-js@^0.1.2:
   version "0.1.2"
@@ -6145,6 +6130,21 @@ opensips-js@^0.1.7:
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/opensips-js/-/opensips-js-0.1.9.tgz#935db52f5ae609e7033b95dad97ec215d801b02e"
   integrity sha512-m4fgpyQb0cFJyPE0GJKdpDX0hAgz9t9uXwYSlQv17T9Z2fbsVETyjMCEvMVf468ippuDzRUhNpe8NGqc+0zI9Q==
+  dependencies:
+    "@types/mime" "^3.0.1"
+    generate-unique-id "^2.0.1"
+    jssip "3.10.0"
+    konva "^9.3.16"
+    loglevel "^1.8.1"
+    mime "^3.0.0"
+    p-iteration "^1.1.8"
+    sdp-transform "2.14.1"
+    uuid "^10.0.0"
+
+opensips-js@^0.1.8:
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/opensips-js/-/opensips-js-0.1.11.tgz#51d81eda6a2aadcc932b250d32c833eb4fd27d42"
+  integrity sha512-tPIidmEYCR/THERDdZ+x2TFPRmd9fU5sVSei7BLizJ+b6aNltU9Z5xs5gapl2PxcGIODn/nBViunMce/xHqmOg==
   dependencies:
     "@types/mime" "^3.0.1"
     generate-unique-id "^2.0.1"
@@ -6999,6 +6999,7 @@ string-argv@~0.3.1:
   integrity sha512-aqD2Q0144Z+/RqG52NeHEkZauTAUWJO8c6yTftGJKO3Tja5tUgIfmIl6kExvhtxSDP7fXB6DvzkfMpCd/F3G+Q==
 
 "string-width-cjs@npm:string-width@^4.2.0", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
+  name string-width-cjs
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -7702,6 +7703,7 @@ word@~0.3.0:
   integrity sha512-OELeY0Q61OXpdUfTp+oweA/vtLVg5VDOXh+3he3PNzLGG/y0oylSOC1xRVj0+l4vQ3tj/bB1HVHv1ocXkQceFA==
 
 "wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
+  name wrap-ansi-cjs
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==

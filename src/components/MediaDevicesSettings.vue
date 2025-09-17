@@ -38,34 +38,27 @@
                 {{ item.label }}
             </option>
         </select>
-        <!--        <label>
-            <div class="inline-block w-4 h-4 text-primary mt-2">
-                <SoundOnIcon />
-            </div>
-            Ringing device
-        </label>
-        <select id="ringingEl" v-model="activeRingingDevice">
-            <option v-for="(item, key) in ringingDevicesList" :key="key" :value="item.deviceId">
-                {{ item.label }}
-            </option>
-        </select>-->
     </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
 import {
+    /*activeInputDevice,
+    inputDevicesList,
+    activeOutputDevice,
+    outputDevicesList,*/
+    useOpenSIPSJS
+} from '@/composables/opensipsjs'
+import MicrophoneIcon from '@/assets/icons/mute.svg?component'
+import HeadphonesIcon from '@/assets/icons/headphones.svg?component'
+import { getTranslation } from '@/plugins/translator'
+
+const { getAudioState, getAudioApi } = useOpenSIPSJS()
+const {
     activeInputDevice,
     inputDevicesList,
     activeOutputDevice,
     outputDevicesList,
-    ringingDevicesList,
-    activeRingingDevice,
-    onMicrophoneChange,
-    onSpeakerChange
-} from '@/composables/opensipsjs'
-import MicrophoneIcon from '@/assets/icons/mute.svg?component'
-import HeadphonesIcon from '@/assets/icons/headphones.svg?component'
-import SoundOnIcon from '@/assets/icons/soundOn.svg?component'
-import { getTranslation } from '@/plugins/translator'
+} = getAudioState()
 
+const { onMicrophoneChange, onSpeakerChange } = getAudioApi()
 </script>

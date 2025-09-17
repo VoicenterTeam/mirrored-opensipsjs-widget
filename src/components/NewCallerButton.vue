@@ -32,7 +32,10 @@ import Keypad from '@/components/Keypad.vue'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import ActionIconButton from '@/components/base/ActionIconButton.vue'
 import { keypadMode } from '@/composables/useWidgetConfig'
-const { startCall } = useOpenSIPSJS()
+import { PopoverTriggerType } from '@voicenter-team/voicenter-ui-plus/library/types/types/VcPopover.types'
+const { getAudioApi } = useOpenSIPSJS()
+
+const { startCall } = getAudioApi()
 
 const emit = defineEmits<{
     (e: 'toggle-keypad'): void
@@ -41,7 +44,9 @@ const emit = defineEmits<{
 const isPopoverOpened = ref(false)
 
 const triggersArray = computed(() => {
-    return keypadMode.value === 'popover' ? [ 'click' ] : []
+    const popoverTrigger: PopoverTriggerType = 'click'
+
+    return keypadMode.value === 'popover' ? popoverTrigger : undefined
 })
 function onStartCall (target: string) {
     startCall(target, false, false)

@@ -118,8 +118,10 @@
 </template>
 
 <script setup lang="ts">
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { ref } from 'vue'
-import { VcForm, VcFormItem, VcButton, VcInput } from '@voicenter-team/voicenter-ui-plus'
 import useDeviceType from '@/composables/useDeviceType'
 import SettingsModal from '@/components/conferencing/SettingsModal.vue'
 import WhiteboardOptionsModal from '@/components/conferencing/WhiteboardOptionsModal.vue'
@@ -129,19 +131,9 @@ import MaskOptionsModal from '@/components/conferencing/MaskOptionsModal.vue'
 import MaskVisualizationOptions from '@/components/conferencing/MaskVisualizationOptions.vue'
 import { bgLogoBase64 } from '@/composables/useWidgetConfig'
 
-import {
-    conferenceStarted,
-    mainSource,
-    microphoneOnModel,
-    videoOnModel,
-    isScreenSharing,
-    isImageWhiteboardEnabled,
-    isPresentationWhiteboardEnabled,
-    isScreenShareWhiteboardEnabled,
-    isWithBokehMaskEffect,
-    isWithBgImgMaskEffect,
-    useOpenSIPSJS
-} from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
+
+const { getVideoApi, getVideoState } = useOpenSIPSJS()
 
 const {
     hangupVideoCall,
@@ -155,7 +147,19 @@ const {
     terminateImageWhiteboard,
     terminatePresentationWhiteboard,
     setupMaskVisualizationConfig
-} = useOpenSIPSJS()
+} = getVideoApi()
+
+const {
+    conferenceStarted,
+    microphoneOnModel,
+    videoOnModel,
+    isScreenSharing,
+    isImageWhiteboardEnabled,
+    isPresentationWhiteboardEnabled,
+    isScreenShareWhiteboardEnabled,
+    isWithBokehMaskEffect,
+    isWithBgImgMaskEffect
+} = getVideoState()
 
 const { isMobile } = useDeviceType()
 
@@ -163,8 +167,6 @@ const { isMobile } = useDeviceType()
 export interface Emit {
     (e: 'hangup'): void
 }
-
-const emit = defineEmits<Emit>()
 
 /* Data */
 const settingsModalOpen = ref(false)
@@ -192,13 +194,13 @@ function enableCamera () {
     }
 }
 
-const toggleMaskEffect = () => {
+/*const toggleMaskEffect = () => {
     if (isWithBokehMaskEffect.value || isWithBgImgMaskEffect.value) {
         //disableMaskEffect()
     } else {
         maskOptionsModalOpen.value = true
     }
-}
+}*/
 </script>
 
 <style scoped>

@@ -39,7 +39,8 @@ import useCallInfo from '@/composables/useCallInfo.ts'
 //import { useIncomingCalls } from '@/ui/phoneDialer/composables/useIncomingCalls'
 
 /* Data */
-const { answerCall, terminateCall } = useOpenSIPSJS()
+const { getAudioApi } = useOpenSIPSJS()
+const { answerCall, terminateCall } = getAudioApi()
 //const { onActionsCallChange, incomingCallActions } = useIncomingCalls()
 
 /* Props */

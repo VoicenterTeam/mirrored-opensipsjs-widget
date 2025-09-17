@@ -26,23 +26,6 @@
             </div>
         </div>
 
-        <!--        <div class="flex items-center mx-1">
-            <IncomingCallActionButton
-                v-if="!props.call.localMuted"
-                color="primary"
-                :icon="SoundOnIcon"
-                :size="soundOnIconSize"
-                @click="doMuteCaller"
-            />
-            <IncomingCallActionButton
-                v-else
-                color="primary"
-                :icon="SoundOffIcon"
-                :size="soundOffIconSize"
-                @click="unmuteCaller"
-            />
-        </div>-->
-
         <div class="flex items-center mx-2 w-[46px]">
             <span class="text-xs text-main-text">
                 {{ callTime }}
@@ -110,18 +93,14 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
 import type { UnwrapRef } from 'vue'
-import DeclineIcon from '@/assets/icons/decline.svg?component'
 import HoldIcon from '@/assets/icons/hold.svg?component'
 import OnHoldIcon from '@/assets/icons/onHold.svg?component'
-import SoundOnIcon from '@/assets/icons/soundOn.svg?component'
-import SoundOffIcon from '@/assets/icons/soundOff.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
-import CallOptionsIconButton from '@/components/CallOptionsIconButton.vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
-import { useOpenSIPSJS, callTimes, allRooms } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import useCallInfo from '@/composables/useCallInfo'
 import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
-import { allowTransfer, displayCallerInfoId, displayCallerInfoName } from '@/composables/useWidgetConfig'
+import { displayCallerInfoId, displayCallerInfoName } from '@/composables/useWidgetConfig'
 import RoomActionButton from '@/components/base/RoomActionButton.vue'
 import AddCallerButton from '@/components/AddCallerButton.vue'
 import OptionActionButton from '@/components/base/OptionActionButton.vue'
@@ -137,7 +116,9 @@ const props = withDefaults(
 )
 
 /* Composables */
-const { terminateCall, holdCall, unholdCall, muteCaller } = useOpenSIPSJS()
+const { getAudioApi, getAudioState } = useOpenSIPSJS()
+const { callTimes, allRooms } = getAudioState()
+const { holdCall, unholdCall } = getAudioApi()
 const { displayName, displayNumber } = useCallInfo(props.call)
 
 const emit = defineEmits<{
@@ -154,26 +135,6 @@ const isMultiCallMode = computed(() => {
 
 const holdIconSize = computed(() => {
     return isMultiCallMode.value ? 'base' : 'xl'
-})
-
-const soundOnIconSize = computed(() => {
-    return isMultiCallMode.value ? 'base-sm' : 'xl-base'
-})
-
-const soundOffIconSize = computed(() => {
-    return isMultiCallMode.value ? 'base' : 'xl-lg'
-})
-
-const declineIconSize = computed(() => {
-    return isMultiCallMode.value ? 'base' : 'xxxl'
-})
-
-const callOptionsButtonClasses = computed(() => {
-    return isMultiCallMode.value ? 'p-0.5' : ''
-})
-
-const declineButtonClasses = computed(() => {
-    return isMultiCallMode.value ? 'p-0.5' : ''
 })
 
 const wrapperClasses = computed(() => {
@@ -221,26 +182,6 @@ const putOnHold = () => {
 const unHoldCall = () => {
     unholdCall(props.call._id)
     isOnLocalHold.value = false
-}
-
-const doMuteCaller = () => {
-    muteCaller(props.call._id, true)
-}
-
-const unmuteCaller = () => {
-    muteCaller(props.call._id, false)
-}
-
-const declineIncomingCall = () => {
-    terminateCall(props.call._id)
-}
-
-const onTransferClick = () => {
-    emit('transfer-click', props.call._id)
-}
-
-const onMoveClick = () => {
-    emit('move-click', props.call._id)
 }
 
 onMounted(() => {

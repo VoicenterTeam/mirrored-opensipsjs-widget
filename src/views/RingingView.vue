@@ -105,7 +105,7 @@ import DeclineIcon from '@/assets/icons/decline.svg?component'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
-import { callTimes } from '@/composables/opensipsjs'
+//import { callTimes } from '@/composables/opensipsjs'
 import useCallInfo from '@/composables/useCallInfo'
 import { ref, onMounted, computed } from 'vue'
 import {
@@ -131,7 +131,10 @@ const emit = defineEmits<{
 }>()
 
 /* Composables */
-const { answerCall, terminateCall } = useOpenSIPSJS()
+const { getAudioState, getAudioApi } = useOpenSIPSJS()
+const { callTimes } = getAudioState()
+const { answerCall, terminateCall } = getAudioApi()
+
 const { displayNumber, displayName } = useCallInfo(props.call)
 const { play, stop } = useRingingSound()
 

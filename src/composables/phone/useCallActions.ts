@@ -1,6 +1,6 @@
 import { computed, ref } from 'vue'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
-import { useOpenSIPSJS, callsInActiveRoom, roomsWithoutActive } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import { KeyPadTriggerObjectType, CALL_ACTIONS_NAMES } from '@/constants/phone.ts'
 import { ActionsPopupInitiator } from '@/types/phone'
 import { ActionsTriggerObjectType } from '@/constants/phone.ts'
@@ -15,7 +15,9 @@ const callToTransfer = ref<string | undefined>(undefined)
 export default function useCallActions () {
     /* Data */
     const { phoneNumber, onPhoneNumberChange, keyPadTrigger, onKeyPadToggle } = usePhoneState()
-    const { startCall, transferCall } = useOpenSIPSJS()
+    const { getAudioApi, getAudioState } = useOpenSIPSJS()
+    const { callsInActiveRoom, roomsWithoutActive } = getAudioState()
+    const { startCall, transferCall } = getAudioApi()
 
     /* Methods */
     const onActionsToggle = (value: null | ActionsPopupInitiator) => {

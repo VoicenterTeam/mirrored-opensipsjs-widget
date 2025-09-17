@@ -21,11 +21,12 @@
 </template>
 <script setup lang="ts">
 import VolumeIndicator from '@/components/phone/VolumeIndicator.vue'
-import { muted, originalStream, useOpenSIPSJS } from '@/composables/opensipsjs'
-
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 
 /* Data */
-const { mute  } = useOpenSIPSJS()
+const { getAudioApi, getAudioState  } = useOpenSIPSJS()
+const { muted, originalStream } = getAudioState()
+const { mute } = getAudioApi()
 
 /* Methods */
 const toggleMute = () => {
