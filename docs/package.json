@@ -26,7 +26,7 @@
     "@vue/eslint-config-typescript": "^13.0.0",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.26.0",
-    "nuxt": "^3.13.0",
+    "nuxt": "^3.19.0",
     "sass": "1.77.6",
     "typedoc": "^0.26.6",
     "typedoc-plugin-markdown": "^4.2.5"
