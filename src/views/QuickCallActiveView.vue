@@ -74,7 +74,7 @@
 import { computed, ref } from 'vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
 import DeclineIcon from '@/assets/icons/decline.svg?component'
-import { allActiveCalls, isMuted, callTimes, currentActiveRoom, useOpenSIPSJS } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import IncomingCallActionButton from '@/components/base/IncomingCallActionButton.vue'
 import QuickCallSettingsButton from '@/components/QuickCallSettingsButton.vue'
 import WidgetIconButton from '@/components/base/WidgetIconButton.vue'
@@ -88,10 +88,16 @@ import { keypadMode, keypadPosition, showKeypad } from '@/composables/useWidgetC
 import { getTranslation } from '@/plugins/translator'
 
 const {
+    getAudioState,
+    getAudioApi
+} = useOpenSIPSJS()
+
+const { allActiveCalls, isMuted, callTimes, currentActiveRoom } = getAudioState()
+const {
     terminateCall,
     muteAgent,
     sendDTMF
-} = useOpenSIPSJS()
+} = getAudioApi()
 
 const showManualKeypad = ref<boolean>(false)
 

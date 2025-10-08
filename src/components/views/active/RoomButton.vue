@@ -13,7 +13,8 @@
 import { computed } from 'vue'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 
-const { setActiveRoom } = useOpenSIPSJS()
+const { getAudioApi } = useOpenSIPSJS()
+const { setActiveRoom } = getAudioApi()
 
 const props = withDefaults(
     defineProps<{

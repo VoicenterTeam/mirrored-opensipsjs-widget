@@ -36,12 +36,16 @@
 </template>
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
-import { speakerVolume, useOpenSIPSJS, } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
+
+const { getAudioApi, getAudioState  } = useOpenSIPSJS()
+const { speakerVolume } = getAudioState()
+const { setSpeakerVolume } = getAudioApi()
 
 /* Data */
 const speakerPlayerVolume = ref(speakerVolume.value * 100)
 const isSpeakerMuted = ref(false)
-const { setSpeakerVolume  } = useOpenSIPSJS()
+
 /* Watchers */
 watch(
     speakerPlayerVolume,

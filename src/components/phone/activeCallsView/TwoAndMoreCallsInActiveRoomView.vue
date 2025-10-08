@@ -28,15 +28,7 @@ import { computed } from 'vue'
 import CallsCompactView from '@/components/phone/common/CallsCompactView.vue'
 import { KeyPadTriggerObjectType } from '@/constants/phone.ts'
 import { usePhoneState } from '@/composables/phone/usePhoneState'
-import {
-    isMuted,
-    useOpenSIPSJS,
-    currentActiveRoom,
-    callsInActiveRoom,
-    activeRoomsWithoutIncoming,
-    roomsWithoutActive,
-    lengthOfCallsWithoutIncoming
-} from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import { allowMergeCalls } from '@/composables/useWidgetConfig'
 import CallActionButton from '@/components/phone/activeCallsView/CallActionButton.vue'
 import MultipleCallsActiveRoom from '@/components/phone/activeCallsView/MultipleCallsActiveRoom.vue'
@@ -45,7 +37,15 @@ import { getTranslation } from '@/plugins/translator'
 
 /* Data */
 const { onKeyPadToggle } = usePhoneState()
-const { muteAgent, holdCall, unholdCall, mergeCallsInRoom } = useOpenSIPSJS()
+const { getAudioApi, getAudioState } = useOpenSIPSJS()
+const {
+    isMuted, currentActiveRoom,
+    callsInActiveRoom,
+    activeRoomsWithoutIncoming,
+    roomsWithoutActive,
+    lengthOfCallsWithoutIncoming
+} = getAudioState()
+const { muteAgent, holdCall, unholdCall, mergeCallsInRoom } = getAudioApi()
 
 // const { isCallsMergeWarningEnabled } = useUserData()
 const { displayAllControls } = useCallActions()

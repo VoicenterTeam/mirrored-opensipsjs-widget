@@ -17,7 +17,7 @@ import type { Component } from 'vue'
 const props = withDefaults(
     defineProps<{
         color: ColorsType
-        pressedColor: ColorsType
+        pressedColor?: ColorsType
         manual?: boolean | undefined
         icon: Component
         disabled?: boolean

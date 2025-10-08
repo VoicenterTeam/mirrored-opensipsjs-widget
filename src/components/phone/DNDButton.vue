@@ -11,12 +11,14 @@
 </template>
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useOpenSIPSJS, isDND } from '@/composables/opensipsjs.ts'
+import { useOpenSIPSJS } from '@/composables/opensipsjs.ts'
 
 
 /* Data */
 const disturbValue = ref(false)
-const { setDND } = useOpenSIPSJS()
+const { getAudioState, getAudioApi } = useOpenSIPSJS()
+const { isDND } = getAudioState()
+const { setDND } = getAudioApi()
 
 /* Watchers */
 watch(

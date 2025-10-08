@@ -47,6 +47,7 @@ export type ColorsType =
     | 'danger'
     | 'additional-danger-bg'
     | 'additional-success-bg'
+    | 'draggable-bg'
 
 export interface ImagesConfig {
     backgroundLogo?: string

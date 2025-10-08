@@ -20,8 +20,11 @@
 </template>
 <script lang="ts" setup>
 import ActiveCallRow from './ActiveCallRow.vue'
-import { callTime, callsInActiveRoom } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import { getTranslation } from '@/plugins/translator'
+
+const { getAudioState } = useOpenSIPSJS()
+const { callTime, callsInActiveRoom } = getAudioState()
 
 interface Props {
     maxHeight: number,

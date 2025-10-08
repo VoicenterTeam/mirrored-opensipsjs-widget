@@ -39,7 +39,6 @@ import InactiveTabWrapper from '@/components/phone/common/InactiveTabWrapper.vue
 import NoActiveCallsView from '@/components/phone/NoActiveCallsView.vue'
 import ActiveCallsWithKeypadView from '@/components/phone/ActiveCallsWithKeypadView.vue'
 import ActiveCallsWithActionButtonsView from '@/components/phone/ActiveCallsWithActionButtonsView.vue'
-import { currentActiveRoom, activeCalls, activeRoomsWithoutIncoming } from '@/composables/opensipsjs'
 import { GenericObjectType, CallUserDataType } from '@/types/phone'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
 import { KeyPadTriggerObjectType } from '@/constants/phone.ts'
@@ -59,7 +58,10 @@ const phoneUIConfig = {
     callsWithActionButtons: ActiveCallsWithActionButtonsView,
     callsWithKeyPad: ActiveCallsWithKeypadView
 }
-const { setCallWaiting, setDND } = useOpenSIPSJS()
+const { getAudioState, getAudioApi } = useOpenSIPSJS()
+const { currentActiveRoom, activeCalls, activeRoomsWithoutIncoming } = getAudioState()
+const { setCallWaiting, setDND } = getAudioApi()
+
 const draggableHandle = ref<typeof Draggable>()
 const { visibleCalls } = useIncomingCalls()
 const callersData = ref<GenericObjectType<CallUserDataType>>({})

@@ -17,7 +17,15 @@ import { computed } from 'vue'
 import CallsCompactView from '@/components/phone/common/CallsCompactView.vue'
 import ActiveCallBlock from '@/components/phone/activeCallsView/ActiveCallBlock.vue'
 import OneCallControlButtonsBlock from '@/components/phone/activeCallsView/OneCallControlButtonsBlock.vue'
-import { callsInActiveRoom, activeRoomsWithoutIncoming, roomsWithoutActive, lengthOfCallsWithoutIncoming } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
+
+const { getAudioState } = useOpenSIPSJS()
+const {
+    callsInActiveRoom,
+    activeRoomsWithoutIncoming,
+    roomsWithoutActive,
+    lengthOfCallsWithoutIncoming
+} = getAudioState()
 
 /* Computed */
 const oneActiveCall = computed(() => {

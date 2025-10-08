@@ -1,6 +1,6 @@
 {
   "name": "opensips-js-widget",
-  "version": "0.2.15",
+  "version": "0.2.17",
   "author": "Bohdan Konechnyi",
   "main": "widget/opensipsjs-widget.mjs",
   "types": "widget/opensipsjs-widget.d.ts",
@@ -21,7 +21,7 @@
     "build": "vite build",
     "build:documentation": "npm run build && cd docs && npm install && npm run build",
     "preview": "vite preview",
-    "type-check": "vue-tsc --noEmit",
+    "type-check": "vue-tsc --noEmit -p tsconfig.check.json",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "files": [
@@ -35,7 +35,7 @@
     "opensips-js": "^0.1.7",
     "opensips-js-screen-share": "^0.0.1",
     "opensips-js-screen-share-whiteboard": "^0.0.1",
-    "opensips-js-vue": "^0.1.7",
+    "opensips-js-vue": "^0.1.8",
     "opensips-js-whiteboard": "^0.0.1",
     "regenerator-runtime": "^0.13.11",
     "tab-election": "^4.2.8",

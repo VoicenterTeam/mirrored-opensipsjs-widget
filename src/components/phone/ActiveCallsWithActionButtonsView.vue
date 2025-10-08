@@ -33,9 +33,12 @@ import useCallActions from '@/composables/phone/useCallActions.ts'
 import { ActionsTriggerObjectType } from '@/constants/phone.ts'
 import ActiveCallsPopup from '@/components/phone/common/ActiveCallsPopup.vue'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
-import { activeCalls, callsInActiveRoom } from '@/composables/opensipsjs.ts'
+import { useOpenSIPSJS } from '@/composables/opensipsjs.ts'
 import type { ICall } from 'opensips-js/src/types/rtc'
 import useCallInfo from '@/composables/useCallInfo.ts'
+
+const { getAudioState } = useOpenSIPSJS()
+const { activeCalls, callsInActiveRoom } = getAudioState()
 
 /* Data */
 const { actionsPopupType, actionsConfig, callToMove, callToTransfer,  onActionsToggle, onCallToTransferChange } = useCallActions()

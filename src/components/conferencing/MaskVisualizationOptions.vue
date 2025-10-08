@@ -36,14 +36,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch } from 'vue'
 import { VcPopover, VcSlider, VcButton } from '@voicenter-team/voicenter-ui-plus'
 import { debounce } from 'lodash'
 import { getTranslation } from '@/plugins/translator'
-
-import {
-    usedWidgetShadowRootEl
-} from '@/composables/opensipsjs'
 
 export interface Props {
     setupVisualizationConfig: (config: unknown) => void

@@ -63,13 +63,13 @@ import { getMediaDevicesList, outputMediaDeviceValue, inputMediaDeviceValue } fr
 import DNDButton from '@/components/phone/DNDButton.vue'
 import { allowDNDSetup } from '@/composables/useWidgetConfig'
 import { getTranslation } from '@/plugins/translator'
+import { ConfigOptionType } from '@voicenter-team/voicenter-ui-plus/library/types/types'
 
 /* Data */
-const  mediaConfigOptions = {
+const  mediaConfigOptions: ConfigOptionType<MediaDeviceInfo> = {
     labelKey: 'label',
     valueKey: 'deviceId',
-    onclickFuncKey: 'func',
-    searchKey: 'name',
+    searchKey: 'label'
 }
 
 </script>

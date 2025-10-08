@@ -81,18 +81,18 @@
 
 <script lang="ts" setup>
 import type { UnwrapRef } from 'vue'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import SettingsIconButton from '@/components/SettingsIconButton.vue'
 import KeypadIconButton from '@/components/KeypadIconButton.vue'
 import ActionIconButton from '@/components/base/ActionIconButton.vue'
 import {
     useOpenSIPSJS,
-    isMuted,
+    /*isMuted,
     isMuteWhenJoin,
     allActiveCalls,
     currentActiveRoom,
     isDND,
-    speakerVolume
+    speakerVolume,*/
 } from '@/composables/opensipsjs'
 import { allowOutgoingCalls, showKeypad, keypadMode } from '@/composables/useWidgetConfig'
 import type { ICall } from 'opensips-js/src/types/rtc'
@@ -100,7 +100,18 @@ import { VcSlider } from '@voicenter-team/voicenter-ui-plus'
 import { debounce } from 'lodash'
 import NewCallerButton from '@/components/NewCallerButton.vue'
 
-const { muteAgent, setDND, terminateCall, startCall, setSpeakerVolume, state } = useOpenSIPSJS()
+const { state, getAudioState, getAudioApi } = useOpenSIPSJS()
+
+const {
+    isMuted,
+    isMuteWhenJoin,
+    allActiveCalls,
+    currentActiveRoom,
+    isDND,
+    speakerVolume
+} = getAudioState()
+
+const { muteAgent, setDND, terminateCall, setSpeakerVolume } = getAudioApi()
 
 withDefaults(
     defineProps<{
@@ -119,9 +130,6 @@ const emit = defineEmits<{
     (e: 'toggle-keypad'): void
     (e: 'toggle-new-call-keypad'): void
 }>()
-
-const isOutgoingCallInputOpen = ref<boolean>(false)
-const outgoingInputValue = ref<string>('')
 
 const isAgentMuted = computed(() => {
     if (!allActiveCalls.value.length) {

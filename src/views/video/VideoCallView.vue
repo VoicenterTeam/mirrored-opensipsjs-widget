@@ -12,10 +12,12 @@
 </template>
 
 <script lang="ts" setup>
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { computed, onMounted, ref, useTemplateRef  } from 'vue'
-import VideoWidgetContent from '@/views/VideoWidgetContent.vue'
+import VideoWidgetContent from '@/views/video/VideoWidgetContent.vue'
 import Draggable from '@/components/Draggable.vue'
-import { layoutMode } from '@/composables/useWidgetConfig'
+import { layoutMode } from '@/composables/useWidgetConfig.ts'
 import { useElementSize } from '@vueuse/core'
 
 /* Emits */

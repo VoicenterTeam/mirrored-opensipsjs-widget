@@ -1,5 +1,5 @@
 import { computed, ref, watch } from 'vue'
-import { allActiveCalls, callTime, currentActiveRoom } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import {
     getCallsInRoom,
     getOldestCall,
@@ -7,6 +7,8 @@ import {
     getRoomTitle,
     getRoomTitleCombined
 } from '@/helpers/roomHelper.ts'
+const { getAudioState } = useOpenSIPSJS()
+const { allActiveCalls, callTime, currentActiveRoom } = getAudioState()
 
 export function useRoomData (roomId: number) {
     /* Data */

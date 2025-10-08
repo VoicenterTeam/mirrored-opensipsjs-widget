@@ -44,7 +44,8 @@ const props = defineProps<Props>()
 
 /* Composable */
 const { onActiveCallsPopupToggle, onKeyPadToggle } = usePhoneState()
-const { terminateCall, setActiveRoom, getActiveCallsInRoom } = useOpenSIPSJS()
+const { getAudioApi } = useOpenSIPSJS()
+const { terminateCall, setActiveRoom, getActiveCallsInRoom } = getAudioApi()
 const { roomTitle, roomDuration } = useRoomData(props.roomId)
 
 /* Methods */

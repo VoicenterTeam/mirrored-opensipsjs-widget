@@ -42,8 +42,17 @@ import FooterBlock from '@/components/phone/FooterBlock.vue'
 import ActiveCallsPopup from '@/components/phone/common/ActiveCallsPopup.vue'
 import useCallActions from '@/composables/phone/useCallActions.ts'
 import KeyPad from '@/components/phone/common/KeyPad.vue'
-import { currentActiveRoom, activeRoomsWithoutIncoming, roomsWithoutActive, lengthOfCallsWithoutIncoming } from '@/composables/opensipsjs'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import { getTranslation } from '@/plugins/translator'
+
+const { getAudioState } = useOpenSIPSJS()
+
+const {
+    currentActiveRoom,
+    activeRoomsWithoutIncoming,
+    roomsWithoutActive,
+    lengthOfCallsWithoutIncoming,
+} = getAudioState()
 
 /* Data */
 const { phoneNumber, keyPadTrigger, onNumberInput, isActiveCallsPopupActive, onActiveCallsPopupToggle } = usePhoneState()

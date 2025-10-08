@@ -41,7 +41,6 @@ import { getTranslation } from '@/plugins/translator'
 import Draggable from '@/components/Draggable.vue'
 import {
     isOpenSIPSReady,
-    allActiveCalls,
     isOpenSIPSInitialized,
     useOpenSIPSJS,
     unregisterOpenSIPS,
@@ -58,7 +57,9 @@ const emit = defineEmits<{
 }>()
 
 /* Composable */
-const { startCall } = useOpenSIPSJS()
+const { getAudioState, getAudioApi } = useOpenSIPSJS()
+const { allActiveCalls } = getAudioState()
+const { startCall } = getAudioApi()
 
 /* Data */
 const draggableHandle = ref<typeof Draggable>()

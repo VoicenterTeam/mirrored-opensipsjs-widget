@@ -51,10 +51,7 @@
 import { computed, ref } from 'vue'
 import { outgoingInputRegexValidator, outgoingCallInputPlaceholder } from '@/composables/useWidgetConfig'
 import { getTranslation } from '@/plugins/translator'
-import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import ActionIconButton from '@/components/base/ActionIconButton.vue'
-
-const { setAutoAnswer } = useOpenSIPSJS()
 
 const props = withDefaults(
     defineProps<{

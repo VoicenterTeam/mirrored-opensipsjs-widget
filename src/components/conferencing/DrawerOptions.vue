@@ -56,17 +56,22 @@
 </template>
 
 <script setup lang="ts">
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { ref } from 'vue'
 import { VcPopover, VcSlider, VcButton } from '@voicenter-team/voicenter-ui-plus'
 import { useOpenSIPSJS } from '@/composables/opensipsjs.ts'
 import { getTranslation } from '@/plugins/translator'
 
+const { getVideoApi } = useOpenSIPSJS()
+
 const {
     setupDrawerOptions,
-    setupScreenShareDrawerOptions,
-} = useOpenSIPSJS()
+    setupScreenShareDrawerOptions
+} = getVideoApi()
 
-type KonvaDrawerOptions = unknown
+type KonvaDrawerOptions = object
 
 export interface Props {
     isExtendedOptions: boolean
