@@ -24,6 +24,12 @@ const widgetBuild: BuildOptions = {
         name: 'OpenSIPSWidget',
         fileName: 'opensipsjs-widget',
         formats: [ 'es', 'umd' ], // Support ES module and UMD
+    },
+    rollupOptions: {
+        output: {
+            manualChunks: undefined, // Disable automatic chunking
+            inlineDynamicImports: true // Inline dynamic imports instead of splitting
+        }
     }
 }
 

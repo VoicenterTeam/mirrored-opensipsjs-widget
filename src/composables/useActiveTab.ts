@@ -1340,12 +1340,10 @@ class TabManager {
 
         // Standard visibility check
         const isDocumentVisible = !document.hidden
-        const hasDocumentFocus = document.hasFocus()
         const visibilityState = document.visibilityState
 
         console.log('[TabManager] Visibility signals:', {
             'document.hidden': document.hidden,
-            'document.hasFocus()': hasDocumentFocus,
             'document.visibilityState': visibilityState,
             isInIframe: this.isInIframe
         })
@@ -1354,15 +1352,13 @@ class TabManager {
         if (this.isInIframe) {
             try {
                 const parentHidden = this.parentWindow?.document?.hidden
-                const parentHasFocus = this.parentWindow?.document?.hasFocus()
 
                 console.log('[TabManager] Parent window signals:', {
                     'parent.document.hidden': parentHidden,
-                    'parent.document.hasFocus()': parentHasFocus
                 })
 
                 // Consider visible if EITHER iframe or parent is visible/focused
-                const isVisible = (isDocumentVisible || !parentHidden) && (hasDocumentFocus || parentHasFocus)
+                const isVisible = (isDocumentVisible || !parentHidden)
 
                 console.log(`[TabManager] ✅ Final visibility (iframe context): ${isVisible}`)
                 return isVisible
