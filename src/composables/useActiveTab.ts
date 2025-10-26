@@ -12,6 +12,7 @@ import type { AllActiveCallsType } from '@/types/opensips'
 import { ICall } from 'opensips-js-vue'
 import { TabMessageType } from '@/types/tab-management'
 import { getCallDisplayInfo } from '@/helpers/callerHelper.ts'
+import { debugMode } from '@/composables/useWidgetConfig'
 
 const { getAudioState } = useOpenSIPSJS()
 
@@ -111,8 +112,10 @@ class TabManager {
     /** tab-election instance for basic leadership coordination */
     private tab: Tab
 
-    /** Enable detailed console logging for debugging (set to true when troubleshooting) */
-    private readonly debug = true
+    /** Enable detailed console logging for debugging (configurable via IWidgetConfig.debug) */
+    private get debug (): boolean {
+        return debugMode.value
+    }
 
     /** Detect if widget is running inside an iframe */
     private readonly isInIframe: boolean
@@ -174,17 +177,19 @@ class TabManager {
         // Generate unique tab identifier for this instance
         this.tabId = this.generateTabId()
 
-        console.log(`[TabManager] 🚀 Initializing new tab: ${this.tabId.slice(-8)}`)
-        console.log('[TabManager] 📍 Environment:', {
-            isInIframe: this.isInIframe,
-            hasParentAccess: !!this.parentWindow,
-            location: window.location.href,
-            parentLocation: this.getParentLocation(),
-            userAgent: navigator.userAgent.substring(0, 50) + '...'
-        })
+        if (this.debug) {
+            console.log(`[TabManager] 🚀 Initializing new tab: ${this.tabId.slice(-8)}`)
+            console.log('[TabManager] 📍 Environment:', {
+                isInIframe: this.isInIframe,
+                hasParentAccess: !!this.parentWindow,
+                location: window.location.href,
+                parentLocation: this.getParentLocation(),
+                userAgent: navigator.userAgent.substring(0, 50) + '...'
+            })
 
-        if (this.isInIframe) {
-            console.log('[TabManager] ⚠️  IFRAME DETECTED - Using enhanced focus detection')
+            if (this.isInIframe) {
+                console.log('[TabManager] ⚠️  IFRAME DETECTED - Using enhanced focus detection')
+            }
         }
 
         // Create tab-election instance for basic leadership coordination
@@ -318,55 +323,55 @@ class TabManager {
      * - Parent visibility change events
      */
     private setupEventListeners (): void {
-        console.log('[TabManager] 🎧 Setting up DOM event listeners...')
+        if (this.debug) console.log('[TabManager] 🎧 Setting up DOM event listeners...')
 
         // User interaction events → trigger leadership request
         // These events indicate the user is actively using this tab
         window.addEventListener('focus', this.boundSendLeadershipRequest)
-        console.log('[TabManager] ✅ window focus listener added')
+        if (this.debug) console.log('[TabManager] ✅ window focus listener added')
 
         window.addEventListener('visibilitychange', this.boundHandleVisibilityChange)
-        console.log('[TabManager] ✅ visibilitychange listener added')
+        if (this.debug) console.log('[TabManager] ✅ visibilitychange listener added')
 
         document.addEventListener('mousedown', this.boundSendLeadershipRequest)
-        console.log('[TabManager] ✅ document mousedown listener added')
+        if (this.debug) console.log('[TabManager] ✅ document mousedown listener added')
 
         document.addEventListener('keydown', this.boundSendLeadershipRequest)
-        console.log('[TabManager] ✅ document keydown listener added')
+        if (this.debug) console.log('[TabManager] ✅ document keydown listener added')
 
         // IFRAME ENHANCEMENT: Add parent window listeners if in iframe
         if (this.isInIframe && this.parentWindow) {
             try {
                 this.parentWindow.addEventListener('focus', this.boundSendLeadershipRequest)
-                console.log('[TabManager] ✅ PARENT window focus listener added (iframe mode)')
+                if (this.debug) console.log('[TabManager] ✅ PARENT window focus listener added (iframe mode)')
 
                 this.parentWindow.addEventListener('visibilitychange', this.boundHandleVisibilityChange)
-                console.log('[TabManager] ✅ PARENT visibilitychange listener added (iframe mode)')
+                if (this.debug) console.log('[TabManager] ✅ PARENT visibilitychange listener added (iframe mode)')
             } catch (e) {
-                console.log('[TabManager] ⚠️  Cannot add parent window listeners (cross-origin):', e)
+                if (this.debug) console.log('[TabManager] ⚠️  Cannot add parent window listeners (cross-origin):', e)
             }
         }
 
         // Cross-tab coordination → localStorage grants changed
         // When another tab writes a grant, all tabs see this event immediately
         window.addEventListener('storage', this.boundOnStorageChange)
-        console.log('[TabManager] ✅ storage change listener added')
+        if (this.debug) console.log('[TabManager] ✅ storage change listener added')
 
         // Tab lifecycle management
         // beforeunload: Show confirmation if user tries to close tab with active calls
         window.addEventListener('beforeunload', this.boundHandleBeforeUnload)
-        console.log('[TabManager] ✅ beforeunload listener added')
+        if (this.debug) console.log('[TabManager] ✅ beforeunload listener added')
 
         // pagehide: Force cleanup when tab actually closes/navigates away
         window.addEventListener('pagehide', this.boundHandlePageHide)
-        console.log('[TabManager] ✅ pagehide listener added')
+        if (this.debug) console.log('[TabManager] ✅ pagehide listener added')
 
         // Request notification permission for incoming call alerts
         // This is async but we don't need to wait for it
-        console.log('[TabManager] 🔔 Requesting notification permission...')
+        if (this.debug) console.log('[TabManager] 🔔 Requesting notification permission...')
         this.requestNotificationPermission()
 
-        console.log('[TabManager] ✅ Event listeners setup completed')
+        if (this.debug) console.log('[TabManager] ✅ Event listeners setup completed')
     }
 
     /**
@@ -376,36 +381,36 @@ class TabManager {
      * in setupEventListeners() for removal to work properly
      */
     private removeEventListeners (): void {
-        console.log('[TabManager] 🧹 Cleaning up event listeners...')
+        if (this.debug) console.log('[TabManager] 🧹 Cleaning up event listeners...')
 
         // Remove all user interaction listeners using stored bound references
         window.removeEventListener('focus', this.boundSendLeadershipRequest)
         window.removeEventListener('visibilitychange', this.boundHandleVisibilityChange)
         document.removeEventListener('mousedown', this.boundSendLeadershipRequest)
         document.removeEventListener('keydown', this.boundSendLeadershipRequest)
-        console.log('[TabManager] ✅ User interaction listeners removed')
+        if (this.debug) console.log('[TabManager] ✅ User interaction listeners removed')
 
         // IFRAME CLEANUP: Remove parent window listeners
         if (this.isInIframe && this.parentWindow) {
             try {
                 this.parentWindow.removeEventListener('focus', this.boundSendLeadershipRequest)
                 this.parentWindow.removeEventListener('visibilitychange', this.boundHandleVisibilityChange)
-                console.log('[TabManager] ✅ PARENT window listeners removed (iframe mode)')
+                if (this.debug) console.log('[TabManager] ✅ PARENT window listeners removed (iframe mode)')
             } catch (e) {
-                console.log('[TabManager] ⚠️  Could not remove parent listeners (cross-origin):', e)
+                if (this.debug) console.log('[TabManager] ⚠️  Could not remove parent listeners (cross-origin):', e)
             }
         }
 
         // Remove coordination listener
         window.removeEventListener('storage', this.boundOnStorageChange)
-        console.log('[TabManager] ✅ Storage change listener removed')
+        if (this.debug) console.log('[TabManager] ✅ Storage change listener removed')
 
         // Remove lifecycle listeners
         window.removeEventListener('beforeunload', this.boundHandleBeforeUnload)
         window.removeEventListener('pagehide', this.boundHandlePageHide)
-        console.log('[TabManager] ✅ Lifecycle listeners removed')
+        if (this.debug) console.log('[TabManager] ✅ Lifecycle listeners removed')
 
-        console.log('[TabManager] ✅ Event listener cleanup completed')
+        if (this.debug) console.log('[TabManager] ✅ Event listener cleanup completed')
     }
 
     /**
@@ -496,14 +501,14 @@ class TabManager {
 
             // Handle focus requests (user wants to switch to tab with calls)
             } else if (message?.type === TabMessageType.FOCUS_REQUEST) {
-                console.log('[TabManager] Received focus request:', message)
+                if (this.debug) console.log('[TabManager] Received focus request:', message)
 
                 // Check if this focus request is meant for this specific tab
                 if (message.tabId === this.tabId) {
-                    console.log('[TabManager] Focus request is for this tab, showing notification...')
+                    if (this.debug) console.log('[TabManager] Focus request is for this tab, showing notification...')
                     this.showFocusNotification()
                 } else {
-                    console.log('[TabManager] Focus request is for different tab:', message.tabId, 'vs', this.tabId)
+                    if (this.debug) console.log('[TabManager] Focus request is for different tab:', message.tabId, 'vs', this.tabId)
                 }
 
             // Handle leadership grants (pre-approved tokens from current leader)
@@ -589,25 +594,27 @@ class TabManager {
     }
 
     private initializeTabElection (): void {
-        console.log('[TabManager] 🏆 Initializing tab election system...')
+        if (this.debug) console.log('[TabManager] 🏆 Initializing tab election system...')
 
         this.tab.waitForLeadership(() => {
-            console.log('[TabManager] 👑 Elected as LEADER - evaluating leadership acceptance...')
+            if (this.debug) console.log('[TabManager] 👑 Elected as LEADER - evaluating leadership acceptance...')
 
             const grant = this.readGrant()
 
-            if (grant) {
-                console.log('[TabManager] Found existing grant in localStorage:', {
-                    grantedTo: grant.to.slice(-8),
-                    thisTab: this.tabId.slice(-8),
-                    isForMe: grant.to === this.tabId
-                })
-            } else {
-                console.log('[TabManager] No existing grant found')
+            if (this.debug) {
+                if (grant) {
+                    console.log('[TabManager] Found existing grant in localStorage:', {
+                        grantedTo: grant.to.slice(-8),
+                        thisTab: this.tabId.slice(-8),
+                        isForMe: grant.to === this.tabId
+                    })
+                } else {
+                    console.log('[TabManager] No existing grant found')
+                }
             }
 
             if (grant && grant.to !== this.tabId) {
-                console.log('[TabManager] 🚫 Another tab has valid grant - STEPPING DOWN')
+                if (this.debug) console.log('[TabManager] 🚫 Another tab has valid grant - STEPPING DOWN')
                 this.setActiveState(false)
                 this.tab.relinquishLeadership()
                 return {} // return any shape; we're stepping down right away
@@ -615,15 +622,15 @@ class TabManager {
 
             // clear self grant if present
             if (grant && grant.to === this.tabId) {
-                console.log('[TabManager] Clearing self-grant from localStorage')
+                if (this.debug) console.log('[TabManager] Clearing self-grant from localStorage')
                 this.clearGrant()
             }
 
-            console.log(`[TabManager] ✅ Tab ${this.tabId.slice(-8)} ACCEPTED leadership`)
+            if (this.debug) console.log(`[TabManager] ✅ Tab ${this.tabId.slice(-8)} ACCEPTED leadership`)
 
             // Do NOT use epoch; just become leader, but we'll relinquish only for newest ts
             const myActiveCalls = Object.values(activeCalls.value).length
-            console.log('[TabManager] Active calls count:', myActiveCalls)
+            if (this.debug) console.log('[TabManager] Active calls count:', myActiveCalls)
 
             this._tabWithActiveCalls.value = myActiveCalls > 0 ? this.tabId : ''
             this.setActiveState(true)
@@ -641,40 +648,44 @@ class TabManager {
                     ts: number;
                     visible: boolean
                 }) => {
-                    console.log('[Leader] 📥 Received leadership request:', {
-                        fromTab: tabId.slice(-8),
-                        requestId: requestId.slice(-12),
-                        timestamp: ts,
-                        visible,
-                        time: new Date().toISOString()
-                    })
+                    if (this.debug) {
+                        console.log('[Leader] 📥 Received leadership request:', {
+                            fromTab: tabId.slice(-8),
+                            requestId: requestId.slice(-12),
+                            timestamp: ts,
+                            visible,
+                            time: new Date().toISOString()
+                        })
+                    }
 
                     // Ignore our own requests entirely
                     if (tabId === this.tabId) {
-                        console.log('[Leader] 🔁 Ignoring self-request')
+                        if (this.debug) console.log('[Leader] 🔁 Ignoring self-request')
                         return { granted: false }
                     }
 
                     const activeCallsCount = Object.keys(activeCalls.value).length
                     if (activeCallsCount > 0) {
-                        console.log('[Leader] 📞 DENIED - Have active calls:', activeCallsCount)
+                        if (this.debug) console.log('[Leader] 📞 DENIED - Have active calls:', activeCallsCount)
                         return { granted: false }
                     }
 
                     if (!visible) {
-                        console.log('[Leader] 👻 DENIED - Requester not visible')
+                        if (this.debug) console.log('[Leader] 👻 DENIED - Requester not visible')
                         return { granted: false }
                     }
 
                     // Track newest candidate
                     if (ts > latest.ts || (ts === latest.ts && requestId > latest.requestId)) {
-                        console.log('[Leader] 🆕 New latest candidate:', {
-                            previous: latest,
-                            new: {
-                                ts,
-                                requestId: requestId.slice(-12)
-                            }
-                        })
+                        if (this.debug) {
+                            console.log('[Leader] 🆕 New latest candidate:', {
+                                previous: latest,
+                                new: {
+                                    ts,
+                                    requestId: requestId.slice(-12)
+                                }
+                            })
+                        }
                         latest = {
                             ts,
                             requestId
@@ -683,16 +694,18 @@ class TabManager {
 
                     // Only the newest may proceed
                     if (ts !== latest.ts || requestId !== latest.requestId) {
-                        console.log('[Leader] ⏭️  DENIED - Stale request (newer exists):', {
-                            this: {
-                                ts,
-                                requestId: requestId.slice(-12)
-                            },
-                            latest: {
-                                ts: latest.ts,
-                                requestId: latest.requestId.slice(-12)
-                            }
-                        })
+                        if (this.debug) {
+                            console.log('[Leader] ⏭️  DENIED - Stale request (newer exists):', {
+                                this: {
+                                    ts,
+                                    requestId: requestId.slice(-12)
+                                },
+                                latest: {
+                                    ts: latest.ts,
+                                    requestId: latest.requestId.slice(-12)
+                                }
+                            })
+                        }
                         return { granted: false }
                     }
 
@@ -705,11 +718,13 @@ class TabManager {
                         to: tabId
                     }
 
-                    console.log('[Leader] ✅ GRANTING leadership:', {
-                        toTab: tabId.slice(-8),
-                        token: token.slice(0, 8) + '...',
-                        timestamp: ts
-                    })
+                    if (this.debug) {
+                        console.log('[Leader] ✅ GRANTING leadership:', {
+                            toTab: tabId.slice(-8),
+                            token: token.slice(0, 8) + '...',
+                            timestamp: ts
+                        })
+                    }
 
                     // Persist grant (so stray winners see it and step down)
                     this.writeGrant({
@@ -717,7 +732,7 @@ class TabManager {
                         token,
                         ts
                     })
-                    console.log('[Leader] Grant written to localStorage')
+                    if (this.debug) console.log('[Leader] Grant written to localStorage')
 
                     // Broadcast (so the intended winner caches token if it wants)
                     this.tab.send({
@@ -726,11 +741,11 @@ class TabManager {
                         ts,
                         token
                     })
-                    console.log('[Leader] Grant broadcasted via tab-election')
+                    if (this.debug) console.log('[Leader] Grant broadcasted via tab-election')
 
                     // Hand-off, but allow cancellation if a newer request appears
                     this.setActiveState(false)
-                    console.log('[Leader] 🔄 Attempting leadership handoff...')
+                    if (this.debug) console.log('[Leader] 🔄 Attempting leadership handoff...')
 
                     try {
                         // If someone newer arrived, cancel (by overwriting 'latest'/'granted')
@@ -738,18 +753,18 @@ class TabManager {
                             // Cancel this grant
                             const g = this.readGrant()
                             if (g && g.to === tabId && g.ts === ts) this.clearGrant()
-                            console.log('[Leader] ❌ Handoff CANCELED - newer request arrived')
+                            if (this.debug) console.log('[Leader] ❌ Handoff CANCELED - newer request arrived')
                             return { granted: false }
                         }
                         await this.tab.relinquishLeadership()
-                        console.log('[Leader] ✅ Leadership RELINQUISHED successfully')
+                        if (this.debug) console.log('[Leader] ✅ Leadership RELINQUISHED successfully')
                         return { granted: true }
                     } catch (e) {
                         console.error('[Leader] ❌ Failed to relinquish leadership:', e)
                         return { granted: false }
                     } finally {
                         if (granted && granted.ts === ts && granted.requestId === requestId && granted.to === tabId) {
-                            console.log('[Leader] Clearing granted state')
+                            if (this.debug) console.log('[Leader] Clearing granted state')
                             granted = null
                         }
                     }
@@ -787,32 +802,34 @@ class TabManager {
     private setActiveState (isActive: boolean): void {
         // Skip if state hasn't changed (prevents unnecessary SIP operations)
         if (this._isActiveTab.value === isActive) {
-            console.log(`[TabManager] ⏭️  State already ${isActive ? 'ACTIVE' : 'INACTIVE'}, no change needed`)
+            if (this.debug) console.log(`[TabManager] ⏭️  State already ${isActive ? 'ACTIVE' : 'INACTIVE'}, no change needed`)
             return
         }
 
-        console.log(`[TabManager] 🔄 State transition: ${this._isActiveTab.value ? 'ACTIVE' : 'INACTIVE'} → ${isActive ? 'ACTIVE' : 'INACTIVE'}`)
-        console.log('[TabManager] Transition details:', {
-            tabId: this.tabId.slice(-8),
-            from: this._isActiveTab.value,
-            to: isActive,
-            timestamp: new Date().toISOString(),
-            isInIframe: this.isInIframe
-        })
+        if (this.debug) {
+            console.log(`[TabManager] 🔄 State transition: ${this._isActiveTab.value ? 'ACTIVE' : 'INACTIVE'} → ${isActive ? 'ACTIVE' : 'INACTIVE'}`)
+            console.log('[TabManager] Transition details:', {
+                tabId: this.tabId.slice(-8),
+                from: this._isActiveTab.value,
+                to: isActive,
+                timestamp: new Date().toISOString(),
+                isInIframe: this.isInIframe
+            })
+        }
 
         // Update the reactive state
         this._isActiveTab.value = isActive
 
         // Manage SIP connection based on active state
         if (isActive) {
-            console.log('[TabManager] 🟢 Becoming ACTIVE - registering with SIP server...')
+            if (this.debug) console.log('[TabManager] 🟢 Becoming ACTIVE - registering with SIP server...')
             tryRegisterOpenSIPS()
         } else {
-            console.log('[TabManager] 🔴 Becoming INACTIVE - unregistering from SIP server...')
+            if (this.debug) console.log('[TabManager] 🔴 Becoming INACTIVE - unregistering from SIP server...')
             unregisterOpenSIPS()
         }
 
-        console.log(`[TabManager] ✅ Tab is now ${isActive ? '🟢 ACTIVE' : '🔴 INACTIVE'}`)
+        if (this.debug) console.log(`[TabManager] ✅ Tab is now ${isActive ? '🟢 ACTIVE' : '🔴 INACTIVE'}`)
     }
 
     /**
@@ -831,31 +848,33 @@ class TabManager {
      * 4. tab-election will promote this tab if grant is received
      */
     public sendLeadershipRequest = debounce(async () => {
-        console.log('[TabManager] 🎯 Leadership request triggered')
+        if (this.debug) console.log('[TabManager] 🎯 Leadership request triggered')
 
         // PRECONDITION: Tab must not be destroyed
         if (this.isDestroyed) {
-            console.log('[TabManager] ❌ Skipping leadership request - tab is destroyed')
+            if (this.debug) console.log('[TabManager] ❌ Skipping leadership request - tab is destroyed')
             return
         }
 
         // PRECONDITION: Don't request if already active
         if (this._isActiveTab.value) {
-            console.log('[TabManager] ⏭️  Skipping leadership request - already active')
+            if (this.debug) console.log('[TabManager] ⏭️  Skipping leadership request - already active')
             return
         }
 
         // PRECONDITION: Don't request if another tab has active calls
         if (this._tabWithActiveCalls.value && this._tabWithActiveCalls.value !== this.tabId) {
-            console.log('[TabManager] 📞 Skipping leadership request - another tab has active calls:',
-                this._tabWithActiveCalls.value.slice(-8))
+            if (this.debug) {
+                console.log('[TabManager] 📞 Skipping leadership request - another tab has active calls:',
+                    this._tabWithActiveCalls.value.slice(-8))
+            }
             return
         }
 
         // PRECONDITION: Tab must be visible to user (enhanced for iframe)
         const isVisible = this.isTabVisible()
         if (!isVisible) {
-            console.log('[TabManager] 👻 Skipping leadership request - tab is not visible')
+            if (this.debug) console.log('[TabManager] 👻 Skipping leadership request - tab is not visible')
             return
         }
 
@@ -866,20 +885,22 @@ class TabManager {
 
         // Prevent duplicate requests (safety check)
         if (this.lastSentRequestId === requestId) {
-            console.log('[TabManager] 🔁 Skipping duplicate leadership request')
+            if (this.debug) console.log('[TabManager] 🔁 Skipping duplicate leadership request')
             return
         }
 
         this.lastSentRequestId = requestId
 
-        console.log('[TabManager] 📤 Sending leadership request:', {
-            tabId: this.tabId.slice(-8),
-            requestId: requestId.slice(-12),
-            timestamp: ts,
-            visible: isVisible,
-            isInIframe: this.isInIframe,
-            currentTime: new Date().toISOString()
-        })
+        if (this.debug) {
+            console.log('[TabManager] 📤 Sending leadership request:', {
+                tabId: this.tabId.slice(-8),
+                requestId: requestId.slice(-12),
+                timestamp: ts,
+                visible: isVisible,
+                isInIframe: this.isInIframe,
+                currentTime: new Date().toISOString()
+            })
+        }
 
         try {
             // Send request to current leader via tab-election system
@@ -890,13 +911,13 @@ class TabManager {
                 visible: isVisible
             })
 
-            console.log('[TabManager] ✅ Leadership request completed:', result)
+            if (this.debug) console.log('[TabManager] ✅ Leadership request completed:', result)
             // Response will arrive via LEADERSHIP_GRANT message if approved
 
         } catch (error) {
             // Request failed (no leader, network issues, etc.)
             // This is normal and expected when no leader exists yet
-            console.log('[TabManager] ⚠️  Leadership request failed (likely no current leader):', error)
+            if (this.debug) console.log('[TabManager] ⚠️  Leadership request failed (likely no current leader):', error)
         }
     }, 200)  // 200ms debounce prevents spam from rapid user interactions
 
@@ -998,50 +1019,54 @@ class TabManager {
     }
 
     private async requestNotificationPermission (): Promise<void> {
-        console.log('[TabManager] 🔔 Checking notification support...')
-        console.log('[TabManager] Notification API available:', 'Notification' in window)
-        console.log('[TabManager] Current permission:', ('Notification' in window) ? Notification.permission : 'N/A')
-        console.log('[TabManager] Is in iframe:', this.isInIframe)
+        if (this.debug) {
+            console.log('[TabManager] 🔔 Checking notification support...')
+            console.log('[TabManager] Notification API available:', 'Notification' in window)
+            console.log('[TabManager] Current permission:', ('Notification' in window) ? Notification.permission : 'N/A')
+            console.log('[TabManager] Is in iframe:', this.isInIframe)
+        }
 
         if (!('Notification' in window)) {
-            console.log('[TabManager] ❌ Notification API not available in this browser')
+            if (this.debug) console.log('[TabManager] ❌ Notification API not available in this browser')
             return
         }
 
         const currentPermission = Notification.permission
-        console.log('[TabManager] Notification permission status:', currentPermission)
+        if (this.debug) console.log('[TabManager] Notification permission status:', currentPermission)
 
         if (currentPermission === 'granted') {
-            console.log('[TabManager] ✅ Notification permission already granted')
+            if (this.debug) console.log('[TabManager] ✅ Notification permission already granted')
             return
         }
 
         if (currentPermission === 'denied') {
-            console.log('[TabManager] 🚫 Notification permission denied by user')
+            if (this.debug) console.log('[TabManager] 🚫 Notification permission denied by user')
             return
         }
 
         // Permission is 'default', request it
-        if (this.isInIframe) {
+        if (this.isInIframe && this.debug) {
             console.log('[TabManager] ⚠️  Running in iframe - notification permission may be restricted')
             console.log('[TabManager] ℹ️  Some browsers require "allow" attribute on iframe for notifications')
         }
 
         try {
-            console.log('[TabManager] 📝 Requesting notification permission...')
+            if (this.debug) console.log('[TabManager] 📝 Requesting notification permission...')
             const result = await Notification.requestPermission()
-            console.log('[TabManager] Notification permission result:', result)
+            if (this.debug) console.log('[TabManager] Notification permission result:', result)
 
-            if (result === 'granted') {
-                console.log('[TabManager] ✅ Notification permission GRANTED')
-            } else if (result === 'denied') {
-                console.log('[TabManager] ❌ Notification permission DENIED')
-            } else {
-                console.log('[TabManager] ⚠️  Notification permission DEFAULT (no action taken)')
+            if (this.debug) {
+                if (result === 'granted') {
+                    console.log('[TabManager] ✅ Notification permission GRANTED')
+                } else if (result === 'denied') {
+                    console.log('[TabManager] ❌ Notification permission DENIED')
+                } else {
+                    console.log('[TabManager] ⚠️  Notification permission DEFAULT (no action taken)')
+                }
             }
         } catch (error) {
             console.error('[TabManager] ❌ Failed to request notification permission:', error)
-            if (this.isInIframe) {
+            if (this.isInIframe && this.debug) {
                 console.error('[TabManager] 💡 IFRAME TIP: Parent page needs to allow notifications via iframe policy')
                 console.error('[TabManager] 💡 Add to iframe: allow="notifications"')
             }
@@ -1049,32 +1074,38 @@ class TabManager {
     }
 
     private async showIncomingCallNotification (call: ICall, callId: string): Promise<void> {
-        console.log('[TabManager] 🔔 Attempting to show incoming call notification:', {
-            callId,
-            hasNotificationAPI: 'Notification' in window,
-            permission: ('Notification' in window) ? Notification.permission : 'N/A',
-            isInIframe: this.isInIframe
-        })
+        if (this.debug) {
+            console.log('[TabManager] 🔔 Attempting to show incoming call notification:', {
+                callId,
+                hasNotificationAPI: 'Notification' in window,
+                permission: ('Notification' in window) ? Notification.permission : 'N/A',
+                isInIframe: this.isInIframe
+            })
+        }
 
         if (!('Notification' in window)) {
-            console.log('[TabManager] ❌ Cannot show notification - API not available')
+            if (this.debug) console.log('[TabManager] ❌ Cannot show notification - API not available')
             return
         }
 
         if (Notification.permission !== 'granted') {
-            console.log('[TabManager] ❌ Cannot show notification - permission not granted:', Notification.permission)
-            if (this.isInIframe) {
-                console.log('[TabManager] 💡 IFRAME: Notifications may be blocked. Check iframe permissions.')
+            if (this.debug) {
+                console.log('[TabManager] ❌ Cannot show notification - permission not granted:', Notification.permission)
+                if (this.isInIframe) {
+                    console.log('[TabManager] 💡 IFRAME: Notifications may be blocked. Check iframe permissions.')
+                }
             }
             return
         }
 
         try {
             const { displayName, displayNumber } = await getCallDisplayInfo(call)
-            console.log('[TabManager] Creating notification for call:', {
-                displayName,
-                displayNumber
-            })
+            if (this.debug) {
+                console.log('[TabManager] Creating notification for call:', {
+                    displayName,
+                    displayNumber
+                })
+            }
 
             const notification = new Notification('Incoming Call', {
                 body: `Call from ${displayName} (${displayNumber})`,
@@ -1082,16 +1113,16 @@ class TabManager {
                 requireInteraction: true
             })
 
-            console.log('[TabManager] ✅ Notification created successfully')
+            if (this.debug) console.log('[TabManager] ✅ Notification created successfully')
 
             notification.onclick = () => {
-                console.log('[TabManager] User clicked notification - focusing tab')
+                if (this.debug) console.log('[TabManager] User clicked notification - focusing tab')
                 this.focusTab()
                 notification.close()
             }
 
             notification.onclose = () => {
-                console.log('[TabManager] Notification closed for call:', callId)
+                if (this.debug) console.log('[TabManager] Notification closed for call:', callId)
                 this.activeNotifications.delete(callId)
             }
 
@@ -1100,10 +1131,10 @@ class TabManager {
             }
 
             this.activeNotifications.set(callId, notification)
-            console.log('[TabManager] Active notifications count:', this.activeNotifications.size)
+            if (this.debug) console.log('[TabManager] Active notifications count:', this.activeNotifications.size)
         } catch (error) {
             console.error('[TabManager] ❌ Failed to show notification:', error)
-            if (this.isInIframe) {
+            if (this.isInIframe && this.debug) {
                 console.error('[TabManager] 💡 IFRAME ERROR: Notifications may be restricted in iframe context')
             }
         }
@@ -1245,16 +1276,18 @@ class TabManager {
      * - Ignore when becoming hidden (don't give up leadership)
      */
     private handleVisibilityChange (): void {
-        console.log('[TabManager] 👁️  Visibility change event:', {
-            'document.hidden': document.hidden,
-            'document.visibilityState': document.visibilityState,
-            'document.hasFocus()': document.hasFocus(),
-            isInIframe: this.isInIframe,
-            timestamp: new Date().toISOString()
-        })
+        if (this.debug) {
+            console.log('[TabManager] 👁️  Visibility change event:', {
+                'document.hidden': document.hidden,
+                'document.visibilityState': document.visibilityState,
+                'document.hasFocus()': document.hasFocus(),
+                isInIframe: this.isInIframe,
+                timestamp: new Date().toISOString()
+            })
+        }
 
         // Check parent visibility if in iframe
-        if (this.isInIframe && this.parentWindow) {
+        if (this.isInIframe && this.parentWindow && this.debug) {
             try {
                 console.log('[TabManager] Parent window state:', {
                     'parent.document.hidden': this.parentWindow.document.hidden,
@@ -1267,10 +1300,10 @@ class TabManager {
 
         // Only request leadership when tab becomes visible
         if (!document.hidden) {
-            console.log('[TabManager] ✅ Tab became VISIBLE - requesting leadership')
+            if (this.debug) console.log('[TabManager] ✅ Tab became VISIBLE - requesting leadership')
             this.sendLeadershipRequest()
         } else {
-            console.log('[TabManager] 🙈 Tab became HIDDEN - no action needed')
+            if (this.debug) console.log('[TabManager] 🙈 Tab became HIDDEN - no action needed')
         }
     }
 
@@ -1336,41 +1369,45 @@ class TabManager {
      * - Page lifecycle state
      */
     private isTabVisible (): boolean {
-        console.log('[TabManager] 👁️  Checking tab visibility...')
+        if (this.debug) console.log('[TabManager] 👁️  Checking tab visibility...')
 
         // Standard visibility check
         const isDocumentVisible = !document.hidden
         const visibilityState = document.visibilityState
 
-        console.log('[TabManager] Visibility signals:', {
-            'document.hidden': document.hidden,
-            'document.visibilityState': visibilityState,
-            isInIframe: this.isInIframe
-        })
+        if (this.debug) {
+            console.log('[TabManager] Visibility signals:', {
+                'document.hidden': document.hidden,
+                'document.visibilityState': visibilityState,
+                isInIframe: this.isInIframe
+            })
+        }
 
         // In iframe context, also check parent window
         if (this.isInIframe) {
             try {
                 const parentHidden = this.parentWindow?.document?.hidden
 
-                console.log('[TabManager] Parent window signals:', {
-                    'parent.document.hidden': parentHidden,
-                })
+                if (this.debug) {
+                    console.log('[TabManager] Parent window signals:', {
+                        'parent.document.hidden': parentHidden,
+                    })
+                }
 
                 // Consider visible if EITHER iframe or parent is visible/focused
                 const isVisible = (isDocumentVisible || !parentHidden)
 
-                console.log(`[TabManager] ✅ Final visibility (iframe context): ${isVisible}`)
+                if (this.debug) console.log(`[TabManager] ✅ Final visibility (iframe context): ${isVisible}`)
                 return isVisible
             } catch (e) {
-                console.log('[TabManager] ⚠️  Cannot access parent window (cross-origin):', e)
+                if (this.debug) console.log('[TabManager] ⚠️  Cannot access parent window (cross-origin):', e)
                 // Fallback to iframe-only checks if parent is cross-origin
             }
         }
 
         // Standard context or cross-origin iframe
         const isVisible = isDocumentVisible && visibilityState === 'visible'
-        console.log(`[TabManager] ✅ Final visibility (standard): ${isVisible}`)
+        if (this.debug) console.log(`[TabManager] ✅ Final visibility (standard): ${isVisible}`)
         return isVisible
     }
 
@@ -1482,7 +1519,7 @@ let tabManager: TabManager | null = null
 
 function initializeActiveTab (): void {
     if (tabManager) {
-        console.warn('[ActiveTab] Tab manager already initialized')
+        if (console?.warn) console.warn('[ActiveTab] Tab manager already initialized')
         return
     }
     tabManager = new TabManager()

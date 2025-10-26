@@ -5,6 +5,7 @@
 ### Properties
 
 - [callSettings](IWidgetConfig.md#callsettings)
+- [debug](IWidgetConfig.md#debug)
 - [themeSettings](IWidgetConfig.md#themesettings)
 
 ## Properties
@@ -15,7 +16,23 @@
 
 #### Defined in
 
-public-api.d.ts:65
+public-api.d.ts:83
+
+___
+
+### debug
+
+• `Optional` **debug**: `boolean`
+
+Enable debug logging for tab management and other widget internals
+
+**`Default`**
+
+false
+
+#### Defined in
+
+public-api.d.ts:88
 
 ___
 
@@ -25,4 +42,4 @@ ___
 
 #### Defined in
 
-public-api.d.ts:64
+public-api.d.ts:82

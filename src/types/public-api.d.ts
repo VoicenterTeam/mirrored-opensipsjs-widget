@@ -81,6 +81,11 @@ export interface IWidgetTheme {
 export interface IWidgetConfig {
     themeSettings: IWidgetTheme
     callSettings: ICallSettings
+    /**
+     * Enable debug logging for tab management and other widget internals
+     * @default false
+     */
+    debug?: boolean
 }
 
 /**

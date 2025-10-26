@@ -5,6 +5,7 @@ import { defaultCallSettings } from '@/enum/defaultCallSettings.enum'
 export function getDefaultWidgetConfig (): IWidgetConfig {
     return JSON.parse(JSON.stringify({
         callSettings: defaultCallSettings,
-        themeSettings: defaultTheme
+        themeSettings: defaultTheme,
+        debug: false
     }))
 }

@@ -188,6 +188,25 @@
                     </VcForm>
                 </VcCollapseItem>
 
+                <!--                <VcCollapseItem-->
+                <!--                    title="Video Config"-->
+                <!--                    name="videoConfig"-->
+                <!--                >-->
+                <!--                    <VcForm-->
+                <!--                        label-position="left"-->
+                <!--                        label-width="auto"-->
+                <!--                    >-->
+                <!--                        <VcFormItem-->
+                <!--                            label="Test (Video Config Placeholder)"-->
+                <!--                        >-->
+                <!--                            <template #info-text>-->
+                <!--                                <p v-html="CONFIG_DESCRIPTION.themeSettings.videoConfig.test" />-->
+                <!--                            </template>-->
+                <!--                            <VcInput v-model="form.themeSettings.videoConfig.test" />-->
+                <!--                        </VcFormItem>-->
+                <!--                    </VcForm>-->
+                <!--                </VcCollapseItem>-->
+
                 <VcCollapseItem
                     title="Call Settings"
                     name="callSettings"

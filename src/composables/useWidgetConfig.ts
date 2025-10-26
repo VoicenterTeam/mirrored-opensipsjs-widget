@@ -193,6 +193,13 @@ export const outgoingInputRegexValidator = computed({
     }
 })
 
+export const debugMode = computed({
+    get: () => widgetConfig.debug ?? false,
+    set: (value: boolean) => {
+        widgetConfig.debug = value
+    }
+})
+
 export const widgetType = computed(() => widgetThemeSettings.value.widgetType)
 
 export const layoutType = computed(() => widgetThemeSettings.value.audioConfig?.layoutConfig.type || defaultAudioConfig.layoutConfig.type)
@@ -333,6 +340,9 @@ export function setThemeSettings (settings: Partial<IWidgetTheme>) {
 export function setConfig (config: Partial<TWidgetConfigOptions>) {
     setCallSettingsPermissions(config.callSettings ?? {})
     setThemeSettings(config.themeSettings ?? {})
+    if (config.debug !== undefined) {
+        debugMode.value = config.debug
+    }
 }
 
 export function getConfig (): IWidgetConfig {

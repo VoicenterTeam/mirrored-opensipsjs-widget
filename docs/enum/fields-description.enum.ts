@@ -101,10 +101,11 @@ export const CONFIG_DESCRIPTION = {
             success: 'Color for confirm actions, such as the confirm button and success messages.',
             danger: 'Color for danger actions, like the cancel button and error messages.',
             'additional-danger-bg': 'Background color for danger buttons when pressed.',
-            'additional-success-bg': 'Background color for success buttons when pressed.'
+            'additional-success-bg': 'Background color for success buttons when pressed.',
+            'draggable-bg': 'Background color for the draggable area of the widget when in floating mode.'
         },
         lang: 'Sets the language for the widget interface. Supports \'en\' (English) and \'he\' (Hebrew). This affects all text displayed in the widget UI.',
-        widgetType: 'audio',
+        widgetType: 'Defines the type of widget to use. Supports \'audio\' for voice-only calls and \'video\' for video calls.',
         audioConfig: {
             images: {
                 backgroundLogo: 'If the outgoing calls option is disabled, this icon will be displayed in the background of the widget.'
@@ -162,6 +163,9 @@ export const CONFIG_DESCRIPTION = {
                     '</ul>',
                 keypadPosition: 'Affects the positioning of the keypad when enabled. Applicable only in static keypad mode.'
             }
+        },
+        videoConfig: {
+            test: 'Test configuration option for video widget (placeholder for future video features).'
         },
         images: {
             backgroundLogo: 'Logo displayed in the background of the widget when outgoing calls are disabled.'
