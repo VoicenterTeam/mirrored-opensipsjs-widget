@@ -13,6 +13,8 @@ export const ringingDevicesList = vsipAPI.state.outputMediaDeviceList
 export const activeRingingDevice = ref<string>('default')
 export const microphoneInputLevel = vsipAPI.state.microphoneInputLevel
 
+export const microphonePermissionAllowed = ref(false)
+
 /* Calls management */
 export const activeCalls = vsipAPI.state.activeCalls
 export const allRooms = computed(() => {
@@ -161,6 +163,7 @@ export function getAudioState () {
         ringingDevicesList,
         activeRingingDevice,
         microphoneInputLevel,
+        microphonePermissionAllowed,
         activeCalls,
         allRooms,
         currentActiveRoom,
@@ -295,6 +298,10 @@ export function getAudioApi () {
         await state.opensipsjs?.audio.setSpeaker(target.value)
     }
 
+    function setMicrophonePermissionAllowed (value: boolean) {
+        microphonePermissionAllowed.value = value
+    }
+
     return {
         startCall,
         answerCall,
@@ -318,6 +325,7 @@ export function getAudioApi () {
         setMicrophoneSensitivity,
         getActiveCallsInRoom,
         onMicrophoneChange,
-        onSpeakerChange
+        onSpeakerChange,
+        setMicrophonePermissionAllowed
     }
 }
