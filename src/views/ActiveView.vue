@@ -5,7 +5,7 @@
             class="flex items-center justify-center p-1 border-b-1 border-border-lines text-sm microphone-access-denied"
         >
             <WarningIcon />
-            <span class="ml-1">Microphone access denied</span>
+            <span class="ml-1">{{ getTranslation('audio.microphone.access.denied') }}</span>
         </div>
         <div
             v-if="showTopKeypad"
@@ -103,6 +103,7 @@ import MoveView from '@/views/MoveView.vue'
 import OutgoingCallView from '@/views/OutgoingCallView.vue'
 import Keypad from '@/components/Keypad.vue'
 import WarningIcon from '@/assets/icons/warning.svg?component'
+import { getTranslation } from '@/plugins/translator'
 
 const { state, getAudioApi, getAudioState } = useOpenSIPSJS()
 
