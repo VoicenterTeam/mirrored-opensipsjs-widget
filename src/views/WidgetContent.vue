@@ -31,11 +31,9 @@ onMounted(() => {
 
     navigator.permissions.query({ name: 'microphone' })
         .then(function (permissionStatus) {
-            console.log('permissionStatus.state', permissionStatus.state)
             setMicrophonePermissionAllowed(permissionStatus.state === 'granted')
 
             permissionStatus.onchange = function () {
-                console.log('permissionStatus.state change', permissionStatus.state)
                 setMicrophonePermissionAllowed(permissionStatus.state === 'granted')
             }
         }).catch(() => {
