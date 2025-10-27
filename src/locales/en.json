@@ -59,7 +59,8 @@
     "keypad": "keypad",
     "merge": "merge",
     "new.call": "New call",
-    "we.are.online": "We're online! <br> Click to call us via browser"
+    "we.are.online": "We're online! <br> Click to call us via browser",
+    "microphone.access.denied": "Microphone access denied"
   },
   "tab": {
     "not.active": "Tab Not Active",

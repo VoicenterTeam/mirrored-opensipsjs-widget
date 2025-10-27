@@ -1,6 +1,13 @@
 <template>
     <div :class="wrapperClasses">
         <div
+            v-if="!microphonePermissionAllowed"
+            class="flex items-center justify-center p-1 border-b-1 border-border-lines text-sm microphone-access-denied"
+        >
+            <WarningIcon />
+            <span class="ml-1">{{ getTranslation('audio.microphone.access.denied') }}</span>
+        </div>
+        <div
             v-if="showTopKeypad"
             class="p-2 border-b-1 border-border-lines"
         >
@@ -95,10 +102,12 @@ import ActiveCallsView from '@/views/ActiveCallsView.vue'
 import MoveView from '@/views/MoveView.vue'
 import OutgoingCallView from '@/views/OutgoingCallView.vue'
 import Keypad from '@/components/Keypad.vue'
+import WarningIcon from '@/assets/icons/warning.svg?component'
+import { getTranslation } from '@/plugins/translator'
 
 const { state, getAudioApi, getAudioState } = useOpenSIPSJS()
 
-const { allActiveCalls, currentActiveRoom } = getAudioState()
+const { allActiveCalls, currentActiveRoom, microphonePermissionAllowed } = getAudioState()
 
 const {
     transferCall,
@@ -311,5 +320,8 @@ const onMakeOutgoingCall = (target: string) => {
 </script>
 
 <style scoped>
-
+.microphone-access-denied {
+  background-color: #ce8809;
+  color: white
+}
 </style>
