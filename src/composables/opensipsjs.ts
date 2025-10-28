@@ -89,12 +89,6 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
                         })
                     //.begin()
 
-                    opensipsjs.on('changeActiveCalls', () => {
-                        /*logger?.log({
-                            action: 'Set speaker volume'
-                        })*/
-                    })
-
                     isOpenSIPSInitialized.value = true
                 })
         } catch (e) {
