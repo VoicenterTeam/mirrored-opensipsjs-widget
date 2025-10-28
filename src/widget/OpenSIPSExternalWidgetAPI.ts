@@ -11,6 +11,7 @@ import { getConfig, setConfig } from '@/composables/useWidgetConfig'
 import { useOpenSIPSJS, startOpenSIPS, disconnectOpenSIPS } from '@/composables/opensipsjs'
 import { useDisplayResolvers } from '@/composables/useDisplayResolvers'
 import type { ListenerCallbackFnType, ListenersKeyType } from 'opensips-js/src/types/listeners'
+import { setLogger, StorageLoggerGetter } from '@/plugins/logger'
 
 const { getAudioApi, getVideoApi } = useOpenSIPSJS()
 const {
@@ -40,6 +41,7 @@ const OpenSIPSExternalWidgetAPI: IWidgetExternalAPIConstructor = class OpenSIPSE
     private state
     public readonly vsip: IVSIPActionsAPI
     public readonly display: IDisplayAPI
+    public readonly logger: StorageLoggerGetter | undefined
 
     constructor (config: TWidgetConfigOptions) {
         setConfig(config)
@@ -52,6 +54,11 @@ const OpenSIPSExternalWidgetAPI: IWidgetExternalAPIConstructor = class OpenSIPSE
 
         // Initialize display customization API
         this.display = this.createDisplayAPI()
+
+        // Initialize logger
+        if (config.loggerSettings?.useLogger && config.loggerSettings?.loggerConfig) {
+            this.logger = setLogger(config.loggerSettings.loggerConfig)
+        }
     }
 
     private createVSIPActionsAPI (): IVSIPActionsAPI {

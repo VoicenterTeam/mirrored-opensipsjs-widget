@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import OpenSIPSJS from 'opensips-js'
+import type { IOpenSIPSConfiguration } from 'opensips-js/src/types/rtc'
 import type { ISIPSCredentials } from '@/types/public-api'
 import type { UnRegisterOptions } from 'jssip/lib/UA'
 import { vsipAPI, OpensipsConnectOptions } from 'opensips-js-vue'
@@ -7,6 +8,8 @@ import { DNDDefaultBehaviour, autoAnswerDefaultBehaviour, callWaitingDefaultBeha
 import { getVideoApi, getVideoState, registerVideoListeners } from '@/composables/video'
 import { getAudioApi, getAudioState } from '@/composables/audio'
 import state from '@/composables/state'
+import { getLogger } from '@/plugins/logger'
+import { safeStringify } from '@/utils/safeStringify'
 
 /* State */
 export const isOpenSIPSReady = vsipAPI.state.isOpenSIPSReady
@@ -35,7 +38,6 @@ function validateCredentials (credentials: ISIPSCredentials) {
  * @param credentials
  */
 export function startOpenSIPS (credentials: ISIPSCredentials) {
-    console.log('LLL startOpenSIPS')
     return new Promise<OpenSIPSJS>((resolve, reject) => {
         try {
             validateCredentials(credentials)
@@ -54,7 +56,16 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
                 connectOptions.password = credentials.password
             }
 
-            (vsipAPI.actions.init(connectOptions, {}) as Promise<OpenSIPSJS>).then(
+            const opensipsConfiguration: Partial<IOpenSIPSConfiguration> = {
+                onTransportCallback: (message: object) => {
+                    getLogger()?.log({
+                        action: 'New message',
+                        body: safeStringify(message)
+                    })
+                }
+            };
+
+            (vsipAPI.actions.init(connectOptions, {}, opensipsConfiguration) as Promise<OpenSIPSJS>).then(
                 (opensipsjs: OpenSIPSJS) => {
                     state.opensipsjs = opensipsjs
 
@@ -77,6 +88,12 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
                             resolve(opensipsjs)
                         })
                     //.begin()
+
+                    opensipsjs.on('changeActiveCalls', () => {
+                        /*logger?.log({
+                            action: 'Set speaker volume'
+                        })*/
+                    })
 
                     isOpenSIPSInitialized.value = true
                 })

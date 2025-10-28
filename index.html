@@ -323,6 +323,21 @@
                     shrinkOnIdle: false,
                     outgoingInputRegexValidator: [/^\+?\d*$/],
                     outgoingCallPlaceHolder: 'Enter number'
+                },
+                loggerSettings: {
+                    useLogger: true,
+                    loggerConfig: {
+                        url: 'LOGGER_URL',
+                        loggerOptions: {
+                            system: 'OPENSIPSJS_WIDGET',
+                            staticObject: {},
+                            logToConsole: true,
+                            overloadGlobalConsole: false,
+                            socketEmitInterval: 10000,
+                            loggerLevel: 'debug',
+                            debugPrefix: 'widget logger'
+                        }
+                    }
                 }
             }
 
