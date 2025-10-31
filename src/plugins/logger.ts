@@ -1,8 +1,9 @@
-import StorageLogger, { ConfigOptions, LocalStorageWorker } from '@voicenter-team/socketio-storage-logger'
+import StorageLogger, { ConfigOptions, LocalStorageWorker, LoggerDataPartial } from '@voicenter-team/socketio-storage-logger'
 import packageInfo from '@/../package.json'
+import FingerprintJS from '@fingerprintjs/fingerprintjs'
 
 export class WebStorageLogger {
-    private readonly logger: StorageLogger
+    private logger: StorageLogger | null = null
 
     constructor (options: ConfigOptions) {
         const config = { ...options }
@@ -10,15 +11,31 @@ export class WebStorageLogger {
             config.loggerOptions.storageWorker = LocalStorageWorker
         }
 
-        if (!config.loggerOptions.staticObject?.Version) {
-            if (!config.loggerOptions.staticObject) {
-                config.loggerOptions.staticObject = {}
-            }
+        this.logger = new StorageLogger(config)
 
-            config.loggerOptions.staticObject.Version = packageInfo.version
+
+        this.setupStaticFields(config)
+    }
+
+    async setupStaticFields (config: ConfigOptions) {
+        if (!config.loggerOptions.staticObject) {
+            config.loggerOptions.staticObject = {}
         }
 
-        this.logger = new StorageLogger(config)
+        const staticFields: LoggerDataPartial = {}
+
+        staticFields.Version = packageInfo.version
+
+        const fp = await FingerprintJS.load()
+        const fingerprint = await fp.get()
+
+        staticFields.Fingerprint = fingerprint.visitorId
+
+        if (location.hostname) {
+            staticFields.Host = location.hostname
+        }
+
+        this.logger?.setupStaticFields(staticFields)
     }
 
     log (data: object) {
@@ -27,6 +44,14 @@ export class WebStorageLogger {
         }
 
         this.logger.log(data)
+    }
+
+    debug (data: object) {
+        if (!this.logger) {
+            throw new Error('Logger doesn\'t exist')
+        }
+
+        this.logger.debug(data)
     }
 
     error (data: object) {

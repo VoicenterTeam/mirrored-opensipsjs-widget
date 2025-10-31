@@ -10,6 +10,7 @@ import { getAudioApi, getAudioState } from '@/composables/audio'
 import state from '@/composables/state'
 import { getLogger } from '@/plugins/logger'
 import { safeStringify } from '@/utils/safeStringify'
+import * as VAD from '@ricky0123/vad-web'
 
 /* State */
 export const isOpenSIPSReady = vsipAPI.state.isOpenSIPSReady
@@ -58,10 +59,14 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
 
             const opensipsConfiguration: Partial<IOpenSIPSConfiguration> = {
                 onTransportCallback: (message: object) => {
-                    getLogger()?.log({
+                    getLogger()?.debug({
                         action: 'New message',
                         body: safeStringify(message)
                     })
+                },
+                noiseReductionOptions: {
+                    mode: 'dynamic',
+                    vadModule: VAD
                 }
             };
 
@@ -88,6 +93,20 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
                             resolve(opensipsjs)
                         })
                     //.begin()
+
+                    state.opensipsjs.on('changeActiveInputMediaDevice', (value: string) => {
+                        getLogger()?.log({
+                            action: 'Change microphone device',
+                            device_id: value
+                        })
+                    })
+
+                    state.opensipsjs.on('changeActiveOutputMediaDevice', (value: string) => {
+                        getLogger()?.log({
+                            action: 'Change speaker device',
+                            device_id: value
+                        })
+                    })
 
                     isOpenSIPSInitialized.value = true
                 })
