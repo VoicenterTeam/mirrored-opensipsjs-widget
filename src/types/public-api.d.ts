@@ -1,6 +1,7 @@
 import type { ListenerCallbackFnType, ListenersKeyType } from 'opensips-js/src/types/listeners'
 import { ICall } from 'opensips-js-vue'
 import { CallUserDataType } from '@/types/phone'
+import { ConfigOptions } from '@voicenter-team/socketio-storage-logger'
 
 export namespace Widget {
     /**
@@ -81,6 +82,7 @@ export interface IWidgetTheme {
 export interface IWidgetConfig {
     themeSettings: IWidgetTheme
     callSettings: ICallSettings
+    loggerSettings?: ILoggerSettings
     /**
      * Enable debug logging for tab management and other widget internals
      * @default false
@@ -387,6 +389,11 @@ export interface ICallSettings {
     ringingSound: string
     outgoingCallPlaceHolder: string
     outgoingInputRegexValidator: Array<string>
+}
+
+export interface ILoggerSettings {
+    useLogger: boolean
+    loggerConfig?: ConfigOptions
 }
 
 /**

@@ -3,6 +3,7 @@ import { ICall, vsipAPI } from 'opensips-js-vue'
 import type { IRoom } from 'opensips-js/src/types/rtc'
 import state from '@/composables/state'
 import type { AllActiveCallsType, CallTimeType } from '@/types/opensips'
+import { getLogger } from '@/plugins/logger'
 
 export const activeInputDevice = vsipAPI.state.selectedInputDevice
 export const inputDevicesList = vsipAPI.state.inputMediaDeviceList
@@ -131,22 +132,47 @@ function processCallsTime (calls: AllActiveCallsType, oldCalls: AllActiveCallsTy
 }
 
 watch(speakerVolume, (newValue) => {
+    getLogger()?.log({
+        action: 'Set speaker volume',
+        value: newValue
+    })
+
     state.opensipsjs?.audio.setSpeakerVolume(newValue)
 })
 
 watch(isMuteWhenJoin, (newValue) => {
+    getLogger()?.log({
+        action: 'Mute when join',
+        state: newValue
+    })
+
     state.opensipsjs?.audio.setMuteWhenJoin(newValue)
 })
 
 watch(isDND, (newValue) => {
+    getLogger()?.log({
+        action: 'Set DND',
+        state: newValue
+    })
+
     state.opensipsjs?.audio.setDND(newValue)
 })
 
 watch(microphoneInputLevel, (newValue) => {
+    getLogger()?.log({
+        action: 'Set microphone sensitivity',
+        value: newValue
+    })
+
     state.opensipsjs?.audio.setMicrophoneSensitivity(newValue)
 })
 
 watch(isCallWaitingEnabled, (newValue) => {
+    getLogger()?.log({
+        action: 'Set call waiting',
+        state: newValue
+    })
+
     state.opensipsjs?.audio.setCallWaiting(newValue)
 })
 
@@ -190,14 +216,29 @@ export function getAudioState () {
 
 export function getAudioApi () {
     function startCall (target: string, addToCurrentRoom = false, holdOtherCalls: boolean = false) {
+        getLogger()?.log({
+            action: 'Make outgoing call',
+            target
+        })
+
         state.opensipsjs?.audio.initCall(target, addToCurrentRoom, holdOtherCalls)
     }
 
     function answerCall (callId: string) {
+        getLogger()?.log({
+            action: 'Answer incoming call',
+            call_id: callId
+        })
+
         state.opensipsjs?.audio.answerCall(callId)
     }
 
     function muteAgent (toMute: boolean) {
+        getLogger()?.log({
+            action: 'Mute agent',
+            state: toMute
+        })
+
         if (toMute) {
             state.opensipsjs?.audio.mute()
         } else {
@@ -214,6 +255,12 @@ export function getAudioApi () {
     }
 
     function muteCaller (callId: string, toMute: boolean) {
+        getLogger()?.log({
+            action: 'Mute caller',
+            call_id: callId,
+            state: toMute,
+        })
+
         if (toMute) {
             state.opensipsjs?.audio.muteCaller(callId)
         } else {
@@ -222,47 +269,105 @@ export function getAudioApi () {
     }
 
     function holdCall (callId: string) {
+        getLogger()?.log({
+            action: 'Hold call',
+            call_id: callId
+        })
+
         state.opensipsjs?.audio.holdCall(callId)
     }
 
     function unholdCall (callId: string) {
+        getLogger()?.log({
+            action: 'Unhold call',
+            call_id: callId
+        })
+
         state.opensipsjs?.audio.unholdCall(callId)
     }
 
     async function moveCall (callId: string, roomId: number) {
+        getLogger()?.log({
+            action: 'Move call',
+            call_id: callId,
+            to_room: roomId
+        })
+
         await state.opensipsjs?.audio.moveCall(callId, roomId)
     }
 
     function transferCall (callId: string, target: string) {
+        getLogger()?.log({
+            action: 'Transfer call',
+            call_id: callId,
+            target
+        })
+
         state.opensipsjs?.audio.transferCall(callId, target)
     }
 
     function mergeCallsInRoom (roomId: number) {
+        getLogger()?.log({
+            action: 'Merge calls in room',
+            room_id: roomId
+        })
+
         state.opensipsjs?.audio.mergeCall(roomId)
     }
 
     function mergeCallByIds (firstCallId: string, secondCallId: string) {
+        getLogger()?.log({
+            action: 'Merge calls by ids',
+            first_call_id: firstCallId,
+            second_call_id: secondCallId
+        })
+
         state.opensipsjs?.audio.mergeCallByIds(firstCallId, secondCallId)
     }
 
     function terminateCall (callId: string) {
+        getLogger()?.log({
+            action: 'Terminate call',
+            call_id: callId
+        })
+
         state.opensipsjs?.audio.terminateCall(callId)
     }
 
     async function setActiveRoom (roomId: number | undefined) {
-        console.log('setActiveRoom', roomId)
+        getLogger()?.log({
+            action: 'Set active room',
+            room_id: roomId
+        })
+
         await state.opensipsjs?.audio.setActiveRoom(roomId)
     }
 
     async function setCallWaiting (value: boolean) {
+        getLogger()?.log({
+            action: 'Set call waiting',
+            state: value
+        })
+
         state.opensipsjs?.audio.setCallWaiting(value)
     }
 
     function setAutoAnswer (value: boolean) {
+        getLogger()?.log({
+            action: 'Set auto answer',
+            state: value
+        })
+
         state.opensipsjs?.audio.setAutoAnswer(value)
     }
 
     function sendDTMF (callId: string, value: string) {
+        getLogger()?.log({
+            action: 'Send DTMF',
+            call_id: callId,
+            value
+        })
+
         state.opensipsjs?.audio.sendDTMF(callId, value)
     }
 
@@ -290,15 +395,32 @@ export function getAudioApi () {
 
     async function onMicrophoneChange (event: Event) {
         const target = event.target as HTMLSelectElement
+
+        getLogger()?.log({
+            action: 'Change microphone device',
+            target: target.value
+        })
+
         await state.opensipsjs?.audio.setMicrophone(target.value)
     }
 
     async function onSpeakerChange (event: Event) {
         const target = event.target as HTMLSelectElement
+
+        getLogger()?.log({
+            action: 'Change speaker device',
+            target: target.value
+        })
+
         await state.opensipsjs?.audio.setSpeaker(target.value)
     }
 
     function setMicrophonePermissionAllowed (value: boolean) {
+        getLogger()?.log({
+            action: 'Microphone permission change',
+            state: value
+        })
+
         microphonePermissionAllowed.value = value
     }
 
