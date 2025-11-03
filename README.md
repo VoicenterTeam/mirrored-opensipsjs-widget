@@ -18,10 +18,12 @@ A Vue 3-based custom web component for integrating OpenSIPS VoIP (Voice over Int
   - QuickCall: Simplified calling interface
 - **Theming Support**: Customize colors and appearance
 - **Call Management**:
+  - Call waiting (automatically rejects incoming calls with 486 when disabled)
   - Call transfer
-  - Call merging
+  - Call merging (conference)
   - Hold/resume
   - Mute/unmute
+  - Do Not Disturb (DND)
 - **Visual Customization**:
   - Custom logos
   - Background images
@@ -175,21 +177,53 @@ callSettings: {
   allowTransfer: true,  // Enable call transfer functionality
   showKeypad: true,     // Show keypad button
   autoAnswer: {
-    allowChange: true,  // Allow changing auto-answer setting
+    allowChange: true,  // Allow user to toggle auto-answer in UI
     defaultBehavior: false // Default auto-answer behavior
   },
+  DND: {
+    allowChange: true,  // Allow user to toggle DND in UI
+    defaultBehavior: false // Default DND behavior
+  },
+  callWaiting: true,    // Enable call waiting (when false, rejects incoming calls with 486 when already on a call)
   outgoingCalls: true,  // Allow making outgoing calls
+  mergeCalls: true,     // Allow merging multiple calls into a conference
   callerInfo: {
     displayName: true,  // Show caller name
     callerId: {
       display: true,    // Show caller ID
-      mask: false       // Mask caller ID
+      mask: false       // Mask caller ID (replaces digits with X except last one)
     }
   },
   shrinkOnIdle: true,   // Shrink widget when idle
   ringingSound: 'url/to/sound.mp3', // Custom ringing sound
   outgoingCallPlaceHolder: 'Enter number...', // Placeholder text
   outgoingInputRegexValidator: ['^[0-9]+$'] // Regex validators for input
+}
+```
+
+### Advanced Configuration
+
+#### Debug Mode
+
+Enable debug logging for troubleshooting:
+
+```javascript
+{
+  debug: true, // Enable debug logging for tab management and widget internals
+  themeSettings: { /* ... */ },
+  callSettings: { /* ... */ }
+}
+```
+
+#### Language Support
+
+Set the widget interface language:
+
+```javascript
+themeSettings: {
+  lang: 'en', // 'en' (English) or 'he' (Hebrew)
+  widgetType: 'audio',
+  // ...
 }
 ```
 
@@ -201,11 +235,52 @@ The widget exposes several methods through its external API:
 
 #### Event Subscription
 
+Subscribe to SIP and call events:
+
 ```javascript
-widget.on('callReceived', (callData) => {
-  console.log('Incoming call from:', callData.from);
+// New RTC session (incoming or outgoing call)
+widget.on('newRTCSession', (session) => {
+  console.log('New call:', session.id, session.direction);
+});
+
+// Call confirmed/answered
+widget.on('confirmed', (session) => {
+  console.log('Call confirmed:', session.id);
+});
+
+// Call ended
+widget.on('ended', (session) => {
+  console.log('Call ended:', session.id);
+});
+
+// Call failed
+widget.on('failed', (session) => {
+  console.log('Call failed:', session.id);
+});
+
+// Connection state changes
+widget.on('connected', () => {
+  console.log('SIP connected');
+});
+
+widget.on('disconnected', () => {
+  console.log('SIP disconnected');
+});
+
+widget.on('registered', () => {
+  console.log('SIP registered');
+});
+
+widget.on('unregistered', () => {
+  console.log('SIP unregistered');
+});
+
+widget.on('registrationFailed', (cause) => {
+  console.log('Registration failed:', cause);
 });
 ```
+
+**Note:** For a complete list of available events, refer to the [OpenSIPS-JS documentation](https://opensipsjs.org/).
 
 #### Configuration
 
@@ -224,15 +299,100 @@ const config = widget.getConfig();
 #### SIP Operations
 
 ```javascript
-// Login to SIP server
+// Login to SIP server with password
 await widget.login({
   username: 'user',
   password: 'pass',
   domain: 'sip.example.com'
 });
 
+// Alternative: Login with JWT authentication
+await widget.login({
+  username: 'user',
+  authorization_jwt: 'your-jwt-token',
+  domain: 'sip.example.com'
+});
+
 // Disconnect from SIP server
 widget.disconnect();
+```
+
+#### Display Customization
+
+Customize how caller information is displayed using display resolvers:
+
+```javascript
+// Set a resolver for caller information
+widget.display.setResolver('callerInfo', async (callUser, call) => {
+  // callUser contains: { userName, userPhone }
+  // Fetch caller info from your database/API
+  const contact = await fetchContactInfo(callUser.userPhone);
+  
+  if (contact) {
+    return {
+      name: contact.displayName,
+      number: contact.formattedNumber
+    };
+  }
+  // Return undefined to use default display
+});
+
+// Clear a resolver
+widget.display.clearResolver('callerInfo');
+
+// Check if a resolver is set
+if (widget.display.hasResolver('callerInfo')) {
+  console.log('Caller info resolver is active');
+}
+```
+
+#### VSIP Actions API
+
+Control calls programmatically using the VSIP actions API:
+
+```javascript
+// Start a new call
+widget.vsip.startCall('1234567890');
+widget.vsip.startCall('1234567890', true, false); // addToCurrentRoom, holdOtherCalls
+
+// Answer an incoming call
+widget.vsip.answerCall(callId);
+
+// Terminate a call
+widget.vsip.terminateCall(callId);
+
+// Hold/Unhold calls
+widget.vsip.holdCall(callId);
+widget.vsip.unholdCall(callId);
+
+// Transfer a call
+widget.vsip.transferCall(callId, '9876543210');
+
+// Merge calls
+widget.vsip.mergeCallsInRoom(roomId);
+widget.vsip.mergeCallByIds(callId1, callId2);
+
+// Move call to different room
+await widget.vsip.moveCall(callId, roomId);
+await widget.vsip.setActiveRoom(roomId);
+
+// Send DTMF tones
+widget.vsip.sendDTMF(callId, '1234');
+
+// Mute/Unmute
+widget.vsip.mute(true);  // Mute agent
+widget.vsip.mute(false); // Unmute agent
+widget.vsip.muteCaller(callId, true);  // Mute specific caller
+widget.vsip.muteCaller(callId, false); // Unmute specific caller
+
+// Volume controls
+widget.vsip.setSpeakerVolume(75);        // 0-100
+widget.vsip.setMicrophoneSensitivity(80); // 0-100
+
+// Call settings
+widget.vsip.setDND(true);               // Enable Do Not Disturb
+widget.vsip.setAutoAnswer(true);        // Enable auto-answer
+await widget.vsip.setCallWaiting(false); // Disable call waiting
 ```
 
 ## Layout Modes

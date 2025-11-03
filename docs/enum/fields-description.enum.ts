@@ -179,7 +179,7 @@ export const CONFIG_DESCRIPTION = {
             allowChange: 'If auto-answer is enabled, this determines whether the user can change it.',
             defaultBehavior: 'When enabled, incoming calls are answered automatically.'
         },
-        callWaiting: 'Determines whether incoming calls are waiting to be answered when user already has another active session',
+        callWaiting: 'Determines whether incoming calls can wait when the user is already on an active call. When disabled (false), incoming calls are automatically rejected with SIP status 486 (Busy Here) if already on a call. When enabled (true), incoming calls will queue and can be answered while maintaining the current call.',
         DND: {
             allowChange: 'If DND is enabled, this determines whether the user can change it.',
             defaultBehavior: 'When enabled, user will not be able to make calls.'
