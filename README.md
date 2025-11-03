@@ -80,6 +80,18 @@ document.querySelector('opensips-widget').addEventListener('widget:ready', ({ de
       allowTransfer: true,
       showKeypad: true,
       // other call settings...
+    },
+    loggerSettings: {
+      useLogger: true,
+      loggerConfig: {
+        url: 'wss://logger.example.com',
+        loggerOptions: {
+          system: 'OPENSIPSJS_WIDGET',
+          logToConsole: true,
+          loggerLevel: 'debug'
+          // other logger settings...
+        }
+      }
     }
   });
   
@@ -107,7 +119,12 @@ document.addEventListener('DOMContentLoaded', () => {
   widgetElement.addEventListener('widget:ready', ({ detail: OpenSIPSWidget }) => {
     // Initialize the widget
     const widget = new OpenSIPSWidget({
-      // Configuration options
+      themeSettings: { /* ... */ },
+      callSettings: { /* ... */ },
+      loggerSettings: {
+        useLogger: true,
+        loggerConfig: { /* ... */ }
+      }
     });
     
     // Login and use the widget...
@@ -126,6 +143,9 @@ const widget = new OpenSIPSWidget({
   },
   callSettings: {
     // Call settings configuration
+  },
+  loggerSettings: {
+    // Logger configuration (optional)
   }
 });
 ```
@@ -200,6 +220,30 @@ callSettings: {
   outgoingInputRegexValidator: ['^[0-9]+$'] // Regex validators for input
 }
 ```
+
+### Logger Settings
+
+Configure logging functionality for the widget. The logger uses `@voicenter-team/socketio-storage-logger` to collect and send logs:
+
+```javascript
+loggerSettings: {
+  useLogger: true,  // Enable/disable logger
+  loggerConfig: {
+    url: 'wss://logger.example.com', // Socket.IO server URL (optional, empty string to disable remote logging)
+    loggerOptions: {
+      system: 'OPENSIPSJS_WIDGET',        // System identifier for logs
+      staticObject: {},                   // Additional static fields to include in all logs
+      logToConsole: true,                 // Whether to output logs to browser console
+      overloadGlobalConsole: false,       // Whether to override global console methods
+      socketEmitInterval: 10000,          // Interval (ms) between sending log batches to server
+      loggerLevel: 'debug',               // Minimum log level: 'debug', 'info', 'warn', 'error'
+      debugPrefix: 'widget logger'        // Prefix for debug log messages
+    }
+  }
+}
+```
+
+**Note:** When `loggerSettings.useLogger` is `false` or `loggerSettings` is omitted, logging is disabled. The logger automatically includes widget version, browser fingerprint, and hostname in all logs.
 
 ### Advanced Configuration
 
