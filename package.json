@@ -1,6 +1,6 @@
 {
   "name": "opensips-js-widget",
-  "version": "0.2.21",
+  "version": "0.2.23",
   "author": "Bohdan Konechnyi",
   "main": "widget/opensipsjs-widget.mjs",
   "types": "widget/opensipsjs-widget.d.ts",
@@ -38,7 +38,7 @@
     "opensips-js": "^0.1.17",
     "opensips-js-screen-share": "^0.0.1",
     "opensips-js-screen-share-whiteboard": "^0.0.1",
-    "opensips-js-vue": "^0.1.11",
+    "opensips-js-vue": "^0.1.13",
     "opensips-js-whiteboard": "^0.0.1",
     "regenerator-runtime": "^0.13.11",
     "tab-election": "^4.2.8",

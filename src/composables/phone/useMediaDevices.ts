@@ -1,8 +1,7 @@
-import { computed, ref, watch } from 'vue'
-import { getInputMediaDevicesList, getOutputMediaDevicesList } from '@/helpers/mediaDevicesHelper.ts'
-import { useOpenSIPSJS  } from '@/composables/opensipsjs'
+import { computed, watch } from 'vue'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 
-const { state } = useOpenSIPSJS()
+const { state, getAudioState, getAudioApi } = useOpenSIPSJS()
 
 /* Types */
 
@@ -11,25 +10,58 @@ export type MediaDevicesList = {
     outputMediaDevicesList: Array<MediaDeviceInfo>
 }
 
-/* Data */
-const inputMediaDevicesList = ref<Array<MediaDeviceInfo>>([])
-const outputMediaDevicesList = ref<Array<MediaDeviceInfo>>([])
-export const outputMediaDeviceValue = ref('')
-export const inputMediaDeviceValue = ref('')
+const { activeInputDevice, inputDevicesList, activeOutputDevice, outputDevicesList } = getAudioState()
 
-/* Computed */
-const getInputMediaDevicesListComputed = computed(() => inputMediaDevicesList.value)
-const getOutputMediaDevicesListComputed = computed(() => outputMediaDevicesList.value)
-export const getMediaDevicesList = computed<MediaDevicesList>(() => {
+export const getMediaDevicesList = computed(() => {
     return {
-        inputMediaDevicesList: getInputMediaDevicesListComputed.value,
-        outputMediaDevicesList: getOutputMediaDevicesListComputed.value
+        inputMediaDevicesList: (inputDevicesList.value || []) as Array<MediaDeviceInfo>,
+        outputMediaDevicesList: (outputDevicesList.value || []) as Array<MediaDeviceInfo>
     }
 })
 
-watch(outputMediaDeviceValue, (value) => {
-    const preferablePhoneDevices = localStorage.getItem('preferablePhoneDevices')
+export const outputMediaDeviceValue = activeOutputDevice
+export const inputMediaDeviceValue = activeInputDevice
 
+async function onDeviceChangeHandler () {
+    if (!state.opensipsjs) return
+
+    const { onMicrophoneChange, onSpeakerChange } = getAudioApi()
+    
+    const currentInputDevice = activeInputDevice.value
+    if (currentInputDevice && currentInputDevice !== 'default') {
+        const inputDeviceExists = inputDevicesList.value?.some(device => 
+            device.deviceId === currentInputDevice
+        )
+        
+        if (!inputDeviceExists) {
+            const event = { target: { value: 'default' } } as Event & { target: HTMLSelectElement }
+            await onMicrophoneChange(event)
+        }
+    }
+
+    const currentOutputDevice = activeOutputDevice.value
+    if (currentOutputDevice && currentOutputDevice !== 'default') {
+        const outputDeviceExists = outputDevicesList.value?.some(device => 
+            device.deviceId === currentOutputDevice
+        )
+        
+        if (!outputDeviceExists) {
+            const event = { target: { value: 'default' } } as Event & { target: HTMLSelectElement }
+            await onSpeakerChange(event)
+        }
+    }
+}
+
+watch([inputDevicesList, outputDevicesList], () => {
+    onDeviceChangeHandler().catch(err => {
+        console.error('Error handling device change:', err)
+    })
+}, { deep: true })
+
+watch(activeOutputDevice, (value) => {
+    if (!value) return
+    
+    const preferablePhoneDevices = localStorage.getItem('preferablePhoneDevices')
     const parsed = preferablePhoneDevices ? JSON.parse(preferablePhoneDevices) : {}
 
     const selectedPreferableDevices = {
@@ -38,11 +70,12 @@ watch(outputMediaDeviceValue, (value) => {
     }
 
     localStorage.setItem('preferablePhoneDevices', JSON.stringify(selectedPreferableDevices))
-    state.opensipsjs?.audio.setSpeaker(value || 'default')
 })
-watch(inputMediaDeviceValue, (value) => {
-    const preferablePhoneDevices = localStorage.getItem('preferablePhoneDevices')
 
+watch(activeInputDevice, (value) => {
+    if (!value) return
+    
+    const preferablePhoneDevices = localStorage.getItem('preferablePhoneDevices')
     const parsed = preferablePhoneDevices ? JSON.parse(preferablePhoneDevices) : {}
 
     const selectedPreferableDevices = {
@@ -51,38 +84,7 @@ watch(inputMediaDeviceValue, (value) => {
     }
 
     localStorage.setItem('preferablePhoneDevices', JSON.stringify(selectedPreferableDevices))
-    state.opensipsjs?.audio.setMicrophone(value || 'default')
-
 })
-/* Methods */
-
-function isDeviceInfoType (device: MediaDeviceInfo | null): device is MediaDeviceInfo {
-    return device !== null
-}
-async function onDeviceChangeHandler () {
-    const newInputMediaDeviceList = await getInputMediaDevicesList()
-    const newOutputMediaDeviceList = await getOutputMediaDevicesList()
-
-    inputMediaDevicesList.value = newInputMediaDeviceList.filter(isDeviceInfoType)
-    outputMediaDevicesList.value = newOutputMediaDeviceList.filter(isDeviceInfoType)
-
-    //check if input device still exist
-    const inputDevice = inputMediaDevicesList.value.find(device => {
-        return device.deviceId === inputMediaDeviceValue.value
-    })
-    if(!inputDevice) {
-        inputMediaDeviceValue.value = 'default'
-    }
-
-    //check if output device still exist
-    const outputDevice = outputMediaDevicesList.value.find(device => {
-        return device.deviceId === outputMediaDeviceValue.value
-    })
-
-    if(!outputDevice) {
-        outputMediaDeviceValue.value = 'default'
-    }
-}
 
 export async function setDefaultMediaDevices () {
     try {
@@ -90,9 +92,12 @@ export async function setDefaultMediaDevices () {
             throw new Error('getUserMedia() not supported')
         }
 
+        if (!state.opensipsjs) return
+
+        const { onMicrophoneChange, onSpeakerChange } = getAudioApi()
+
         await navigator.mediaDevices.getUserMedia({ audio: true })
         const devices = await navigator.mediaDevices.enumerateDevices()
-
 
         const preferablePhoneDevices = localStorage.getItem('preferablePhoneDevices')
         const parsed = preferablePhoneDevices ? JSON.parse(preferablePhoneDevices) : {}
@@ -109,27 +114,16 @@ export async function setDefaultMediaDevices () {
         const outputDefaultDevice = devices.find(
             (device) => device.deviceId === 'default' && device.kind === 'audiooutput')
 
-        inputMediaDeviceValue.value =  preferableInputDevice?.deviceId || inputDefaultDevice?.deviceId || ''
+        const inputDeviceId = preferableInputDevice?.deviceId || inputDefaultDevice?.deviceId || 'default'
+        const outputDeviceId = preferableOutputDevice?.deviceId || outputDefaultDevice?.deviceId || 'default'
 
-        outputMediaDeviceValue.value = preferableOutputDevice?.deviceId || outputDefaultDevice?.deviceId || ''
+        const inputEvent = { target: { value: inputDeviceId } } as Event & { target: HTMLSelectElement }
+        const outputEvent = { target: { value: outputDeviceId } } as Event & { target: HTMLSelectElement }
+        
+        await onMicrophoneChange(inputEvent)
+        await onSpeakerChange(outputEvent)
 
-    } catch (e) {
-        console.error(e)
-    }
-}
-
-const setDefaultData = async () => {
-    try {
-        await setDefaultMediaDevices()
-        await onDeviceChangeHandler()
     } catch (e) {
         console.error('Error setting default media devices:', e)
     }
 }
-/* Created */
-setDefaultData().then()
-navigator.mediaDevices.addEventListener(
-    'devicechange',
-    onDeviceChangeHandler
-)
-

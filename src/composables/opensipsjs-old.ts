@@ -340,7 +340,6 @@ function registerOpenSIPSListeners (opensipsJS: OpenSIPSJS) {
             allRooms.value = [ ...rooms ]
         })
         .on('currentActiveRoomChanged', (roomId: number | undefined) => {
-            console.log('currentActiveRoomChanged', roomId)
             currentActiveRoom.value = roomId
         })
         .on('changeCallStatus', (data: AllActiveCallsStatusType) => {
