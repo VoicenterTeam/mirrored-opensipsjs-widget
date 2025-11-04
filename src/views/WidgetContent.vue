@@ -29,7 +29,7 @@ watch(allCallStatuses, (statuses) => {
 onMounted(() => {
     if (!navigator.permissions) return
 
-    navigator.permissions.query({ name: 'microphone' })
+    navigator.permissions.query({ name: 'microphone' as PermissionName })
         .then(function (permissionStatus) {
             setMicrophonePermissionAllowed(permissionStatus.state === 'granted')
 

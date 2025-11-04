@@ -5,7 +5,9 @@ import styles1 from '@voicenter-team/voicenter-ui-plus/library/style.css?inline'
 import styles2 from '@/styles/style.scss?inline'
 import VLoading from 'v-loading-directive'
 
-export * from '@/types/public-api.d'
+// Export all public types and API
+export type * from '@/types/public-api'
+export { default as OpenSIPSExternalWidgetAPI } from '@/widget/OpenSIPSExternalWidgetAPI'
 
 const widget = defineCustomElement(OpenSIPSWidgetComponent, {
     configureApp (app) {

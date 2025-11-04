@@ -24,7 +24,6 @@
 
 <script lang="ts" setup>
 import { ref, computed, watch, onMounted } from 'vue'
-import { ICall } from 'opensips-js-vue'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import RoundedCallView from '@/views/RoundedCallView.vue'
 import { applySettingsToWidgetRootEl, layoutType, widgetType } from '@/composables/useWidgetConfig'
@@ -41,14 +40,7 @@ const { activeCalls } = getAudioState()
 import {
     usedWidgetShadowRootEl
 } from '@/composables/opensipsjs'
-import type { IWidgetExternalAPIConstructor } from '@/types/public-api'
-
-/* Types */
-interface CallUpdatedPayload {
-    currentCalls: Array<ICall>
-    newCalls: Array<ICall>
-    removedCalls: Array<ICall>
-}
+import type { IWidgetExternalAPIConstructor, CallUpdatedPayload } from '@/types/public-api'
 
 const layoutTypeComponent = {
     rounded: RoundedCallView,

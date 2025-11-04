@@ -1,7 +1,17 @@
 import type { ListenerCallbackFnType, ListenersKeyType } from 'opensips-js/src/types/listeners'
-import { ICall } from 'opensips-js-vue'
-import { CallUserDataType } from '@/types/phone'
-import { ConfigOptions } from '@voicenter-team/socketio-storage-logger'
+import type { ICall } from 'opensips-js-vue'
+import type { ConfigOptions } from '@voicenter-team/socketio-storage-logger'
+
+// Re-export types used in public API signatures
+export type { ICall } from 'opensips-js-vue'
+
+/**
+ * User data associated with a call
+ */
+export interface CallUserDataType {
+    userName?: string
+    userPhone?: string
+}
 
 export namespace Widget {
     /**
@@ -418,7 +428,14 @@ export interface ICallerInfoSettings {
     }
 }
 
+export interface CallUpdatedPayload {
+    currentCalls: Array<ICall>
+    newCalls: Array<ICall>
+    removedCalls: Array<ICall>
+}
+
 export interface OpenSIPSWidgetElementEventMap extends HTMLElementEventMap {
     'widget:ready': CustomEvent<IWidgetExternalAPIConstructor>
     'widget:destroy': CustomEvent<undefined>
+    'calls:updated': CustomEvent<CallUpdatedPayload>
 }
