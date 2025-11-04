@@ -94,17 +94,24 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
                         })
                     //.begin()
 
-                    state.opensipsjs.on('changeActiveInputMediaDevice', (value: string) => {
+                    opensipsjs.on('changeActiveInputMediaDevice', (value: string) => {
                         getLogger()?.log({
                             action: 'Change microphone device',
                             device_id: value
                         })
                     })
 
-                    state.opensipsjs.on('changeActiveOutputMediaDevice', (value: string) => {
+                    opensipsjs.on('changeActiveOutputMediaDevice', (value: string) => {
                         getLogger()?.log({
                             action: 'Change speaker device',
                             device_id: value
+                        })
+                    })
+
+                    opensipsjs.on('changeAvailableDeviceList', (event: MediaDeviceInfo[]) => {
+                        getLogger()?.log({
+                            action: 'Available media devices list changed',
+                            devices: event
                         })
                     })
 
