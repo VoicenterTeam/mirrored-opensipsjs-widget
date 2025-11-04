@@ -4,6 +4,7 @@ import type { IRoom } from 'opensips-js/src/types/rtc'
 import state from '@/composables/state'
 import type { AllActiveCallsType, CallTimeType } from '@/types/opensips'
 import { getLogger } from '@/plugins/logger'
+import useCallSounds from '@/composables/useCallSounds'
 
 export const activeInputDevice = vsipAPI.state.selectedInputDevice
 export const inputDevicesList = vsipAPI.state.inputMediaDeviceList
@@ -215,12 +216,15 @@ export function getAudioState () {
 }
 
 export function getAudioApi () {
+    const { playOnDialSound, playHangupSound, playAnswerBeepSound } = useCallSounds()
+
     function startCall (target: string, addToCurrentRoom = false, holdOtherCalls: boolean = false) {
         getLogger()?.log({
             action: 'Make outgoing call',
             target
         })
 
+        playOnDialSound()
         state.opensipsjs?.audio.initCall(target, addToCurrentRoom, holdOtherCalls)
     }
 
@@ -230,6 +234,7 @@ export function getAudioApi () {
             call_id: callId
         })
 
+        playAnswerBeepSound()
         state.opensipsjs?.audio.answerCall(callId)
     }
 
@@ -331,6 +336,7 @@ export function getAudioApi () {
             call_id: callId
         })
 
+        playHangupSound()
         state.opensipsjs?.audio.terminateCall(callId)
     }
 
