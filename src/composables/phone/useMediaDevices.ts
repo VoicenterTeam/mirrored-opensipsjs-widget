@@ -3,6 +3,8 @@ import { useOpenSIPSJS } from '@/composables/opensipsjs'
 
 const { state, getAudioState, getAudioApi } = useOpenSIPSJS()
 
+const PREFERABLE_PHONE_DEVICES_KEY = 'preferablePhoneDevices'
+
 /* Types */
 
 export type MediaDevicesList = {
@@ -14,8 +16,8 @@ const { activeInputDevice, inputDevicesList, activeOutputDevice, outputDevicesLi
 
 export const getMediaDevicesList = computed(() => {
     return {
-        inputMediaDevicesList: (inputDevicesList.value || []) as Array<MediaDeviceInfo>,
-        outputMediaDevicesList: (outputDevicesList.value || []) as Array<MediaDeviceInfo>
+        inputMediaDevicesList: inputDevicesList.value,
+        outputMediaDevicesList: outputDevicesList.value
     }
 })
 
@@ -61,7 +63,7 @@ watch([inputDevicesList, outputDevicesList], () => {
 watch(activeOutputDevice, (value) => {
     if (!value) return
     
-    const preferablePhoneDevices = localStorage.getItem('preferablePhoneDevices')
+    const preferablePhoneDevices = localStorage.getItem(PREFERABLE_PHONE_DEVICES_KEY)
     const parsed = preferablePhoneDevices ? JSON.parse(preferablePhoneDevices) : {}
 
     const selectedPreferableDevices = {
@@ -69,13 +71,13 @@ watch(activeOutputDevice, (value) => {
         audioOutput: value,
     }
 
-    localStorage.setItem('preferablePhoneDevices', JSON.stringify(selectedPreferableDevices))
+    localStorage.setItem(PREFERABLE_PHONE_DEVICES_KEY, JSON.stringify(selectedPreferableDevices))
 })
 
 watch(activeInputDevice, (value) => {
     if (!value) return
     
-    const preferablePhoneDevices = localStorage.getItem('preferablePhoneDevices')
+    const preferablePhoneDevices = localStorage.getItem(PREFERABLE_PHONE_DEVICES_KEY)
     const parsed = preferablePhoneDevices ? JSON.parse(preferablePhoneDevices) : {}
 
     const selectedPreferableDevices = {
@@ -83,7 +85,7 @@ watch(activeInputDevice, (value) => {
         audioOutput: parsed.audioOutput,
     }
 
-    localStorage.setItem('preferablePhoneDevices', JSON.stringify(selectedPreferableDevices))
+    localStorage.setItem(PREFERABLE_PHONE_DEVICES_KEY, JSON.stringify(selectedPreferableDevices))
 })
 
 export async function setDefaultMediaDevices () {
@@ -99,7 +101,7 @@ export async function setDefaultMediaDevices () {
         await navigator.mediaDevices.getUserMedia({ audio: true })
         const devices = await navigator.mediaDevices.enumerateDevices()
 
-        const preferablePhoneDevices = localStorage.getItem('preferablePhoneDevices')
+        const preferablePhoneDevices = localStorage.getItem(PREFERABLE_PHONE_DEVICES_KEY)
         const parsed = preferablePhoneDevices ? JSON.parse(preferablePhoneDevices) : {}
 
         const preferableInputDevice = devices.find(
