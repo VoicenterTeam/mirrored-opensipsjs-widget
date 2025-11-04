@@ -8,7 +8,7 @@
         </label>
         <select
             id="microphoneEl"
-            v-model="activeInputDevice"
+            :value="activeInputDevice"
             @change="onMicrophoneChange"
         >
             <option
@@ -27,7 +27,7 @@
         </label>
         <select
             id="speakerEl"
-            v-model="activeOutputDevice"
+            :value="activeOutputDevice"
             @change="onSpeakerChange"
         >
             <option

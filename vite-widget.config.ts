@@ -48,10 +48,14 @@ const plugins =  [
     svgLoader(),
     dts({
         rollupTypes: true,
-        copyDtsFiles: true,
-        skipDiagnostics: true,
+        copyDtsFiles: false,
+        skipDiagnostics: false,
         staticImport: true,
-        insertTypesEntry: false
+        insertTypesEntry: true,
+        entryRoot: './src',
+        outDir: 'widget',
+        strictOutput: true,
+        pathsToAliases: true
     }),
 ]
 

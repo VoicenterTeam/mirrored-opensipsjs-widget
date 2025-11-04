@@ -402,21 +402,11 @@ export function getAudioApi () {
     async function onMicrophoneChange (event: Event) {
         const target = event.target as HTMLSelectElement
 
-        getLogger()?.log({
-            action: 'Change microphone device',
-            target: target.value
-        })
-
         await state.opensipsjs?.audio.setMicrophone(target.value)
     }
 
     async function onSpeakerChange (event: Event) {
         const target = event.target as HTMLSelectElement
-
-        getLogger()?.log({
-            action: 'Change speaker device',
-            target: target.value
-        })
 
         await state.opensipsjs?.audio.setSpeaker(target.value)
     }
