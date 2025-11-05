@@ -49,7 +49,6 @@ const plugins =  [
     dts({
         rollupTypes: true,
         copyDtsFiles: false,
-        skipDiagnostics: false,
         staticImport: true,
         insertTypesEntry: true,
         entryRoot: './src',

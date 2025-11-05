@@ -18,11 +18,7 @@ export class WebStorageLogger {
     }
 
     async setupStaticFields (config: ConfigOptions) {
-        if (!config.loggerOptions.staticObject) {
-            config.loggerOptions.staticObject = {}
-        }
-
-        const staticFields: LoggerDataPartial = {}
+        const staticFields: LoggerDataPartial = config.loggerOptions?.staticObject ?? {}
 
         staticFields.Version = packageInfo.version
 
