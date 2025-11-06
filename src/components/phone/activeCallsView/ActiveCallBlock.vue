@@ -7,7 +7,6 @@
             {{ getTranslation('audio.calling') }}
         </div>
         <div
-            v-else
             class="flex items-center justify-center mb-1 h-4"
         >
             <!--           <AudioQualityIndicator :call-id="id" />-->

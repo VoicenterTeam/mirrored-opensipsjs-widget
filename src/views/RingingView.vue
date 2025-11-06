@@ -113,7 +113,6 @@ import {
     displayCallerInfoId,
     allowTransfer
 } from '@/composables/useWidgetConfig'
-import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
 import useRingingSound from '@/composables/useRingingSound.ts'
 import { getTranslation } from '@/plugins/translator'
 import ActionIconButton from '@/components/base/ActionIconButton.vue'
@@ -132,7 +131,7 @@ const emit = defineEmits<{
 
 /* Composables */
 const { getAudioState, getAudioApi } = useOpenSIPSJS()
-const { callTimes } = getAudioState()
+const { callTime: callTimeState } = getAudioState()
 const { answerCall, terminateCall } = getAudioApi()
 
 const { displayNumber, displayName } = useCallInfo(props.call)
@@ -140,8 +139,7 @@ const { play, stop } = useRingingSound()
 
 /* Computed */
 const callTime = computed(() => {
-    const time = callTimes.value[props.call._id]
-    return getFormattedTimeFromSeconds(time)
+    return callTimeState.value[props.call._id]?.formatted || '00:00:00'
 })
 
 /* Data */

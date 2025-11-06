@@ -29,16 +29,9 @@
         </div>
 
         <div
-            v-if="!isOutgoingUnanswered"
             class="mx-2 w-[46px] text-xs text-main-text"
         >
             {{ callTime }}
-        </div>
-        <div
-            v-else
-            class="w-full text-sm px-2"
-        >
-            {{ getTranslation('audio.calling.in.progress') }}
         </div>
 
         <CallOptionsButton
@@ -89,7 +82,6 @@ import { computed, onMounted, ref } from 'vue'
 import type { ICall } from 'opensips-js/src/types/rtc'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import useCallInfo from '@/composables/useCallInfo'
-import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
 import { displayCallerInfoId, displayCallerInfoName } from '@/composables/useWidgetConfig'
 import RoomActionButton from '@/components/base/RoomActionButton.vue'
 import AddCallerButton from '@/components/AddCallerButton.vue'
@@ -109,7 +101,7 @@ const props = withDefaults(
 
 /* Composables */
 const { getAudioState, getAudioApi } = useOpenSIPSJS()
-const { callTimes, allRooms, allActiveCalls } = getAudioState()
+const { callTime: callTimeState, allRooms, allActiveCalls } = getAudioState()
 const { terminateCall, holdCall, unholdCall, muteCaller } = getAudioApi()
 const { displayNumber, displayName } = useCallInfo(props.call)
 
@@ -140,8 +132,7 @@ const showSwitchRoomButton = computed(() => {
 })
 
 const callTime = computed(() => {
-    const time = callTimes.value[props.call._id]
-    return getFormattedTimeFromSeconds(time)
+    return callTimeState.value[props.call._id]?.formatted || '00:00:00'
 })
 
 function onToggleAddCallerKeypad () {

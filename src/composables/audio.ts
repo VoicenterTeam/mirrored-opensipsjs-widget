@@ -2,7 +2,6 @@ import { ref, computed, watch } from 'vue'
 import { ICall, vsipAPI } from 'opensips-js-vue'
 import type { IRoom } from 'opensips-js/src/types/rtc'
 import state from '@/composables/state'
-import type { AllActiveCallsType, CallTimeType } from '@/types/opensips'
 import { getLogger } from '@/plugins/logger'
 import useCallSounds from '@/composables/useCallSounds'
 
@@ -72,66 +71,6 @@ export const allActiveCalls = computed(() => {
     return Object.values(activeCalls.value)
 })
 
-export const callTimes = ref<CallTimeType>({})
-
-interface CallTimeIntervalsType {
-    [key: string]: any
-}
-
-const callTimeIntervals = ref<CallTimeIntervalsType>({})
-
-function updateCallTime (callId: string) {
-    const prevTime = callTimes.value[callId] || 0
-    callTimes.value = {
-        ...callTimes.value,
-        [callId]: prevTime + 1
-    }
-}
-
-function removeCallTime (callId: string) {
-    delete callTimes.value[callId]
-}
-
-function setCallInterval (callId: string, interval: any) {
-    callTimeIntervals.value = {
-        ...callTimeIntervals.value,
-        [callId]: interval
-    }
-}
-function removeOldCallTimes (calls: Array<ICall>) {
-    const ids = calls.map(call => call._id)
-
-    ids.forEach(id => {
-        clearInterval(id)
-        removeCallTime(id)
-    })
-}
-
-function processCallsTime (calls: AllActiveCallsType, oldCalls: AllActiveCallsType) {
-    const removedCalls = Object.values(oldCalls).filter(oldCall => {
-        return !Object.values(calls).some(newCall => {
-            return newCall._id === oldCall._id
-        })
-    })
-
-    removeOldCallTimes(removedCalls)
-
-    const newCalls = Object.values(calls).filter(call => {
-        return !Object.values(oldCalls).some((existingCall) => {
-            return existingCall._id === call._id
-        })
-    })
-
-    if (!newCalls.length) {
-        return
-    }
-
-    newCalls.forEach(call => {
-        const interval = setInterval(() => updateCallTime(call._id), 1000)
-        setCallInterval(call._id, interval)
-    })
-}
-
 watch(speakerVolume, (newValue) => {
     getLogger()?.log({
         action: 'Set speaker volume',
@@ -177,10 +116,6 @@ watch(isCallWaitingEnabled, (newValue) => {
     state.opensipsjs?.audio.setCallWaiting(newValue)
 })
 
-watch(activeCalls, (calls, oldCalls) => {
-    processCallsTime(calls, oldCalls || {})
-}, { deep: true })
-
 export function getAudioState () {
     return {
         activeInputDevice,
@@ -210,8 +145,7 @@ export function getAudioState () {
         callTime,
         callMetrics,
         muted,
-        allActiveCalls,
-        callTimes
+        allActiveCalls
     }
 }
 

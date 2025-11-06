@@ -99,7 +99,6 @@ import IncomingCallActionButton from '@/components/base/IncomingCallActionButton
 import type { ICall } from 'opensips-js/src/types/rtc'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import useCallInfo from '@/composables/useCallInfo'
-import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
 import { displayCallerInfoId, displayCallerInfoName } from '@/composables/useWidgetConfig'
 import RoomActionButton from '@/components/base/RoomActionButton.vue'
 import AddCallerButton from '@/components/AddCallerButton.vue'
@@ -117,7 +116,7 @@ const props = withDefaults(
 
 /* Composables */
 const { getAudioApi, getAudioState } = useOpenSIPSJS()
-const { callTimes, allRooms } = getAudioState()
+const { callTime: callTimeState, allRooms } = getAudioState()
 const { holdCall, unholdCall } = getAudioApi()
 const { displayName, displayNumber } = useCallInfo(props.call)
 
@@ -166,8 +165,7 @@ const wrapperClasses = computed(() => {
 })
 
 const callTime = computed(() => {
-    const time = callTimes.value[props.call._id]
-    return getFormattedTimeFromSeconds(time)
+    return callTimeState.value[props.call._id]?.formatted || '00:00:00'
 })
 
 function onSwitchRoomButtonClick () {

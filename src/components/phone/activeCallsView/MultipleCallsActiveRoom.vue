@@ -32,18 +32,7 @@ interface Props {
 defineProps<Props>()
 
 const getDuration = (callId: string) => {
-    const timeData = callTime.value?.[callId]
-    if (!timeData) return ''
-
-    const seconds = timeData.seconds || 0
-    const hours = Math.floor(seconds / 3600)
-    const minutes = Math.floor((seconds % 3600) / 60)
-    const secs = seconds % 60
-
-    if (hours > 0) {
-        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
-    }
-    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+    return callTime.value?.[callId]?.formatted || ''
 }
 </script>
 <style lang="scss" scoped>

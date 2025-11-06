@@ -83,7 +83,6 @@ import Keypad from '@/components/Keypad.vue'
 import MuteIcon from '@/assets/icons/mute.svg?component'
 import UnMuteIcon from '@/assets/icons/unmute.svg?component'
 import KeypadIcon from '@/assets/icons/keypad.svg?component'
-import { getFormattedTimeFromSeconds } from '@/helpers/timeHelper'
 import { keypadMode, keypadPosition, showKeypad } from '@/composables/useWidgetConfig'
 import { getTranslation } from '@/plugins/translator'
 
@@ -92,7 +91,7 @@ const {
     getAudioApi
 } = useOpenSIPSJS()
 
-const { allActiveCalls, isMuted, callTimes, currentActiveRoom } = getAudioState()
+const { allActiveCalls, isMuted, callTime: callTimeState, currentActiveRoom } = getAudioState()
 const {
     terminateCall,
     muteAgent,
@@ -143,8 +142,7 @@ const callTime = computed(() => {
     const call = allActiveCalls.value[0]
 
     if (call) {
-        const time = callTimes.value[call._id]
-        return getFormattedTimeFromSeconds(time)
+        return callTimeState.value[call._id]?.formatted || '00:00:00'
     }
 
     return ''
