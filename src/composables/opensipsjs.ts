@@ -59,9 +59,9 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
 
             const opensipsConfiguration: Partial<IOpenSIPSConfiguration> = {
                 onTransportCallback: (message: object) => {
-                    getLogger()?.debug({
+                    getLogger()?.log({
                         action: 'New message',
-                        body: safeStringify(message)
+                        body: message
                     })
                 },
                 noiseReductionOptions: {
