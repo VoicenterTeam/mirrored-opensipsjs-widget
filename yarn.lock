@@ -2991,10 +2991,10 @@
   dependencies:
     "@voicenter-team/eslint-config-ts" "1.0.21"
 
-"@voicenter-team/socketio-storage-logger@^2.0.6":
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/@voicenter-team/socketio-storage-logger/-/socketio-storage-logger-2.0.6.tgz#92f1602ef65640c83188114c3f1388620489a126"
-  integrity sha512-0SypQR3aDxz2MulyhRhDEQ/61Gfnp0P93FQW2AKsZJ72UhroG5NZ9WZ5Ca/9lmjrGCH2XBPHZGq7D2cxQmCBdw==
+"@voicenter-team/socketio-storage-logger@^2.0.8":
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/@voicenter-team/socketio-storage-logger/-/socketio-storage-logger-2.0.8.tgz#64b5634c8d798f21a14e7d1fc996205303e9701b"
+  integrity sha512-0KgH89sl5LA2PgOoO+ZwA5bTISYTQLg9/4SbkegySmz/YnwpwBJ9b9eASNoHPuwFvOJMLv4BPsYfjZNpr8mpYg==
   dependencies:
     socket.io-client "2.5.0"
     uuid "^9.0.1"
