@@ -59,9 +59,14 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
 
             const opensipsConfiguration: Partial<IOpenSIPSConfiguration> = {
                 onTransportCallback: (message: object) => {
+                    const messageCopy = { ...message }
+                    if (messageCopy.ua) {
+                        delete messageCopy.ua
+                    }
+
                     getLogger()?.log({
                         action: 'New message',
-                        body: message
+                        body: JSON.parse(JSON.stringify(messageCopy))
                     })
                 },
                 noiseReductionOptions: {
