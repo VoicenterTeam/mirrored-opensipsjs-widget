@@ -75,7 +75,9 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
                 }
             };
 
-            (vsipAPI.actions.init(connectOptions, {}, opensipsConfiguration) as Promise<OpenSIPSJS>).then(
+            const loggerInstance = getLogger();
+
+            (vsipAPI.actions.init(connectOptions, {}, opensipsConfiguration, loggerInstance) as Promise<OpenSIPSJS>).then(
                 (opensipsjs: OpenSIPSJS) => {
                     state.opensipsjs = opensipsjs
 
