@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import OpenSIPSJS from 'opensips-js'
-import type { IOpenSIPSConfiguration } from 'opensips-js/src/types/rtc'
+import type { IOpenSIPSConfiguration, CustomLoggerType } from 'opensips-js/src/types/rtc'
 import type { ISIPSCredentials } from '@/types/public-api'
 import type { UnRegisterOptions } from 'jssip/lib/UA'
 import { vsipAPI, OpensipsConnectOptions } from 'opensips-js-vue'
@@ -73,11 +73,28 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
                     mode: 'dynamic',
                     vadModule: VAD
                 }
-            };
+            }
 
-            const loggerInstance = getLogger();
+            const loggerInstance = getLogger()
+            let customLogger: CustomLoggerType
 
-            (vsipAPI.actions.init(connectOptions, {}, opensipsConfiguration, loggerInstance) as Promise<OpenSIPSJS>).then(
+            if (loggerInstance) {
+                function loggerLog (...args: any[]) {
+                    loggerInstance?.log({
+                        action: 'OpenSIPSJS log',
+                        body: args.map(arg => String(arg)).join(' ')
+                    })
+                }
+
+                customLogger = {
+                    log: loggerLog,
+                    debug: loggerLog,
+                    warn: loggerLog,
+                    error: loggerLog
+                }
+            }
+
+            (vsipAPI.actions.init(connectOptions, {}, opensipsConfiguration, customLogger) as Promise<OpenSIPSJS>).then(
                 (opensipsjs: OpenSIPSJS) => {
                     state.opensipsjs = opensipsjs
 
