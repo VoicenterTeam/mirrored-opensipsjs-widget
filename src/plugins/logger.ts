@@ -50,6 +50,14 @@ export class WebStorageLogger {
         this.logger.debug(data)
     }
 
+    warn (data: object) {
+        if (!this.logger) {
+            throw new Error('Logger doesn\'t exist')
+        }
+
+        this.logger.warn(data)
+    }
+
     error (data: object) {
         if (!this.logger) {
             throw new Error('Logger doesn\'t exist')
