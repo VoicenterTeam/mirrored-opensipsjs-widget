@@ -35,13 +35,9 @@ import type {
     IWidgetExternalAPI
 } from '@/types/public-api'
 import { type Credentials, getCredentials, isLoggedIn, logIn, logOut } from '~/composable/useAuthorisation'
-import { useLocalStorage } from '@vueuse/core'
-import { WIDGET_CONFIG_STORAGE_KEY } from '~/enum/storage.enum'
-import type { IWidgetConfig } from '@/types/public-api'
 
 /* Data */
 let widgetAPI: undefined | IWidgetExternalAPI
-const widgetConfig = useLocalStorage<IWidgetConfig>(WIDGET_CONFIG_STORAGE_KEY, {} as IWidgetConfig)
 
 /* Methods */
 function onLogin (payload: Credentials) {
