@@ -56,7 +56,6 @@ function onLogout () {
     }
 }
 function onWidgetInit (widgetExternalAPI: IWidgetExternalAPI) {
-    console.log('onWidgetInit')
     widgetAPI = widgetExternalAPI
 }
 function widgetLogin () {
@@ -65,24 +64,15 @@ function widgetLogin () {
         const checkInterval = setInterval(() => {
             if (widgetAPI) {
                 clearInterval(checkInterval)
-                console.log('getCredentials.value', getCredentials.value)
                 widgetAPI.login(getCredentials.value)
             }
         }, 2000)
         return
     }
 
-    console.log('getCredentials.value', getCredentials.value)
     widgetAPI.login(getCredentials.value)
 }
 function onConfigChange () {
-    console.log('Config changed, applying new settings...')
-    /* if (widgetAPI) {
-        // Apply the new configuration
-        widgetAPI.setConfig(widgetConfig.value)
-        console.log('New config applied:', widgetConfig.value)
-    } */
-
     if (widgetAPI) {
         widgetAPI.disconnect()
         setTimeout(() => {
@@ -94,7 +84,6 @@ function onConfigChange () {
 /* Hooks */
 onMounted(
     () => {
-        console.log('isLoggedIn.value', isLoggedIn.value)
         if (isLoggedIn.value) {
             widgetLogin()
         }

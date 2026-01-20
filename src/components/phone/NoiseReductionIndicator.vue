@@ -23,22 +23,18 @@ import { noiseReductionMode } from '@/composables/useWidgetConfig'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import { getTranslation } from '@/plugins/translator'
 
-/* Data */
 const { getAudioState } = useOpenSIPSJS()
 const { noiseReductionState } = getAudioState()
 
-/* Computed */
 const showIndicator = computed(() => {
     return noiseReductionMode.value === 'enabled' || noiseReductionMode.value === 'dynamic'
 })
 
 const isActive = computed(() => {
-    // For 'enabled' mode, it's always active
     if (noiseReductionMode.value === 'enabled') {
         return true
     }
 
-    // For 'dynamic' mode, check the actual runtime state from opensips-js-vue
     if (noiseReductionMode.value === 'dynamic') {
         return noiseReductionState?.value === true
     }
