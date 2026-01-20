@@ -58,6 +58,9 @@ const getTitle = computed(() => {
 
 <style lang="scss" scoped>
 .noise-reduction-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 22px;
     width: 22px;
     background-color: transparent;
