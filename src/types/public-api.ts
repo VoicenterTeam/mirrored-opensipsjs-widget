@@ -213,6 +213,11 @@ export interface IVSIPActionsAPI {
      * Set microphone sensitivity
      */
     setMicrophoneSensitivity: (value: number) => void
+
+    /**
+     * Set VAD (Voice Activity Detection) configuration
+     */
+    setVADConfiguration: (options: { mode: TNoiseReductionMode }) => void
 }
 
 /**
@@ -383,6 +388,18 @@ export interface IFixedLayoutConfig extends IBaseLayoutConfig {
 export type ILayoutConfig = IFloatingLayoutConfig | IDockedLayoutConfig | IFixedLayoutConfig
 
 /**
+ * Noise reduction mode type
+ */
+export type TNoiseReductionMode = 'disabled' | 'enabled' | 'dynamic'
+
+/**
+ * Noise reduction options
+ */
+export interface INoiseReductionOptions {
+    mode: TNoiseReductionMode
+}
+
+/**
  * Represents the call settings for the widget.
  */
 export interface ICallSettings {
@@ -399,6 +416,7 @@ export interface ICallSettings {
     ringingSound: string
     outgoingCallPlaceHolder: string
     outgoingInputRegexValidator: Array<string>
+    noiseReductionOptions: INoiseReductionOptions
 }
 
 export interface ILoggerSettings {

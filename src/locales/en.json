@@ -60,7 +60,11 @@
     "merge": "merge",
     "new.call": "New call",
     "we.are.online": "We're online! <br> Click to call us via browser",
-    "microphone.access.denied": "Microphone access denied"
+    "microphone.access.denied": "Microphone access denied",
+    "noise.reduction.always.on": "Noise Reduction: Always On",
+    "noise.reduction.dynamic.active": "Noise Reduction: Dynamic (Active)",
+    "noise.reduction.dynamic.inactive": "Noise Reduction: Dynamic (Inactive)",
+    "noise.reduction.off": "Noise Reduction: Off"
   },
   "tab": {
     "not.active": "Tab Not Active",

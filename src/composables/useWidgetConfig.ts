@@ -9,7 +9,8 @@ import {
     TPosition,
     TKeypadMode,
     TKeypadPosition,
-    LangType
+    LangType,
+    TNoiseReductionMode
 } from '@/types/public-api'
 import { defaultAudioConfig, defaultTheme } from '@/enum/defaultTheme.enum'
 import { getDefaultWidgetConfig } from '@/enum/defaultWidgetConfig.enum'
@@ -197,6 +198,13 @@ export const debugMode = computed({
     get: () => widgetConfig.debug ?? false,
     set: (value: boolean) => {
         widgetConfig.debug = value
+    }
+})
+
+export const noiseReductionMode = computed({
+    get: () => widgetCallSettings.value.noiseReductionOptions.mode,
+    set: (value: TNoiseReductionMode) => {
+        widgetCallSettings.value.noiseReductionOptions.mode = value
     }
 })
 

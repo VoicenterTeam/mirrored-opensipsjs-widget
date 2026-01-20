@@ -38,7 +38,7 @@
     "opensips-js": "^0.1.19",
     "opensips-js-screen-share": "^0.0.1",
     "opensips-js-screen-share-whiteboard": "^0.0.1",
-    "opensips-js-vue": "^0.1.30",
+    "opensips-js-vue": "^0.1.33",
     "opensips-js-whiteboard": "^0.0.1",
     "regenerator-runtime": "^0.13.11",
     "tab-election": "^4.2.8",

@@ -31,5 +31,8 @@ export const defaultCallSettings: ICallSettings = {
     outgoingCallPlaceHolder: '',
     outgoingInputRegexValidator: [
         '/^\\+?\\d*$/'
-    ]
+    ],
+    noiseReductionOptions: {
+        mode: 'dynamic'
+    }
 }

@@ -60,7 +60,11 @@
     "merge": "מזג",
     "new.call": "שיחה חדשה",
     "we.are.online": "אנחנו פעילים! <br> לחץ כדי להתקשר אלינו דרך הדפדפן",
-    "microphone.access.denied": "הגישה למיקרופון נדחתה"
+    "microphone.access.denied": "הגישה למיקרופון נדחתה",
+    "noise.reduction.always.on": "הפחתת רעש: תמיד פעיל",
+    "noise.reduction.dynamic.active": "הפחתת רעש: דינמי (פעיל)",
+    "noise.reduction.dynamic.inactive": "הפחתת רעש: דינמי (לא פעיל)",
+    "noise.reduction.off": "הפחתת רעש: כבוי"
   },
   "tab": {
     "not.active": "הטאב לא פעיל",
