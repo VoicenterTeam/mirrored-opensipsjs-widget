@@ -4,6 +4,8 @@ import type { IRoom } from 'opensips-js/src/types/rtc'
 import state from '@/composables/state'
 import { getLogger } from '@/plugins/logger'
 import useCallSounds from '@/composables/useCallSounds'
+import type { TNoiseReductionMode } from '@/types/public-api'
+import { noiseReductionMode } from '@/composables/useWidgetConfig'
 
 export const activeInputDevice = vsipAPI.state.selectedInputDevice
 export const inputDevicesList = vsipAPI.state.inputMediaDeviceList
@@ -62,6 +64,7 @@ export const isCallWaitingEnabled = vsipAPI.state.isCallWaitingEnabled
 export const speakerVolume = vsipAPI.state.speakerVolume
 export const callTime = vsipAPI.state.callTime
 export const callMetrics = vsipAPI.state.callMetrics
+export const noiseReductionState = vsipAPI.state.noiseReductionState
 
 export const muted = computed(() => {
     return Object.values(activeCalls.value).length ? isMuted.value : isMuteWhenJoin.value
@@ -116,6 +119,15 @@ watch(isCallWaitingEnabled, (newValue) => {
     state.opensipsjs?.audio.setCallWaiting(newValue)
 })
 
+watch(noiseReductionMode, (newValue) => {
+    getLogger()?.log({
+        action: 'Set noise reduction mode',
+        mode: newValue
+    })
+
+    state.opensipsjs?.audio.setVADConfiguration({ mode: newValue })
+})
+
 export function getAudioState () {
     return {
         activeInputDevice,
@@ -145,7 +157,8 @@ export function getAudioState () {
         callTime,
         callMetrics,
         muted,
-        allActiveCalls
+        allActiveCalls,
+        noiseReductionState
     }
 }
 
@@ -354,6 +367,15 @@ export function getAudioApi () {
         microphonePermissionAllowed.value = value
     }
 
+    function setVADConfiguration (options: { mode: TNoiseReductionMode }) {
+        getLogger()?.log({
+            action: 'Set VAD configuration',
+            mode: options.mode
+        })
+
+        state.opensipsjs?.audio.setVADConfiguration(options)
+    }
+
     return {
         startCall,
         answerCall,
@@ -378,6 +400,7 @@ export function getAudioApi () {
         getActiveCallsInRoom,
         onMicrophoneChange,
         onSpeakerChange,
-        setMicrophonePermissionAllowed
+        setMicrophonePermissionAllowed,
+        setVADConfiguration
     }
 }

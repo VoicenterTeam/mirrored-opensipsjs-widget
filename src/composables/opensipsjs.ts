@@ -4,7 +4,7 @@ import type { IOpenSIPSConfiguration, CustomLoggerType } from 'opensips-js/src/t
 import type { ISIPSCredentials } from '@/types/public-api'
 import type { UnRegisterOptions } from 'jssip/lib/UA'
 import { vsipAPI, OpensipsConnectOptions } from 'opensips-js-vue'
-import { DNDDefaultBehaviour, autoAnswerDefaultBehaviour, callWaitingDefaultBehaviour } from '@/composables/useWidgetConfig'
+import { DNDDefaultBehaviour, autoAnswerDefaultBehaviour, callWaitingDefaultBehaviour, noiseReductionMode } from '@/composables/useWidgetConfig'
 import { getVideoApi, getVideoState, registerVideoListeners } from '@/composables/video'
 import { getAudioApi, getAudioState } from '@/composables/audio'
 import state from '@/composables/state'
@@ -70,7 +70,7 @@ export function startOpenSIPS (credentials: ISIPSCredentials) {
                     })
                 },
                 noiseReductionOptions: {
-                    mode: 'dynamic',
+                    mode: noiseReductionMode.value,
                     vadModule: VAD
                 }
             }

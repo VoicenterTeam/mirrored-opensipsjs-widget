@@ -6315,14 +6315,14 @@ opensips-js-screen-share@^0.0.1:
   dependencies:
     opensips-js "^0.1.2"
 
-opensips-js-vue@^0.1.30:
-  version "0.1.30"
-  resolved "https://registry.yarnpkg.com/opensips-js-vue/-/opensips-js-vue-0.1.30.tgz#de2ed8342e89904d6915704e570952ef9e5c0012"
-  integrity sha512-JkwmEfVoRFMv2uw06Mh3bD15cKzx8n8JY3vgJcTj11ck2V3W/TrCUN/PN2Gzb1Dv37mlhCVUDGKJI4qZa4q7Vw==
+opensips-js-vue@^0.1.33:
+  version "0.1.33"
+  resolved "https://registry.yarnpkg.com/opensips-js-vue/-/opensips-js-vue-0.1.33.tgz#794e195848daabff028632d81a6a74bbf7d09225"
+  integrity sha512-7KxOBk9Q/AuhNtiDRGQzHlPybB3EeuqACYpem7UD4ywMs4jBM3pNHTBTt31KPBXpU4IrDQLaEXggYA5Yza36NQ==
   dependencies:
     "@ricky0123/vad-web" "0.0.28"
     core-js "3.8.3"
-    opensips-js "^0.1.35"
+    opensips-js "^0.1.38"
     vue "3.3.8"
 
 opensips-js-whiteboard@^0.0.1:
@@ -6363,10 +6363,10 @@ opensips-js@^0.1.2:
     sdp-transform "2.14.1"
     uuid "^10.0.0"
 
-opensips-js@^0.1.35:
-  version "0.1.35"
-  resolved "https://registry.yarnpkg.com/opensips-js/-/opensips-js-0.1.35.tgz#669fbbd19bcdb7132174a53b56f0b176b7f3ab44"
-  integrity sha512-H9AmGoC6vdh2ESPpTqqrANe5XnbUa2m6jZ/rTEiKiaJkDTdp9ld6N978B1XrcvsPaCFxP0hYtZs+izp+NLbVWA==
+opensips-js@^0.1.38:
+  version "0.1.38"
+  resolved "https://registry.yarnpkg.com/opensips-js/-/opensips-js-0.1.38.tgz#342ca12ef5d3e6bf6dc36503da670ae8f8623192"
+  integrity sha512-uwIEl6S2/ZQ2n6kMRmsi18NGhaE/a+fgFXDPRitZRXJbOu0MAnM/Dhb4Ra32waXHDvO/e/X4YJHorPhKN2XW8Q==
   dependencies:
     "@types/mime" "^3.0.1"
     generate-unique-id "^2.0.1"

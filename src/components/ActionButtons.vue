@@ -25,6 +25,9 @@
                 </div>
             </div>
             <div>
+                <NoiseReductionIndicator />
+            </div>
+            <div>
                 <ActionIconButton
                     :icon="isAgentMuted ? 'vc-lc-mic-off': 'vc-lc-mic'"
                     :color="isAgentMuted ? 'btn-filled-text': 'primary-actions'"
@@ -99,6 +102,7 @@ import type { ICall } from 'opensips-js/src/types/rtc'
 import { VcSlider } from '@voicenter-team/voicenter-ui-plus'
 import { debounce } from 'lodash'
 import NewCallerButton from '@/components/NewCallerButton.vue'
+import NoiseReductionIndicator from '@/components/phone/NoiseReductionIndicator.vue'
 
 const { state, getAudioState, getAudioApi } = useOpenSIPSJS()
 

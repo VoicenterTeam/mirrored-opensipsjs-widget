@@ -22,7 +22,7 @@
                     @login="onLogin"
                 />
 
-                <Config />
+                <Config @change="onConfigChange" />
             </div>
         </div>
     </div>
@@ -56,10 +56,25 @@ function onWidgetInit (widgetExternalAPI: IWidgetExternalAPI) {
 }
 function widgetLogin () {
     if (!widgetAPI) {
+        // Widget API not ready yet, wait for it with interval
+        const checkInterval = setInterval(() => {
+            if (widgetAPI) {
+                clearInterval(checkInterval)
+                widgetAPI.login(getCredentials.value)
+            }
+        }, 2000)
         return
     }
 
     widgetAPI.login(getCredentials.value)
+}
+function onConfigChange () {
+    if (widgetAPI) {
+        widgetAPI.disconnect()
+        setTimeout(() => {
+            widgetLogin()
+        }, 1000)
+    }
 }
 
 /* Hooks */

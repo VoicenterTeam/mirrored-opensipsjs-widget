@@ -372,6 +372,19 @@
                                 label="Ringing Sound"
                             />
                         </VcFormItem>
+
+                        <VcFormItem
+                            label="Noise Reduction mode"
+                        >
+                            <template #info-text>
+                                <p v-html="CONFIG_DESCRIPTION.callSettings.noiseReductionOptions?.mode || 'Voice Activity Detection (VAD) mode for noise reduction. Dynamic adjusts automatically, Enabled is always on, Disabled turns it off.'" />
+                            </template>
+                            <VcSelect
+                                v-model="form.callSettings.noiseReductionOptions.mode"
+                                :options="noiseReductionModeOptions"
+                                :config="selectConfig"
+                            />
+                        </VcFormItem>
                     </VcForm>
                 </VcCollapseItem>
             </VcCollapse>
@@ -552,6 +565,20 @@ const layoutConfigKeypadPositionOptions: Array<OptionType> = [
     {
         label: 'Bottom',
         value: 'bottom'
+    }
+]
+const noiseReductionModeOptions: Array<OptionType> = [
+    {
+        label: 'Disabled',
+        value: 'disabled'
+    },
+    {
+        label: 'Enabled',
+        value: 'enabled'
+    },
+    {
+        label: 'Dynamic',
+        value: 'dynamic'
     }
 ]
 

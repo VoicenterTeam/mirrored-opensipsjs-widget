@@ -196,6 +196,9 @@ export const CONFIG_DESCRIPTION = {
         shrinkOnIdle: 'When enabled, the widget shrinks to a smaller size when not on a call.',
         ringingSound: 'Specifies the sound to play for incoming calls.',
         outgoingCallPlaceHolder: 'Sets the placeholder text in the outgoing call input field.',
-        outgoingInputRegexValidator: 'Specifies an array of regular expression patterns to validate and sanitize the user\'s input in the outgoing call input field, ensuring only allowed characters are entered.'
+        outgoingInputRegexValidator: 'Specifies an array of regular expression patterns to validate and sanitize the user\'s input in the outgoing call input field, ensuring only allowed characters are entered.',
+        noiseReductionOptions: {
+            mode: 'Controls the Voice Activity Detection (VAD) for noise reduction. <br><ul><li><strong>disabled</strong> - VAD is turned off, no noise reduction is applied.</li><li><strong>enabled</strong> - VAD is always active, providing constant noise reduction.</li><li><strong>dynamic</strong> - VAD adjusts automatically based on detected audio patterns (recommended).</li></ul>'
+        }
     }
 }
