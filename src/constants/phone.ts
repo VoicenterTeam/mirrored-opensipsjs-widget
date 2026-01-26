@@ -1,4 +1,5 @@
 export const MAX_NUMBER_INPUT_LENGTH = 18
+export const MAX_NUMBER_DTMF_INPUT_LENGTH = Infinity
 export const KeyPadTriggerObjectType = {
     keypad: 'keypad' ,
     add_caller: 'add_caller' ,
