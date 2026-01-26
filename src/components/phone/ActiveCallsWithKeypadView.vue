@@ -21,7 +21,7 @@
                     :placeholder="getTranslation('common.type.number')"
                     clearable
                     class="h-full"
-                    @update:modelValue="onNumberInput"
+                    @update:modelValue="onKeypadNumberInput"
                     @keyup.enter="initCall"
                 />
             </div>
@@ -37,7 +37,7 @@ import SoundManager from '@/components/phone/SoundManager.vue'
 import CallsCompactView from '@/components/phone/common/CallsCompactView.vue'
 import BackToCurrentCall from '@/components/phone/activeCallsWithKeypadView/BackToCurrentCall.vue'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
-import { keyPadTriggerTitlesConfig } from '@/constants/phone.ts'
+import { KeyPadTriggerObjectType, keyPadTriggerTitlesConfig, MAX_NUMBER_DTMF_INPUT_LENGTH } from '@/constants/phone.ts'
 import FooterBlock from '@/components/phone/FooterBlock.vue'
 import ActiveCallsPopup from '@/components/phone/common/ActiveCallsPopup.vue'
 import useCallActions from '@/composables/phone/useCallActions.ts'
@@ -68,6 +68,15 @@ const triggerTitle = computed(() => {
 const showActiveCallsPopup = computed(() => {
     return roomsWithoutActive.value.length && !keyPadTrigger.value
 })
+
+function onKeypadNumberInput (value: string| number) {
+    if (keyPadTrigger.value === KeyPadTriggerObjectType.keypad) {
+        onNumberInput(value, MAX_NUMBER_DTMF_INPUT_LENGTH)
+        return
+    }
+
+    onNumberInput(value)
+}
 
 /* Watchers */
 watch(

@@ -21,9 +21,9 @@
 <script lang="ts" setup>
 import { onBeforeUnmount } from 'vue'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
-import { MAX_NUMBER_INPUT_LENGTH } from '@/constants/phone.ts'
+import { KeyPadTriggerObjectType, MAX_NUMBER_DTMF_INPUT_LENGTH, MAX_NUMBER_INPUT_LENGTH } from '@/constants/phone.ts'
 /* Data */
-const { phoneNumber, onPhoneNumberChange, onKeyPadToggle } = usePhoneState()
+const { phoneNumber, keyPadTrigger, onPhoneNumberChange, onKeyPadToggle } = usePhoneState()
 const keyPadConfig = [
     {
         id: 1,
@@ -87,8 +87,10 @@ const keyPadConfig = [
     }
 ]
 const onPhoneNumberInput = (key: string) => {
+    const limit = keyPadTrigger.value === KeyPadTriggerObjectType.keypad ?
+        MAX_NUMBER_DTMF_INPUT_LENGTH: MAX_NUMBER_INPUT_LENGTH
 
-    if (phoneNumber.value.length >= MAX_NUMBER_INPUT_LENGTH) {
+    if (phoneNumber.value.length >= limit) {
         return
     }
 

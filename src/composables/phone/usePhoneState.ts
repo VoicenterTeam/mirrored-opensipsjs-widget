@@ -26,8 +26,8 @@ export function usePhoneState () {
     })
 
     /* Methods */
-    const onNumberInput = (value: string| number ) => {
-        if (phoneNumber.value.length >= MAX_NUMBER_INPUT_LENGTH) {
+    const onNumberInput = (value: string| number, limit = MAX_NUMBER_INPUT_LENGTH) => {
+        if (value.length > limit && phoneNumber.value.length >= limit) {
             return
         }
         value = `${value}`
