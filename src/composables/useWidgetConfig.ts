@@ -221,7 +221,7 @@ export function setCallSettingsPermissions (settings: Partial<ICallSettings>) {
     widgetCallSettings.value = merge({}, widgetCallSettings.value, settings)
 }
 
-/*function buildPositionSettings (settings: IWidgetTheme) {
+/* function buildPositionSettings (settings: IWidgetTheme) {
     const position: Partial<TPositionConfig> = {}
 
     for (const [ key, oppositeKey ] of Object.entries(POSITION_MAP) as [ TPosition, TPosition ][]) {
@@ -267,12 +267,11 @@ export function setCallSettingsPermissions (settings: Partial<ICallSettings>) {
     }
 
     return position
-}*/
+} */
 
 export function applySettingsToWidgetRootEl (widgetRootEl: HTMLElement, dragHandleElement?: HTMLElement) {
     const settings = widgetThemeSettings.value
 
-    // Setting widget colors
     Object.entries(settings.colors).forEach(([ key, value ]) => {
         widgetRootEl.style.setProperty(`--${key}`, value)
     })
@@ -303,31 +302,59 @@ export function applySettingsToWidgetRootEl (widgetRootEl: HTMLElement, dragHand
         }
     } else {
         const anchor = settings.audioConfig?.layoutConfig.position.anchor
+        const isDocked = widgetMode === 'docked'
 
         if (anchor) {
-            widgetRootEl.style.left = CENTER_POSITIONS.horizontal
-            widgetRootEl.style.right = 'unset'
+            if (isDocked) {
+                widgetRootEl.style.left = 'unset'
+                widgetRootEl.style.right = 'unset'
+                widgetRootEl.style.marginLeft = 'auto'
+                widgetRootEl.style.marginRight = 'auto'
+                widgetRootEl.style.transform = 'none'
 
-            switch (anchor) {
-                case 'bottom-center':
-                    widgetRootEl.style.bottom = toCssValue(settings.audioConfig?.layoutConfig.position.bottom, '0px')
-                    widgetRootEl.style.top = 'unset'
-                    widgetRootEl.style.transform = 'translateX(-50%)'
+                switch (anchor) {
+                    case 'bottom-center':
+                        widgetRootEl.style.bottom = toCssValue(settings.audioConfig?.layoutConfig.position.bottom, '0px')
+                        widgetRootEl.style.top = 'unset'
+                        break
+                    case 'top-center':
+                        widgetRootEl.style.bottom = 'unset'
+                        widgetRootEl.style.top = toCssValue(settings.audioConfig?.layoutConfig.position.top, '0px')
+                        break
+                    case 'center':
+                        widgetRootEl.style.bottom = 'unset'
+                        widgetRootEl.style.top = '50%'
+                        widgetRootEl.style.transform = 'translateY(-50%)'
+                        break
+                }
+            } else {
+                widgetRootEl.style.left = CENTER_POSITIONS.horizontal
+                widgetRootEl.style.right = 'unset'
+                widgetRootEl.style.marginLeft = 'unset'
+                widgetRootEl.style.marginRight = 'unset'
 
-                    break
-                case 'top-center':
-                    widgetRootEl.style.bottom = 'unset'
-                    widgetRootEl.style.top = toCssValue(settings.audioConfig?.layoutConfig.position.top, '0px')
-                    widgetRootEl.style.transform = 'translateX(-50%)'
-
-                    break
-                case 'center':
-                    widgetRootEl.style.bottom = 'unset'
-                    widgetRootEl.style.top = CENTER_POSITIONS.vertical
-                    widgetRootEl.style.transform = 'translate(-50%, -50%)'
-
-                    break
+                switch (anchor) {
+                    case 'bottom-center':
+                        widgetRootEl.style.bottom = toCssValue(settings.audioConfig?.layoutConfig.position.bottom, '0px')
+                        widgetRootEl.style.top = 'unset'
+                        widgetRootEl.style.transform = 'translateX(-50%)'
+                        break
+                    case 'top-center':
+                        widgetRootEl.style.bottom = 'unset'
+                        widgetRootEl.style.top = toCssValue(settings.audioConfig?.layoutConfig.position.top, '0px')
+                        widgetRootEl.style.transform = 'translateX(-50%)'
+                        break
+                    case 'center':
+                        widgetRootEl.style.bottom = 'unset'
+                        widgetRootEl.style.top = CENTER_POSITIONS.vertical
+                        widgetRootEl.style.transform = 'translate(-50%, -50%)'
+                        break
+                }
             }
+        } else {
+            widgetRootEl.style.transform = 'none'
+            widgetRootEl.style.marginLeft = 'unset'
+            widgetRootEl.style.marginRight = 'unset'
         }
 
         disableDraggable()
@@ -337,10 +364,7 @@ export function applySettingsToWidgetRootEl (widgetRootEl: HTMLElement, dragHand
 export function setThemeSettings (settings: Partial<IWidgetTheme>) {
     const mergedTheme: IWidgetTheme = merge({}, defaultTheme, settings)
 
-    widgetThemeSettings.value = {
-        ...mergedTheme,
-        //position: buildPositionSettings(mergedTheme)
-    }
+    widgetThemeSettings.value = mergedTheme
 
     setLanguage(widgetThemeSettings.value.lang)
 }

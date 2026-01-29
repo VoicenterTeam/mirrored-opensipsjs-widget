@@ -180,7 +180,8 @@ themeSettings: {
       position: {
         left: '20px',
         bottom: '20px',
-        anchor: 'bottom-center' // Optional anchor point
+        anchor: 'bottom-center' // 'bottom-center', 'top-center', 'center', or null
+                                // See "Layout Modes" section for details
       },
       keypadMode: 'popover', // 'popover', 'static', or 'manual'
       keypadPosition: 'bottom' // 'top' or 'bottom'
@@ -441,46 +442,109 @@ await widget.vsip.setCallWaiting(false); // Disable call waiting
 
 ## Layout Modes
 
+The widget supports three layout modes, each with different positioning behavior:
+
 ### Floating
 
-The widget can be freely moved by dragging it around the screen.
+**CSS Position**: `fixed`  
+**Draggable**: Yes  
+**Use Case**: When you want users to freely move the widget around the screen
+
+The widget uses `position: fixed` and can be freely dragged by the user. The initial position is set using `left` and `top` properties, but users can move it anywhere on the screen. The position is constrained to stay within the viewport bounds.
 
 ```javascript
 layoutConfig: {
   mode: 'floating',
   position: {
     left: '20px',
-    bottom: '20px'
+    bottom: '20px'  // Initial position (bottom is ignored for floating mode)
   }
 }
 ```
 
+**Note**: For floating mode, only `left` and `top` properties are used for initial positioning. The `right` and `bottom` properties are automatically unset.
+
+---
+
 ### Docked
 
-The widget is anchored to a specific position in the viewport.
+**CSS Position**: `relative`  
+**Draggable**: No  
+**Use Case**: When you want the widget to be part of the parent element's document flow
+
+The widget is inserted into the parent element using `position: relative`. This means it flows naturally within the parent container and affects the layout of surrounding elements. Use this mode when you want the widget to be embedded as part of your page layout.
 
 ```javascript
 layoutConfig: {
   mode: 'docked',
+  position: {} // No need for position
+}
+```
+
+⚠️ **Important**: With `position: relative`, the `top`, `bottom`, `left`, and `right` properties shift the element from its natural position, not from the viewport edges. This is different from fixed positioning.
+
+---
+
+### Fixed
+
+**CSS Position**: `fixed`  
+**Draggable**: No  
+**Use Case**: When you want the widget at a specific viewport position that doesn't move with page scroll
+
+The widget uses `position: fixed` and stays in place relative to the viewport, even when the page scrolls. This mode has two positioning approaches:
+
+#### Approach 1: Using Anchor (Viewport Centering)
+
+When `anchor` is specified, the widget is positioned using viewport-based centering:
+
+```javascript
+layoutConfig: {
+  mode: 'fixed',
   position: {
-    anchor: 'bottom-center'
+    anchor: 'bottom-center',
+    bottom: '20px'  // Optional: distance from bottom edge
   }
 }
 ```
 
-### Fixed
+**Available anchors**:
+- `'bottom-center'` - Centered horizontally, positioned at bottom (uses `left: 50vw` + `transform: translateX(-50%)`)
+- `'top-center'` - Centered horizontally, positioned at top
+- `'center'` - Centered both horizontally and vertically (uses `translate(-50%, -50%)`)
 
-The widget is fixed at specific coordinates and cannot be moved.
+**With offset**:
+```javascript
+layoutConfig: {
+  mode: 'fixed',
+  position: {
+    anchor: 'bottom-center',
+    bottom: '20px'  // 20px from the bottom of viewport
+  }
+}
+```
+
+#### Approach 2: Explicit Positioning (No Anchor)
+
+When `anchor` is `null` or not specified, use explicit positioning values:
 
 ```javascript
 layoutConfig: {
   mode: 'fixed',
   position: {
     left: '20px',
-    top: '20px'
+    top: '20px',
+    anchor: null  // Important: Set to null to disable anchor
   }
 }
 ```
+
+**Position properties**:
+- `left` - Distance from left edge of viewport
+- `top` - Distance from top edge of viewport  
+- `right` - Distance from right edge of viewport
+- `bottom` - Distance from bottom edge of viewport
+
+⚠️ **Important**: When using explicit positioning, you must set `anchor: null` to prevent the default anchor value from being merged in. Otherwise, the anchor will override your explicit positioning.
 
 ## Development
 

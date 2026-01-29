@@ -248,6 +248,7 @@
     </div>
 
     <script type="module" src="src/widget.ce.ts"></script>
+    <!-- <script type="module" src="https://cdn.opensipsjs.org/opensipsjs-widget/v0.2.35/opensipsjs-widget.mjs"></script> -->
 
     <script>
         const widget = document.getElementById('openSIPSWidget')
@@ -303,8 +304,12 @@
                     audioConfig: {
                         layoutConfig: {
                             mode: 'floating',
-                            type: 'phoneView',
-                            position: { anchor: null },
+                            type: 'rounded',
+                            position: {
+                              top: '20px',
+                              left: '20px',
+                              anchor: 'top-center'
+                            },
                             keypadMode: 'popover',
                             keypadPosition: 'bottom'
                         },

@@ -26,7 +26,7 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import RoundedCallView from '@/views/RoundedCallView.vue'
-import { applySettingsToWidgetRootEl, layoutType, widgetType } from '@/composables/useWidgetConfig'
+import { applySettingsToWidgetRootEl, layoutType, widgetType, widgetThemeSettings } from '@/composables/useWidgetConfig'
 import { setWidgetElement } from '@/composables/useWidgetState'
 import OpenSIPSExternalWidgetAPI from '@/widget/OpenSIPSExternalWidgetAPI'
 import QuickCallView from '@/views/QuickCallView.vue'
@@ -93,6 +93,9 @@ function onReady (draggableRoot: HTMLElement | undefined) {
 
     usedWidgetShadowRootEl.value = widgetWrapper.value
 
+    hostElement = host
+    draggableElement = draggableRoot
+
     setWidgetElement(
         host,
         draggableRoot
@@ -129,6 +132,20 @@ watch(
     {
         deep: true,
     }
+)
+
+let hostElement: HTMLElement | null = null
+let draggableElement: HTMLElement | undefined = undefined
+
+watch(
+    widgetThemeSettings,
+    () => {
+        if (hostElement) {
+            console.log('🔧 widgetThemeSettings changed, reapplying settings...')
+            applySettingsToWidgetRootEl(hostElement, draggableElement)
+        }
+    },
+    { deep: true }
 )
 
 onMounted(
