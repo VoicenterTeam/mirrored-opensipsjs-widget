@@ -93,7 +93,6 @@ function onReady (draggableRoot: HTMLElement | undefined) {
 
     usedWidgetShadowRootEl.value = widgetWrapper.value
 
-    // Store for later reapplication
     hostElement = host
     draggableElement = draggableRoot
 
