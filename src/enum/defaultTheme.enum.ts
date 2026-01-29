@@ -10,7 +10,6 @@ export const defaultAudioConfig: IWidgetAudioConfig = {
         type: 'rounded',
         mode: 'floating',
         position: {
-            bottom: '20px',
             anchor: 'bottom-center'
         },
         keypadMode: 'popover',
