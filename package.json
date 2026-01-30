@@ -1,6 +1,6 @@
 {
   "name": "opensips-js-widget",
-  "version": "0.2.37",
+  "version": "0.2.38",
   "author": "Bohdan Konechnyi",
   "main": "widget/opensipsjs-widget.mjs",
   "types": "widget/opensipsjs-widget.d.ts",

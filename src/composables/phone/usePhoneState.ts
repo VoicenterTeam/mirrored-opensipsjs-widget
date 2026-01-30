@@ -4,6 +4,7 @@ import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import { buttonPressSound } from '@/constants/phone.ts'
 
 
+let previousKeyPadTrigger = ''
 const phoneNumber = ref('')
 const keyPadTrigger = ref<keyPadTriggerType | undefined>(undefined)
 const isActiveCallsPopupActive = ref(false)
@@ -72,8 +73,17 @@ export function usePhoneState () {
 
         phoneNumber.value =  value
     }
-    const onKeyPadToggle = (value?: keyPadTriggerType) => {
+    const onKeyPadToggle = (value?: keyPadTriggerType) => { 
+        if (keyPadTrigger.value) {
+            previousKeyPadTrigger = keyPadTrigger.value
+        }
+
         keyPadTrigger.value = value
+        
+        // Clear phone number when switching between different types of keypad
+        if (value && previousKeyPadTrigger !== value) {
+            phoneNumber.value = ''
+        }
     }
 
     return {
