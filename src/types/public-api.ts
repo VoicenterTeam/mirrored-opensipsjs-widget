@@ -1,9 +1,11 @@
 import type { ListenerCallbackFnType, ListenersKeyType } from 'opensips-js/src/types/listeners'
 import type { ICall } from 'opensips-js-vue'
 import type { ConfigOptions } from '@voicenter-team/socketio-storage-logger'
+import type { AudioStateType } from '@/composables/audio'
 
 // Re-export types used in public API signatures
 export type { ICall } from 'opensips-js-vue'
+export type { AudioStateType } from '@/composables/audio'
 
 /**
  * User data associated with a call
@@ -281,6 +283,12 @@ export interface IWidgetExternalAPI {
      * Returns current widget configuration.
      */
     getConfig: () => IWidgetConfig
+
+    /**
+     * Returns the audio state - provides access to all reactive audio properties
+     * including active calls, rooms, devices, mute status, etc.
+     */
+    getAudioState: () => AudioStateType
 
     /**
      * Logs in to the SIP server.

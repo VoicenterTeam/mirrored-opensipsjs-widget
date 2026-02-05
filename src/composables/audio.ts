@@ -128,7 +128,39 @@ watch(noiseReductionMode, (newValue) => {
     state.opensipsjs?.audio.setVADConfiguration({ mode: newValue })
 })
 
-export function getAudioState () {
+export type AudioStateType = {
+    activeInputDevice: typeof activeInputDevice
+    inputDevicesList: typeof inputDevicesList
+    activeOutputDevice: typeof activeOutputDevice
+    outputDevicesList: typeof outputDevicesList
+    ringingDevicesList: typeof ringingDevicesList
+    activeRingingDevice: typeof activeRingingDevice
+    microphoneInputLevel: typeof microphoneInputLevel
+    microphonePermissionAllowed: typeof microphonePermissionAllowed
+    activeCalls: typeof activeCalls
+    allRooms: typeof allRooms
+    currentActiveRoom: typeof currentActiveRoom
+    allCallStatuses: typeof allCallStatuses
+    callsInActiveRoom: typeof callsInActiveRoom
+    activeRoomsWithoutIncoming: typeof activeRoomsWithoutIncoming
+    roomsWithoutActive: typeof roomsWithoutActive
+    callsExceptIncoming: typeof callsExceptIncoming
+    lengthOfCallsWithoutIncoming: typeof lengthOfCallsWithoutIncoming
+    isMuted: typeof isMuted
+    isDND: typeof isDND
+    isMuteWhenJoin: typeof isMuteWhenJoin
+    originalStream: typeof originalStream
+    callAddingInProgress: typeof callAddingInProgress
+    isCallWaitingEnabled: typeof isCallWaitingEnabled
+    speakerVolume: typeof speakerVolume
+    callTime: typeof callTime
+    callMetrics: typeof callMetrics
+    muted: typeof muted
+    allActiveCalls: typeof allActiveCalls
+    noiseReductionState: typeof noiseReductionState
+}
+
+export function getAudioState (): AudioStateType {
     return {
         activeInputDevice,
         inputDevicesList,

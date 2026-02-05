@@ -13,7 +13,7 @@ import { useDisplayResolvers } from '@/composables/useDisplayResolvers'
 import type { ListenerCallbackFnType, ListenersKeyType } from 'opensips-js/src/types/listeners'
 import { setLogger, WebStorageLogger } from '@/plugins/logger'
 
-const { getAudioApi, getVideoApi } = useOpenSIPSJS()
+const { getAudioApi, getVideoApi, getAudioState } = useOpenSIPSJS()
 const {
     startCall,
     answerCall,
@@ -178,6 +178,10 @@ const OpenSIPSExternalWidgetAPI: IWidgetExternalAPIConstructor = class OpenSIPSE
 
     public getConfig () {
         return getConfig()
+    }
+
+    public getAudioState () {
+        return getAudioState()
     }
 
     public on <T extends ListenersKeyType> (event: T, listener: ListenerCallbackFnType<T>) {
