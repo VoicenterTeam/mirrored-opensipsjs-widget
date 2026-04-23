@@ -1,7 +1,7 @@
 <template>
-    <div class="flex items-center sensitivity-block gap-x-1">
+    <div class="flex items-center sensitivity-block min-w-0 gap-x-1">
         <div
-            class="h-5 w-5 flex justify-center items-center rounded-sm cursor-pointer"
+            class="h-5 w-5 shrink-0 flex justify-center items-center rounded-sm cursor-pointer"
             :class="{
                 'vc-lc-mic-off': muted,
                 'vc-lc-mic': !muted,
@@ -16,6 +16,7 @@
             :bar-height="7"
             :bar-width="250"
             :sensitivity="2"
+            class="indicator flex-1 basis-0 min-w-0"
         />
     </div>
 </template>
@@ -37,6 +38,13 @@ const toggleMute = () => {
 .sensitivity-block {
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
+
+  .indicator {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
   .active {
     background-color:
         color-mix(in srgb, var(--destructive) var(--dynamic-percentage-10), transparent);

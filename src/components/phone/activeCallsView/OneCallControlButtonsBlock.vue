@@ -1,5 +1,5 @@
 <template>
-    <div class="keypad-wrapper w-full gap-x-5 gap-y-8">
+    <div class="keypad-wrapper w-full gap-x-3 gap-y-3">
         <CallActionButton
             v-for="(button, index) in oneActiveCallButtons"
             :key="index"

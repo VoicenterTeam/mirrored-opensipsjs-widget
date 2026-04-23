@@ -1,11 +1,13 @@
 <template>
     <div
+        ref="buttonContainerRef"
         :class="[type, {'disabled': disabled }]"
         class="call-control-button-container flex flex-col items-center"
     >
         <button
             class="control-button mb-1"
             :disabled="disabled"
+            :style="controlButtonSizeStyle"
             @click="onClick"
         >
             <div class="flex h-full icon-wrapper items-center justify-center">
@@ -21,6 +23,8 @@
     </div>
 </template>
 <script setup lang="ts">
+import { computed, ref } from 'vue'
+import { useMainWrapperHeight } from '@/composables/phone/useMainWrapperHeight'
 
 /* Props */
 interface Props {
@@ -38,6 +42,29 @@ const emit = defineEmits<{
     (event: 'click'): void,
 }>()
 
+const COMPACT_THRESHOLD_HEIGHT = 500
+const COMPACT_BUTTON_SIZE = 40
+const DEFAULT_BUTTON_SIZE = 52
+
+const buttonContainerRef = ref<HTMLElement | null>(null)
+const { mainWrapperHeight } = useMainWrapperHeight(buttonContainerRef)
+
+const controlButtonSize = computed(() => {
+    const currentHeight = mainWrapperHeight.value
+    if (!currentHeight) {
+        return DEFAULT_BUTTON_SIZE
+    }
+
+    return currentHeight < COMPACT_THRESHOLD_HEIGHT
+        ? COMPACT_BUTTON_SIZE
+        : DEFAULT_BUTTON_SIZE
+})
+
+const controlButtonSizeStyle = computed(() => ({
+    width: `${controlButtonSize.value}px`,
+    height: `${controlButtonSize.value}px`,
+}))
+
 /* Methods */
 const onClick = () => {
     emit('click')
@@ -46,8 +73,6 @@ const onClick = () => {
 <style lang="scss">
 .call-control-button-container {
   .control-button {
-    width: 52px;
-    height: 52px;
     border-radius: 100px;
   }
 

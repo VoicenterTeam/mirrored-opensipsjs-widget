@@ -1,5 +1,8 @@
 <template>
-    <div class="active-calls-with-keypad-view-wrapper w-full flex flex-col h-full">
+    <div
+        ref="keypadViewRef"
+        class="active-calls-with-keypad-view-wrapper w-full flex flex-col h-full"
+    >
         <SoundManager class="mb-1" />
         <CallsCompactView
             v-if="roomsWithoutActive.length"
@@ -11,11 +14,17 @@
             :room-id="currentActiveRoom"
         />
         <div
-            class="trigger-block flex flex-col flex-1 justify-center p-1"
-            :class="{'keypad_trigger-wrapper mb-2': triggerTitle}"
+            class="trigger-block flex flex-col flex-1 p-1 min-h-0"
+            :class="[
+                isCompactLayout ? 'justify-start' : 'justify-center',
+                { 'keypad_trigger-wrapper': triggerTitle, 'mb-2': triggerTitle && !isCompactLayout },
+            ]"
         >
-            <span class="text-sm text-center mb-2">{{ triggerTitle }}</span>
-            <div class="h-10 mb-3">
+            <span
+                class="text-sm text-center"
+                :class="isCompactLayout ? 'mb-0' : 'mb-2'"
+            >{{ triggerTitle }}</span>
+            <div :class="isCompactLayout ? 'h-8 mb-1' : 'h-10 mb-3'">
                 <VcInput
                     :model-value="phoneNumber"
                     :placeholder="getTranslation('common.type.number')"
@@ -27,12 +36,12 @@
             </div>
             <KeyPad />
         </div>
-        <FooterBlock />
+        <FooterBlock class="shrink-0" />
         <ActiveCallsPopup v-if="isActiveCallsPopupActive" />
     </div>
 </template>
 <script lang="ts" setup>
-import { computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import SoundManager from '@/components/phone/SoundManager.vue'
 import CallsCompactView from '@/components/phone/common/CallsCompactView.vue'
 import BackToCurrentCall from '@/components/phone/activeCallsWithKeypadView/BackToCurrentCall.vue'
@@ -43,6 +52,7 @@ import ActiveCallsPopup from '@/components/phone/common/ActiveCallsPopup.vue'
 import useCallActions from '@/composables/phone/useCallActions.ts'
 import KeyPad from '@/components/phone/common/KeyPad.vue'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
+import { useMainWrapperHeight } from '@/composables/phone/useMainWrapperHeight'
 import { getTranslation } from '@/plugins/translator'
 
 const { getAudioState } = useOpenSIPSJS()
@@ -57,6 +67,18 @@ const {
 /* Data */
 const { phoneNumber, keyPadTrigger, onNumberInput, isActiveCallsPopupActive, onActiveCallsPopupToggle } = usePhoneState()
 const { initCall } = useCallActions()
+
+const COMPACT_THRESHOLD_HEIGHT = 500
+
+const keypadViewRef = ref<HTMLElement | null>(null)
+const { mainWrapperHeight } = useMainWrapperHeight(keypadViewRef)
+
+const isCompactLayout = computed(() => {
+    const currentHeight = mainWrapperHeight.value
+    const isShortWidget = !!currentHeight && currentHeight < COMPACT_THRESHOLD_HEIGHT
+    const hasActiveRooms = activeRoomsWithoutIncoming.value.length > 0
+    return isShortWidget && hasActiveRooms
+})
 
 /* Computed */
 const triggerTitle = computed(() => {

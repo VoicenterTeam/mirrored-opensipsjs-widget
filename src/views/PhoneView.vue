@@ -153,16 +153,19 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .main-wrapper {
-    height: 100%;
+    /*height: 100%;
     min-height: 400px;
-    min-width: 300px;
+    min-width: 300px;*/
+    width: 300px;
+    height: 400px;
     @apply bg-primary-bg;
 
     &.has-draggable {
         @apply flex;
 
         .phone-view-wrapper {
-            @apply pl-2;
+            @apply px-2;
+            scale: 0.9;
         }
     }
 

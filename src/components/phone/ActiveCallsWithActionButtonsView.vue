@@ -1,5 +1,8 @@
 <template>
-    <div class="active-calls-with-action-buttons flex flex-col h-full">
+    <div
+        ref="activeCallsViewRef"
+        class="active-calls-with-action-buttons flex flex-col h-full"
+    >
         <SoundManager class="mb-1" />
         <OneCallInActiveRoomView
             v-if="isOneActiveCallInActiveRoom"
@@ -14,14 +17,15 @@
         />
         <ActiveCallsPopup v-if="isActiveCallsPopupActive" />
         <FooterActionsBlock
-            class="py-6 px-5 mb-0"
+            class="px-5 mb-0 shrink-0"
+            :class="footerPaddingClass"
         />
         <CallMovePopup v-if="callToMove" />
         <CallTransferPopup v-if="callToTransfer" />
     </div>
 </template>
 <script lang="ts" setup>
-import { computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import ActionsPopup from '@/components/phone/activeCallsView/ActionsPopup.vue'
 import OneCallInActiveRoomView from '@/components/phone/activeCallsView/OneCallInActiveRoomView.vue'
 import SoundManager from '@/components/phone/SoundManager.vue'
@@ -34,6 +38,7 @@ import { ActionsTriggerObjectType } from '@/constants/phone.ts'
 import ActiveCallsPopup from '@/components/phone/common/ActiveCallsPopup.vue'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
 import { useOpenSIPSJS } from '@/composables/opensipsjs.ts'
+import { useMainWrapperHeight } from '@/composables/phone/useMainWrapperHeight'
 import type { ICall } from 'opensips-js/src/types/rtc'
 import useCallInfo from '@/composables/useCallInfo.ts'
 
@@ -97,6 +102,18 @@ const isOneActiveCallInActiveRoom = computed(() => {
 })
 const isTwoAndMoreActiveCallsInActiveRoom = computed(() => {
     return callsInActiveRoom.value.length > 1
+})
+
+const COMPACT_THRESHOLD_HEIGHT = 500
+
+const activeCallsViewRef = ref<HTMLElement | null>(null)
+const { mainWrapperHeight } = useMainWrapperHeight(activeCallsViewRef)
+
+const footerPaddingClass = computed(() => {
+    const currentHeight = mainWrapperHeight.value
+    const isCompact = !!currentHeight && currentHeight < COMPACT_THRESHOLD_HEIGHT
+
+    return isCompact ? 'py-1' : 'py-3'
 })
 </script>
 <style lang="scss" scoped>

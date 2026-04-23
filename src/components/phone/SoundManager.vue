@@ -1,21 +1,26 @@
 <template>
-    <div class="speaker-manager-wrapper flex items-center w-full gap-y-1">
-        <SpeakerManager class="item" />
+    <div class="speaker-manager-wrapper shrink-0 flex items-center w-full min-w-0 gap-y-1">
+        <SpeakerManager class="item flex-1 basis-0 min-w-0" />
         <MuteManager
-            class="item"
+            class="item flex-1 basis-0 min-w-0 ml-1"
         />
-        <DNDButton v-if="allowDNDSetup" />
+        <DNDButton
+            v-if="allowDNDSetup"
+            class="shrink-0"
+        />
         <VcPopover
             :teleported="false"
             triggers="click"
             placement="bottom"
             popover-width="350"
+            class="shrink-0"
         >
             <template #reference>
                 <VcButtonIcon
                     icon="vc-lc-settings"
                     type="outline"
                     color="primary"
+                    class="shrink-0"
                 />
             </template>
             <div
@@ -75,8 +80,10 @@ const  mediaConfigOptions: ConfigOptionType<MediaDeviceInfo> = {
 </script>
 <style lang="scss" scoped>
 .speaker-manager-wrapper {
-  column-gap: 15px;
+  column-gap: 8px;
   overflow: hidden;
+  min-width: 0;
+  flex-shrink: 0;
   box-shadow: 0px 10px 20px -19px var(--card-shadow-color);
   border-bottom: 0.5px solid var(--ui-lines);
   .item {
