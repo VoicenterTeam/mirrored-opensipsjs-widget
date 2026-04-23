@@ -1,14 +1,22 @@
 <template>
-    <div class="active-calls-popup-wrapper absolute w-full phone-dialer-custom-scroll">
+    <div
+        ref="activeCallsPopupRef"
+        class="active-calls-popup-wrapper absolute w-full phone-dialer-custom-scroll"
+        :class="{ 'is-xs': isXsLayout }"
+    >
         <PopupHeader
             :header="getTranslation('common.active.calls')"
             :action="closeCallsPopup"
         />
         <div
             v-if="currentActiveRoom"
-            class="current-call-block pt-3 pb-4 px-4"
+            class="current-call-block px-4"
+            :class="isXsLayout ? 'pt-1 pb-1' : 'pt-3 pb-4'"
         >
-            <div class="title font-semibold pb-2">
+            <div
+                class="title font-semibold"
+                :class="isXsLayout ? 'pb-0' : 'pb-2'"
+            >
                 {{ getTranslation('audio.current.call') }}
             </div>
             <ActiveCallPopupRow
@@ -19,11 +27,13 @@
         </div>
         <div
             v-if="isMergeButtonVisible || isConferenceButtonVisible"
-            class="calls-manage-buttons-block  flex items-center justify-between p-4 gap-x-1"
+            class="calls-manage-buttons-block  flex items-center justify-between gap-x-1"
+            :class="isXsLayout ? 'px-2 py-1' : 'p-4'"
         >
             <button
                 v-if="isMergeButtonVisible"
-                class="merge h-8 flex items-center justify-center gap-x-1"
+                class="merge flex items-center justify-center gap-x-1"
+                :class="isXsLayout ? 'h-6' : 'h-8'"
                 @click="handleCallsMerge"
             >
                 <i class="vc-lc-merge text-base" />
@@ -31,7 +41,8 @@
             </button>
             <button
                 v-if="isConferenceButtonVisible"
-                class="conference merge h-8 flex items-center justify-center gap-x-1"
+                class="conference merge flex items-center justify-center gap-x-1"
+                :class="isXsLayout ? 'h-6' : 'h-8'"
                 @click="handleCallsConference"
             >
                 <i class="vc-lc-share-2 text-base" />
@@ -39,8 +50,11 @@
             </button>
         </div>
         <div
-            :class="{'mb-12': roomsWithoutActive.length === 1}"
-            class="not-active-calls-wrapper mb-4 overflow-auto"
+            :class="[
+                { 'mb-12': roomsWithoutActive.length === 1 && !isXsLayout },
+                isXsLayout ? 'mb-1' : 'mb-4',
+            ]"
+            class="not-active-calls-wrapper overflow-auto"
         >
             <ActiveCallPopupRow
                 v-for="room in roomsWithoutActive"
@@ -51,11 +65,12 @@
     </div>
 </template>
 <script setup lang="ts">
-import { computed, onBeforeUnmount } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import PopupHeader from '@/components/phone/common/PopupHeader.vue'
 import ActiveCallPopupRow from '@/components/phone/common/ActiveCallPopupRow.vue'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
+import { useMainWrapperHeight } from '@/composables/phone/useMainWrapperHeight'
 import { getTranslation } from '@/plugins/translator'
 
 /* Data */
@@ -63,6 +78,9 @@ const { onActiveCallsPopupToggle } = usePhoneState()
 const { getAudioState, getAudioApi } = useOpenSIPSJS()
 const { currentActiveRoom, allRooms, activeCalls, roomsWithoutActive } = getAudioState()
 const { moveCall, mergeCallByIds, getActiveCallsInRoom } = getAudioApi()
+
+const activeCallsPopupRef = ref<HTMLElement | null>(null)
+const { isXsLayout } = useMainWrapperHeight(activeCallsPopupRef)
 
 const closeCallsPopup = ()  => {
     onActiveCallsPopupToggle(false)
@@ -168,6 +186,61 @@ onBeforeUnmount(() => {
 
     .active-call-popup-row-wrapper {
       border-bottom: 0.5px solid var(--ui-lines);
+    }
+  }
+
+  &.is-xs {
+    border-radius: 14px 14px 0 0;
+
+    .popup-header-container {
+      height: 32px;
+      padding: 4px 12px;
+      .header {
+        font-size: 13px;
+      }
+      .close-button {
+        padding: 2px;
+      }
+    }
+
+    .current-call-block .title {
+      font-size: 9px;
+      letter-spacing: 0.5px;
+    }
+
+    .calls-manage-buttons-block .merge,
+    .calls-manage-buttons-block .conference {
+      font-size: 10px;
+      i {
+        font-size: 12px;
+      }
+    }
+
+    .not-active-calls-wrapper {
+      max-height: 120px;
+      .active-call-popup-row-wrapper {
+        padding: 4px 8px;
+        .call-data .caller {
+          font-size: 12px;
+        }
+        .call-data .duration {
+          font-size: 10px;
+        }
+      }
+      .actions .set-active-room-button {
+        height: 24px;
+        width: 24px;
+        i {
+          font-size: 12px;
+        }
+      }
+      .actions .call-end-button {
+        height: 24px;
+        width: 24px;
+        i {
+          font-size: 14px;
+        }
+      }
     }
   }
 }

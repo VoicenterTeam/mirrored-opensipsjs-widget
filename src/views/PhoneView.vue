@@ -157,7 +157,7 @@ onMounted(() => {
     min-height: 400px;
     min-width: 300px;*/
     width: 300px;
-    height: 400px;
+    height: 300px;
     @apply bg-primary-bg;
 
     &.has-draggable {

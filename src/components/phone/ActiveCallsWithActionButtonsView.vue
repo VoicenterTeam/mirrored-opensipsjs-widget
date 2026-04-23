@@ -104,16 +104,17 @@ const isTwoAndMoreActiveCallsInActiveRoom = computed(() => {
     return callsInActiveRoom.value.length > 1
 })
 
-const COMPACT_THRESHOLD_HEIGHT = 500
-
 const activeCallsViewRef = ref<HTMLElement | null>(null)
-const { mainWrapperHeight } = useMainWrapperHeight(activeCallsViewRef)
+const { isCompactLayout, isXsLayout } = useMainWrapperHeight(activeCallsViewRef)
 
 const footerPaddingClass = computed(() => {
-    const currentHeight = mainWrapperHeight.value
-    const isCompact = !!currentHeight && currentHeight < COMPACT_THRESHOLD_HEIGHT
-
-    return isCompact ? 'py-1' : 'py-3'
+    if (isXsLayout.value) {
+        return 'pt-2 pb-0'
+    }
+    if (isCompactLayout.value) {
+        return 'py-1'
+    }
+    return 'py-3'
 })
 </script>
 <style lang="scss" scoped>

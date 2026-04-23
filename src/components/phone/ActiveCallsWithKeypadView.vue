@@ -12,19 +12,22 @@
         <BackToCurrentCall
             v-if="currentActiveRoom"
             :room-id="currentActiveRoom"
+            :class="{ 'mt-1 mb-1': isShrunkLayout }"
         />
         <div
-            class="trigger-block flex flex-col flex-1 p-1 min-h-0"
+            class="trigger-block flex flex-col min-h-0"
             :class="[
-                isCompactLayout ? 'justify-start' : 'justify-center',
-                { 'keypad_trigger-wrapper': triggerTitle, 'mb-2': triggerTitle && !isCompactLayout },
+                triggerBlockLayoutClass,
+                isShrunkLayout ? 'justify-start' : 'justify-center',
+                { 'keypad_trigger-wrapper': triggerTitle, 'mb-2': triggerTitle && !isShrunkLayout },
             ]"
         >
             <span
-                class="text-sm text-center"
-                :class="isCompactLayout ? 'mb-0' : 'mb-2'"
+                v-if="triggerTitle"
+                class="text-center"
+                :class="triggerTitleClass"
             >{{ triggerTitle }}</span>
-            <div :class="isCompactLayout ? 'h-8 mb-1' : 'h-10 mb-3'">
+            <div :class="inputWrapperClass">
                 <VcInput
                     :model-value="phoneNumber"
                     :placeholder="getTranslation('common.type.number')"
@@ -34,7 +37,7 @@
                     @keyup.enter="initCall"
                 />
             </div>
-            <KeyPad />
+            <KeyPad :class="keypadMarginClass" />
         </div>
         <FooterBlock class="shrink-0" />
         <ActiveCallsPopup v-if="isActiveCallsPopupActive" />
@@ -68,16 +71,50 @@ const {
 const { phoneNumber, keyPadTrigger, onNumberInput, isActiveCallsPopupActive, onActiveCallsPopupToggle } = usePhoneState()
 const { initCall } = useCallActions()
 
-const COMPACT_THRESHOLD_HEIGHT = 500
-
 const keypadViewRef = ref<HTMLElement | null>(null)
-const { mainWrapperHeight } = useMainWrapperHeight(keypadViewRef)
+const { isCompactLayout, isXsLayout } = useMainWrapperHeight(keypadViewRef)
 
-const isCompactLayout = computed(() => {
-    const currentHeight = mainWrapperHeight.value
-    const isShortWidget = !!currentHeight && currentHeight < COMPACT_THRESHOLD_HEIGHT
-    const hasActiveRooms = activeRoomsWithoutIncoming.value.length > 0
-    return isShortWidget && hasActiveRooms
+const hasActiveRooms = computed(() => activeRoomsWithoutIncoming.value.length > 0)
+
+const isShrunkLayout = computed(
+    () => (isCompactLayout.value && hasActiveRooms.value) || isXsLayout.value
+)
+
+const triggerTitleClass = computed(() => {
+    if (isXsLayout.value) {
+        return 'text-xs mb-0'
+    }
+    if (isShrunkLayout.value) {
+        return 'text-sm mb-0'
+    }
+    return 'text-sm mb-2'
+})
+
+const inputWrapperClass = computed(() => {
+    if (isXsLayout.value) {
+        return 'h-7 mb-1'
+    }
+    if (isShrunkLayout.value) {
+        return 'h-8 mb-1'
+    }
+    return 'h-10 mb-3'
+})
+
+const triggerBlockLayoutClass = computed(() => {
+    if (isXsLayout.value) {
+        return 'px-1 py-0 mb-1'
+    }
+    return 'p-1 flex-1'
+})
+
+const keypadMarginClass = computed(() => {
+    if (isXsLayout.value) {
+        return 'mb-1'
+    }
+    if (isShrunkLayout.value) {
+        return 'mb-2'
+    }
+    return ''
 })
 
 /* Computed */

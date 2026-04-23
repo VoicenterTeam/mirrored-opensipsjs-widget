@@ -2,9 +2,13 @@
     <div
         ref="activeCallsWrapperRef"
         class="active-calls-wrapper mb-2"
+        :class="{ 'is-xs': isXsLayout }"
         :style="{ maxHeight: `${dynamicMaxHeight}px` }"
     >
-        <div class="header p-2 uppercase font-semibold overflow-hidden h-8">
+        <div
+            class="header uppercase font-semibold overflow-hidden"
+            :class="isXsLayout ? 'px-2 py-1 h-6' : 'p-2 h-8'"
+        >
             {{ getTranslation('audio.participants') }}
         </div>
         <div
@@ -37,7 +41,8 @@ interface Props {
 }
 defineProps<Props>()
 
-const COMPACT_THRESHOLD_HEIGHT = 500
+const XS_MAX_HEIGHT_SINGLE_ROOM = 85
+const XS_MAX_HEIGHT_MULTI_ROOM = 60
 const COMPACT_MAX_HEIGHT_SINGLE_ROOM = 125
 const COMPACT_MAX_HEIGHT_MULTI_ROOM = 90
 const MEDIUM_MAX_HEIGHT = 150
@@ -45,19 +50,20 @@ const MEDIUM_THRESHOLD_HEIGHT = 600
 const FALLBACK_MAX_HEIGHT = 250
 
 const activeCallsWrapperRef = ref<HTMLElement | null>(null)
-const { mainWrapperHeight } = useMainWrapperHeight(activeCallsWrapperRef)
+const { mainWrapperHeight, isCompactLayout, isXsLayout } = useMainWrapperHeight(activeCallsWrapperRef)
 
 const isMultiRoom = computed(() => activeRoomsWithoutIncoming.value.length > 1)
 
 const dynamicMaxHeight = computed(() => {
-    const currentHeight = mainWrapperHeight.value
-    if (!currentHeight || currentHeight < COMPACT_THRESHOLD_HEIGHT) {
-        return isMultiRoom.value
-            ? COMPACT_MAX_HEIGHT_MULTI_ROOM
-            : COMPACT_MAX_HEIGHT_SINGLE_ROOM
+    if (isXsLayout.value) {
+        return isMultiRoom.value ? XS_MAX_HEIGHT_MULTI_ROOM : XS_MAX_HEIGHT_SINGLE_ROOM
     }
 
-    if (currentHeight <= MEDIUM_THRESHOLD_HEIGHT) {
+    if (isCompactLayout.value) {
+        return isMultiRoom.value ? COMPACT_MAX_HEIGHT_MULTI_ROOM : COMPACT_MAX_HEIGHT_SINGLE_ROOM
+    }
+
+    if (mainWrapperHeight.value <= MEDIUM_THRESHOLD_HEIGHT) {
         return MEDIUM_MAX_HEIGHT
     }
 
@@ -81,6 +87,13 @@ const getDuration = (callId: string) => {
   .rows-wrapper {
     .active-call-row-wrapper:not(:last-child) {
       border-bottom: 1px solid var(--ui-lines);
+    }
+  }
+
+  &.is-xs {
+    .header {
+      font-size: 9px;
+      line-height: 1;
     }
   }
 }

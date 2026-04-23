@@ -1,7 +1,8 @@
 <template>
     <div
         ref="twoAndMoreViewRef"
-        class="flex-1 flex flex-col min-h-0"
+        class="flex flex-col min-h-0"
+        :class="{ 'flex-1': !isXsLayout }"
     >
         <CallsCompactView
             v-if="roomsWithoutActive.length"
@@ -12,7 +13,7 @@
             :max-height="maxHeight"
         />
         <div
-            class="keypad-wrapper gap-x-2 px-1 w-full"
+            class="keypad-wrapper px-1 w-full"
             :class="keypadSpacingClass"
         >
             <CallActionButton
@@ -180,19 +181,18 @@ const maxHeight  = computed(() => {
     return rowsQuantity.value * 52
 })
 
-const COMPACT_THRESHOLD_HEIGHT = 500
-
 const twoAndMoreViewRef = ref<HTMLElement | null>(null)
-const { mainWrapperHeight } = useMainWrapperHeight(twoAndMoreViewRef)
+const { isCompactLayout, isXsLayout } = useMainWrapperHeight(twoAndMoreViewRef)
 
-const isCompactLayout = computed(() => {
-    const currentHeight = mainWrapperHeight.value
-    return !!currentHeight && currentHeight < COMPACT_THRESHOLD_HEIGHT
+const keypadSpacingClass = computed(() => {
+    if (isXsLayout.value) {
+        return 'py-0 gap-x-4 gap-y-1'
+    }
+    if (isCompactLayout.value) {
+        return 'py-0 gap-x-2 gap-y-1'
+    }
+    return 'py-1 gap-x-2 gap-y-3'
 })
-
-const keypadSpacingClass = computed(() =>
-    isCompactLayout.value ? 'py-0 gap-y-1' : 'py-1 gap-y-3'
-)
 </script>
 <style scoped lang="scss">
 .keypad-wrapper {
