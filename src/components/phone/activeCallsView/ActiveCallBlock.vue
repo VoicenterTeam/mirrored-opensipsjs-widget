@@ -2,11 +2,11 @@
     <div class="active-call-block-wrapper text-center">
         <div
             v-if="callAddingInProgress"
-            class="calling-status text-sm font-medium mb-3 h-4"
+            class="calling-status text-sm font-medium mb-2 h-4"
         >
             {{ getTranslation('audio.calling') }}
         </div>
-        <div
+        <div v-if="callDuration"
             class="flex items-center justify-center mb-1 h-4"
         >
             <!--           <AudioQualityIndicator :call-id="id" />-->

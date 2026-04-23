@@ -1,17 +1,24 @@
 <template>
-    <div class="keypad-wrapper grid grid-cols-3 gap-2 m-auto">
+    <div
+        ref="keyPadRef"
+        class="keypad-wrapper grid grid-cols-3 m-auto"
+        :class="isCompactLayout ? 'gap-1 is-compact' : 'gap-2'"
+    >
         <button
             v-for="(key, index) in keyPadConfig"
             :key="index"
-            class="flex-col flex items-center justify-center py-1"
+            class="flex-col flex items-center justify-center"
+            :class="isCompactLayout ? 'py-0' : 'py-1'"
             @click="onPhoneNumberInput(key.number)"
         >
-            <div class="font-semibold">
+            <div
+                class="keypad-number font-semibold"
+            >
                 {{ key.number }}
             </div>
             <div
                 v-if="key.letters"
-                class="text-xs font-semibold inline-block text-secondary"
+                class="keypad-letters font-semibold inline-block text-secondary"
             >
                 {{ key.letters }}
             </div>
@@ -19,11 +26,15 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { onBeforeUnmount } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
 import { KeyPadTriggerObjectType, MAX_NUMBER_DTMF_INPUT_LENGTH, MAX_NUMBER_INPUT_LENGTH } from '@/constants/phone.ts'
+import { useMainWrapperHeight } from '@/composables/phone/useMainWrapperHeight'
+import { useOpenSIPSJS } from '@/composables/opensipsjs'
 /* Data */
 const { phoneNumber, keyPadTrigger, onPhoneNumberChange, onKeyPadToggle } = usePhoneState()
+const { getAudioState } = useOpenSIPSJS()
+const { activeRoomsWithoutIncoming } = getAudioState()
 const keyPadConfig = [
     {
         id: 1,
@@ -99,6 +110,19 @@ const onPhoneNumberInput = (key: string) => {
     onPhoneNumberChange(updatedNumber)
 }
 
+const COMPACT_THRESHOLD_HEIGHT = 500
+
+const keyPadRef = ref<HTMLElement | null>(null)
+const { mainWrapperHeight } = useMainWrapperHeight(keyPadRef)
+
+const hasActiveRooms = computed(() => activeRoomsWithoutIncoming.value.length > 0)
+
+const isCompactLayout = computed(() => {
+    const currentHeight = mainWrapperHeight.value
+    const isShortWidget = !!currentHeight && currentHeight < COMPACT_THRESHOLD_HEIGHT
+    return isShortWidget && hasActiveRooms.value
+})
+
 /* onBeforeUnmount  */
 onBeforeUnmount (() => {
     onKeyPadToggle(undefined)
@@ -109,13 +133,35 @@ onBeforeUnmount (() => {
   button {
     border: 0.5px solid var(--ui-lines);
     min-height: 45px;
-    min-width: 85px;
+    min-width: 65px;
 
     &:hover {
       @apply bg-secondary-actions-bg--focus;
     }
     &:active {
       @apply bg-secondary-actions-bg--pressed;
+    }
+  }
+
+  .keypad-number {
+    font-size: 16px;
+    line-height: 1.2;
+  }
+  .keypad-letters {
+    font-size: 12px;
+    line-height: 1.2;
+  }
+
+  &.is-compact {
+    button {
+      min-height: 34px;
+    }
+    .keypad-number {
+      font-size: 13px;
+    }
+    .keypad-letters {
+      font-size: 9px;
+      letter-spacing: 0.3px;
     }
   }
 }

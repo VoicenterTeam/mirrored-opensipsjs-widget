@@ -1,5 +1,8 @@
 <template>
-    <div class="flex-1 flex flex-col">
+    <div
+        ref="twoAndMoreViewRef"
+        class="flex-1 flex flex-col min-h-0"
+    >
         <CallsCompactView
             v-if="roomsWithoutActive.length"
             :rooms-length="activeRoomsWithoutIncoming.length"
@@ -9,7 +12,8 @@
             :max-height="maxHeight"
         />
         <div
-            class="keypad-wrapper py-1 gap-x-5 gap-y-8 px-1 w-full"
+            class="keypad-wrapper gap-x-2 px-1 w-full"
+            :class="keypadSpacingClass"
         >
             <CallActionButton
                 v-for="(button, index) in controlButtonsConfig"
@@ -24,7 +28,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import CallsCompactView from '@/components/phone/common/CallsCompactView.vue'
 import { KeyPadTriggerObjectType } from '@/constants/phone.ts'
 import { usePhoneState } from '@/composables/phone/usePhoneState'
@@ -33,6 +37,7 @@ import { allowMergeCalls } from '@/composables/useWidgetConfig'
 import CallActionButton from '@/components/phone/activeCallsView/CallActionButton.vue'
 import MultipleCallsActiveRoom from '@/components/phone/activeCallsView/MultipleCallsActiveRoom.vue'
 import useCallActions from '@/composables/phone/useCallActions.ts'
+import { useMainWrapperHeight } from '@/composables/phone/useMainWrapperHeight'
 import { getTranslation } from '@/plugins/translator'
 
 /* Data */
@@ -174,11 +179,24 @@ const controlButtonsConfig = computed(() => getControlButtonsConfig())
 const maxHeight  = computed(() => {
     return rowsQuantity.value * 52
 })
+
+const COMPACT_THRESHOLD_HEIGHT = 500
+
+const twoAndMoreViewRef = ref<HTMLElement | null>(null)
+const { mainWrapperHeight } = useMainWrapperHeight(twoAndMoreViewRef)
+
+const isCompactLayout = computed(() => {
+    const currentHeight = mainWrapperHeight.value
+    return !!currentHeight && currentHeight < COMPACT_THRESHOLD_HEIGHT
+})
+
+const keypadSpacingClass = computed(() =>
+    isCompactLayout.value ? 'py-0 gap-y-1' : 'py-1 gap-y-3'
+)
 </script>
 <style scoped lang="scss">
 .keypad-wrapper {
   max-width: 400px;
   align-self: center;
-  margin: auto;
 }
 </style>

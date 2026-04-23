@@ -4,12 +4,13 @@
           flex
           gap-x-1
           items-center
+          min-w-0
           volume-block
         "
     >
         <div
             v-if="isSpeakerMuted||!speakerPlayerVolume"
-            class="h-5 w-5 flex justify-center items-center active rounded-sm"
+            class="h-5 w-5 shrink-0 flex justify-center items-center active rounded-sm"
         >
             <i
                 class="cursor-pointer text-base vc-lc-volume-x"
@@ -19,7 +20,7 @@
         </div>
         <div
             v-else
-            class="h-5 w-5 flex justify-center items-center rounded-sm"
+            class="h-5 w-5 shrink-0 flex justify-center items-center rounded-sm"
         >
             <i
                 class="vc-lc-volume-1 cursor-pointer text-base"
@@ -31,6 +32,7 @@
             v-model="speakerPlayerVolume"
             :show-tooltip="false"
             placement="left"
+            class="slider flex-1 basis-0 min-w-0 w-full"
         />
     </div>
 </template>
@@ -68,7 +70,15 @@ const onSpeakerUnmute = () => {
 
 </script>
 <style lang="scss" scoped>
-.volume-block{
+.volume-block {
+  min-width: 0;
+
+  .slider {
+    flex: 1 1 0;
+    min-width: 0;
+    width: 100%;
+  }
+
   .active {
     background-color:
         color-mix(in srgb, var(--destructive) var(--dynamic-percentage-10), transparent);
@@ -78,6 +88,9 @@ const onSpeakerUnmute = () => {
 <style lang="scss">
 .el-slider {
   max-width: 250px;
+  min-width: 0;
+  width: 100%;
+
   .el-slider__runway, .el-slider__bar  {
     height: 2px;
   }

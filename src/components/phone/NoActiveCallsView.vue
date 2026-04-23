@@ -1,7 +1,7 @@
 <template>
     <div class="no-active-calls-view-wrapper w-full flex flex-col h-full">
-        <SoundManager class="mb-3" />
-        <div class="h-10 mb-3">
+        <SoundManager class="mb-2" />
+        <div class="h-10 mb-2">
             <VcInput
                 :model-value="phoneNumber"
                 :placeholder="getTranslation('audio.type.number.uppercase')"
@@ -11,7 +11,7 @@
                 @keyup.enter="initCall"
             />
         </div>
-        <div class="mb-4 flex-1 flex justify-center">
+        <div class="mb-3 flex-1 flex justify-center">
             <Keypad />
         </div>
         <FooterBlock>
