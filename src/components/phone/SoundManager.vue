@@ -1,5 +1,9 @@
 <template>
-    <div class="speaker-manager-wrapper shrink-0 flex items-center w-full min-w-0 gap-y-1">
+    <div
+        ref="soundManagerRef"
+        class="speaker-manager-wrapper shrink-0 flex items-center w-full min-w-0 gap-y-1"
+        :class="{ 'is-xs': isXsLayout }"
+    >
         <SpeakerManager class="item flex-1 basis-0 min-w-0" />
         <MuteManager
             class="item flex-1 basis-0 min-w-0 ml-1"
@@ -61,12 +65,14 @@
     </div>
 </template>
 <script lang="ts" setup>
+import { ref } from 'vue'
 import SpeakerManager from '@/components/phone/SpeakerManager.vue'
 import MuteManager from '@/components/phone/MuteManager.vue'
 import InputDeviceOption from '@/components/phone/common/InputDeviceOption.vue'
 import { getMediaDevicesList, outputMediaDeviceValue, inputMediaDeviceValue } from '@/composables/phone/useMediaDevices.ts'
 import DNDButton from '@/components/phone/DNDButton.vue'
 import { allowDNDSetup } from '@/composables/useWidgetConfig'
+import { useMainWrapperHeight } from '@/composables/phone/useMainWrapperHeight'
 import { getTranslation } from '@/plugins/translator'
 import { ConfigOptionType } from '@voicenter-team/voicenter-ui-plus/library/types/types'
 
@@ -77,6 +83,8 @@ const  mediaConfigOptions: ConfigOptionType<MediaDeviceInfo> = {
     searchKey: 'label'
 }
 
+const soundManagerRef = ref<HTMLElement | null>(null)
+const { isXsLayout } = useMainWrapperHeight(soundManagerRef)
 </script>
 <style lang="scss" scoped>
 .speaker-manager-wrapper {
@@ -89,6 +97,12 @@ const  mediaConfigOptions: ConfigOptionType<MediaDeviceInfo> = {
   .item {
     flex: 1 1 0;
     min-width: 0;
+  }
+
+  &.is-xs {
+    column-gap: 4px;
+    padding-top: 2px;
+    padding-bottom: 2px;
   }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
     <div
         ref="buttonContainerRef"
-        :class="[type, {'disabled': disabled }]"
+        :class="[type, {'disabled': disabled, 'is-xs': isXsLayout }]"
         class="call-control-button-container flex flex-col items-center"
     >
         <button
@@ -42,22 +42,21 @@ const emit = defineEmits<{
     (event: 'click'): void,
 }>()
 
-const COMPACT_THRESHOLD_HEIGHT = 500
+const XS_BUTTON_SIZE = 28
 const COMPACT_BUTTON_SIZE = 40
 const DEFAULT_BUTTON_SIZE = 52
 
 const buttonContainerRef = ref<HTMLElement | null>(null)
-const { mainWrapperHeight } = useMainWrapperHeight(buttonContainerRef)
+const { isCompactLayout, isXsLayout } = useMainWrapperHeight(buttonContainerRef)
 
 const controlButtonSize = computed(() => {
-    const currentHeight = mainWrapperHeight.value
-    if (!currentHeight) {
-        return DEFAULT_BUTTON_SIZE
+    if (isXsLayout.value) {
+        return XS_BUTTON_SIZE
     }
-
-    return currentHeight < COMPACT_THRESHOLD_HEIGHT
-        ? COMPACT_BUTTON_SIZE
-        : DEFAULT_BUTTON_SIZE
+    if (isCompactLayout.value) {
+        return COMPACT_BUTTON_SIZE
+    }
+    return DEFAULT_BUTTON_SIZE
 })
 
 const controlButtonSizeStyle = computed(() => ({
@@ -87,6 +86,18 @@ const onClick = () => {
       text-transform: uppercase;
       font-size: 10px;
       font-weight: 680;
+    }
+  }
+
+  &.is-xs {
+    .button-name {
+      font-size: 10px;
+      line-height: 120%;
+      letter-spacing: 0.5px;
+
+      &.uppercase {
+        font-size: 9px;
+      }
     }
   }
 

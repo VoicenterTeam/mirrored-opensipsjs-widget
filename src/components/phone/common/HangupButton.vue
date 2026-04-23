@@ -24,22 +24,26 @@ const props = withDefaults(
     }
 )
 
-const COMPACT_THRESHOLD_HEIGHT = 500
+const XS_BUTTON_SIZE = 36
 const COMPACT_BUTTON_SIZE = 44
 const DEFAULT_LARGE_BUTTON_SIZE = 56
 
 const hangupButtonRef = ref<HTMLElement | null>(null)
-const { mainWrapperHeight } = useMainWrapperHeight(hangupButtonRef)
+const { isCompactLayout, isXsLayout } = useMainWrapperHeight(hangupButtonRef)
 
 const hangupButtonSizeStyle = computed(() => {
     if (props.size !== 'large') {
         return undefined
     }
 
-    const currentHeight = mainWrapperHeight.value
-    const size = currentHeight && currentHeight < COMPACT_THRESHOLD_HEIGHT
-        ? COMPACT_BUTTON_SIZE
-        : DEFAULT_LARGE_BUTTON_SIZE
+    let size: number
+    if (isXsLayout.value) {
+        size = XS_BUTTON_SIZE
+    } else if (isCompactLayout.value) {
+        size = COMPACT_BUTTON_SIZE
+    } else {
+        size = DEFAULT_LARGE_BUTTON_SIZE
+    }
 
     return {
         width: `${size}px`,

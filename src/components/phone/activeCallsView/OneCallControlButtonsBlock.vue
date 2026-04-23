@@ -1,5 +1,9 @@
 <template>
-    <div class="keypad-wrapper w-full gap-x-3 gap-y-3">
+    <div
+        ref="controlButtonsBlockRef"
+        class="keypad-wrapper w-full"
+        :class="[gridGapClass]"
+    >
         <CallActionButton
             v-for="(button, index) in oneActiveCallButtons"
             :key="index"
@@ -12,13 +16,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import CallActionButton from '@/components/phone/activeCallsView/CallActionButton.vue'
 import { ControlButtonObjectType } from '@/types/phone'
 import { useOpenSIPSJS } from '@/composables/opensipsjs'
 import { KeyPadTriggerObjectType } from '@/constants/phone.ts'
 import useCallActions from '@/composables/phone/useCallActions.ts'
 import { usePhoneState } from '@/composables/phone/usePhoneState.ts'
+import { useMainWrapperHeight } from '@/composables/phone/useMainWrapperHeight'
 import { getTranslation } from '@/plugins/translator'
 import { allowTransfer } from '@/composables/useWidgetConfig'
 
@@ -29,6 +34,19 @@ const { holdCall, unholdCall, muteAgent } = getAudioApi()
 
 const  { onKeyPadToggle } = usePhoneState()
 const {  onCallToTransferChange } = useCallActions()
+
+const controlButtonsBlockRef = ref<HTMLElement | null>(null)
+const { isCompactLayout, isXsLayout } = useMainWrapperHeight(controlButtonsBlockRef)
+
+const gridGapClass = computed(() => {
+    if (isXsLayout.value) {
+        return 'gap-x-4 gap-y-1'
+    }
+    if (isCompactLayout.value) {
+        return 'gap-x-3 gap-y-1'
+    }
+    return 'gap-x-3 gap-y-3'
+})
 
 /* Methods */
 const currentCall = computed(() => {

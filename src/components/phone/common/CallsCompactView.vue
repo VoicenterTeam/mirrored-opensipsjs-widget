@@ -1,21 +1,28 @@
 <template>
-    <div class="flex justify-between items-center py-2 compact-view-wrapper gap-x-3">
+    <div
+        ref="callsCompactViewRef"
+        class="flex justify-between items-center compact-view-wrapper"
+        :class="[isXsLayout ? 'py-1 gap-x-1 is-xs' : 'py-2 gap-x-3']"
+    >
         <div
-            class="flex justify-between gap-x-2 items-center active-calls-wrapper"
+            class="flex justify-between items-center active-calls-wrapper min-w-0"
+            :class="isXsLayout ? 'gap-x-1' : 'gap-x-2'"
         >
-            <i class="vc-lc-phone-call" />
-            <div class="counter uppercase">
+            <i class="vc-lc-phone-call shrink-0" />
+            <div class="counter uppercase truncate">
                 {{ `${roomsLength} ${getTranslation('audio.calls')}` }}
                 {{ `${callsLength} ${getTranslation('audio.callers')}` }}
             </div>
         </div>
-        <div class="flex items-center justify-between gap-x-1">
+        <div class="flex items-center justify-between gap-x-1 shrink-0">
             <SwitchCallButton />
         </div>
     </div>
 </template>
 <script lang="ts" setup>
+import { ref } from 'vue'
 import SwitchCallButton from '@/components/phone/common/SwitchCallButton.vue'
+import { useMainWrapperHeight } from '@/composables/phone/useMainWrapperHeight'
 import { getTranslation } from '@/plugins/translator'
 
 /* Props */
@@ -25,6 +32,8 @@ type Props = {
 }
 defineProps<Props>()
 
+const callsCompactViewRef = ref<HTMLElement | null>(null)
+const { isXsLayout } = useMainWrapperHeight(callsCompactViewRef)
 </script>
 <style lang="scss" scoped>
 .compact-view-wrapper {
@@ -60,6 +69,34 @@ defineProps<Props>()
     background-color: var(--bg-light-grey);
     i {
       color: var(--call-details);
+    }
+  }
+
+  &.is-xs {
+    .active-calls-wrapper {
+      .counter {
+        font-size: 9px;
+        letter-spacing: 0.5px;
+      }
+      i {
+        font-size: 14px;
+      }
+    }
+
+    :deep(.switch-call-button) {
+      > div {
+        padding-left: 6px;
+        padding-right: 6px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+      }
+      .context {
+        font-size: 9px;
+        letter-spacing: 0.4px;
+      }
+      i {
+        font-size: 12px;
+      }
     }
   }
 }

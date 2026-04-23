@@ -1,14 +1,21 @@
 <template>
     <div
         ref="keyPadRef"
-        class="keypad-wrapper grid grid-cols-3 m-auto"
-        :class="isCompactLayout ? 'gap-1 is-compact' : 'gap-2'"
+        class="keypad-wrapper grid grid-cols-3 mx-auto shrink-0"
+        :class="[
+            {
+                'is-compact': isShrunkLayout && !isXsMultiRoomLayout,
+                'is-xs': isXsKeypadLayout && !isXsMultiRoomLayout,
+                'is-xs-multi': isXsMultiRoomLayout,
+            },
+            keypadGapClass,
+        ]"
     >
         <button
             v-for="(key, index) in keyPadConfig"
             :key="index"
             class="flex-col flex items-center justify-center"
-            :class="isCompactLayout ? 'py-0' : 'py-1'"
+            :class="isShrunkLayout ? 'py-0' : 'py-1'"
             @click="onPhoneNumberInput(key.number)"
         >
             <div
@@ -110,17 +117,31 @@ const onPhoneNumberInput = (key: string) => {
     onPhoneNumberChange(updatedNumber)
 }
 
-const COMPACT_THRESHOLD_HEIGHT = 500
-
 const keyPadRef = ref<HTMLElement | null>(null)
-const { mainWrapperHeight } = useMainWrapperHeight(keyPadRef)
+const { isCompactLayout, isXsLayout } = useMainWrapperHeight(keyPadRef)
 
 const hasActiveRooms = computed(() => activeRoomsWithoutIncoming.value.length > 0)
+const hasMultipleRooms = computed(() => activeRoomsWithoutIncoming.value.length > 1)
 
-const isCompactLayout = computed(() => {
-    const currentHeight = mainWrapperHeight.value
-    const isShortWidget = !!currentHeight && currentHeight < COMPACT_THRESHOLD_HEIGHT
-    return isShortWidget && hasActiveRooms.value
+const isShrunkLayout = computed(
+    () => (isCompactLayout.value && hasActiveRooms.value) || isXsLayout.value
+)
+const isXsKeypadLayout = computed(() => isXsLayout.value)
+const isXsMultiRoomLayout = computed(
+    () => isXsLayout.value && hasMultipleRooms.value
+)
+
+const keypadGapClass = computed(() => {
+    if (isXsMultiRoomLayout.value) {
+        return 'gap-[1px]'
+    }
+    if (isXsKeypadLayout.value) {
+        return 'gap-[2px]'
+    }
+    if (isShrunkLayout.value) {
+        return 'gap-1'
+    }
+    return 'gap-2'
 })
 
 /* onBeforeUnmount  */
@@ -130,10 +151,14 @@ onBeforeUnmount (() => {
 </script>
 <style lang="scss" scoped>
 .keypad-wrapper {
+  grid-auto-rows: minmax(45px, 1fr);
+
   button {
     border: 0.5px solid var(--ui-lines);
     min-height: 45px;
     min-width: 65px;
+    height: 100%;
+    overflow: hidden;
 
     &:hover {
       @apply bg-secondary-actions-bg--focus;
@@ -153,15 +178,52 @@ onBeforeUnmount (() => {
   }
 
   &.is-compact {
+    grid-auto-rows: minmax(34px, 1fr);
     button {
       min-height: 34px;
     }
     .keypad-number {
       font-size: 13px;
+      line-height: 1;
     }
     .keypad-letters {
       font-size: 9px;
+      line-height: 1;
       letter-spacing: 0.3px;
+    }
+  }
+
+  &.is-xs {
+    grid-auto-rows: minmax(26px, 1fr);
+    button {
+      min-height: 26px;
+      min-width: 55px;
+    }
+    .keypad-number {
+      font-size: 11px;
+      line-height: 1;
+    }
+    .keypad-letters {
+      font-size: 8px;
+      line-height: 1;
+      letter-spacing: 0.2px;
+    }
+  }
+
+  &.is-xs-multi {
+    grid-auto-rows: minmax(22px, 1fr);
+    button {
+      min-height: 22px;
+      min-width: 50px;
+    }
+    .keypad-number {
+      font-size: 10px;
+      line-height: 1;
+    }
+    .keypad-letters {
+      font-size: 7px;
+      line-height: 1;
+      letter-spacing: 0.2px;
     }
   }
 }
