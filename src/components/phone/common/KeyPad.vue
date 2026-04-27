@@ -41,7 +41,7 @@ import { useOpenSIPSJS } from '@/composables/opensipsjs'
 /* Data */
 const { phoneNumber, keyPadTrigger, onPhoneNumberChange, onKeyPadToggle } = usePhoneState()
 const { getAudioState } = useOpenSIPSJS()
-const { activeRoomsWithoutIncoming } = getAudioState()
+const { activeRoomsWithoutIncoming, currentActiveRoom } = getAudioState()
 const keyPadConfig = [
     {
         id: 1,
@@ -128,7 +128,7 @@ const isShrunkLayout = computed(
 )
 const isXsKeypadLayout = computed(() => isXsLayout.value)
 const isXsMultiRoomLayout = computed(
-    () => isXsLayout.value && hasMultipleRooms.value
+    () => isXsLayout.value && hasMultipleRooms.value && !!currentActiveRoom.value
 )
 
 const keypadGapClass = computed(() => {
