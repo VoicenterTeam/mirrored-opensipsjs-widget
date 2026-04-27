@@ -156,7 +156,7 @@ onMounted(() => {
     /*height: 100%;
     min-height: 400px;
     min-width: 300px;*/
-    width: 300px;
+    width: 334px;
     height: 300px;
     @apply bg-primary-bg;
 

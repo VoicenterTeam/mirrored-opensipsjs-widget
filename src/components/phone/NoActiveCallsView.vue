@@ -15,10 +15,10 @@
             />
         </div>
         <div
-            class="flex-1 flex justify-center min-h-0"
+            class="flex-1 flex justify-center items-stretch min-h-0"
             :class="isXsLayout ? 'mb-1' : 'mb-3'"
         >
-            <Keypad />
+            <Keypad class="h-full" />
         </div>
         <FooterBlock class="shrink-0">
             <template #pv-bottom-left>
