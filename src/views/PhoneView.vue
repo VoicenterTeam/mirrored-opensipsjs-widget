@@ -170,7 +170,7 @@ onMounted(() => {
     }
 
     .phone-view-wrapper {
-        @apply w-full relative;
+        @apply w-full h-full relative;
     }
 }
 </style>

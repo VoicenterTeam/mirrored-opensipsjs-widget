@@ -1,7 +1,7 @@
 <template>
     <div
         ref="keyPadRef"
-        class="keypad-wrapper grid grid-cols-3 mx-auto shrink-0"
+        class="keypad-wrapper grid grid-cols-3 mx-auto w-full shrink-0"
         :class="[
             {
                 'is-compact': isShrunkLayout && !isXsMultiRoomLayout,

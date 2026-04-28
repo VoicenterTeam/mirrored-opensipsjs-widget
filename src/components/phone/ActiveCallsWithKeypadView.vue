@@ -102,20 +102,17 @@ const inputWrapperClass = computed(() => {
 
 const triggerBlockLayoutClass = computed(() => {
     if (isXsLayout.value && currentActiveRoom.value) {
-        return 'px-1 py-0 mb-1'
+        return 'px-1 py-0 mb-1 flex-1'
     }
     return 'p-1 flex-1'
 })
 
 const keypadMarginClass = computed(() => {
-    const classes: Array<string> = []
+    const classes: Array<string> = [ 'flex-1', 'min-h-0' ]
     if (isXsLayout.value) {
         classes.push('mb-1')
     } else if (isShrunkLayout.value) {
         classes.push('mb-2')
-    }
-    if (!currentActiveRoom.value) {
-        classes.push('flex-1 min-h-0')
     }
     return classes.join(' ')
 })
