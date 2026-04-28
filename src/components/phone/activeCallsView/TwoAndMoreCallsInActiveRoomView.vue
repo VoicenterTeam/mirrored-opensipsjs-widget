@@ -1,8 +1,7 @@
 <template>
     <div
         ref="twoAndMoreViewRef"
-        class="flex flex-col min-h-0"
-        :class="{ 'flex-1': !isXsLayout }"
+        class="flex flex-col min-h-0 flex-1"
     >
         <CallsCompactView
             v-if="roomsWithoutActive.length"

@@ -1,7 +1,7 @@
 <template>
     <div
         ref="controlButtonsBlockRef"
-        class="keypad-wrapper w-full"
+        class="keypad-wrapper w-full flex-1"
         :class="[gridGapClass]"
     >
         <CallActionButton
@@ -103,6 +103,7 @@ const oneActiveCallButtons = computed(() => {
   align-self: center;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  align-content: space-evenly;
   max-width: 400px;
 }
 

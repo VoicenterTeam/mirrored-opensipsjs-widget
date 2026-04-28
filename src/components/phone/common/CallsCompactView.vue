@@ -38,6 +38,7 @@ const { isXsLayout } = useMainWrapperHeight(callsCompactViewRef)
 <style lang="scss" scoped>
 .compact-view-wrapper {
   border-bottom: 0.5px solid var(--ui-lines);
+  margin-bottom: 2px;
   .active-calls-wrapper {
     .counter {
       line-height: normal;
